@@ -1,0 +1,21 @@
+name: Deploy staging
+
+# Runs on the self-hosted runner living on the staging VPS itself, so
+# checkout/build/restart all happen locally on the box that serves the site.
+# Restricted to push on main (never pull_request) since a self-hosted runner
+# executes workflow code with real permissions on that machine.
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, staging]
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: npm ci
+
+      - run: npm run build:staging
+
+      - run: sudo systemctl restart igem-wiki

@@ -1,7 +1,11 @@
 # Reverse proxy for the staging Next.js process on the Hetzner VPS.
-# Replace the placeholder hostname with the team's actual staging domain.
 # Caddy handles automatic HTTPS (ACME) with no extra config needed.
-staging.igem-lund.example {
+#
+# This VPS runs a shared top-level /etc/caddy/Caddyfile that imports
+# per-site snippets, so install this as /etc/caddy/wiki.caddy and add
+# `import /etc/caddy/wiki.caddy` to the top level of the main Caddyfile,
+# then `sudo systemctl reload caddy`.
+wiki.igemlund.org {
     encode zstd gzip
 
     reverse_proxy 127.0.0.1:3000
