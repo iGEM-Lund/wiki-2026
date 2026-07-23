@@ -23,20 +23,72 @@ body {
 .site__header {
   display: flex;
   gap: 2rem;
-  align-items: flex-start;
+  align-items: center;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border);
 }
 
-.site__nav-section {
-  margin-bottom: 0.75rem;
+.site__brand {
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
 }
 
-.site__nav-label {
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  color: var(--muted);
+.site__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.site__nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  list-style: none;
+}
+.site__nav-item::-webkit-details-marker {
+  display: none;
+}
+.site__nav-item:hover {
+  background: color-mix(in srgb, var(--muted) 12%, transparent);
+}
+
+.site__nav-dropdown {
+  position: relative;
+}
+
+.site__nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 12rem;
+  margin: 0.25rem 0 0;
+  padding: 0.35rem;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: Canvas;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+.site__nav-dropdown-menu li + li {
+  margin-top: 0.15rem;
+}
+.site__nav-dropdown-menu a {
+  display: block;
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  color: inherit;
+}
+.site__nav-dropdown-menu a:hover {
+  background: color-mix(in srgb, var(--muted) 12%, transparent);
 }
 
 .site__main {

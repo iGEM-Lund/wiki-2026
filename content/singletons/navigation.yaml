@@ -1,0 +1,3 @@
+# Editorial nav tree — edit via the Keystatic admin UI at /keystatic, not by
+# hand. See keystatic.config.ts (navigation singleton) and src/lib/nav.ts.
+items: []

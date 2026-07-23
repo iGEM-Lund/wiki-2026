@@ -10,12 +10,14 @@
     "start:staging": "cross-env BUILD_TARGET=staging next start -p 3000",
     "prebuild": "node scripts/keystatic-routes.mjs unlink",
     "build": "npm run prebuild && cross-env BUILD_TARGET=production next build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "generate:icons": "node scripts/generate-icon-names.mjs"
   },
   "dependencies": {
     "@keystatic/core": "^0.5.50",
     "@keystatic/next": "^5.0.4",
     "@mdx-js/mdx": "^3.1.1",
+    "lucide-react": "^1.26.0",
     "next": "^15.5.20",
     "react": "^19.1.8",
     "react-dom": "^19.1.8"
