@@ -16,6 +16,17 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run build:staging
+      # Keystatic's GitHub-mode client ID/secret are needed at build time
+      # (NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG is client-exposed, so it must
+      # be baked in before build, not just present when the app starts).
+      # /srv/igem-wiki/.env.staging is systemd's EnvironmentFile for the
+      # running app, but that's not read during this CI build step, so
+      # source it explicitly here instead.
+      - name: Build (staging)
+        run: |
+          set -a
+          source /srv/igem-wiki/.env.staging
+          set +a
+          npm run build:staging
 
       - run: sudo systemctl restart igem-wiki
