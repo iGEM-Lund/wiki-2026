@@ -1,5 +1,4 @@
 import { reader } from '@/lib/keystatic/reader';
-import { STANDARD_PAGES } from '@/lib/standard-pages';
 
 export type NavIconValue = { type: 'library'; name: string } | { type: 'custom'; url: string } | null;
 
@@ -11,23 +10,15 @@ export type NavItem = { name: string; icon: NavIconValue } & (
 );
 
 type RawIcon = { discriminant: 'library'; value: string } | { discriminant: 'custom'; value: string };
-type RawTarget = { discriminant: 'page'; value: string | null } | { discriminant: 'standard'; value: string };
 
 function resolveIcon(icon: RawIcon): NavIconValue {
   return icon.discriminant === 'library' ? { type: 'library', name: icon.value } : { type: 'custom', url: icon.value };
 }
 
-async function resolveTarget(target: RawTarget): Promise<NavTarget | null> {
-  if (target.discriminant === 'page') {
-    if (!target.value) return null;
-    const entry = await reader.collections.pages.read(target.value);
-    return entry ? { title: entry.title, href: `/${target.value}` } : null;
-  }
-
-  const def = STANDARD_PAGES.find((p) => p.key === target.value);
-  if (!def) return null;
-  const entry = await reader.singletons[def.key].read();
-  return entry ? { title: entry.title, href: `/${def.slug}` } : null;
+async function resolveTarget(slug: string | null): Promise<NavTarget | null> {
+  if (!slug) return null;
+  const entry = await reader.collections.pages.read(slug);
+  return entry ? { title: entry.title, href: `/${slug}` } : null;
 }
 
 export async function getNav(): Promise<NavItem[]> {
@@ -46,7 +37,7 @@ export async function getNav(): Promise<NavItem[]> {
 
     const dropdownItems = (
       await Promise.all(
-        item.linkMode.value.map(async (entry: { label: string; target: RawTarget }) => ({
+        item.linkMode.value.map(async (entry: { label: string; target: string | null }) => ({
           label: entry.label,
           target: await resolveTarget(entry.target),
         })),

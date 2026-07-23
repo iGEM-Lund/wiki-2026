@@ -60,19 +60,22 @@ distinguish staging from the production export build.
 
 ## Content model
 
-- **`pages` collection** (`content/pages/<slug>/index.mdx`): `title`, `section`
-  (select: team / project / protocols / notebook / safety / attributions),
-  `order` (number), and MDX `content`. `src/lib/nav.ts`'s `getNav()` reads all
-  entries via the Reader API, groups them by `section`, and sorts within each
-  group by `order`. Keep `SECTION_ORDER` in `src/lib/nav.ts` in sync with
-  `SECTION_OPTIONS` in `keystatic.config.ts` — there's no shared enum between
-  the two.
-- **Singletons** (`projectDescription`, `humanPractices`) back iGEM's required
-  Standard URL judging pages. They deliberately have **no slug field** — that's
-  what guarantees their paths stay fixed and non-writer-renameable, since
-  iGEM's Judging Form links to exact static URLs. The fixed paths live in
-  `src/lib/standard-pages.ts`; only the singleton's `title` field is
-  writer-editable.
+- **`pages` collection** (`content/pages/<slug>/index.mdx`): `title` and MDX
+  `content`. Every page on the site is one of these — including the
+  mandatory iGEM Standard URL judging pages (Project Description, Human
+  Practices, ...). There's no separate singleton mechanism for them; whoever
+  creates those pages is responsible for giving them the exact slugs iGEM's
+  Judging Form links to (`project-description`, `human-practices`, ...) and
+  for not renaming or deleting them afterward. Routing is a flat
+  `/[slug]` (`src/app/(site)/[slug]/page.tsx`).
+- **`navigation` singleton** drives the entire top nav — it's editorially
+  curated, not derived from collection fields. Each item has a name, an icon
+  (a searchable `lucide-react` picker or a custom image URL), and either a
+  direct link or a dropdown of links, each pointing at a `pages` entry via a
+  `relationship` field. See `src/lib/nav.ts` (resolves the raw data),
+  `src/components/nav-icon.tsx` (renders the icon server-side at build
+  time), and `src/app/(site)/layout.tsx` (renders the tree). Regenerate the
+  icon list with `npm run generate:icons` after bumping `lucide-react`.
 
 ## Adding a new content component
 
