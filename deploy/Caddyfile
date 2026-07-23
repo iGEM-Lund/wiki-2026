@@ -1,0 +1,20 @@
+# Reverse proxy for the staging Next.js process on the Hetzner VPS.
+# Replace the placeholder hostname with the team's actual staging domain.
+# Caddy handles automatic HTTPS (ACME) with no extra config needed.
+staging.igem-lund.example {
+    encode zstd gzip
+
+    reverse_proxy 127.0.0.1:3000
+
+    log {
+        output file /var/log/caddy/igem-wiki-access.log
+    }
+
+    # Optional extra layer on top of Keystatic's own GitHub OAuth gate for
+    # /keystatic. Uncomment and set credentials via `caddy hash-password` if
+    # the team wants defense-in-depth on a publicly reachable VPS.
+    # @keystaticAdmin path /keystatic* /api/keystatic*
+    # basicauth @keystaticAdmin {
+    #     <username> <bcrypt-hash>
+    # }
+}

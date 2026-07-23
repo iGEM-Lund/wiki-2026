@@ -1,0 +1,26 @@
+# systemd unit for the staging Next.js process on the Hetzner VPS.
+# Install at /etc/systemd/system/igem-wiki.service, then:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now igem-wiki
+#
+# Deploy/update flow:
+#   git pull && npm ci && npm run build:staging && sudo systemctl restart igem-wiki
+[Unit]
+Description=iGEM Lund 2026 Wiki - staging Next.js server
+After=network.target
+
+[Service]
+Type=simple
+User=igemwiki
+WorkingDirectory=/srv/igem-wiki
+Environment=BUILD_TARGET=staging
+Environment=PORT=3000
+EnvironmentFile=-/srv/igem-wiki/.env.staging
+ExecStart=/usr/bin/npm run start:staging
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:/var/log/igem-wiki/out.log
+StandardError=append:/var/log/igem-wiki/err.log
+
+[Install]
+WantedBy=multi-user.target

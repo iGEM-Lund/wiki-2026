@@ -1,0 +1,45 @@
+# Runs in iGEM's GitLab, against the mirror of this repo. iGEM does not
+# accept pre-built HTML — this pipeline must run `npm ci && npm run build`
+# itself. `npm run build` is the production/export path by default (see
+# package.json + scripts/keystatic-routes.mjs): it strips Keystatic's admin
+# routes before `next build` runs with BUILD_TARGET=production, output:'export'.
+#
+# Open question before first real deploy: confirm whether iGEM pre-seeds
+# this repo with its own required .gitlab-ci.yml (some seasons ship a starter
+# Pages template) that needs reconciling with this one, rather than being
+# fully replaced by it.
+stages:
+  - build
+  - verify
+  - deploy
+
+image: node:20-alpine
+
+build:
+  stage: build
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - out
+    expire_in: 1 hour
+
+verify:
+  stage: verify
+  script:
+    - node scripts/verify-export.mjs
+  dependencies:
+    - build
+
+pages:
+  stage: deploy
+  script:
+    - mv out public
+  artifacts:
+    paths:
+      - public
+  dependencies:
+    - build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
