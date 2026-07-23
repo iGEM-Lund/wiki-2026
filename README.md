@@ -15,7 +15,7 @@ touching code. One codebase, two deployment targets:
 
 ## The two-repo workflow
 
-- **This repo** (`iGEM-Lund-2026/Wiki` on GitHub) is where writing and staging
+- **This repo** (`iGEM-Lund/wiki-2026` on GitHub) is where writing and staging
   happen. Keystatic's GitHub-mode storage reads/writes content here directly.
 - **iGEM's GitLab repo** is a separate, frozen mirror. It only ever receives the
   production build's *source* (this codebase, mirrored) — iGEM's own
@@ -33,7 +33,7 @@ npm run dev
 ```
 
 Visit `http://localhost:3000/keystatic`. On first run it walks you through
-creating a GitHub App scoped to `iGEM-Lund-2026/Wiki`; the resulting
+creating a GitHub App scoped to `iGEM-Lund/wiki-2026`; the resulting
 `KEYSTATIC_GITHUB_CLIENT_ID` / `KEYSTATIC_GITHUB_CLIENT_SECRET` / `KEYSTATIC_SECRET`
 / `NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` values go in `.env`.
 
@@ -140,4 +140,4 @@ whether iGEM's GitLab pre-seeds repos with a required starter
   `predev`/`prebuild:staging` as needed.
 - **Keystatic GitHub App auth issues**: recheck the four `KEYSTATIC_GITHUB_*`
   env vars and that the GitHub App has been granted access to
-  `iGEM-Lund-2026/Wiki`.
+  `iGEM-Lund/wiki-2026`.

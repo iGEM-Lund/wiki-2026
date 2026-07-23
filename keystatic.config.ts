@@ -21,7 +21,7 @@ const SECTION_OPTIONS = [
 export default config({
   storage: {
     kind: 'github',
-    repo: { owner: 'iGEM-Lund-2026', name: 'Wiki' },
+    repo: { owner: 'iGEM-Lund', name: 'wiki-2026' },
   },
   collections: {
     pages: collection({
