@@ -3,8 +3,13 @@
 #   sudo systemctl daemon-reload
 #   sudo systemctl enable --now igem-wiki
 #
-# Deploy/update flow:
-#   git pull && npm ci && npm run build:staging && sudo systemctl restart igem-wiki
+# Deploy/update flow is automatic: a self-hosted GitHub Actions runner lives
+# on this same box (see .github/workflows/deploy-staging.yml) and, on every
+# push to main, checks out into WorkingDirectory below, runs
+# `npm ci && npm run build:staging`, then `sudo systemctl restart igem-wiki`
+# (the igemwiki user has a narrow NOPASSWD sudoers rule for just that
+# command). .env.staging lives outside the checkout so it survives across
+# runs untouched.
 [Unit]
 Description=iGEM Lund 2026 Wiki - staging Next.js server
 After=network.target
@@ -12,7 +17,7 @@ After=network.target
 [Service]
 Type=simple
 User=igemwiki
-WorkingDirectory=/srv/igem-wiki
+WorkingDirectory=/srv/igem-wiki/actions-runner/_work/wiki-2026/wiki-2026
 Environment=BUILD_TARGET=staging
 Environment=PORT=3000
 EnvironmentFile=-/srv/igem-wiki/.env.staging
