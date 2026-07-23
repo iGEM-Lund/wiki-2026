@@ -1,0 +1,25 @@
+# dependencies
+/node_modules
+
+# next.js build output
+/.next/
+/out/
+
+# generated Keystatic admin routes — see scripts/keystatic-routes.mjs.
+# These are copied in from keystatic-admin/ for dev/staging and removed
+# entirely for the production export build. Never hand-edit these paths.
+/src/app/keystatic/
+/src/app/api/keystatic/
+
+# env files
+.env
+.env*.local
+.env.staging
+
+# misc
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+npm-debug.log*
+
+CLAUDE.md
