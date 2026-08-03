@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)));
 const outDir = join(rootDir, 'out');
 
-const forbidden = [join(outDir, 'keystatic'), join(outDir, 'api')];
+const forbidden = [join(outDir, 'edit'), join(outDir, 'api')];
 
 const found = forbidden.filter((p) => existsSync(p));
 

@@ -4,7 +4,7 @@ import { getNav } from '@/lib/nav';
 import { NavIcon } from '@/components/nav-icon';
 
 // getNav() is called here, not in the root layout, so a nav-build failure
-// can never break the /keystatic admin route tree.
+// can never break the /edit admin route tree.
 export default async function SiteLayout({ children }: { children: ReactNode }) {
   const nav = await getNav();
 

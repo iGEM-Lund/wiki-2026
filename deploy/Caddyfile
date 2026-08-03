@@ -22,9 +22,9 @@ wiki.igemlund.org {
     }
 
     # Optional extra layer on top of Keystatic's own GitHub OAuth gate for
-    # /keystatic. Uncomment and set credentials via `caddy hash-password` if
+    # /edit. Uncomment and set credentials via `caddy hash-password` if
     # the team wants defense-in-depth on a publicly reachable VPS.
-    # @keystaticAdmin path /keystatic* /api/keystatic*
+    # @keystaticAdmin path /edit* /api/keystatic*
     # basicauth @keystaticAdmin {
     #     <username> <bcrypt-hash>
     # }
