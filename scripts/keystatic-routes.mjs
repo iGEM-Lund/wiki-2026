@@ -7,7 +7,7 @@
 // outright, regardless of any runtime feature flag inside it. The only fix
 // is for the files to be physically absent before Next scans the tree.
 //
-// src/app/edit/ and src/app/api/keystatic/ are gitignored — they are
+// src/app/keystatic/ and src/app/api/keystatic/ are gitignored — they are
 // generated artifacts, never the source of truth (that's keystatic-admin/).
 import { existsSync, mkdirSync, copyFileSync, rmSync, readdirSync, rmdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -17,9 +17,9 @@ const rootDir = dirname(dirname(fileURLToPath(import.meta.url)));
 const SOURCE_DIR = join(rootDir, 'keystatic-admin');
 
 const TARGETS = [
-  { from: 'keystatic.tsx', to: 'src/app/edit/keystatic.tsx' },
-  { from: 'layout.tsx', to: 'src/app/edit/layout.tsx' },
-  { from: 'page.tsx', to: 'src/app/edit/[[...params]]/page.tsx' },
+  { from: 'keystatic.tsx', to: 'src/app/keystatic/keystatic.tsx' },
+  { from: 'layout.tsx', to: 'src/app/keystatic/layout.tsx' },
+  { from: 'page.tsx', to: 'src/app/keystatic/[[...params]]/page.tsx' },
   { from: 'route.ts', to: 'src/app/api/keystatic/[...params]/route.ts' },
 ];
 
@@ -34,7 +34,7 @@ function link() {
 }
 
 function unlink() {
-  rmSync(join(rootDir, 'src/app/edit'), { recursive: true, force: true });
+  rmSync(join(rootDir, 'src/app/keystatic'), { recursive: true, force: true });
   rmSync(join(rootDir, 'src/app/api/keystatic'), { recursive: true, force: true });
 
   const apiDir = join(rootDir, 'src/app/api');
