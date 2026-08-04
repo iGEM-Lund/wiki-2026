@@ -6,3 +6,10 @@ items:
     linkMode:
       discriminant: link
       value: welcome
+  - name: Project
+    icon:
+      discriminant: library
+      value: info
+    linkMode:
+      discriminant: link
+      value: project-description
