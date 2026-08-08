@@ -24,7 +24,7 @@ export async function resolveCitedReferences(source: string): Promise<CitedRefer
   const slugs = extractCitedSlugs(source);
   const entries = await Promise.all(
     slugs.map(async (slug) => {
-      const entry = await reader.collections.references.read(slug);
+      const entry = await reader.collections.bibliography.read(slug);
       return entry ? { slug, shortForm: entry.shortForm, longForm: entry.longForm } : null;
     }),
   );
