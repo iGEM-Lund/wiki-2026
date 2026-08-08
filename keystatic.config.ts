@@ -99,6 +99,31 @@ export default config({
         }),
       },
     }),
+    // Bibliography entries, cited from page content via the Citation content
+    // component (see src/lib/keystatic/content-components.tsx). No MDX field
+    // here — just the two forms of a citation — so this is a flat, data-only
+    // collection (one YAML file per entry), the same shape as the navigation
+    // singleton below.
+    references: collection({
+      label: 'References',
+      slugField: 'shortForm',
+      path: 'content/references/*',
+      format: { data: 'yaml' },
+      columns: ['shortForm'],
+      schema: {
+        shortForm: fields.slug({
+          name: {
+            label: 'Short Form',
+            description: 'e.g. "Barker et al. (2020)" — how this reference reads inline.',
+          },
+        }),
+        longForm: fields.text({
+          label: 'Long Form',
+          multiline: true,
+          description: 'Full citation for the References section.',
+        }),
+      },
+    }),
   },
   singletons: {
     // Editorially-curated nav tree — see src/lib/nav.ts (resolves this into
