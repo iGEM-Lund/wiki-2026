@@ -140,3 +140,20 @@ body {
   color: var(--muted);
   font-size: 0.9rem;
 }
+
+.citation {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+.citation--missing {
+  color: #b91c1c;
+}
+
+.references {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.references li {
+  margin: 0.5rem 0;
+}

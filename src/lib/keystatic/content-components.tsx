@@ -53,7 +53,11 @@ export const contentComponents = {
   Citation: inline({
     label: 'Citation',
     schema: {
-      id: fields.text({ label: 'Reference ID' }),
+      reference: fields.relationship({
+        label: 'Reference',
+        collection: 'references',
+        validation: { isRequired: true },
+      }),
     },
   }),
 
