@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { reader } from '@/lib/keystatic/reader';
 import { renderMdx } from '@/lib/mdx/render';
 import { resolveCitedReferences, toReferenceLookup } from '@/lib/references';
+import { buildHeadingTree } from '@/lib/headings';
+import { TableOfContents } from '@/components/table-of-contents';
 
 // Every page on the site — including the mandatory iGEM Standard URL Pages —
 // is a `pages` collection entry, so one route serves all of them.
@@ -23,24 +25,27 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
 
   const source = await entry.content();
   const citedReferences = await resolveCitedReferences(source);
-  const { Content } = await renderMdx(source, toReferenceLookup(citedReferences));
+  const { Content, headings } = await renderMdx(source, toReferenceLookup(citedReferences));
 
   return (
-    <article>
-      <h1>{entry.title}</h1>
-      <Content />
-      {citedReferences.length > 0 ? (
-        <section className="references">
-          <h2>References</h2>
-          <ol>
-            {citedReferences.map((ref) => (
-              <li key={ref.slug} id={`ref-${ref.slug}`}>
-                {ref.longForm}
-              </li>
-            ))}
-          </ol>
-        </section>
-      ) : null}
-    </article>
+    <div className="page-layout">
+      <article>
+        <h1>{entry.title}</h1>
+        <Content />
+        {citedReferences.length > 0 ? (
+          <section className="references">
+            <h2>References</h2>
+            <ol>
+              {citedReferences.map((ref) => (
+                <li key={ref.slug} id={`ref-${ref.slug}`}>
+                  {ref.longForm}
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
+      </article>
+      <TableOfContents headings={buildHeadingTree(headings)} />
+    </div>
   );
 }

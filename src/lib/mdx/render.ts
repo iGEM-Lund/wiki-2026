@@ -1,8 +1,10 @@
 import { evaluate } from '@mdx-js/mdx';
 import * as runtime from 'react/jsx-runtime';
+import rehypeSlug from 'rehype-slug';
 import type { ComponentType } from 'react';
 import { mdxComponents } from '@/components/content';
 import { Citation } from '@/components/content/Citation';
+import { rehypeCollectHeadings, type HeadingItem } from '@/lib/headings';
 
 // fields.mdx() stores raw MDX source text — unlike the older fields.document,
 // there's no pre-parsed document tree to walk, so rendering requires actually
@@ -10,10 +12,15 @@ import { Citation } from '@/components/content/Citation';
 export async function renderMdx(
   source: string,
   referenceLookup: Record<string, { shortForm: string }> = {},
-): Promise<{ Content: ComponentType }> {
+): Promise<{ Content: ComponentType; headings: HeadingItem[] }> {
+  const headings: HeadingItem[] = [];
   const { default: MDXContent } = await evaluate(source, {
     ...runtime,
     baseUrl: import.meta.url,
+    // rehype-slug gives every heading a stable `id` (so the outline's links
+    // and the References section's anchors both resolve); the collector
+    // runs after it to read those ids back out for the page outline.
+    rehypePlugins: [rehypeSlug, [rehypeCollectHeadings, headings]],
   });
 
   // Override Citation with the page's resolved reference lookup bound in —
@@ -26,5 +33,6 @@ export async function renderMdx(
 
   return {
     Content: () => MDXContent({ components }),
+    headings,
   };
 }
