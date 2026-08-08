@@ -59,6 +59,15 @@ export const contentComponents = {
         validation: { isRequired: true },
       }),
     },
+    // ContentView only receives the raw field value — for a relationship
+    // field that's just the target's slug, not its resolved short form
+    // (Keystatic doesn't expose resolved relationship labels to
+    // ContentView) — but the slug is still derived from the short form and
+    // reads well enough to identify the citation at a glance without
+    // opening the editor. The picker itself (opened on click) searches and
+    // lists references by short form, since that's the references
+    // collection's slugField display name.
+    ContentView: (props) => <span>[Citation: {props.value.reference ?? '(none selected)'}]</span>,
   }),
 
   ResultsTable: wrapper({

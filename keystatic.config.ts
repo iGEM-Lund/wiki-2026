@@ -115,12 +115,14 @@ export default config({
           name: {
             label: 'Short Form',
             description: 'e.g. "Barker et al. (2020)" — how this reference reads inline.',
+            validation: { isRequired: true },
           },
         }),
         longForm: fields.text({
           label: 'Long Form',
           multiline: true,
           description: 'Full citation for the References section.',
+          validation: { isRequired: true },
         }),
       },
     }),
