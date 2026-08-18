@@ -104,10 +104,10 @@ export default config({
     // here — just the two forms of a citation — so this is a flat, data-only
     // collection (one YAML file per entry), the same shape as the navigation
     // singleton below.
-    references: collection({
-      label: 'References',
+    bibliography: collection({
+      label: 'Bibliography',
       slugField: 'shortForm',
-      path: 'content/references/*',
+      path: 'content/bibliography/*',
       format: { data: 'yaml' },
       columns: ['shortForm'],
       schema: {

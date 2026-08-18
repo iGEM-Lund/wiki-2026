@@ -55,7 +55,7 @@ export const contentComponents = {
     schema: {
       reference: fields.relationship({
         label: 'Reference',
-        collection: 'references',
+        collection: 'bibliography',
         validation: { isRequired: true },
       }),
     },
