@@ -13,3 +13,10 @@ items:
     linkMode:
       discriminant: link
       value: project-description
+  - name: Human Practices
+    icon:
+      discriminant: library
+      value: circle
+    linkMode:
+      discriminant: link
+      value: human-practices
