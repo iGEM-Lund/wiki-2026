@@ -12,7 +12,7 @@ items:
       value: info
     linkMode:
       discriminant: link
-      value: project-description
+      value: project
   - name: Human Practices
     icon:
       discriminant: library
@@ -20,3 +20,9 @@ items:
     linkMode:
       discriminant: link
       value: human-practices
+  - name: Engineering
+    icon:
+      discriminant: library
+      value: test-tubes
+    linkMode:
+      discriminant: link
