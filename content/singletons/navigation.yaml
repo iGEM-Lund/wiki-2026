@@ -26,6 +26,7 @@ items:
       value: test-tubes
     linkMode:
       discriminant: link
+      value: engineering
   - name: Engagement
     icon:
       discriminant: library
@@ -40,3 +41,24 @@ items:
     linkMode:
       discriminant: link
       value: sustainability
+  - name: Education
+    icon:
+      discriminant: library
+      value: book
+    linkMode:
+      discriminant: link
+      value: education
+  - name: Collaborations
+    icon:
+      discriminant: library
+      value: circle
+    linkMode:
+      discriminant: link
+      value: collaborations
+  - name: People
+    icon:
+      discriminant: library
+      value: person-standing
+    linkMode:
+      discriminant: link
+      value: people
