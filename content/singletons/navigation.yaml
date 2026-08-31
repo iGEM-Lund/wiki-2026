@@ -13,13 +13,6 @@ items:
     linkMode:
       discriminant: link
       value: project
-  - name: Human Practices
-    icon:
-      discriminant: library
-      value: circle
-    linkMode:
-      discriminant: link
-      value: human-practices
   - name: Engineering
     icon:
       discriminant: library
@@ -34,6 +27,13 @@ items:
     linkMode:
       discriminant: link
       value: engagement
+  - name: Human Practices
+    icon:
+      discriminant: library
+      value: circle
+    linkMode:
+      discriminant: link
+      value: human-practices
   - name: Sustainability
     icon:
       discriminant: library
