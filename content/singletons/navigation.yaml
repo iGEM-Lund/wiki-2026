@@ -5,7 +5,7 @@ items:
       value: circle
     linkMode:
       discriminant: link
-      value: welcome
+      value: home_page
   - name: Project
     icon:
       discriminant: library
@@ -33,3 +33,10 @@ items:
     linkMode:
       discriminant: link
       value: engagement
+  - name: Sustainability
+    icon:
+      discriminant: library
+      value: bird
+    linkMode:
+      discriminant: link
+      value: sustainability
