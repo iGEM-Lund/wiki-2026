@@ -26,3 +26,10 @@ items:
       value: test-tubes
     linkMode:
       discriminant: link
+  - name: Engagement
+    icon:
+      discriminant: library
+      value: handshake
+    linkMode:
+      discriminant: link
+      value: engagement
