@@ -3,6 +3,8 @@ import { ProtocolBox } from './ProtocolBox';
 import { FigureWithCaption } from './FigureWithCaption';
 import { Citation } from './Citation';
 import { ResultsTable } from './ResultsTable';
+import { Formula } from './Formula';
+import { FormulaBlock } from './FormulaBlock';
 
 // Site-render map, used by src/lib/mdx/render.ts. Kept in sync by hand with
 // the editor-side registration in src/lib/keystatic/content-components.tsx —
@@ -14,4 +16,6 @@ export const mdxComponents = {
   FigureWithCaption,
   Citation,
   ResultsTable,
+  Formula,
+  FormulaBlock,
 };
