@@ -149,6 +149,12 @@ body {
   color: #b91c1c;
 }
 
+.formula--block {
+  margin: 1rem 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
 .references {
   margin-top: 2rem;
   padding-top: 1rem;
