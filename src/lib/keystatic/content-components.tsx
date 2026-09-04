@@ -40,7 +40,18 @@ export const contentComponents = {
     // opening the editor. The picker itself (opened on click) searches and
     // lists references by short form, since that's the references
     // collection's slugField display name.
-    ContentView: (props) => <span>[Citation: {props.value.reference ?? '(none selected)'}]</span>,
+    //
+    // Styled with the same `citation`/`citation--missing` classes the live
+    // site's Citation component uses (src/components/content/Citation.tsx,
+    // globals.css), so the in-editor preview looks like the real in-text
+    // citation rather than a bracketed placeholder.
+    ContentView: (props) => {
+      const slug = props.value.reference;
+      if (!slug) {
+        return <span className="citation citation--missing">[missing reference]</span>;
+      }
+      return <span className="citation">{slug.replace(/-/g, ' ')}</span>;
+    },
   }),
 
   Formula: inline({
