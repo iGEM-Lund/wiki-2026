@@ -1,5 +1,5 @@
 import { fields } from '@keystatic/core';
-import { block, wrapper, inline } from '@keystatic/core/content-components';
+import { block, inline } from '@keystatic/core/content-components';
 import { renderLatexToHtml } from '@/lib/katex';
 import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/chemistry';
 
@@ -7,38 +7,9 @@ import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/ch
 // MDX field's toolbar and how each component previews inside the Keystatic
 // admin UI. The site's actual rendering uses a SEPARATE map — see
 // src/components/content/index.ts. Both maps must share the same key names
-// (Callout, ProtocolBox, FigureWithCaption, Citation, ResultsTable) so the
-// MDX tags written here resolve correctly when rendered on the live site.
+// (FigureWithCaption, Citation) so the MDX tags written here resolve
+// correctly when rendered on the live site.
 export const contentComponents = {
-  Callout: block({
-    label: 'Callout',
-    schema: {
-      tone: fields.select({
-        label: 'Tone',
-        options: [
-          { label: 'Info', value: 'info' },
-          { label: 'Warning', value: 'warning' },
-          { label: 'Success', value: 'success' },
-        ],
-        defaultValue: 'info',
-      }),
-      text: fields.text({ label: 'Text', multiline: true }),
-    },
-    ContentView: (props) => (
-      <div>
-        [Callout: {props.value.tone}] {props.value.text}
-      </div>
-    ),
-  }),
-
-  ProtocolBox: wrapper({
-    label: 'Protocol Box',
-    schema: {
-      title: fields.text({ label: 'Title' }),
-    },
-    ContentView: (props) => <div>{props.children}</div>,
-  }),
-
   FigureWithCaption: block({
     label: 'Figure',
     schema: {
@@ -70,14 +41,6 @@ export const contentComponents = {
     // lists references by short form, since that's the references
     // collection's slugField display name.
     ContentView: (props) => <span>[Citation: {props.value.reference ?? '(none selected)'}]</span>,
-  }),
-
-  ResultsTable: wrapper({
-    label: 'Results Table',
-    schema: {
-      caption: fields.text({ label: 'Caption' }),
-    },
-    ContentView: (props) => <div>{props.children}</div>,
   }),
 
   Formula: inline({

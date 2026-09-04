@@ -104,24 +104,6 @@ body {
   font-size: 0.85rem;
 }
 
-.callout {
-  border: 1px solid var(--border);
-  border-left-width: 4px;
-  padding: 0.75rem 1rem;
-  border-radius: 4px;
-  margin: 1rem 0;
-}
-.callout--info { border-left-color: #3b82f6; }
-.callout--warning { border-left-color: #f59e0b; }
-.callout--success { border-left-color: #22c55e; }
-
-.protocol-box {
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1rem;
-  margin: 1rem 0;
-}
-
 .figure-with-caption {
   margin: 1rem 0;
 }
@@ -129,14 +111,6 @@ body {
   max-width: 100%;
 }
 .figure-with-caption figcaption {
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.results-table {
-  margin: 1rem 0;
-}
-.results-table__caption {
   color: var(--muted);
   font-size: 0.9rem;
 }
