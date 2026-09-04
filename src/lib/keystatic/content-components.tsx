@@ -1,6 +1,7 @@
 import { fields } from '@keystatic/core';
 import { block, wrapper, inline } from '@keystatic/core/content-components';
 import { renderLatexToHtml } from '@/lib/katex';
+import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/chemistry';
 
 // Editor-side registration only: these govern what writers can insert in the
 // MDX field's toolbar and how each component previews inside the Keystatic
@@ -106,6 +107,36 @@ export const contentComponents = {
     },
     ContentView: (props) => (
       <div dangerouslySetInnerHTML={{ __html: renderLatexToHtml(props.value.latex ?? '', true) }} />
+    ),
+  }),
+
+  ChemStructure: block({
+    label: 'Chemical Structure',
+    schema: {
+      smiles: fields.text({
+        label: 'SMILES',
+        description:
+          'A SMILES string, e.g. testosterone: C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@@H]2O)CCC4=CC(=O)CC[C@]34C — rendered as a 2D structure.',
+      }),
+      caption: fields.text({ label: 'Caption (optional)' }),
+    },
+    ContentView: (props) => (
+      <div dangerouslySetInnerHTML={{ __html: renderSmilesToStructureSvg(props.value.smiles ?? '') }} />
+    ),
+  }),
+
+  ChemReaction: block({
+    label: 'Chemical Reaction',
+    schema: {
+      smiles: fields.text({
+        label: 'Reaction SMILES',
+        description:
+          'Reactants and products separated by ">>", multiple components on a side separated by ".". e.g. ethanol + acetic acid -> ethyl acetate + water: CCO.CC(=O)O>>CCOC(=O)C.O',
+      }),
+      caption: fields.text({ label: 'Caption (optional)' }),
+    },
+    ContentView: (props) => (
+      <div dangerouslySetInnerHTML={{ __html: renderReactionSmilesToHtml(props.value.smiles ?? '') }} />
     ),
   }),
 };
