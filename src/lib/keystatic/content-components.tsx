@@ -113,4 +113,46 @@ export const contentComponents = {
       <div dangerouslySetInnerHTML={{ __html: renderReactionSmilesToHtml(props.value.smiles ?? '') }} />
     ),
   }),
+
+  // Renders as a live WebGL viewer only on the published/staging site (see
+  // src/components/content/MoleculeViewer.tsx) — the editor preview below
+  // stays a static placeholder rather than spinning up a real 3Dmol
+  // instance per keystroke.
+  MoleculeViewer: block({
+    label: '3D Molecule Viewer',
+    schema: {
+      modelUrl: fields.url({
+        label: 'Model file URL',
+        description:
+          'Upload via tools.igem.org/uploads, then paste the static.igem.wiki URL here (PDB, mmCIF, SDF, MOL2, or XYZ format).',
+      }),
+      format: fields.select({
+        label: 'File format',
+        options: [
+          { label: 'PDB', value: 'pdb' },
+          { label: 'mmCIF', value: 'cif' },
+          { label: 'SDF', value: 'sdf' },
+          { label: 'MOL2', value: 'mol2' },
+          { label: 'XYZ', value: 'xyz' },
+        ],
+        defaultValue: 'pdb',
+      }),
+      style: fields.select({
+        label: 'Rendering style',
+        options: [
+          { label: 'Cartoon', value: 'cartoon' },
+          { label: 'Stick', value: 'stick' },
+          { label: 'Sphere', value: 'sphere' },
+          { label: 'Line', value: 'line' },
+        ],
+        defaultValue: 'cartoon',
+      }),
+      caption: fields.text({ label: 'Caption (optional)' }),
+    },
+    ContentView: (props) => (
+      <div>
+        [3D Model{props.value.caption ? `: ${props.value.caption}` : ''} ({props.value.format})]
+      </div>
+    ),
+  }),
 };
