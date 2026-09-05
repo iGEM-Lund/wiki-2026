@@ -11,8 +11,10 @@ items:
       discriminant: library
       value: info
     linkMode:
-      discriminant: link
-      value: project
+      discriminant: dropdown
+      value:
+        - label: Project_drop_down
+          target: project
   - name: Engineering
     icon:
       discriminant: library
@@ -32,8 +34,8 @@ items:
       discriminant: library
       value: circle
     linkMode:
-      discriminant: link
-      value: human-practices
+      discriminant: dropdown
+      value: []
   - name: Sustainability
     icon:
       discriminant: library
@@ -68,3 +70,4 @@ items:
       value: clock
     linkMode:
       discriminant: link
+      value: contributions
