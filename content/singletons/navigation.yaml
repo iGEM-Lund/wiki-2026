@@ -39,41 +39,15 @@ items:
           target: education
         - label: Collaborations
           target: collaborations
-  - name: Human Practices
-    icon:
-      discriminant: library
-      value: circle
-    linkMode:
-      discriminant: dropdown
-      value: []
-  - name: Sustainability
-    icon:
-      discriminant: library
-      value: bird
-    linkMode:
-      discriminant: link
-      value: sustainability
-  - name: Education
-    icon:
-      discriminant: library
-      value: book
-    linkMode:
-      discriminant: link
-      value: education
-  - name: Collaborations
-    icon:
-      discriminant: library
-      value: circle
-    linkMode:
-      discriminant: link
-      value: collaborations
   - name: People
     icon:
       discriminant: library
       value: person-standing
     linkMode:
-      discriminant: link
-      value: people
+      discriminant: dropdown
+      value:
+        - label: People
+          target: people
   - name: Contributions
     icon:
       discriminant: library
