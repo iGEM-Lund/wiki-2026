@@ -13,7 +13,7 @@ items:
     linkMode:
       discriminant: dropdown
       value:
-        - label: Project_drop_down
+        - label: Project
           target: project
   - name: Engineering
     icon:
@@ -27,8 +27,18 @@ items:
       discriminant: library
       value: handshake
     linkMode:
-      discriminant: link
-      value: engagement
+      discriminant: dropdown
+      value:
+        - label: Engagement
+          target: engagement
+        - label: Sustainability
+          target: sustainability
+        - label: Human Practices
+          target: human-practices
+        - label: Education
+          target: education
+        - label: Collaborations
+          target: collaborations
   - name: Human Practices
     icon:
       discriminant: library
