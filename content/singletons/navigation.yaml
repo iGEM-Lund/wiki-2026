@@ -62,3 +62,9 @@ items:
     linkMode:
       discriminant: link
       value: people
+  - name: Contributions
+    icon:
+      discriminant: library
+      value: clock
+    linkMode:
+      discriminant: link
