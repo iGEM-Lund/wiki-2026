@@ -20,8 +20,12 @@ items:
       discriminant: library
       value: test-tubes
     linkMode:
-      discriminant: link
-      value: engineering
+      discriminant: dropdown
+      value:
+        - label: DBTL
+          target: engineering
+        - label: Safety
+          target: safety
   - name: Engagement
     icon:
       discriminant: library
