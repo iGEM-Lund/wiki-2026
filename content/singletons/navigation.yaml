@@ -29,14 +29,14 @@ items:
     linkMode:
       discriminant: dropdown
       value:
-        - label: Collaborations
-          target: collaborations
-        - label: Education
-          target: education
         - label: Human Practices
           target: human-practices
         - label: Sustainability
           target: sustainability
+        - label: Education
+          target: education
+        - label: Collaborations
+          target: collaborations
   - name: People
     icon:
       discriminant: library
