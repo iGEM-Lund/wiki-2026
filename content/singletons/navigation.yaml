@@ -53,3 +53,10 @@ items:
     linkMode:
       discriminant: link
       value: contributions
+  - name: Home Page
+    icon:
+      discriminant: library
+      value: circle
+    linkMode:
+      discriminant: link
+      value: home_page
