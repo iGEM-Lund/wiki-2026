@@ -63,4 +63,4 @@ items:
       value: circle
     linkMode:
       discriminant: link
-      value: awards
+      value: awards_won
