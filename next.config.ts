@@ -4,6 +4,12 @@ const isProductionExport = process.env.BUILD_TARGET === 'production';
 
 const nextConfig: NextConfig = {
   output: isProductionExport ? 'export' : undefined,
+  // iGEM serves the published export at https://2026.igem.wiki/lund/, not
+  // at that domain's root — without this, every generated asset URL and
+  // internal link is root-relative and 404s once live. Must stay unset for
+  // staging, which serves from wiki.igemlund.org's root.
+  basePath: isProductionExport ? '/lund' : undefined,
+  assetPrefix: isProductionExport ? '/lund' : undefined,
   // Content images are always external static.igem.wiki URLs rendered via
   // plain <img> in content components — Image Optimization is a server-only
   // runtime feature that provides no value here and must be off for export.
