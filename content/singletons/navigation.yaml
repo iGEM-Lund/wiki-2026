@@ -21,7 +21,6 @@ items:
           target: project_results
         - label: POC
           target: project_proof-of-concept
-        - target: project-description
   - name: Engineering
     icon:
       discriminant: library
