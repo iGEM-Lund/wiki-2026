@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 # Mirrors this repo's `main` to iGEM's GitLab repo (gitlab.igem.org/2026/lund),
 # which iGEM's own .gitlab-ci.yml then builds and publishes via GitLab Pages.
-# That repo is a frozen mirror of this codebase's source — iGEM does not
-# accept pre-built HTML — so a force-push here is expected, not a mistake.
+# iGEM does not accept pre-built HTML.
+#
+# `main` on GitLab is protected against force pushes (and teams don't get
+# Settings access to change that), so this doesn't force-push. Instead it
+# builds a merge commit — tree content exactly this repo's `main`, but with
+# GitLab's current main tip as first parent — so publishing is always a
+# fast-forward from GitLab's point of view. That also leaves a real commit
+# history of every publish on GitLab's side, instead of erasing it each time.
 #
 # Manual and deliberate by design: a push here immediately triggers a rebuild
 # of the live, judged wiki, so this is never wired into CI. Run it yourself
@@ -49,7 +55,7 @@ BUILD_TARGET=production npm run build
 node scripts/verify-export.mjs
 
 echo
-echo "This will force-push 'main' to iGEM's GitLab repo, which immediately"
+echo "This will publish 'main' to iGEM's GitLab repo, which immediately"
 echo "rebuilds and republishes the live, judged wiki at gitlab.igem.org/2026/lund."
 read -r -p "Continue? [y/N] " confirm
 if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
@@ -63,8 +69,16 @@ else
   git remote add gitlab "$GITLAB_REMOTE_URL"
 fi
 
-echo "==> Pushing main -> gitlab/main (force)"
-git push --force gitlab main:main
+echo "==> Fetching GitLab's current main"
+git fetch gitlab main
+gitlab_main_sha="$(git rev-parse FETCH_HEAD)"
+local_tree="$(git rev-parse "$local_sha^{tree}")"
+
+echo "==> Building publish commit (fast-forward from GitLab's current main, no force-push needed)"
+merge_commit="$(git commit-tree "$local_tree" -p "$gitlab_main_sha" -p "$local_sha" -m "Publish $(git rev-parse --short "$local_sha") to iGEM GitLab")"
+
+echo "==> Pushing to gitlab/main"
+git push gitlab "$merge_commit:refs/heads/main"
 
 echo
 echo "Pushed. Check the pipeline at:"
