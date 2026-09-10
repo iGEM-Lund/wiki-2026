@@ -40,6 +40,9 @@ if [[ "$local_sha" != "$origin_sha" ]]; then
   exit 1
 fi
 
+echo "==> Installing dependencies (npm ci)"
+npm ci
+
 echo "==> Running local production build (pre-flight check; iGEM's CI rebuilds this itself)"
 BUILD_TARGET=production npm run build
 node scripts/verify-export.mjs
