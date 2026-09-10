@@ -9,24 +9,17 @@
 # when you actually mean to publish (see README.md, "Pushing to production
 # (iGEM GitLab)").
 #
-# Requires a GitLab deploy key (write access) registered on the GitLab repo.
-# Defaults to ~/.ssh/igem_gitlab_deploy; override with GITLAB_DEPLOY_SSH_KEY.
+# Uses your normal SSH setup (agent / default identity / ~/.ssh/config) by
+# default — just make sure the key it'll use is registered on your GitLab
+# account (or as a project deploy key) with write access to that repo. Set
+# GITLAB_DEPLOY_SSH_KEY to pin a specific key instead, e.g. if you'd rather
+# use a dedicated deploy-only key.
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
 GITLAB_REMOTE_URL="git@gitlab.igem.org:2026/lund.git"
-SSH_KEY="${GITLAB_DEPLOY_SSH_KEY:-$HOME/.ssh/igem_gitlab_deploy}"
-
-if [[ ! -f "$SSH_KEY" ]]; then
-  echo "error: deploy SSH key not found at $SSH_KEY" >&2
-  echo "  Generate one and register its public half as a GitLab deploy key" >&2
-  echo "  (write access) on gitlab.igem.org/2026/lund, or point" >&2
-  echo "  GITLAB_DEPLOY_SSH_KEY at an existing key. See README.md, 'Pushing" >&2
-  echo "  to production (iGEM GitLab)'." >&2
-  exit 1
-fi
 
 current_branch="$(git rev-parse --abbrev-ref HEAD)"
 if [[ "$current_branch" != "main" ]]; then
@@ -67,7 +60,11 @@ else
 fi
 
 echo "==> Pushing main -> gitlab/main (force)"
-GIT_SSH_COMMAND="ssh -i $SSH_KEY -o IdentitiesOnly=yes" git push --force gitlab main:main
+if [[ -n "${GITLAB_DEPLOY_SSH_KEY:-}" ]]; then
+  GIT_SSH_COMMAND="ssh -i $GITLAB_DEPLOY_SSH_KEY -o IdentitiesOnly=yes" git push --force gitlab main:main
+else
+  git push --force gitlab main:main
+fi
 
 echo
 echo "Pushed. Check the pipeline at:"

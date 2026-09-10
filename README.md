@@ -130,11 +130,12 @@ The script:
    `node scripts/verify-export.mjs` locally first, as an early signal before
    iGEM's own pipeline rebuilds it.
 3. Prompts for confirmation, then force-pushes `main` to
-   `git@gitlab.igem.org:2026/lund.git` over SSH, using a dedicated deploy key
-   (default `~/.ssh/igem_gitlab_deploy`, overridable via
-   `GITLAB_DEPLOY_SSH_KEY`). Generate a keypair and register the public half
-   as a GitLab deploy key with write access under that repo's
-   Settings → Repository → Deploy keys.
+   `git@gitlab.igem.org:2026/lund.git` over SSH, using your normal SSH setup
+   (agent / default identity) by default — just make sure whichever key
+   that resolves to is registered on your `gitlab.igem.org` account (or as a
+   project deploy key) with write access to `2026/lund`. Set
+   `GITLAB_DEPLOY_SSH_KEY` to pin a specific key instead, e.g. for a
+   dedicated deploy-only key.
 
 Once pushed, iGEM's GitLab CI takes over: our `.gitlab-ci.yml` runs three
 stages — `build` (`npm ci && npm run build`), `verify`
