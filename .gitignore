@@ -21,6 +21,7 @@
 *.tsbuildinfo
 next-env.d.ts
 npm-debug.log*
+.idea/
 
 CLAUDE.md
 .claude/
