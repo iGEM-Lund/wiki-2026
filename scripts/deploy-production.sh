@@ -9,17 +9,18 @@
 # when you actually mean to publish (see README.md, "Pushing to production
 # (iGEM GitLab)").
 #
-# Uses your normal SSH setup (agent / default identity / ~/.ssh/config) by
-# default — just make sure the key it'll use is registered on your GitLab
-# account (or as a project deploy key) with write access to that repo. Set
-# GITLAB_DEPLOY_SSH_KEY to pin a specific key instead, e.g. if you'd rather
-# use a dedicated deploy-only key.
+# Pushes over HTTPS, not SSH: iGEM's GitLab serves its web/git-http traffic
+# through CloudFront, which doesn't proxy raw SSH — port 22 just hangs,
+# regardless of local network. Auth comes from a GitLab access token
+# (write_repository scope) stored in ~/.netrc, which git's http backend
+# reads automatically — no env var to export on every run. See README.md,
+# "Pushing to production (iGEM GitLab)" for how to set that up.
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-GITLAB_REMOTE_URL="git@gitlab.igem.org:2026/lund.git"
+GITLAB_REMOTE_URL="https://gitlab.igem.org/2026/lund.git"
 
 current_branch="$(git rev-parse --abbrev-ref HEAD)"
 if [[ "$current_branch" != "main" ]]; then
@@ -63,11 +64,7 @@ else
 fi
 
 echo "==> Pushing main -> gitlab/main (force)"
-if [[ -n "${GITLAB_DEPLOY_SSH_KEY:-}" ]]; then
-  GIT_SSH_COMMAND="ssh -i $GITLAB_DEPLOY_SSH_KEY -o IdentitiesOnly=yes" git push --force gitlab main:main
-else
-  git push --force gitlab main:main
-fi
+git push --force gitlab main:main
 
 echo
 echo "Pushed. Check the pipeline at:"
