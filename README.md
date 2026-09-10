@@ -114,9 +114,15 @@ git pull && npm ci && npm run build:staging && sudo systemctl restart igem-wiki
 iGEM auto-provisions `gitlab.igem.org/2026/lund`, pre-seeded with their own
 Vite/React starter template (including its own `.gitlab-ci.yml`, which builds
 that template with `yarn`). We don't use that template — instead we mirror
-*this* codebase there, force-pushing `main` over whatever's there, which
-replaces the entire tree (their starter's `.gitlab-ci.yml` included) with
-ours.
+*this* codebase there, replacing the entire tree (their starter's
+`.gitlab-ci.yml` included) with ours.
+
+`main` on GitLab is protected against force pushes, and teams don't get
+Settings access to loosen that — so the mirror isn't a force push. It's a
+generated merge commit whose *tree* is exactly this repo's `main`, but whose
+first parent is whatever GitLab's `main` currently points to, making every
+publish a legitimate fast-forward from GitLab's side. Side benefit: GitLab
+ends up with a real history of every publish, instead of losing it each time.
 
 Run `npm run deploy:production` (or `bash scripts/deploy-production.sh`
 directly) from a clean, up-to-date `main`. It's deliberately manual, not
@@ -129,8 +135,8 @@ The script:
 2. Runs `npm ci`, then `BUILD_TARGET=production npm run build` and
    `node scripts/verify-export.mjs` locally first, as an early signal before
    iGEM's own pipeline rebuilds it.
-3. Prompts for confirmation, then force-pushes `main` to
-   `https://gitlab.igem.org/2026/lund.git`.
+3. Prompts for confirmation, then builds and pushes the merge commit
+   described above to `https://gitlab.igem.org/2026/lund.git`.
 
 **Auth is HTTPS + an access token, not SSH** — iGEM's GitLab serves its
 web/git-http traffic through CloudFront, which doesn't proxy raw SSH (port
