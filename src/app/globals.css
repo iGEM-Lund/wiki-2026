@@ -1,7 +1,19 @@
 :root {
   color-scheme: light dark;
-  --border: #d0d0d0;
-  --muted: #666;
+
+  /* AnTigone brand kit (Canva) — teal palette is primary, pink is secondary. */
+  --color-pearl: #fef8f4;
+  --color-shallows: #e8f4f4;
+  --color-peacock: #008080;
+  --color-depths: #004747;
+  --color-truffle: #1a1a18;
+  --color-noir: #121212;
+  --color-blush: #f7e0e6;
+  --color-rose: #d4a0b0;
+  --color-crimson: #7e0c28;
+
+  --font-heading: 'Fredoka', system-ui, sans-serif;
+  --font-body: 'Poppins', system-ui, sans-serif;
 }
 
 * {
@@ -15,9 +27,104 @@ body {
 }
 
 .site {
+  /* Light mode: pale surface (Pearl/Shallows), Depths for headings, Truffle
+     for body text — the brand guideline's "dark text on a pale background". */
+  --bg: var(--color-pearl);
+  --bg-alt: var(--color-shallows);
+  --text: var(--color-truffle);
+  --heading: var(--color-depths);
+  --accent: var(--color-peacock);
+  --error: var(--color-crimson);
+  --border: color-mix(in srgb, var(--text) 25%, var(--bg));
+  --muted: color-mix(in srgb, var(--text) 60%, var(--bg));
+
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+}
+
+@media (prefers-color-scheme: dark) {
+  .site {
+    /* Dark mode: Truffle-over-Noir surfaces, pale text — the guideline's
+       "pale text on a dark background" mode, never mixed with light mode. */
+    --bg: var(--color-noir);
+    --bg-alt: var(--color-truffle);
+    --text: var(--color-pearl);
+    --heading: var(--color-shallows);
+    /* Crimson fails contrast on Noir; Rose (same pink palette) is the
+       accessible stand-in for error/missing states in dark mode. */
+    --error: var(--color-rose);
+  }
+}
+
+/* Explicit choice from the header toggle overrides prefers-color-scheme —
+   higher specificity than both the plain and media-queried .site rules. */
+:root[data-theme='light'] .site {
+  --bg: var(--color-pearl);
+  --bg-alt: var(--color-shallows);
+  --text: var(--color-truffle);
+  --heading: var(--color-depths);
+  --error: var(--color-crimson);
+}
+:root[data-theme='dark'] .site {
+  --bg: var(--color-noir);
+  --bg-alt: var(--color-truffle);
+  --text: var(--color-pearl);
+  --heading: var(--color-shallows);
+  --error: var(--color-rose);
+}
+
+.site h1,
+.site h2,
+.site h3,
+.site h4,
+.site h5,
+.site h6 {
+  font-family: var(--font-heading);
+  color: var(--heading);
+  line-height: 1.2;
+  margin: 1.5em 0 0.5em;
+}
+/* Sizes adapted from the brand guideline's print-point scale (Title 60pt /
+   Heading 32pt / Subtitle 24pt / Section Header 16pt / Subheading 12pt) to a
+   readable web scale, keeping the same hierarchy and weights. */
+.site h1 {
+  font-size: 2.25rem;
+  font-weight: 600;
+}
+.site h2 {
+  font-size: 1.75rem;
+  font-weight: 500;
+}
+.site h3 {
+  font-size: 1.375rem;
+  font-weight: 500;
+}
+.site h4 {
+  font-size: 1.125rem;
+  font-weight: 400;
+}
+.site h5,
+.site h6 {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.site a {
+  color: var(--heading);
+}
+.site a:hover {
+  color: var(--accent);
+}
+
+.site blockquote {
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.0625rem;
 }
 
 .site__header {
@@ -29,9 +136,24 @@ body {
 }
 
 .site__brand {
-  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
   text-decoration: none;
   color: inherit;
+}
+.site__brand-name {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--heading);
+}
+.site__brand-team {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
 }
 
 .site__nav {
@@ -56,7 +178,7 @@ body {
   display: none;
 }
 .site__nav-item:hover {
-  background: color-mix(in srgb, var(--muted) 12%, transparent);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 .site__nav-dropdown {
@@ -73,7 +195,7 @@ body {
   list-style: none;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: Canvas;
+  background: var(--bg-alt);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 10;
 }
@@ -88,7 +210,27 @@ body {
   color: inherit;
 }
 .site__nav-dropdown-menu a:hover {
-  background: color-mix(in srgb, var(--muted) 12%, transparent);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+.site__theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-left: auto;
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--heading);
+  cursor: pointer;
+}
+.site__theme-toggle:hover {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .site__main {
@@ -112,7 +254,8 @@ body {
 }
 .figure-with-caption figcaption {
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 200;
 }
 
 .citation {
@@ -120,7 +263,7 @@ body {
   text-decoration-style: dotted;
 }
 .citation--missing {
-  color: #b91c1c;
+  color: var(--error);
 }
 
 .formula--block {
@@ -153,7 +296,7 @@ body {
   flex: 0 0 auto;
 }
 .chem-structure__error {
-  color: #b91c1c;
+  color: var(--error);
 }
 
 .molecule-viewer {
@@ -170,11 +313,12 @@ body {
   padding: 0.75rem;
   border: 1px solid var(--border);
   border-radius: 4px;
-  color: #b91c1c;
+  color: var(--error);
 }
 .molecule-viewer figcaption {
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 200;
   margin-top: 0.5rem;
 }
 
@@ -203,7 +347,8 @@ body {
   font-size: 0.9rem;
 }
 .toc__title {
-  font-weight: 600;
+  font-family: var(--font-heading);
+  font-weight: 500;
   margin: 0 0 0.5rem;
 }
 .toc ol {
