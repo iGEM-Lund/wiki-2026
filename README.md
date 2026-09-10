@@ -111,10 +111,36 @@ git pull && npm ci && npm run build:staging && sudo systemctl restart igem-wiki
 
 ## Pushing to production (iGEM GitLab)
 
-Push/mirror this codebase to the iGEM-provided GitLab repo. `.gitlab-ci.yml`
-runs three stages: `build` (`npm ci && npm run build`), `verify`
+iGEM auto-provisions `gitlab.igem.org/2026/lund`, pre-seeded with their own
+Vite/React starter template (including its own `.gitlab-ci.yml`, which builds
+that template with `yarn`). We don't use that template — instead we mirror
+*this* codebase there, force-pushing `main` over whatever's there, which
+replaces the entire tree (their starter's `.gitlab-ci.yml` included) with
+ours.
+
+Run `npm run deploy:production` (or `bash scripts/deploy-production.sh`
+directly) from a clean, up-to-date `main`. It's deliberately manual, not
+CI-automated — a push to GitLab immediately rebuilds and republishes the
+live, judged wiki, so it should only happen when someone means to publish.
+The script:
+
+1. Refuses to run unless you're on `main` with a clean tree matching
+   `origin/main`.
+2. Runs `BUILD_TARGET=production npm run build` and
+   `node scripts/verify-export.mjs` locally first, as an early signal before
+   iGEM's own pipeline rebuilds it.
+3. Prompts for confirmation, then force-pushes `main` to
+   `git@gitlab.igem.org:2026/lund.git` over SSH, using a dedicated deploy key
+   (default `~/.ssh/igem_gitlab_deploy`, overridable via
+   `GITLAB_DEPLOY_SSH_KEY`). Generate a keypair and register the public half
+   as a GitLab deploy key with write access under that repo's
+   Settings → Repository → Deploy keys.
+
+Once pushed, iGEM's GitLab CI takes over: our `.gitlab-ci.yml` runs three
+stages — `build` (`npm ci && npm run build`), `verify`
 (`scripts/verify-export.mjs`, which fails the pipeline if `out/keystatic` or
-`out/api` ever exist), and `pages` (publishes `out/` as GitLab Pages).
+`out/api` ever exist), and `pages` (publishes `out/` as GitLab Pages). Check
+progress at `https://gitlab.igem.org/2026/lund/-/pipelines`.
 
 ## End-to-end test checklist
 
@@ -129,11 +155,13 @@ Run this early, before content volume ramps up:
 - [ ] Confirm no browser network request goes to any non-bundled origin except
       `static.igem.wiki` images and the iGEM Video Universe embed
 
-Two things this checklist should specifically surface, since they haven't been
+One thing this checklist should specifically surface, since it hasn't been
 verified against iGEM's actual hosting yet: whether GitLab Pages' URL/trailing-
-slash behavior matches `next.config.ts`'s `trailingSlash: true` assumption, and
-whether iGEM's GitLab pre-seeds repos with a required starter
-`.gitlab-ci.yml` that needs reconciling with this one.
+slash behavior matches `next.config.ts`'s `trailingSlash: true` assumption.
+
+(iGEM's GitLab does pre-seed repos with their own starter `.gitlab-ci.yml` —
+confirmed by inspecting the template. `deploy-production.sh`'s mirror push
+resolves this by replacing the whole tree, that file included, with ours.)
 
 ## Troubleshooting
 

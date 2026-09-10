@@ -10,6 +10,7 @@
     "start:staging": "cross-env BUILD_TARGET=staging next start -p 3000",
     "prebuild": "node scripts/keystatic-routes.mjs unlink",
     "build": "npm run prebuild && cross-env BUILD_TARGET=production next build",
+    "deploy:production": "bash scripts/deploy-production.sh",
     "typecheck": "tsc --noEmit",
     "generate:icons": "node scripts/generate-icon-names.mjs"
   },
