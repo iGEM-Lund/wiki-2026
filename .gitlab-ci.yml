@@ -4,10 +4,10 @@
 # package.json + scripts/keystatic-routes.mjs): it strips Keystatic's admin
 # routes before `next build` runs with BUILD_TARGET=production, output:'export'.
 #
-# Open question before first real deploy: confirm whether iGEM pre-seeds
-# this repo with its own required .gitlab-ci.yml (some seasons ship a starter
-# Pages template) that needs reconciling with this one, rather than being
-# fully replaced by it.
+# iGEM's GitLab does pre-seed the repo with its own starter .gitlab-ci.yml
+# (a Vite/yarn Pages template) — confirmed by inspecting the template.
+# scripts/deploy-production.sh's mirror push replaces the whole tree,
+# this file included, so it fully overwrites theirs; no reconciling needed.
 stages:
   - build
   - verify
