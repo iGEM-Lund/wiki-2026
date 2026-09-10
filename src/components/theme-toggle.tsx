@@ -5,18 +5,16 @@ import { Moon, Sun } from 'lucide-react';
 
 type Theme = 'light' | 'dark';
 
-function currentSystemTheme(): Theme {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
 export function ThemeToggle() {
-  // Starts light to match the server-rendered markup; the effect corrects it
-  // immediately from localStorage/system preference before the user notices.
+  // Light is the default whenever nothing is stored yet — the site doesn't
+  // follow prefers-color-scheme, so this also matches the initial render.
   const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
     const stored = localStorage.getItem('theme');
-    setTheme(stored === 'light' || stored === 'dark' ? stored : currentSystemTheme());
+    if (stored === 'light' || stored === 'dark') {
+      setTheme(stored);
+    }
   }, []);
 
   function toggle() {

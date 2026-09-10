@@ -1,5 +1,7 @@
 :root {
-  color-scheme: light dark;
+  /* Light is the preferred default regardless of OS preference; dark is
+     opt-in only, via the header toggle (see the data-theme rules below). */
+  color-scheme: light;
 
   /* AnTigone brand kit (Canva) — teal palette is primary, pink is secondary. */
   --color-pearl: #fef8f4;
@@ -47,34 +49,20 @@ body {
   font-weight: 300;
 }
 
-@media (prefers-color-scheme: dark) {
-  .site {
-    /* Dark mode: Truffle-over-Noir surfaces, pale text — the guideline's
-       "pale text on a dark background" mode, never mixed with light mode. */
-    --bg: var(--color-noir);
-    --bg-alt: var(--color-truffle);
-    --text: var(--color-pearl);
-    --heading: var(--color-shallows);
-    /* Crimson fails contrast on Noir; Rose (same pink palette) is the
-       accessible stand-in for error/missing states in dark mode. */
-    --error: var(--color-rose);
-  }
-}
-
-/* Explicit choice from the header toggle overrides prefers-color-scheme —
-   higher specificity than both the plain and media-queried .site rules. */
-:root[data-theme='light'] .site {
-  --bg: var(--color-pearl);
-  --bg-alt: var(--color-shallows);
-  --text: var(--color-truffle);
-  --heading: var(--color-depths);
-  --error: var(--color-crimson);
+/* Dark mode is opt-in only, via the header toggle's explicit data-theme
+   attribute — the site never follows prefers-color-scheme. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
 }
 :root[data-theme='dark'] .site {
+  /* Dark mode: Truffle-over-Noir surfaces, pale text — the guideline's
+     "pale text on a dark background" mode, never mixed with light mode. */
   --bg: var(--color-noir);
   --bg-alt: var(--color-truffle);
   --text: var(--color-pearl);
   --heading: var(--color-shallows);
+  /* Crimson fails contrast on Noir; Rose (same pink palette) is the
+     accessible stand-in for error/missing states in dark mode. */
   --error: var(--color-rose);
 }
 
