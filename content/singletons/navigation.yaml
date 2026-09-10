@@ -74,7 +74,7 @@ items:
   - name: Awards
     icon:
       discriminant: library
-      value: circle
+      value: medal
     linkMode:
       discriminant: link
       value: awards_won
