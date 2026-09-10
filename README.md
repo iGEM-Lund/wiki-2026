@@ -126,16 +126,29 @@ The script:
 
 1. Refuses to run unless you're on `main` with a clean tree matching
    `origin/main`.
-2. Runs `BUILD_TARGET=production npm run build` and
+2. Runs `npm ci`, then `BUILD_TARGET=production npm run build` and
    `node scripts/verify-export.mjs` locally first, as an early signal before
    iGEM's own pipeline rebuilds it.
 3. Prompts for confirmation, then force-pushes `main` to
-   `git@gitlab.igem.org:2026/lund.git` over SSH, using your normal SSH setup
-   (agent / default identity) by default — just make sure whichever key
-   that resolves to is registered on your `gitlab.igem.org` account (or as a
-   project deploy key) with write access to `2026/lund`. Set
-   `GITLAB_DEPLOY_SSH_KEY` to pin a specific key instead, e.g. for a
-   dedicated deploy-only key.
+   `https://gitlab.igem.org/2026/lund.git`.
+
+**Auth is HTTPS + an access token, not SSH** — iGEM's GitLab serves its
+web/git-http traffic through CloudFront, which doesn't proxy raw SSH (port
+22 just hangs, regardless of your network), so a normal SSH remote can't
+connect. One-time setup:
+
+1. On `gitlab.igem.org/2026/lund` → Settings → Access Tokens, create a
+   token (Project Access Token, or Personal Access Token if project tokens
+   aren't available on iGEM's tier) with the `write_repository` scope.
+2. Add it to `~/.netrc` (create the file if it doesn't exist; `chmod 600` it
+   either way so it's not world-readable):
+   ```
+   machine gitlab.igem.org
+   login <anything-non-empty, e.g. your GitLab username>
+   password <the token>
+   ```
+   Git's HTTPS backend reads `~/.netrc` automatically, so nothing needs to
+   be exported before each deploy.
 
 Once pushed, iGEM's GitLab CI takes over: our `.gitlab-ci.yml` runs three
 stages — `build` (`npm ci && npm run build`), `verify`
