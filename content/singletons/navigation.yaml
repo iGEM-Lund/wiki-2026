@@ -30,7 +30,7 @@ items:
       value:
         - label: Parts
           target: engineering_parts
-        - label: DBTL Cycle
+        - label: Design-Build-Test-Learn Cycle
           target: engineering_DBTL
         - label: Modelling
           target: engineering_modelling
