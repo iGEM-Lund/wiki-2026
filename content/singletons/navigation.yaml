@@ -2,7 +2,7 @@ items:
   - name: Home Page
     icon:
       discriminant: library
-      value: circle
+      value: home
     linkMode:
       discriminant: link
       value: home_page
