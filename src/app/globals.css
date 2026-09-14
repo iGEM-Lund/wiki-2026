@@ -194,22 +194,36 @@ body {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  /* Trigger keeps its own natural width and just sits centered in this
-     lane — it must NEVER stretch to the lane's (possibly much wider) size,
-     or the button looks oversized even when nothing is open. */
+  align-items: flex-start;
+  /* Trigger keeps its own natural width and stays left-anchored in this
+     lane — it must NEVER stretch to the lane's (possibly much wider) open
+     size, or the button looks oversized even when nothing is open. Anchored
+     rather than centered so the lane only grows to the right on hover,
+     meaning the trigger itself never shifts out from under the pointer
+     while it's mid-hover. */
 }
 
-/* An invisible, zero-height mirror of the menu labels. It exists only so
-   the widest label's width (capped at --nav-dropdown-max) is counted when
-   the browser sizes this flex item, reserving real space in the nav row —
-   otherwise the panel below (which must stay position:absolute so opening
-   it doesn't shove the page down) could overlap a neighboring nav item. */
+/* An invisible, zero-height mirror of the menu labels. At rest it's
+   clamped to zero width, so this flex item contributes nothing and the
+   dropdown's rest-state width is just the trigger's own — keeping the gap
+   between every nav button consistent instead of some being pre-padded to
+   fit their (possibly much longer) menu. On hover/focus it's allowed to
+   grow to its real, capped width, and because that's a genuine
+   layout-affecting change, the nav row actually reflows: neighboring
+   buttons get pushed aside for as long as this one is open, instead of the
+   panel below (which must stay position:absolute so opening it doesn't
+   shove the page down) silently overlapping them. */
 .site__nav-dropdown-sizer {
   height: 0;
+  max-width: 0;
   overflow: hidden;
   visibility: hidden;
   pointer-events: none;
+  transition: max-width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.site__nav-dropdown:hover .site__nav-dropdown-sizer,
+.site__nav-dropdown:focus-within .site__nav-dropdown-sizer {
+  max-width: var(--nav-dropdown-max, 10rem);
 }
 .site__nav-dropdown-sizer-inner {
   display: flex;
