@@ -9,6 +9,7 @@ import '@fontsource/poppins/300.css';
 import '@fontsource/poppins/300-italic.css';
 import { getNav } from '@/lib/nav';
 import { NavIcon } from '@/components/nav-icon';
+import { NavDropdownLink } from '@/components/nav-dropdown-link';
 import { ThemeToggle } from '@/components/theme-toggle';
 
 // getNav() is called here, not in the root layout, so a nav-build failure
@@ -38,13 +39,15 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
                   <NavIcon icon={item.icon} size={18} />
                   {item.name}
                 </span>
-                <ul className="site__nav-dropdown-menu">
-                  {item.items.map((entry) => (
-                    <li key={entry.target.href}>
-                      <Link href={entry.target.href}>{entry.label}</Link>
-                    </li>
-                  ))}
-                </ul>
+                <div className="site__nav-dropdown-panel">
+                  <ul className="site__nav-dropdown-menu">
+                    {item.items.map((entry) => (
+                      <li key={entry.target.href}>
+                        <NavDropdownLink href={entry.target.href}>{entry.label}</NavDropdownLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             ),
           )}

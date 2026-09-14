@@ -170,56 +170,75 @@ body {
 }
 
 .site__nav-item--trigger {
+  position: relative;
+  z-index: 2;
   cursor: default;
-  transition: transform 0.18s ease;
+  transition: transform 0.36s cubic-bezier(0.34, 1.9, 0.64, 1);
 }
 .site__nav-dropdown:hover .site__nav-item--trigger,
 .site__nav-dropdown:focus-within .site__nav-item--trigger {
   transform: scale(1.08);
-  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .site__nav-dropdown {
   position: relative;
 }
 
-.site__nav-dropdown-menu {
+/* The trigger sits in normal flow, on top of this panel (z-index). Opening
+   the dropdown grows the panel's border/background down from behind the
+   trigger, so the button and the menu below it read as one continuous
+   shape instead of a button plus a separate floating box. */
+.site__nav-dropdown-panel {
   position: absolute;
-  top: 100%;
-  left: 0;
-  min-width: 12rem;
-  margin: 0.25rem 0 0;
-  padding: 0.35rem;
-  list-style: none;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--bg-alt);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  opacity: 0;
-  transform-origin: top;
-  transform: scaleY(0.35);
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  min-width: 100%;
+  width: max-content;
+  max-width: 16rem;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
   pointer-events: none;
+  transform: translateX(-50%);
   transition:
-    opacity 0.18s ease,
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border-color 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 0.2s;
 }
-/* Bridges the gap between the trigger and the menu (margin-top above) so
-   moving the pointer down into the menu doesn't briefly leave every
-   hoverable descendant of .site__nav-dropdown and close the menu. */
-.site__nav-dropdown-menu::before {
+.site__nav-dropdown:hover .site__nav-dropdown-panel,
+.site__nav-dropdown:focus-within .site__nav-dropdown-panel {
+  border-color: var(--border);
+  background: var(--bg-alt);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+  pointer-events: auto;
+}
+/* Reserves the trigger's own footprint at the top of the panel, so the
+   menu list below starts right where the trigger ends. */
+.site__nav-dropdown-panel::before {
   content: '';
-  position: absolute;
-  top: -0.25rem;
-  left: 0;
-  right: 0;
-  height: 0.25rem;
+  flex: 0 0 auto;
+  height: 2.3rem;
+}
+
+.site__nav-dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0;
+  padding: 0 0.35rem 0.35rem;
+  list-style: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  transition-delay: 0.22s;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-menu,
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu {
-  opacity: 1;
-  transform: scaleY(1);
-  pointer-events: auto;
+  max-height: 20rem;
 }
 .site__nav-dropdown-menu li + li {
   margin-top: 0.15rem;
@@ -238,22 +257,22 @@ body {
   transform: translateY(0);
 }
 .site__nav-dropdown-menu li:nth-child(1) {
-  transition-delay: 0.04s;
+  transition-delay: 0.3s;
 }
 .site__nav-dropdown-menu li:nth-child(2) {
-  transition-delay: 0.08s;
+  transition-delay: 0.35s;
 }
 .site__nav-dropdown-menu li:nth-child(3) {
-  transition-delay: 0.12s;
+  transition-delay: 0.4s;
 }
 .site__nav-dropdown-menu li:nth-child(4) {
-  transition-delay: 0.16s;
+  transition-delay: 0.45s;
 }
 .site__nav-dropdown-menu li:nth-child(5) {
-  transition-delay: 0.2s;
+  transition-delay: 0.5s;
 }
 .site__nav-dropdown-menu li:nth-child(6) {
-  transition-delay: 0.24s;
+  transition-delay: 0.55s;
 }
 .site__nav-dropdown-menu a {
   display: block;
@@ -261,6 +280,7 @@ body {
   border-radius: 4px;
   text-decoration: none;
   color: inherit;
+  text-align: center;
 }
 .site__nav-dropdown-menu a:hover {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
