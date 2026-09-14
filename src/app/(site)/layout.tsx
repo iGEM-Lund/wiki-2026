@@ -33,11 +33,11 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
                 {item.name}
               </Link>
             ) : (
-              <details key={item.name} className="site__nav-dropdown">
-                <summary className="site__nav-item">
+              <div key={item.name} className="site__nav-dropdown">
+                <button type="button" className="site__nav-item">
                   <NavIcon icon={item.icon} size={18} />
                   {item.name}
-                </summary>
+                </button>
                 <ul className="site__nav-dropdown-menu">
                   {item.items.map((entry) => (
                     <li key={entry.target.href}>
@@ -45,7 +45,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
                     </li>
                   ))}
                 </ul>
-              </details>
+              </div>
             ),
           )}
         </nav>
