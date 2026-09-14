@@ -39,6 +39,19 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
                   <NavIcon icon={item.icon} size={18} />
                   {item.name}
                 </span>
+                {/* Zero-height mirror of the menu labels: it reserves the
+                    dropdown's real width in the nav row (so opening it can
+                    never overlap a neighboring nav item) without adding
+                    height, since the visible panel below is absolutely
+                    positioned and must float over the page instead of
+                    pushing it down. */}
+                <div className="site__nav-dropdown-sizer" aria-hidden="true">
+                  <div className="site__nav-dropdown-sizer-inner">
+                    {item.items.map((entry) => (
+                      <span key={entry.target.href}>{entry.label}</span>
+                    ))}
+                  </div>
+                </div>
                 <div className="site__nav-dropdown-panel">
                   <ul className="site__nav-dropdown-menu">
                     {item.items.map((entry) => (
