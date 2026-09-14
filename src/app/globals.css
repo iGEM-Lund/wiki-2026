@@ -194,14 +194,28 @@ body {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  /* Trigger keeps its own natural width and stays left-anchored in this
+  align-items: center;
+  /* Trigger keeps its own natural width and just sits centered in this
      lane — it must NEVER stretch to the lane's (possibly much wider) open
-     size, or the button looks oversized even when nothing is open. Anchored
-     rather than centered so the lane only grows to the right on hover,
-     meaning the trigger itself never shifts out from under the pointer
-     while it's mid-hover. */
+     size, or the button looks oversized even when nothing is open. Centering
+     (rather than anchoring left) is safe even though the lane grows out from
+     under the pointer: the panel below turns pointer-events on the instant
+     hovering starts (that's not part of the delayed transition list), and
+     it already spans the full lane, so the cursor is always over *some*
+     hoverable descendant of .site__nav-dropdown throughout. */
 }
+
+/* Every property below (sizer/panel/menu) uses the asymmetric-transition
+   trick: the *closing* timing lives on each element's base rule, and the
+   *opening* timing is redeclared inside the :hover/:focus-within rule.
+   CSS transitions always run the timing that belongs to the state being
+   transitioned INTO, so this gives opening and closing genuinely different
+   sequencing instead of one mirroring the other backwards:
+     opening: pop -> expand horizontally (+ fade in) -> expand vertically
+     closing: shrink vertically -> shrink horizontally (+ fade out)
+   Without this split, closing reused the opening's delays, which meant the
+   width/height snapped back immediately while the color was still waiting
+   out its (now-backwards) delay — reads as an instant, unanimated collapse. */
 
 /* An invisible, zero-height mirror of the menu labels. At rest it's
    clamped to zero width, so this flex item contributes nothing and the
@@ -219,11 +233,15 @@ body {
   overflow: hidden;
   visibility: hidden;
   pointer-events: none;
-  transition: max-width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  /* closing: shrink horizontally only after the menu has finished
+     shrinking vertically (0.34s, matched to the menu's closing duration). */
+  transition: max-width 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.34s;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-sizer,
 .site__nav-dropdown:focus-within .site__nav-dropdown-sizer {
   max-width: var(--nav-dropdown-max, 10rem);
+  /* opening: give the trigger's pop a head start, then expand horizontally. */
+  transition: max-width 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
 }
 .site__nav-dropdown-sizer-inner {
   display: flex;
@@ -257,10 +275,12 @@ body {
   background: transparent;
   overflow: hidden;
   pointer-events: none;
+  /* closing: fade out alongside the horizontal shrink (same delay/duration
+     as the sizer above), after the menu list has already collapsed. */
   transition:
-    border-color 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.2s,
-    background-color 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.2s,
-    box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+    border-color 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
+    background-color 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
+    box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.34s;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-panel,
 .site__nav-dropdown:focus-within .site__nav-dropdown-panel {
@@ -268,6 +288,12 @@ body {
   background: var(--bg-alt);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
   pointer-events: auto;
+  /* opening: fade in alongside the horizontal expand (same delay/duration
+     as the sizer above). */
+  transition:
+    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s,
+    background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s,
+    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
 }
 .site__nav-dropdown-panel::before {
   content: '';
@@ -284,45 +310,59 @@ body {
   list-style: none;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(0.19, 1, 0.22, 1) 0.22s;
+  /* closing: shrink vertically first, immediately, no delay. */
+  transition: max-height 0.34s cubic-bezier(0.4, 0, 0.7, 1);
 }
 .site__nav-dropdown:hover .site__nav-dropdown-menu,
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu {
   max-height: 20rem;
+  /* opening: expand vertically only after the horizontal expand (+ pop
+     lead) above has finished — 0.12s pop lead + 0.3s horizontal = 0.42s. */
+  transition: max-height 0.42s cubic-bezier(0.19, 1, 0.22, 1) 0.42s;
 }
 .site__nav-dropdown-menu li + li {
   margin-top: 0.15rem;
 }
-/* Sublinks fade/slide in one at a time as the menu expands. */
+/* Sublinks fade/slide in one at a time as the menu expands; on close they
+   just fade out together, quickly, no stagger. */
 .site__nav-dropdown-menu li {
   opacity: 0;
   transform: translateY(-4px);
   transition:
-    opacity 0.16s ease,
-    transform 0.16s ease;
+    opacity 0.12s ease,
+    transform 0.12s ease;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-menu li,
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu li {
   opacity: 1;
   transform: translateY(0);
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease;
 }
-.site__nav-dropdown-menu li:nth-child(1) {
-  transition-delay: 0.3s;
+.site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(1),
+.site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(1) {
+  transition-delay: 0.46s;
 }
-.site__nav-dropdown-menu li:nth-child(2) {
-  transition-delay: 0.35s;
+.site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(2),
+.site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(2) {
+  transition-delay: 0.51s;
 }
-.site__nav-dropdown-menu li:nth-child(3) {
-  transition-delay: 0.4s;
+.site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(3),
+.site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(3) {
+  transition-delay: 0.56s;
 }
-.site__nav-dropdown-menu li:nth-child(4) {
-  transition-delay: 0.45s;
+.site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(4),
+.site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(4) {
+  transition-delay: 0.61s;
 }
-.site__nav-dropdown-menu li:nth-child(5) {
-  transition-delay: 0.5s;
+.site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(5),
+.site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(5) {
+  transition-delay: 0.66s;
 }
-.site__nav-dropdown-menu li:nth-child(6) {
-  transition-delay: 0.55s;
+.site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(6),
+.site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(6) {
+  transition-delay: 0.71s;
 }
 .site__nav-dropdown-menu a {
   display: block;
