@@ -261,10 +261,13 @@ body {
   position: relative;
   z-index: 2;
   cursor: default;
-  /* No border/background/width of its own — the panel behind it (same
-     position, lower z-index) is the only thing that ever draws a box, so
-     there's nothing for this trigger to visually clash or misalign with,
-     no matter how it's transformed. */
+  justify-content: center;
+  /* No border/background of its own — the panel behind it (same position,
+     lower z-index) is the only thing that ever draws a box, so there's
+     nothing for this trigger to visually clash or misalign with, no matter
+     how it's transformed. It's stretched to the lane's full (static) width
+     by the parent below, so justify-content centers its icon+label inside
+     that width instead of hugging the left edge. */
   transition: transform 0.36s cubic-bezier(0.34, 1.9, 0.64, 1);
 }
 /* Permanently kill the generic .site__nav-item hover tint on the trigger:
@@ -282,54 +285,38 @@ body {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  /* Trigger keeps its own natural width and just sits centered in this
-     lane — it must NEVER stretch to the lane's (possibly much wider) open
-     size, or the button looks oversized even when nothing is open. Centering
-     (rather than anchoring left) is safe even though the lane grows out from
-     under the pointer: the panel below turns pointer-events on the instant
-     hovering starts (that's not part of the delayed transition list), and
-     it already spans the full lane, so the cursor is always over *some*
-     hoverable descendant of .site__nav-dropdown throughout. */
+  align-items: stretch;
+  /* The lane is sized once, up front, to fit its widest menu label (see the
+     sizer below) — it never grows on hover, so opening a dropdown never
+     reflows or overlaps neighboring nav buttons. The trigger stretches to
+     fill that lane (rather than sitting centered in it) so every nav
+     button's box — plain links and dropdown triggers alike — touches its
+     neighbor at exactly the flex `gap`, keeping the whitespace between all
+     nav buttons even regardless of how wide any one dropdown's menu is. */
 }
 
-/* Every property below (sizer/panel/menu) uses the asymmetric-transition
-   trick: the *closing* timing lives on each element's base rule, and the
-   *opening* timing is redeclared inside the :hover/:focus-within rule.
-   CSS transitions always run the timing that belongs to the state being
+/* Every property below (panel/menu) uses the asymmetric-transition trick:
+   the *closing* timing lives on each element's base rule, and the *opening*
+   timing is redeclared inside the :hover/:focus-within rule. CSS
+   transitions always run the timing that belongs to the state being
    transitioned INTO, so this gives opening and closing genuinely different
    sequencing instead of one mirroring the other backwards:
-     opening: pop -> expand horizontally (+ fade in) -> expand vertically
-     closing: shrink vertically -> shrink horizontally (+ fade out)
+     opening: pop -> fade in -> expand vertically
+     closing: shrink vertically -> fade out
    Without this split, closing reused the opening's delays, which meant the
-   width/height snapped back immediately while the color was still waiting
-   out its (now-backwards) delay — reads as an instant, unanimated collapse. */
+   height snapped back immediately while the color was still waiting out its
+   (now-backwards) delay — reads as an instant, unanimated collapse. */
 
-/* An invisible, zero-height mirror of the menu labels. At rest it's
-   clamped to zero width, so this flex item contributes nothing and the
-   dropdown's rest-state width is just the trigger's own — keeping the gap
-   between every nav button consistent instead of some being pre-padded to
-   fit their (possibly much longer) menu. On hover/focus it's allowed to
-   grow to its real, capped width, and because that's a genuine
-   layout-affecting change, the nav row actually reflows: neighboring
-   buttons get pushed aside for as long as this one is open, instead of the
-   panel below (which must stay position:absolute so opening it doesn't
-   shove the page down) silently overlapping them. */
+/* An invisible, zero-height mirror of the menu labels, always at its full
+   (capped) width — never animated. This is what reserves each dropdown
+   lane's real width in the nav row up front, so there's enough space for
+   the menu from the start and hovering never triggers a layout reflow. */
 .site__nav-dropdown-sizer {
   height: 0;
-  max-width: 0;
+  max-width: var(--nav-dropdown-max, 10rem);
   overflow: hidden;
   visibility: hidden;
   pointer-events: none;
-  /* closing: shrink horizontally only after the menu has finished
-     shrinking vertically (0.34s, matched to the menu's closing duration). */
-  transition: max-width 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.34s;
-}
-.site__nav-dropdown:hover .site__nav-dropdown-sizer,
-.site__nav-dropdown:focus-within .site__nav-dropdown-sizer {
-  max-width: var(--nav-dropdown-max, 10rem);
-  /* opening: give the trigger's pop a head start, then expand horizontally. */
-  transition: max-width 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
 }
 .site__nav-dropdown-sizer-inner {
   display: flex;
@@ -344,12 +331,12 @@ body {
 
 /* The one and only bordered/rounded box. It starts at the same top edge as
    the trigger (a spacer below reserves the trigger's own footprint) and
-   spans the full reserved lane width, so the trigger — narrower, centered,
-   with no border of its own — simply sits on top of its upper portion like
-   a label on a card. Absolutely positioned (not stretched, never
-   transformed) so it floats over the page when it opens instead of
-   pushing content down, and its own edges never move, so nothing (like the
-   trigger's hover pop) can ever throw it out of alignment with itself. */
+   spans the full reserved lane width, matching the (now equally wide)
+   trigger sitting on top of its upper portion like a label on a card.
+   Absolutely positioned (not stretched, never transformed) so it floats
+   over the page when it opens instead of pushing content down, and its own
+   edges never move, so nothing (like the trigger's hover pop) can ever
+   throw it out of alignment with itself. */
 .site__nav-dropdown-panel {
   position: absolute;
   top: 0;
@@ -363,12 +350,11 @@ body {
   background: transparent;
   overflow: hidden;
   pointer-events: none;
-  /* closing: fade out alongside the horizontal shrink (same delay/duration
-     as the sizer above), after the menu list has already collapsed. */
+  /* closing: fade out only after the menu list has already collapsed. */
   transition:
-    border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
-    background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
-    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.34s;
+    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
+    background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
+    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.34s;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-panel,
 .site__nav-dropdown:focus-within .site__nav-dropdown-panel {
@@ -376,8 +362,7 @@ body {
   background: var(--bg-alt);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
   pointer-events: auto;
-  /* opening: fade in alongside the horizontal expand (same delay/duration
-     as the sizer above). */
+  /* opening: give the trigger's pop a head start, then fade in. */
   transition:
     border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s,
     background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s,
@@ -404,8 +389,8 @@ body {
 .site__nav-dropdown:hover .site__nav-dropdown-menu,
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu {
   max-height: 20rem;
-  /* opening: expand vertically only after the horizontal expand (+ pop
-     lead) above has finished — 0.12s pop lead + 0.3s horizontal = 0.42s. */
+  /* opening: expand vertically only after the pop + fade-in above have
+     finished — 0.12s pop lead + 0.3s fade = 0.42s. */
   transition: max-height 0.42s cubic-bezier(0.19, 1, 0.22, 1) 0.42s;
 }
 .site__nav-dropdown-menu li + li {
