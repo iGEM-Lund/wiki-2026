@@ -12,7 +12,7 @@ items:
           target: project_solution-and-project-design
         - label: Results
           target: project_results
-        - label: POC
+        - label: Proof of Concept
           target: project_proof-of-concept
   - name: Engineering
     icon:
