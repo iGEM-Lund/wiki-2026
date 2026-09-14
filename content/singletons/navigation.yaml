@@ -1,11 +1,4 @@
 items:
-  - name: Home Page
-    icon:
-      discriminant: library
-      value: home
-    linkMode:
-      discriminant: link
-      value: home_page
   - name: Project
     icon:
       discriminant: library
@@ -71,10 +64,3 @@ items:
     linkMode:
       discriminant: link
       value: contributions
-  - name: Awards
-    icon:
-      discriminant: library
-      value: medal
-    linkMode:
-      discriminant: link
-      value: awards_won
