@@ -8,6 +8,7 @@ import '@fontsource/poppins/200-italic.css';
 import '@fontsource/poppins/300.css';
 import '@fontsource/poppins/300-italic.css';
 import { getNav } from '@/lib/nav';
+import { AntigoneLogoMark } from '@/components/antigone-logo';
 import { NavIcon } from '@/components/nav-icon';
 import { NavDropdownLink } from '@/components/nav-dropdown-link';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -23,8 +24,11 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
     <div className="site">
       <header className="site__header">
         <Link href="/" className="site__brand">
-          <span className="site__brand-name">AnTigone</span>
-          <span className="site__brand-team">iGEM Lund 2026</span>
+          <AntigoneLogoMark className="site__brand-mark" />
+          <span className="site__brand-text">
+            <span className="site__brand-name">AnTigone</span>
+            <span className="site__brand-team">iGEM Lund 2026</span>
+          </span>
         </Link>
         <nav className="site__nav">
           {nav.map((item) =>
