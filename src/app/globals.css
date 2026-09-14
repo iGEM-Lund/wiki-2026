@@ -169,6 +169,16 @@ body {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
+.site__nav-item--trigger {
+  cursor: default;
+  transition: transform 0.18s ease;
+}
+.site__nav-dropdown:hover .site__nav-item--trigger,
+.site__nav-dropdown:focus-within .site__nav-item--trigger {
+  transform: scale(1.08);
+  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 .site__nav-dropdown {
   position: relative;
 }
@@ -187,20 +197,63 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 10;
   opacity: 0;
-  transform: translateY(-6px);
+  transform-origin: top;
+  transform: scaleY(0.35);
   pointer-events: none;
   transition:
-    opacity 0.16s ease,
-    transform 0.16s ease;
+    opacity 0.18s ease,
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Bridges the gap between the trigger and the menu (margin-top above) so
+   moving the pointer down into the menu doesn't briefly leave every
+   hoverable descendant of .site__nav-dropdown and close the menu. */
+.site__nav-dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -0.25rem;
+  left: 0;
+  right: 0;
+  height: 0.25rem;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-menu,
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu {
   opacity: 1;
-  transform: translateY(0);
+  transform: scaleY(1);
   pointer-events: auto;
 }
 .site__nav-dropdown-menu li + li {
   margin-top: 0.15rem;
+}
+/* Sublinks fade/slide in one at a time as the menu expands. */
+.site__nav-dropdown-menu li {
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease;
+}
+.site__nav-dropdown:hover .site__nav-dropdown-menu li,
+.site__nav-dropdown:focus-within .site__nav-dropdown-menu li {
+  opacity: 1;
+  transform: translateY(0);
+}
+.site__nav-dropdown-menu li:nth-child(1) {
+  transition-delay: 0.04s;
+}
+.site__nav-dropdown-menu li:nth-child(2) {
+  transition-delay: 0.08s;
+}
+.site__nav-dropdown-menu li:nth-child(3) {
+  transition-delay: 0.12s;
+}
+.site__nav-dropdown-menu li:nth-child(4) {
+  transition-delay: 0.16s;
+}
+.site__nav-dropdown-menu li:nth-child(5) {
+  transition-delay: 0.2s;
+}
+.site__nav-dropdown-menu li:nth-child(6) {
+  transition-delay: 0.24s;
 }
 .site__nav-dropdown-menu a {
   display: block;

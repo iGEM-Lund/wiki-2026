@@ -34,10 +34,10 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
               </Link>
             ) : (
               <div key={item.name} className="site__nav-dropdown">
-                <button type="button" className="site__nav-item">
+                <span className="site__nav-item site__nav-item--trigger">
                   <NavIcon icon={item.icon} size={18} />
                   {item.name}
-                </button>
+                </span>
                 <ul className="site__nav-dropdown-menu">
                   {item.items.map((entry) => (
                     <li key={entry.target.href}>
