@@ -235,7 +235,12 @@ body {
 .site__nav {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  /* row-gap smaller than column-gap: the column value is what keeps wide
+     dropdown panels clear of their neighbors (see .site__nav-dropdown-panel
+     below); at widths where items wrap onto their own lines that reasoning
+     no longer applies, so a tight row-gap keeps wrapped rows from reading
+     as unrelated, far-apart items. */
+  gap: 0.75rem 2rem;
   flex-wrap: wrap;
 }
 
@@ -243,7 +248,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.4rem 0.6rem;
+  padding: 0.5rem 0.85rem;
   border: none;
   border-radius: 4px;
   background: none;
@@ -311,19 +316,22 @@ body {
 /* The one and only bordered/rounded box. It starts at the same top edge as
    the trigger (a spacer below reserves the trigger's own footprint) and
    sizes itself to fit its longest menu label (capped, so one very long
-   label can't blow out the header), so the trigger — narrower, centered,
-   with no border of its own — simply sits on top of its upper-left portion
-   like a label on a card. Absolutely positioned (not stretched, never
+   label can't blow out the header), centered under the trigger — same as
+   the trigger's own icon+label are centered in .site__nav-item — so the
+   trigger reads as sitting in the middle of the card it opens, not pinned
+   to its top-left corner. Absolutely positioned (not stretched, never
    transformed, and never contributing to .site__nav-dropdown's own layout
    width — see above) so it floats over the page and, if wider than its
-   lane, over neighboring nav buttons too, instead of pushing content down
-   or forcing every lane to pre-reserve its menu's full width. Its own edges
-   never move, so nothing (like the trigger's hover pop) can ever throw it
-   out of alignment with itself. */
+   lane, out over the `gap` on either side (generous enough — see .site__nav
+   — that a capped-width panel never reaches a neighboring nav button)
+   instead of pushing content down or forcing every lane to pre-reserve its
+   menu's full width. Its own edges never move, so nothing (like the
+   trigger's hover pop) can ever throw it out of alignment with itself. */
 .site__nav-dropdown-panel {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: max-content;
   max-width: var(--nav-dropdown-max, 10rem);
   z-index: 1;
