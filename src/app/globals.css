@@ -261,13 +261,13 @@ body {
   position: relative;
   z-index: 2;
   cursor: default;
-  justify-content: center;
-  /* No border/background of its own — the panel behind it (same position,
-     lower z-index) is the only thing that ever draws a box, so there's
-     nothing for this trigger to visually clash or misalign with, no matter
-     how it's transformed. It's stretched to the lane's full (static) width
-     by the parent below, so justify-content centers its icon+label inside
-     that width instead of hugging the left edge. */
+  /* No border/background/width of its own — the panel behind it (same
+     position, lower z-index) is the only thing that ever draws a box, so
+     there's nothing for this trigger to visually clash or misalign with,
+     no matter how it's transformed. It's kept at its own natural content
+     width (see .site__nav-dropdown below) rather than stretched or padded
+     out to fit its menu, so the *visible* gap between it and its neighbors
+     is exactly the flex `gap` — same as a plain link. */
   transition: transform 0.36s cubic-bezier(0.34, 1.9, 0.64, 1);
 }
 /* Permanently kill the generic .site__nav-item hover tint on the trigger:
@@ -285,14 +285,15 @@ body {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  /* The lane is sized once, up front, to fit its widest menu label (see the
-     sizer below) — it never grows on hover, so opening a dropdown never
-     reflows or overlaps neighboring nav buttons. The trigger stretches to
-     fill that lane (rather than sitting centered in it) so every nav
-     button's box — plain links and dropdown triggers alike — touches its
-     neighbor at exactly the flex `gap`, keeping the whitespace between all
-     nav buttons even regardless of how wide any one dropdown's menu is. */
+  align-items: center;
+  /* The trigger is the only child that ever takes up flex layout space —
+     it keeps its own natural width, so this lane is exactly as wide as a
+     plain nav link's and the flex `gap` alone gives every nav button
+     (plain links and dropdown triggers alike) the same visible whitespace,
+     regardless of how wide any one dropdown's menu is. The panel below is
+     sized to its own content independently (it's position:absolute, so it
+     never participates in this element's layout width) and simply floats
+     wider than the lane when its menu needs more room. */
 }
 
 /* Every property below (panel/menu) uses the asymmetric-transition trick:
@@ -307,41 +308,24 @@ body {
    height snapped back immediately while the color was still waiting out its
    (now-backwards) delay — reads as an instant, unanimated collapse. */
 
-/* An invisible, zero-height mirror of the menu labels, always at its full
-   (capped) width — never animated. This is what reserves each dropdown
-   lane's real width in the nav row up front, so there's enough space for
-   the menu from the start and hovering never triggers a layout reflow. */
-.site__nav-dropdown-sizer {
-  height: 0;
-  max-width: var(--nav-dropdown-max, 10rem);
-  overflow: hidden;
-  visibility: hidden;
-  pointer-events: none;
-}
-.site__nav-dropdown-sizer-inner {
-  display: flex;
-  flex-direction: column;
-  max-width: var(--nav-dropdown-max, 10rem);
-  padding: 0.15rem 0.35rem 0.35rem;
-}
-.site__nav-dropdown-sizer-inner span {
-  display: block;
-  padding: 0.35rem 0.5rem;
-}
-
 /* The one and only bordered/rounded box. It starts at the same top edge as
    the trigger (a spacer below reserves the trigger's own footprint) and
-   spans the full reserved lane width, matching the (now equally wide)
-   trigger sitting on top of its upper portion like a label on a card.
-   Absolutely positioned (not stretched, never transformed) so it floats
-   over the page when it opens instead of pushing content down, and its own
-   edges never move, so nothing (like the trigger's hover pop) can ever
-   throw it out of alignment with itself. */
+   sizes itself to fit its longest menu label (capped, so one very long
+   label can't blow out the header), so the trigger — narrower, centered,
+   with no border of its own — simply sits on top of its upper-left portion
+   like a label on a card. Absolutely positioned (not stretched, never
+   transformed, and never contributing to .site__nav-dropdown's own layout
+   width — see above) so it floats over the page and, if wider than its
+   lane, over neighboring nav buttons too, instead of pushing content down
+   or forcing every lane to pre-reserve its menu's full width. Its own edges
+   never move, so nothing (like the trigger's hover pop) can ever throw it
+   out of alignment with itself. */
 .site__nav-dropdown-panel {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: max-content;
+  max-width: var(--nav-dropdown-max, 10rem);
   z-index: 1;
   display: flex;
   flex-direction: column;
