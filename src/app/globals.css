@@ -169,6 +169,10 @@ body {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
+.site__nav-item--trigger {
+  cursor: default;
+}
+
 .site__nav-dropdown {
   position: relative;
 }
@@ -192,6 +196,17 @@ body {
   transition:
     opacity 0.16s ease,
     transform 0.16s ease;
+}
+/* Bridges the gap between the trigger and the menu (margin-top above) so
+   moving the pointer down into the menu doesn't briefly leave every
+   hoverable descendant of .site__nav-dropdown and close the menu. */
+.site__nav-dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -0.25rem;
+  left: 0;
+  right: 0;
+  height: 0.25rem;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-menu,
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu {
