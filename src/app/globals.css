@@ -235,7 +235,7 @@ body {
   pointer-events: none;
   /* closing: shrink horizontally only after the menu has finished
      shrinking vertically (0.34s, matched to the menu's closing duration). */
-  transition: max-width 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.34s;
+  transition: max-width 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.34s;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-sizer,
 .site__nav-dropdown:focus-within .site__nav-dropdown-sizer {
@@ -278,9 +278,9 @@ body {
   /* closing: fade out alongside the horizontal shrink (same delay/duration
      as the sizer above), after the menu list has already collapsed. */
   transition:
-    border-color 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
-    background-color 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
-    box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.34s;
+    border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
+    background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
+    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.34s;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-panel,
 .site__nav-dropdown:focus-within .site__nav-dropdown-panel {
