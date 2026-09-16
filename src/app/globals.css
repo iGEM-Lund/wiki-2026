@@ -776,3 +776,98 @@ body {
   border-left-color: var(--accent);
   font-weight: 500;
 }
+.toc__toggle {
+  /* Only ever shown on mobile (see the media query below) — desktop keeps
+     the always-visible fixed sidebar. */
+  display: none;
+}
+
+/* Below this width the fixed sidebar would eat too much of the reading
+   column, so the pane instead sits inline above the article for a moment,
+   then collapses into a floating button (data-state, set by
+   TableOfContents) that expands it as an overlay instead of pushing
+   content. */
+@media (max-width: 48rem) {
+  .page-layout {
+    display: flex;
+    flex-direction: column;
+  }
+  .page-layout:has(> .toc) > article {
+    margin-left: 0;
+  }
+
+  .toc {
+    position: static;
+    order: -1;
+    top: auto;
+    left: auto;
+    width: 100%;
+    max-height: none;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .toc[data-state='collapsed'],
+  .toc[data-state='expanded'] {
+    position: fixed;
+    inset: auto 1.5rem calc(1.5rem + 4rem) auto;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+    z-index: 40;
+  }
+
+  .toc[data-state='collapsed'] .toc__panel {
+    display: none;
+  }
+
+  .toc[data-state='collapsed'] .toc__toggle,
+  .toc[data-state='expanded'] .toc__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 25%);
+    cursor: pointer;
+  }
+
+  .toc[data-state='expanded'] .toc__panel {
+    position: absolute;
+    bottom: calc(100% + 0.75rem);
+    right: 0;
+    width: 16rem;
+    max-width: calc(100vw - 3rem);
+    max-height: 60vh;
+    overflow-y: auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+  }
+}
+
+.back-to-top {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 25%);
+  cursor: pointer;
+}
