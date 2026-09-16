@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@fontsource/fredoka": "^5.3.0",
+    "@fontsource/opendyslexic": "^5.3.0",
     "@fontsource/poppins": "^5.3.0",
     "@keystatic/core": "^0.5.50",
     "@keystatic/next": "^5.0.4",
