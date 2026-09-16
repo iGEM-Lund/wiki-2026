@@ -26,8 +26,10 @@ function OutlineList({ nodes, activeId }: { nodes: HeadingNode[]; activeId: stri
 
 export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   const [activeId, setActiveId] = useState<string | null>(null);
-  // Measured so the pane can clear the (non-sticky) header without a
-  // hardcoded height — the header's own height varies with nav wrapping.
+  // Only used to size the intersection observer's top margin, so a heading
+  // isn't marked "active" while it's still hidden under the fixed header.
+  // The pane's own on-screen position comes from the --header-height custom
+  // property (set by HeaderHeightSync) via CSS, not this state.
   const [headerHeight, setHeaderHeight] = useState(0);
 
   useEffect(() => {
@@ -71,7 +73,7 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="toc" aria-label="Page outline" style={{ top: headerHeight + 24 }}>
+    <nav className="toc" aria-label="Page outline">
       <p className="toc__title">On this page</p>
       <OutlineList nodes={headings} activeId={activeId} />
     </nav>

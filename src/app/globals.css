@@ -8,6 +8,13 @@
      site with it. */
   font-size: 100%;
 
+  /* In-page jumps (TOC clicks, citation refs) animate instead of snapping —
+     the reduced-motion rules below already override this back to `auto`.
+     scroll-padding-top keeps the target heading clear of the fixed header,
+     the same offset the TOC pane itself uses. */
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-height, 6rem) + 1rem);
+
   /* AnTigone brand kit (Canva) — teal palette is primary, pink is secondary. */
   --color-pearl: #fef8f4;
   --color-shallows: #e8f4f4;
@@ -102,6 +109,9 @@ body {
     scroll-behavior: auto !important;
   }
 }
+:root[data-motion='reduce'] {
+  scroll-behavior: auto !important;
+}
 :root[data-motion='reduce'] *,
 :root[data-motion='reduce'] *::before,
 :root[data-motion='reduce'] *::after {
@@ -161,10 +171,16 @@ body {
 }
 
 .site__header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
   display: flex;
   gap: 2rem;
   align-items: center;
   padding: 1rem 1.5rem;
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -615,7 +631,7 @@ body {
 
 .site__main {
   flex: 1;
-  padding: 1.5rem;
+  padding: calc(var(--header-height, 6rem) + 1.5rem) 1.5rem 1.5rem;
   max-width: 78rem;
 }
 
@@ -718,14 +734,14 @@ body {
 .toc {
   /* Fixed to the viewport, not sticky within the article — it stays in
      place for the whole scroll instead of unsticking near the bottom.
-     `top` is set inline (see table-of-contents.tsx) to the measured
-     header height, since the header isn't itself sticky/fixed; this
-     value is just the fallback used before that JS measurement lands. */
+     `top`/`max-height` key off --header-height (set by HeaderHeightSync)
+     since the fixed header's own height varies with nav wrapping; 6rem is
+     just the fallback used before that JS measurement lands. */
   position: fixed;
-  top: 6rem;
+  top: calc(var(--header-height, 6rem) + 1.5rem);
   left: 1.5rem;
   width: 16rem;
-  max-height: calc(100vh - 3rem);
+  max-height: calc(100vh - var(--header-height, 6rem) - 3rem);
   overflow-y: auto;
   font-size: 0.9rem;
 }

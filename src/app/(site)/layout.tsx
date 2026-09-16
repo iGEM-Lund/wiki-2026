@@ -14,6 +14,7 @@ import { AntigoneLogoMark } from '@/components/antigone-logo';
 import { NavIcon } from '@/components/nav-icon';
 import { NavDropdownLink } from '@/components/nav-dropdown-link';
 import { AccessibilityMenu } from '@/components/accessibility-menu';
+import { HeaderHeightSync } from '@/components/header-height-sync';
 
 // getNav() is called here, not in the root layout, so a nav-build failure
 // can never break the /keystatic admin route tree. Fonts are imported here
@@ -24,6 +25,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
 
   return (
     <div className="site">
+      <HeaderHeightSync />
       <header className="site__header">
         <Link href="/" className="site__brand">
           <AntigoneLogoMark className="site__brand-mark" />
