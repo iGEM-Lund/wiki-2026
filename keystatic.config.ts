@@ -96,6 +96,10 @@ export default config({
         content: fields.mdx({
           label: 'Content',
           components: contentComponents,
+          // Keystatic's built-in inline image button uploads local files into the
+          // repo, which iGEM's rules forbid (see FigureWithCaption in
+          // content-components.tsx, which takes a hosted URL instead).
+          options: { image: false },
         }),
       },
     }),
