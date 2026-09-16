@@ -31,10 +31,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       <header className="site__header">
         <Link href="/" className="site__brand">
           <AntigoneLogoMark className="site__brand-mark" />
-          <span className="site__brand-text">
-            <span className="site__brand-name">AnTigone</span>
-            <span className="site__brand-team">iGEM Lund 2026</span>
-          </span>
+          <span className="site__brand-name">AnTigone</span>
         </Link>
         <MobileNav>
           <nav className="site__nav" id="site-nav">

@@ -197,23 +197,11 @@ body {
   flex-shrink: 0;
   color: var(--heading);
 }
-.site__brand-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-}
 .site__brand-name {
   font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   color: var(--heading);
-}
-.site__brand-team {
-  font-family: var(--font-body);
-  font-weight: 300;
-  font-size: 0.7rem;
-  color: var(--muted);
-  letter-spacing: 0.02em;
 }
 
 /* AnTigone brand mark: the line traces itself in like it's being hand-drawn,
@@ -806,17 +794,31 @@ body {
     margin-left: 0;
   }
 
+  /* Bottom-right thumb zone: page contents is reached for constantly while
+     reading, so it sits at the very corner; back-to-top (used once per
+     page, at most) stacks 3rem button + 0.5rem gap above it instead of
+     competing for the same corner. Both key off the same 1.5rem base offset
+     and add env(safe-area-inset-bottom) so a home indicator never overlaps
+     them. */
   .toc {
     position: fixed;
-    inset: auto 1.5rem calc(1.5rem + 4rem) auto;
+    inset: auto 1.5rem calc(1.5rem + env(safe-area-inset-bottom, 0px)) auto;
     width: auto;
     max-height: none;
     margin: 0;
-    z-index: 40;
+    /* Above .back-to-top (z-index: 50) so its drawer, once open, layers over
+       the back-to-top button the same way the nav drawer already does. */
+    z-index: 60;
     /* The desktop rule sets overflow-y: auto for the sidebar's own scrolling;
        left on, it clips the toggle button's round box-shadow to this
        element's rectangular box. */
     overflow: visible;
+  }
+
+  /* Clears the floating button stack (back-to-top + page-contents toggle)
+     so it never covers the last lines of body text or the footer itself. */
+  .site__footer {
+    padding-bottom: calc(9rem + env(safe-area-inset-bottom, 0px));
   }
 
   .toc__toggle {
@@ -869,12 +871,38 @@ body {
    out-specificity those same hover/focus-within rules so a lingering touch
    hover can't re-collapse or re-style anything on mobile. */
 @media (max-width: 48rem) {
+  /* Nav toggle - brand - accessibility toggle, left to right, regardless of
+     their order in the DOM: the brand stays the one element without a fixed
+     width (min-width: 0 lets it shrink instead of overflowing), so it takes
+     up whatever space is left between the two toggles and its own centered
+     content reads as a middle-anchored banner. */
+  .site__header {
+    gap: 0.75rem;
+  }
+  .site__brand {
+    order: 2;
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+  }
+  .site__a11y {
+    order: 3;
+    margin-left: 0;
+  }
+  .site__a11y-toggle {
+    /* 44px minimum touch target (up from the desktop 36px). */
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
   .site__nav-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
+    order: 1;
+    /* 44px minimum touch target (up from the desktop 36px). */
+    width: 2.75rem;
+    height: 2.75rem;
     border: 1px solid var(--border);
     border-radius: 999px;
     background: transparent;
@@ -888,23 +916,25 @@ body {
   }
 
   .site__nav {
+    /* Slides in from the left, under its toggle button (also reordered to
+       the header's left edge above), rather than the right. */
     position: fixed;
     z-index: 90;
     top: 0;
-    right: 0;
+    left: 0;
     bottom: 0;
     width: min(18rem, 85vw);
     padding: calc(var(--header-height, 6rem) + 1.5rem) 1.5rem 1.5rem;
     margin: 0;
     background: var(--bg);
-    border-left: 1px solid var(--border);
-    box-shadow: -4px 0 16px rgb(0 0 0 / 20%);
+    border-right: 1px solid var(--border);
+    box-shadow: 4px 0 16px rgb(0 0 0 / 20%);
     overflow-y: auto;
     flex-wrap: nowrap;
     flex-direction: column;
     align-items: stretch;
     gap: 0.25rem;
-    transform: translateX(100%);
+    transform: translateX(-100%);
     transition: transform 0.25s ease;
   }
 
@@ -977,4 +1007,12 @@ body {
   color: var(--bg);
   box-shadow: 0 2px 8px rgb(0 0 0 / 25%);
   cursor: pointer;
+}
+
+@media (max-width: 48rem) {
+  /* Stacked 3rem button height + 0.5rem gap above .toc's own bottom offset
+     (see the media query above) so the two floating buttons never touch. */
+  .back-to-top {
+    bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px) + 3rem + 0.5rem);
+  }
 }
