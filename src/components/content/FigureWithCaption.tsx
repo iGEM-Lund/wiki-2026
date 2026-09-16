@@ -5,7 +5,7 @@ type FigureWithCaptionProps = {
 };
 
 // Plain <img>, not next/image: content images are always external
-// static.igem.wiki URLs (uploaded via tools.igem.org/uploads), and Image
+// static.igem.wiki URLs (uploaded via teams.igem.org/6160/deliverables/wiki/uploads), and Image
 // Optimization is off anyway for the static export build (see next.config.ts).
 export function FigureWithCaption({ src, alt = '', caption }: FigureWithCaptionProps) {
   return (

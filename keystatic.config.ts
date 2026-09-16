@@ -11,7 +11,7 @@ export const showAdminUI = process.env.BUILD_TARGET !== 'production';
 // Shared by the navigation singleton below: a nav item's (or dropdown
 // entry's) icon is either picked from the bundled lucide-react library
 // (rendered as inline SVG at build time, see src/components/nav-icon.tsx)
-// or a custom image URL, uploaded via tools.igem.org/uploads like every
+// or a custom image URL, uploaded via teams.igem.org/6160/deliverables/wiki/uploads like every
 // other image reference in this project — never a Keystatic image-upload
 // field, which would commit the binary into the repo.
 const iconField = fields.conditional(
@@ -31,7 +31,7 @@ const iconField = fields.conditional(
     }),
     custom: fields.url({
       label: 'Icon URL',
-      description: 'Upload via tools.igem.org/uploads, then paste the static.igem.wiki URL here.',
+      description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
       validation: { isRequired: true },
     }),
   },
