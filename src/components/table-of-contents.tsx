@@ -32,6 +32,7 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   // The pane's own on-screen position comes from the --header-height custom
   // property (set by HeaderHeightSync) via CSS, not this state.
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(0);
   // Mobile only (see the max-width media query in globals.css — desktop
   // always renders the fixed sidebar and ignores this): the pane stays a
   // floating toggle button until tapped, then slides in from the right as
@@ -50,10 +51,24 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   }, []);
 
   useEffect(() => {
+    const update = () => setViewportHeight(window.innerHeight);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  useEffect(() => {
     const ids = flattenIds(headings);
     if (ids.length === 0) return;
 
     const visible = new Set<string>();
+    // The "active" band runs from just below the fixed header down to 70% of
+    // the viewport — but on a short viewport with a tall header (e.g. mobile,
+    // where the nav wraps to multiple rows), that 70% cutoff can land above
+    // the header itself, inverting the band so nothing ever intersects it.
+    // Clamping the bottom margin keeps the band at least 120px tall.
+    const top = headerHeight + 32;
+    const bottom = Math.max(0, viewportHeight - top - 120);
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -66,7 +81,7 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
         const topmostVisible = ids.find((id) => visible.has(id));
         if (topmostVisible) setActiveId(topmostVisible);
       },
-      { rootMargin: `-${headerHeight + 32}px 0px -70% 0px`, threshold: 0 },
+      { rootMargin: `-${top}px 0px -${bottom}px 0px`, threshold: 0 },
     );
 
     for (const id of ids) {
@@ -75,7 +90,7 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
     }
 
     return () => observer.disconnect();
-  }, [headings, headerHeight]);
+  }, [headings, headerHeight, viewportHeight]);
 
   useEffect(() => {
     if (!open) return;
