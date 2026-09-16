@@ -131,6 +131,7 @@ body {
   color: var(--heading);
   line-height: 1.2;
   margin: 1.5em 0 0.5em;
+  clear: both; /* don't run alongside a floated figure's tail — see .figure-with-caption--float-* */
 }
 /* Sizes adapted from the brand guideline's print-point scale (Title 60pt /
    Heading 32pt / Subtitle 24pt / Section Header 16pt / Subheading 12pt) to a
@@ -668,6 +669,24 @@ body {
   font-size: 0.8125rem;
   font-weight: 200;
 }
+.figure-with-caption--float-left {
+  float: left;
+  max-width: 45%;
+  margin: 0.25rem 1.5rem 1rem 0;
+}
+.figure-with-caption--float-right {
+  float: right;
+  max-width: 45%;
+  margin: 0.25rem 0 1rem 1.5rem;
+}
+@media (max-width: 48rem) {
+  .figure-with-caption--float-left,
+  .figure-with-caption--float-right {
+    float: none;
+    max-width: 100%;
+    margin: 1rem 0;
+  }
+}
 
 .citation {
   text-decoration: underline;
@@ -675,6 +694,35 @@ body {
 }
 .citation--missing {
   color: var(--error);
+}
+
+.expandable {
+  margin: 1rem 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-alt);
+  padding: 0.75rem 1rem;
+}
+.expandable__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  cursor: pointer;
+  list-style: none;
+}
+.expandable__summary::-webkit-details-marker {
+  display: none;
+}
+.expandable__icon {
+  flex: 0 0 auto;
+  transition: transform 0.15s ease;
+}
+.expandable[open] .expandable__icon {
+  transform: rotate(180deg);
+}
+.expandable__body {
+  margin-top: 0.75rem;
 }
 
 .formula--block {

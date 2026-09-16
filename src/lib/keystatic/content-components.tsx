@@ -1,5 +1,5 @@
 import { fields } from '@keystatic/core';
-import { block, inline } from '@keystatic/core/content-components';
+import { block, inline, wrapper } from '@keystatic/core/content-components';
 import { renderLatexToHtml } from '@/lib/katex';
 import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/chemistry';
 
@@ -19,8 +19,41 @@ export const contentComponents = {
       }),
       alt: fields.text({ label: 'Alt text' }),
       caption: fields.text({ label: 'Caption', multiline: true }),
+      align: fields.select({
+        label: 'Placement',
+        description: 'Float lets text wrap alongside the figure instead of the figure taking the full width.',
+        options: [
+          { label: 'Full width', value: 'none' },
+          { label: 'Float left (text wraps on the right)', value: 'left' },
+          { label: 'Float right (text wraps on the left)', value: 'right' },
+        ],
+        defaultValue: 'none',
+      }),
     },
     ContentView: (props) => <div>[Figure: {props.value.caption ?? ''}]</div>,
+  }),
+
+  // The only blocks that need nested rich content, so the only ones using
+  // wrapper() instead of block()/inline(). Two components rather than one:
+  // ExpandableSummary marks which of Expandable's children is the always-
+  // visible teaser (written as its first child) — this only relies on
+  // wrapper()'s plain top-level `children`, not a named child-field region
+  // nested inside another wrapper's schema, which Keystatic's docs don't
+  // show as a supported combination and this repo has no running
+  // GitHub-authenticated admin instance to verify against.
+  Expandable: wrapper({
+    label: 'Expandable',
+    schema: {
+      defaultOpen: fields.checkbox({ label: 'Expanded by default', defaultValue: false }),
+    },
+    ContentView: ({ children }) => <div>{children}</div>,
+  }),
+
+  ExpandableSummary: wrapper({
+    label: 'Expandable Summary',
+    description: 'The always-visible teaser — insert as the first item inside an Expandable.',
+    schema: {},
+    ContentView: ({ children }) => <strong>{children}</strong>,
   }),
 
   Citation: inline({

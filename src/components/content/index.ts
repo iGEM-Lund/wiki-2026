@@ -1,4 +1,6 @@
 import { FigureWithCaption } from './FigureWithCaption';
+import { Expandable } from './Expandable';
+import { ExpandableSummary } from './ExpandableSummary';
 import { Citation } from './Citation';
 import { Formula } from './Formula';
 import { FormulaBlock } from './FormulaBlock';
@@ -12,6 +14,8 @@ import { MoleculeViewer } from './MoleculeViewer';
 // at both authoring and render time.
 export const mdxComponents = {
   FigureWithCaption,
+  Expandable,
+  ExpandableSummary,
   Citation,
   Formula,
   FormulaBlock,
