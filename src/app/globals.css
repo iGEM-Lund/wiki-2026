@@ -3,6 +3,11 @@
      opt-in only, via the header toggle (see the data-theme rules below). */
   color-scheme: light;
 
+  /* Text size is opt-in only too, via the accessibility menu's data-font-size
+     attribute — scaling the root font-size scales every rem unit in the
+     site with it. */
+  font-size: 100%;
+
   /* AnTigone brand kit (Canva) — teal palette is primary, pink is secondary. */
   --color-pearl: #fef8f4;
   --color-shallows: #e8f4f4;
@@ -64,6 +69,46 @@ body {
   /* Crimson fails contrast on Noir; Rose (same pink palette) is the
      accessible stand-in for error/missing states in dark mode. */
   --error: var(--color-rose);
+}
+
+/* Text size and dyslexia-friendly font are opt-in only too, via the
+   accessibility menu's data-font-size/data-font attributes — same
+   never-inherit-OS-preference philosophy as data-theme above. */
+:root[data-font-size='large'] {
+  font-size: 112.5%;
+}
+:root[data-font-size='larger'] {
+  font-size: 125%;
+}
+
+:root[data-font='dyslexic'] .site {
+  --font-heading: 'OpenDyslexic', system-ui, sans-serif;
+  --font-body: 'OpenDyslexic', system-ui, sans-serif;
+}
+
+/* Reduced motion is honored both automatically (OS-level preference) and
+   manually (the accessibility menu's data-motion attribute, for anyone who
+   wants motion off without changing their OS setting). Near-zero durations,
+   not `none`, so elements with animation-fill-mode: forwards (e.g. the
+   AnTigone logo draw-in) still land on their end state instead of popping
+   back to their from-keyframe. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+:root[data-motion='reduce'] *,
+:root[data-motion='reduce'] *::before,
+:root[data-motion='reduce'] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
 }
 
 .site h1,
@@ -441,24 +486,131 @@ body {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
-.site__theme-toggle {
+.site__a11y {
+  position: relative;
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+.site__a11y-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 2.25rem;
   height: 2.25rem;
-  margin-left: auto;
-  flex: 0 0 auto;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: transparent;
   color: var(--heading);
   cursor: pointer;
 }
-.site__theme-toggle:hover {
+.site__a11y-toggle:hover,
+.site__a11y-toggle[aria-expanded='true'] {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
   border-color: var(--accent);
   color: var(--accent);
+}
+
+.site__a11y-panel {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 15rem;
+  padding: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-alt);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.site__a11y-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.site__a11y-label {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.site__a11y-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.site__a11y-option:hover {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+.site__a11y-switch {
+  margin-left: auto;
+  width: 1.8rem;
+  height: 1.05rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--border);
+  position: relative;
+}
+.site__a11y-switch::before {
+  content: '';
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--bg);
+  transition: transform 0.15s ease;
+}
+.site__a11y-switch[data-on='true'] {
+  background: var(--accent);
+}
+.site__a11y-switch[data-on='true']::before {
+  transform: translateX(0.75rem);
+}
+
+.site__a11y-sizes {
+  display: flex;
+  gap: 0.4rem;
+}
+.site__a11y-size {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  font-family: var(--font-heading);
+}
+.site__a11y-size[data-size='large'] {
+  font-size: 1.15em;
+}
+.site__a11y-size[data-size='larger'] {
+  font-size: 1.3em;
+}
+.site__a11y-size[aria-checked='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 .site__main {

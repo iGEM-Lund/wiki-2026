@@ -7,11 +7,13 @@ import '@fontsource/poppins/200.css';
 import '@fontsource/poppins/200-italic.css';
 import '@fontsource/poppins/300.css';
 import '@fontsource/poppins/300-italic.css';
+import '@fontsource/opendyslexic/400.css';
+import '@fontsource/opendyslexic/700.css';
 import { getNav } from '@/lib/nav';
 import { AntigoneLogoMark } from '@/components/antigone-logo';
 import { NavIcon } from '@/components/nav-icon';
 import { NavDropdownLink } from '@/components/nav-dropdown-link';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { AccessibilityMenu } from '@/components/accessibility-menu';
 
 // getNav() is called here, not in the root layout, so a nav-build failure
 // can never break the /keystatic admin route tree. Fonts are imported here
@@ -56,7 +58,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
             ),
           )}
         </nav>
-        <ThemeToggle />
+        <AccessibilityMenu />
       </header>
       <main className="site__main">{children}</main>
       <footer className="site__footer">AnTigone &middot; iGEM Lund 2026</footer>
