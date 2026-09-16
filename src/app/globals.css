@@ -293,6 +293,21 @@ body {
   }
 }
 
+/* Wraps the toggle button + <nav> as siblings without adding a box of its
+   own — `display: contents` keeps the header's flex gap between brand,
+   nav items and the a11y menu exactly as if the toggle/nav were direct
+   header children, while still letting `[data-open]` below target the
+   drawer state. */
+.site__nav-wrap {
+  display: contents;
+}
+
+/* Only ever shown below 48rem (see the media query below) — desktop keeps
+   the always-visible hover nav and never renders this. */
+.site__nav-toggle {
+  display: none;
+}
+
 .site__nav {
   display: flex;
   align-items: center;
@@ -798,6 +813,10 @@ body {
     max-height: none;
     margin: 0;
     z-index: 40;
+    /* The desktop rule sets overflow-y: auto for the sidebar's own scrolling;
+       left on, it clips the toggle button's round box-shadow to this
+       element's rectangular box. */
+    overflow: visible;
   }
 
   .toc__toggle {
@@ -837,6 +856,108 @@ body {
 
   .toc[data-open='true'] .toc__panel {
     transform: translateX(0);
+  }
+}
+
+/* Below this width there's no hover to drive the dropdown nav (nothing to
+   hover on touch), so it collapses into a toggle button that slides the
+   whole nav in as a right-side drawer — the same pattern as the page-outline
+   drawer above. Each group's links are always expanded (a flat, scrollable
+   list) rather than hidden behind a second hover interaction that doesn't
+   exist here. Desktop's hover/focus-within styles live entirely outside
+   this query and are untouched; the paired selectors below exist only to
+   out-specificity those same hover/focus-within rules so a lingering touch
+   hover can't re-collapse or re-style anything on mobile. */
+@media (max-width: 48rem) {
+  .site__nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--heading);
+    cursor: pointer;
+    flex: 0 0 auto;
+  }
+  .site__nav-toggle:hover,
+  .site__nav-toggle[aria-expanded='true'] {
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+  }
+
+  .site__nav {
+    position: fixed;
+    z-index: 90;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(18rem, 85vw);
+    padding: calc(var(--header-height, 6rem) + 1.5rem) 1.5rem 1.5rem;
+    margin: 0;
+    background: var(--bg);
+    border-left: 1px solid var(--border);
+    box-shadow: -4px 0 16px rgb(0 0 0 / 20%);
+    overflow-y: auto;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+  }
+
+  .site__nav-wrap[data-open='true'] .site__nav {
+    transform: translateX(0);
+  }
+
+  .site__nav-item {
+    width: 100%;
+  }
+
+  .site__nav-dropdown {
+    align-items: stretch;
+    width: 100%;
+  }
+  .site__nav-item--trigger,
+  .site__nav-dropdown:hover .site__nav-item--trigger,
+  .site__nav-dropdown:focus-within .site__nav-item--trigger {
+    cursor: default;
+    transform: none;
+  }
+  .site__nav-dropdown-panel,
+  .site__nav-dropdown:hover .site__nav-dropdown-panel,
+  .site__nav-dropdown:focus-within .site__nav-dropdown-panel {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: auto;
+  }
+  .site__nav-dropdown-panel::before {
+    display: none;
+  }
+  .site__nav-dropdown-menu,
+  .site__nav-dropdown:hover .site__nav-dropdown-menu,
+  .site__nav-dropdown:focus-within .site__nav-dropdown-menu {
+    max-height: none;
+    overflow: visible;
+    padding: 0.15rem 0.35rem 0.35rem 1.25rem;
+    transition: none;
+  }
+  .site__nav-dropdown-menu li,
+  .site__nav-dropdown:hover .site__nav-dropdown-menu li,
+  .site__nav-dropdown:focus-within .site__nav-dropdown-menu li {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .site__nav-dropdown-menu a {
+    text-align: left;
   }
 }
 

@@ -13,6 +13,7 @@ import { getNav } from '@/lib/nav';
 import { AntigoneLogoMark } from '@/components/antigone-logo';
 import { NavIcon } from '@/components/nav-icon';
 import { NavDropdownLink } from '@/components/nav-dropdown-link';
+import { MobileNav } from '@/components/mobile-nav';
 import { AccessibilityMenu } from '@/components/accessibility-menu';
 import { HeaderHeightSync } from '@/components/header-height-sync';
 import { BackToTop } from '@/components/back-to-top';
@@ -35,32 +36,34 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
             <span className="site__brand-team">iGEM Lund 2026</span>
           </span>
         </Link>
-        <nav className="site__nav">
-          {nav.map((item) =>
-            item.kind === 'link' ? (
-              <Link key={item.name} href={item.target.href} className="site__nav-item">
-                <NavIcon icon={item.icon} size={18} />
-                {item.name}
-              </Link>
-            ) : (
-              <div key={item.name} className="site__nav-dropdown">
-                <span className="site__nav-item site__nav-item--trigger">
+        <MobileNav>
+          <nav className="site__nav" id="site-nav">
+            {nav.map((item) =>
+              item.kind === 'link' ? (
+                <Link key={item.name} href={item.target.href} className="site__nav-item">
                   <NavIcon icon={item.icon} size={18} />
                   {item.name}
-                </span>
-                <div className="site__nav-dropdown-panel">
-                  <ul className="site__nav-dropdown-menu">
-                    {item.items.map((entry) => (
-                      <li key={entry.target.href}>
-                        <NavDropdownLink href={entry.target.href}>{entry.label}</NavDropdownLink>
-                      </li>
-                    ))}
-                  </ul>
+                </Link>
+              ) : (
+                <div key={item.name} className="site__nav-dropdown">
+                  <span className="site__nav-item site__nav-item--trigger">
+                    <NavIcon icon={item.icon} size={18} />
+                    {item.name}
+                  </span>
+                  <div className="site__nav-dropdown-panel">
+                    <ul className="site__nav-dropdown-menu">
+                      {item.items.map((entry) => (
+                        <li key={entry.target.href}>
+                          <NavDropdownLink href={entry.target.href}>{entry.label}</NavDropdownLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            ),
-          )}
-        </nav>
+              ),
+            )}
+          </nav>
+        </MobileNav>
         <AccessibilityMenu />
       </header>
       <main className="site__main">{children}</main>
