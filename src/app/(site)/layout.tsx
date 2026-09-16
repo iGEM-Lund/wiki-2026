@@ -15,6 +15,7 @@ import { NavIcon } from '@/components/nav-icon';
 import { NavDropdownLink } from '@/components/nav-dropdown-link';
 import { AccessibilityMenu } from '@/components/accessibility-menu';
 import { HeaderHeightSync } from '@/components/header-height-sync';
+import { BackToTop } from '@/components/back-to-top';
 
 // getNav() is called here, not in the root layout, so a nav-build failure
 // can never break the /keystatic admin route tree. Fonts are imported here
@@ -64,6 +65,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       </header>
       <main className="site__main">{children}</main>
       <footer className="site__footer">AnTigone &middot; iGEM Lund 2026</footer>
+      <BackToTop />
     </div>
   );
 }
