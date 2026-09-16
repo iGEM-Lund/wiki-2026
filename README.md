@@ -94,7 +94,7 @@ what actually renders on the live site.
 ## Images, PDFs, videos
 
 Never commit binaries to this repo. Upload images/PDFs via
-`tools.igem.org/uploads`, which hosts them at `static.igem.wiki`, then paste
+`teams.igem.org/6160/deliverables/wiki/uploads`, which hosts them at `static.igem.wiki`, then paste
 the resulting URL into a `fields.url()` field (see `FigureWithCaption` in
 `keystatic.config.ts`). Videos go through the iGEM Video Universe and get
 embedded by URL, not uploaded.

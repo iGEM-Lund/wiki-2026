@@ -15,7 +15,7 @@ export const contentComponents = {
     schema: {
       src: fields.url({
         label: 'Image URL',
-        description: 'Upload via tools.igem.org/uploads, then paste the static.igem.wiki URL here.',
+        description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
       }),
       alt: fields.text({ label: 'Alt text' }),
       caption: fields.text({ label: 'Caption', multiline: true }),
@@ -124,7 +124,7 @@ export const contentComponents = {
       modelUrl: fields.url({
         label: 'Model file URL',
         description:
-          'Upload via tools.igem.org/uploads, then paste the static.igem.wiki URL here (PDB, mmCIF, SDF, MOL2, or XYZ format).',
+          'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here (PDB, mmCIF, SDF, MOL2, or XYZ format).',
       }),
       format: fields.select({
         label: 'File format',
