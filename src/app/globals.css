@@ -783,48 +783,29 @@ body {
 }
 
 /* Below this width the fixed sidebar would eat too much of the reading
-   column, so the pane instead sits inline above the article for a moment,
-   then collapses into a floating button (data-state, set by
-   TableOfContents) that expands it as an overlay instead of pushing
-   content. */
+   column, so it's replaced by a floating toggle button (bottom-right) that
+   slides the outline in from the right edge as an overlay, via `open`
+   (set by TableOfContents), instead of pushing content. */
 @media (max-width: 48rem) {
-  .page-layout {
-    display: flex;
-    flex-direction: column;
-  }
   .page-layout:has(> .toc) > article {
     margin-left: 0;
   }
 
   .toc {
-    position: static;
-    order: -1;
-    top: auto;
-    left: auto;
-    width: 100%;
-    max-height: none;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .toc[data-state='collapsed'],
-  .toc[data-state='expanded'] {
     position: fixed;
     inset: auto 1.5rem calc(1.5rem + 4rem) auto;
     width: auto;
+    max-height: none;
     margin: 0;
-    padding: 0;
-    border: none;
     z-index: 40;
   }
 
-  .toc[data-state='collapsed'] .toc__panel {
-    display: none;
-  }
-
-  .toc[data-state='collapsed'] .toc__toggle,
-  .toc[data-state='expanded'] .toc__toggle {
+  .toc__toggle {
+    /* Positioned (not static) and stacked above .toc__panel below, so the
+       button stays visible and clickable — as the drawer's close control —
+       even once the drawer slides over its bottom-right corner. */
+    position: relative;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -838,19 +819,24 @@ body {
     cursor: pointer;
   }
 
-  .toc[data-state='expanded'] .toc__panel {
-    position: absolute;
-    bottom: calc(100% + 0.75rem);
+  .toc__panel {
+    position: fixed;
+    z-index: 1;
+    top: 0;
     right: 0;
-    width: 16rem;
-    max-width: calc(100vw - 3rem);
-    max-height: 60vh;
-    overflow-y: auto;
+    bottom: 0;
+    width: min(20rem, 85vw);
+    padding: calc(var(--header-height, 6rem) + 1.5rem) 1.5rem 1.5rem;
     background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+    border-left: 1px solid var(--border);
+    box-shadow: -4px 0 16px rgb(0 0 0 / 20%);
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+  }
+
+  .toc[data-open='true'] .toc__panel {
+    transform: translateX(0);
   }
 }
 

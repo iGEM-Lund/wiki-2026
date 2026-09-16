@@ -1,15 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { List } from 'lucide-react';
+import { List, X } from 'lucide-react';
 import type { HeadingNode } from '@/lib/headings';
-
-// Mobile only (see the max-width media query in globals.css — desktop always
-// renders the fixed sidebar and ignores this): the pane starts inline above
-// the article, then auto-collapses into a floating toggle button so it
-// doesn't permanently eat into the reading width on small screens.
-type MobileState = 'inline' | 'collapsed' | 'expanded';
-const AUTO_COLLAPSE_MS = 2500;
 
 function flattenIds(nodes: HeadingNode[]): string[] {
   return nodes.flatMap((node) => [node.id, ...flattenIds(node.children)]);
@@ -39,7 +32,11 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   // The pane's own on-screen position comes from the --header-height custom
   // property (set by HeaderHeightSync) via CSS, not this state.
   const [headerHeight, setHeaderHeight] = useState(0);
-  const [mobileState, setMobileState] = useState<MobileState>('inline');
+  // Mobile only (see the max-width media query in globals.css — desktop
+  // always renders the fixed sidebar and ignores this): the pane stays a
+  // floating toggle button until tapped, then slides in from the right as
+  // an overlay instead of eating into the reading width.
+  const [open, setOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -80,23 +77,15 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
     return () => observer.disconnect();
   }, [headings, headerHeight]);
 
-  // Desktop ignores mobileState entirely (see globals.css), so this timer is
-  // harmless there — it just never gets a chance to visually matter.
   useEffect(() => {
-    if (headings.length === 0) return;
-    const timer = setTimeout(() => setMobileState('collapsed'), AUTO_COLLAPSE_MS);
-    return () => clearTimeout(timer);
-  }, [headings]);
-
-  useEffect(() => {
-    if (mobileState !== 'expanded') return;
+    if (!open) return;
     function onPointerDown(event: PointerEvent) {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
-        setMobileState('collapsed');
+        setOpen(false);
       }
     }
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') setMobileState('collapsed');
+      if (event.key === 'Escape') setOpen(false);
     }
     document.addEventListener('pointerdown', onPointerDown);
     document.addEventListener('keydown', onKeyDown);
@@ -104,29 +93,29 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
       document.removeEventListener('pointerdown', onPointerDown);
       document.removeEventListener('keydown', onKeyDown);
     };
-  }, [mobileState]);
+  }, [open]);
 
   if (headings.length === 0) return null;
 
   return (
-    <nav className="toc" data-state={mobileState} aria-label="Page outline" ref={navRef}>
+    <nav className="toc" data-open={open} aria-label="Page outline" ref={navRef}>
       <button
         type="button"
         className="toc__toggle"
-        aria-expanded={mobileState === 'expanded'}
+        aria-expanded={open}
         aria-controls="toc-panel"
-        aria-label="Page outline"
-        onClick={() => setMobileState((state) => (state === 'expanded' ? 'collapsed' : 'expanded'))}
+        aria-label={open ? 'Close page outline' : 'Open page outline'}
+        onClick={() => setOpen((value) => !value)}
       >
-        <List size={18} />
+        {open ? <X size={18} /> : <List size={18} />}
       </button>
       <div
         id="toc-panel"
         className="toc__panel"
-        // Collapse back to the floating button once a link is followed, so
-        // it doesn't sit open over the heading the reader just jumped to.
+        // Close the drawer once a link is followed, so it doesn't stay open
+        // over the heading the reader just jumped to.
         onClick={(event) => {
-          if ((event.target as HTMLElement).tagName === 'A') setMobileState('collapsed');
+          if ((event.target as HTMLElement).tagName === 'A') setOpen(false);
         }}
       >
         <p className="toc__title">On this page</p>
