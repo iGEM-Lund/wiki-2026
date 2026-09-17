@@ -212,51 +212,57 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
 
   return (
     <div className={`world-map${isDragging ? ' world-map--dragging' : ''}`} ref={containerRef}>
-      <svg
-        ref={svgRef}
-        className="world-map__viewport"
-        viewBox={`0 0 ${viewBox.width} ${viewBox.height}`}
-        role="group"
-        aria-label="World map"
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-      >
-        <rect className="world-map__sea" x={0} y={0} width={viewBox.width} height={viewBox.height} />
-        <g transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}>
-          <path className="world-map__land" d={landPath} />
-          {pins.map((pin) => (
-            <g
-              key={pin.id}
-              className="world-map__pin"
-              data-pin-id={pin.id}
-              transform={`translate(${pin.x} ${pin.y}) scale(${1 / transform.k})`}
-              tabIndex={0}
-              role="button"
-              aria-label={pin.title}
-              aria-expanded={pin.id === openPinId}
-              onMouseEnter={(event) => handlePinHover(pin.id, event.currentTarget)}
-              onMouseLeave={() => handlePinHoverEnd(pin.id)}
-              onFocus={(event) => handlePinHover(pin.id, event.currentTarget)}
-              onBlur={() => handlePinHoverEnd(pin.id)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  handlePinActivate(pin.id, event.currentTarget);
-                }
-              }}
-            >
-              {/* Physical pin: a thin needle from the local origin (the
-                  exact projected lat/lng point) up to a round head — drawn
-                  as a line then a circle on top, so the circle naturally
-                  covers the needle's upper end. */}
-              <line className="world-map__pin-needle" x1={0} y1={0} x2={0} y2={-13} />
-              <circle className="world-map__pin-dot" cx={0} cy={-13} r={3.5} />
-            </g>
-          ))}
-        </g>
-      </svg>
+      {/* The border/rounded-corner clipping lives on this inner frame, not
+          the outer container, so the popup below (a sibling, not a child,
+          of the frame) can overflow past the map's own edges instead of
+          being clipped when a pin sits near the border. */}
+      <div className="world-map__frame">
+        <svg
+          ref={svgRef}
+          className="world-map__viewport"
+          viewBox={`0 0 ${viewBox.width} ${viewBox.height}`}
+          role="group"
+          aria-label="World map"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+        >
+          <rect className="world-map__sea" x={0} y={0} width={viewBox.width} height={viewBox.height} />
+          <g transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}>
+            <path className="world-map__land" d={landPath} />
+            {pins.map((pin) => (
+              <g
+                key={pin.id}
+                className="world-map__pin"
+                data-pin-id={pin.id}
+                transform={`translate(${pin.x} ${pin.y}) scale(${1 / transform.k})`}
+                tabIndex={0}
+                role="button"
+                aria-label={pin.title}
+                aria-expanded={pin.id === openPinId}
+                onMouseEnter={(event) => handlePinHover(pin.id, event.currentTarget)}
+                onMouseLeave={() => handlePinHoverEnd(pin.id)}
+                onFocus={(event) => handlePinHover(pin.id, event.currentTarget)}
+                onBlur={() => handlePinHoverEnd(pin.id)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handlePinActivate(pin.id, event.currentTarget);
+                  }
+                }}
+              >
+                {/* Physical pin: a thin needle from the local origin (the
+                    exact projected lat/lng point) up to a round head —
+                    drawn as a line then a circle on top, so the circle
+                    naturally covers the needle's upper end. */}
+                <line className="world-map__pin-needle" x1={0} y1={0} x2={0} y2={-13} />
+                <circle className="world-map__pin-dot" cx={0} cy={-13} r={3.5} />
+              </g>
+            ))}
+          </g>
+        </svg>
+      </div>
 
       {hoveredPin && anchor && !isDragging ? (
         <div className="world-map__tooltip" role="tooltip" style={{ left: anchor.left, top: anchor.top }}>
