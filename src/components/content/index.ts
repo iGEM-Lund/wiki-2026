@@ -7,6 +7,9 @@ import { FormulaBlock } from './FormulaBlock';
 import { ChemStructure } from './ChemStructure';
 import { ChemReaction } from './ChemReaction';
 import { MoleculeViewer } from './MoleculeViewer';
+import { Layout } from './Layout';
+import { LayoutSidebar } from './LayoutSidebar';
+import { LayoutColumn } from './LayoutColumn';
 
 // Site-render map, used by src/lib/mdx/render.ts. Kept in sync by hand with
 // the editor-side registration in src/lib/keystatic/content-components.tsx —
@@ -22,4 +25,7 @@ export const mdxComponents = {
   ChemStructure,
   ChemReaction,
   MoleculeViewer,
+  Layout,
+  LayoutSidebar,
+  LayoutColumn,
 };
