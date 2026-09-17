@@ -371,7 +371,7 @@ body {
    transitions always run the timing that belongs to the state being
    transitioned INTO, so this gives opening and closing genuinely different
    sequencing instead of one mirroring the other backwards:
-     opening: pop -> fade in -> expand vertically
+     opening: pop + fade in + expand vertically, all at once, no lead-in delay
      closing: shrink vertically -> fade out
    Without this split, closing reused the opening's delays, which meant the
    height snapped back immediately while the color was still waiting out its
@@ -418,11 +418,11 @@ body {
   background: var(--bg-alt);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
   pointer-events: auto;
-  /* opening: give the trigger's pop a head start, then fade in. */
+  /* opening: fade in immediately, no head start. */
   transition:
-    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s,
-    background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s,
-    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
+    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .site__nav-dropdown-panel::before {
   content: '';
@@ -445,9 +445,8 @@ body {
 .site__nav-dropdown:hover .site__nav-dropdown-menu,
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu {
   max-height: 20rem;
-  /* opening: expand vertically only after the pop + fade-in above have
-     finished — 0.12s pop lead + 0.3s fade = 0.42s. */
-  transition: max-height 0.42s cubic-bezier(0.19, 1, 0.22, 1) 0.42s;
+  /* opening: expand vertically immediately alongside the fade-in above. */
+  transition: max-height 0.42s cubic-bezier(0.19, 1, 0.22, 1);
 }
 .site__nav-dropdown-menu li + li {
   margin-top: 0.15rem;
@@ -471,27 +470,27 @@ body {
 }
 .site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(1),
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(1) {
-  transition-delay: 0.46s;
+  transition-delay: 0.04s;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(2),
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(2) {
-  transition-delay: 0.51s;
+  transition-delay: 0.09s;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(3),
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(3) {
-  transition-delay: 0.56s;
+  transition-delay: 0.14s;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(4),
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(4) {
-  transition-delay: 0.61s;
+  transition-delay: 0.19s;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(5),
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(5) {
-  transition-delay: 0.66s;
+  transition-delay: 0.24s;
 }
 .site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(6),
 .site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(6) {
-  transition-delay: 0.71s;
+  transition-delay: 0.29s;
 }
 .site__nav-dropdown-menu a {
   display: block;
