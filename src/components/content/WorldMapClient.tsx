@@ -247,7 +247,14 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
                 }
               }}
             >
-              <circle className="world-map__pin-dot" r={6} />
+              {/* Teardrop pin: tip at the local origin (the exact projected
+                  lat/lng point), head above it — R=4.5 head radius, h=11
+                  tip-to-head-center distance, tuned by visual comparison
+                  (see this feature's dev session for the candidate renders). */}
+              <path
+                className="world-map__pin-dot"
+                d="M 0 0 C -2.25 -6.6 -4.5 -3.85 -4.5 -11 A 4.5 4.5 0 1 1 4.5 -11 C 4.5 -3.85 2.25 -6.6 0 0 Z"
+              />
             </g>
           ))}
         </g>
