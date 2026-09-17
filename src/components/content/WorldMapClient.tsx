@@ -42,6 +42,13 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
   const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
   const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
   const justDraggedRef = useRef(false);
+  // Which pin (if any) the current press started on, and its DOM element —
+  // captured at pointerdown, BEFORE setPointerCapture below retargets every
+  // later event (including the eventual click) to the <svg> itself. Pin
+  // activation is decided entirely from this + the drag threshold on
+  // pointerup, rather than from a per-pin onClick, because a captured
+  // pointer's click never actually reaches the pin element to fire it.
+  const pressedPinRef = useRef<{ id: string; element: SVGGElement } | null>(null);
 
   const openPin = pins.find((pin) => pin.id === openPinId) ?? null;
   const hoveredPin =
@@ -140,6 +147,8 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
 
   function handlePointerDown(event: ReactPointerEvent<SVGSVGElement>) {
     if (event.button !== 0) return;
+    const pinElement = (event.target as Element).closest<SVGGElement>('.world-map__pin');
+    pressedPinRef.current = pinElement ? { id: pinElement.dataset.pinId!, element: pinElement } : null;
     event.currentTarget.setPointerCapture(event.pointerId);
     justDraggedRef.current = false;
     pointerStartRef.current = { x: event.clientX, y: event.clientY };
@@ -171,16 +180,19 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
   }
 
   function handlePointerUp() {
+    const wasDrag = justDraggedRef.current;
+    const pressedPin = pressedPinRef.current;
     pointerStartRef.current = null;
     lastPointerRef.current = null;
+    pressedPinRef.current = null;
     setIsDragging(false);
-  }
-
-  // Reached only when a click bubbles up without a pin's own click handler
-  // stopping it — i.e. a click on empty sea/land, not on a pin.
-  function handleBackgroundClick() {
-    if (justDraggedRef.current) return;
-    setOpenPinId(null);
+    if (wasDrag) return; // a drag-release, not a click — leave state as-is
+    if (pressedPin) {
+      handlePinActivate(pressedPin.id, pressedPin.element);
+    } else {
+      // A genuine click on empty sea/land closes any open popup.
+      setOpenPinId(null);
+    }
   }
 
   function handlePinHover(id: string, element: Element) {
@@ -210,7 +222,6 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
-        onClick={handleBackgroundClick}
       >
         <rect className="world-map__sea" x={0} y={0} width={viewBox.width} height={viewBox.height} />
         <g transform={`translate(${transform.x} ${transform.y}) scale(${transform.k})`}>
@@ -219,6 +230,7 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
             <g
               key={pin.id}
               className="world-map__pin"
+              data-pin-id={pin.id}
               transform={`translate(${pin.x} ${pin.y}) scale(${1 / transform.k})`}
               tabIndex={0}
               role="button"
@@ -228,14 +240,9 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
               onMouseLeave={() => handlePinHoverEnd(pin.id)}
               onFocus={(event) => handlePinHover(pin.id, event.currentTarget)}
               onBlur={() => handlePinHoverEnd(pin.id)}
-              onClick={(event) => {
-                event.stopPropagation();
-                handlePinActivate(pin.id, event.currentTarget);
-              }}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
-                  event.stopPropagation();
                   handlePinActivate(pin.id, event.currentTarget);
                 }
               }}
