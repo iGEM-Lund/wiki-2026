@@ -838,6 +838,10 @@ body {
   margin: 0.5rem 0;
 }
 
+article p {
+  text-align: justify;
+}
+
 .page-layout:has(> .toc) > article {
   margin-left: calc(16rem + 2rem);
 }
