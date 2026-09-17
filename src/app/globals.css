@@ -866,10 +866,17 @@ body {
 .world-map__pin {
   cursor: pointer;
 }
+.world-map__pin-needle {
+  stroke: var(--color-crimson);
+  stroke-width: 1.8;
+}
 .world-map__pin-dot {
   fill: var(--color-crimson);
   stroke: var(--color-pearl);
   stroke-width: 1.5;
+}
+:root[data-theme='dark'] .site .world-map__pin-needle {
+  stroke: var(--color-rose);
 }
 :root[data-theme='dark'] .site .world-map__pin-dot {
   /* Crimson fails contrast on the dark-mode Noir background — same rule
