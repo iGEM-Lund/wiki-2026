@@ -498,7 +498,7 @@ body {
   border-radius: 4px;
   text-decoration: none;
   color: inherit;
-  text-align: center;
+  text-align: left;
 }
 .site__nav-dropdown-menu a:hover {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
