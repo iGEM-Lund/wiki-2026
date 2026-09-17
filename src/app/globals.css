@@ -131,7 +131,6 @@ body {
   color: var(--heading);
   line-height: 1.2;
   margin: 1.5em 0 0.5em;
-  clear: both; /* don't run alongside a floated figure's tail — see .figure-with-caption--float-* */
 }
 /* Sizes adapted from the brand guideline's print-point scale (Title 60pt /
    Heading 32pt / Subtitle 24pt / Section Header 16pt / Subheading 12pt) to a
@@ -657,22 +656,33 @@ body {
   font-size: 0.8125rem;
   font-weight: 200;
 }
-.figure-with-caption--float-left {
-  float: left;
-  max-width: 45%;
-  margin: 0.25rem 1.5rem 1rem 0;
+.layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+  align-items: start;
 }
-.figure-with-caption--float-right {
-  float: right;
-  max-width: 45%;
-  margin: 0.25rem 0 1rem 1.5rem;
+.layout-sidebar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+  align-items: start;
+}
+.layout__column {
+  min-width: 0; /* lets grid items shrink below intrinsic content width — images, KaTeX, the 3D viewer canvas */
+}
+.layout__column > :first-child {
+  margin-top: 0;
+}
+.layout__column > :last-child {
+  margin-bottom: 0;
 }
 @media (max-width: 48rem) {
-  .figure-with-caption--float-left,
-  .figure-with-caption--float-right {
-    float: none;
-    max-width: 100%;
-    margin: 1rem 0;
+  .layout,
+  .layout-sidebar {
+    grid-template-columns: 1fr;
   }
 }
 
