@@ -193,6 +193,48 @@ export const contentComponents = {
     ),
   }),
 
+  // Pins are a repeating fields.array(fields.object(...)) — proven elsewhere
+  // in this codebase only at the top-level keystatic.config.ts schema (the
+  // navigation singleton's dropdown items), not yet inside a
+  // content-component's own schema, but the field types themselves are the
+  // same ones already exercised there.
+  //
+  // `body` is deliberately fields.text (raw MDX source), NOT fields.mdx —
+  // verified against the installed @keystatic/core@0.5.50 runtime
+  // (node_modules/@keystatic/core/dist/index-a8452c26.js:20037-20038, and a
+  // second call path at :18507) that any field with formKind 'content'
+  // (what fields.mdx/fields.document both are) throws Error('Not
+  // implemented') the moment it's nested inside fields.array/fields.object
+  // and a writer reopens the page for editing. So a pin's popup body is
+  // hand-typed raw MDX in a plain multiline textarea — writers can still
+  // embed other content components (e.g. <Citation reference="slug" />),
+  // they just don't get Keystatic's rich-text toolbar/component-picker for
+  // this one field. See src/components/content/WorldMap.tsx, which compiles
+  // this text at render time with the same @mdx-js/mdx primitive
+  // src/lib/mdx/render.ts uses for page content.
+  WorldMap: block({
+    label: 'World Map',
+    schema: {
+      pins: fields.array(
+        fields.object({
+          title: fields.text({ label: 'Title', validation: { isRequired: true } }),
+          lat: fields.number({ label: 'Latitude', validation: { min: -90, max: 90 } }),
+          lng: fields.number({ label: 'Longitude', validation: { min: -180, max: 180 } }),
+          body: fields.text({
+            label: 'Popup body (MDX)',
+            multiline: true,
+            description:
+              'Raw MDX — plain formatting, or hand-embed other components, e.g. <Citation reference="slug" />.',
+          }),
+        }),
+        { label: 'Pins', itemLabel: (props) => props.fields.title.value || 'Pin' },
+      ),
+    },
+    // Cheap static placeholder, same MoleculeViewer precedent above —
+    // never a live interactive map inside the admin editor.
+    ContentView: (props) => <div>[World Map: {(props.value.pins ?? []).length} pin(s)]</div>,
+  }),
+
   // Generalized responsive layout system: Layout/LayoutSidebar are the two
   // container shapes, LayoutColumn is the shared column marker. The count of
   // LayoutColumn children IS the column count (enforced by each container's

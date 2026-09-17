@@ -4,6 +4,7 @@ import rehypeSlug from 'rehype-slug';
 import type { ComponentType } from 'react';
 import { mdxComponents } from '@/components/content';
 import { Citation } from '@/components/content/Citation';
+import { WorldMap } from '@/components/content/WorldMap';
 import { rehypeCollectHeadings, type HeadingItem } from '@/lib/headings';
 
 // fields.mdx() stores raw MDX source text — unlike the older fields.document,
@@ -29,6 +30,9 @@ export async function renderMdx(
   const components = {
     ...mdxComponents,
     Citation: (props: { reference?: string | null }) => Citation({ ...props, lookup: referenceLookup }),
+    // Pin popup bodies are raw MDX that may embed <Citation> — forward the
+    // same resolved lookup so those resolve too, not just top-level ones.
+    WorldMap: (props: Parameters<typeof WorldMap>[0]) => WorldMap({ ...props, referenceLookup }),
   };
 
   return {
