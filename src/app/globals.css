@@ -693,6 +693,57 @@ body {
   color: var(--error);
 }
 
+/* Crimson/Rose/Blush is the brand's secondary (pink) palette — see the
+   --color-* declarations at the top of this file. Crimson fails contrast
+   on the dark-mode Noir background (same reasoning as --error above), so
+   the card swaps to a crimson-tinted dark surface with Rose text instead
+   of reusing the light-mode Blush/Crimson pairing verbatim. */
+.quote-block {
+  --quote-surface: var(--color-blush);
+  --quote-accent: var(--color-crimson);
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 1.75rem 3.25rem 1.5rem 1.75rem;
+  border-radius: 14px;
+  background: var(--quote-surface);
+}
+:root[data-theme='dark'] .site .quote-block {
+  --quote-surface: color-mix(in srgb, var(--color-crimson) 22%, var(--bg-alt));
+  --quote-accent: var(--color-rose);
+}
+.quote-block__mark {
+  position: absolute;
+  top: 1.15rem;
+  right: 1.25rem;
+  width: 2.75rem;
+  height: auto;
+  color: var(--quote-accent);
+  opacity: 0.6;
+}
+.quote-block__text {
+  margin: 0;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+.quote-block__quotee {
+  margin: 0.85rem 0 0;
+  /* Below the quote, left-aligned rather than centered/right, so it reads
+     as an attribution line under the text instead of a caption under a
+     figure. */
+  text-align: left;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  color: var(--quote-accent);
+}
+.quote-block__quotee::before {
+  content: '— ';
+}
+
 .expandable {
   margin: 1rem 0;
   border: 1px solid var(--border);

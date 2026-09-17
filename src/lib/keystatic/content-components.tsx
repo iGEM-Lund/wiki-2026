@@ -46,6 +46,20 @@ export const contentComponents = {
     ContentView: ({ children }) => <strong>{children}</strong>,
   }),
 
+  Quote: block({
+    label: 'Quote',
+    schema: {
+      quote: fields.text({ label: 'Quote', multiline: true }),
+      quotee: fields.text({ label: 'Quotee (optional)' }),
+    },
+    ContentView: (props) => (
+      <blockquote>
+        {props.value.quote ?? ''}
+        {props.value.quotee ? <div>— {props.value.quotee}</div> : null}
+      </blockquote>
+    ),
+  }),
+
   Citation: inline({
     label: 'Citation',
     schema: {

@@ -2,6 +2,7 @@ import { FigureWithCaption } from './FigureWithCaption';
 import { Expandable } from './Expandable';
 import { ExpandableSummary } from './ExpandableSummary';
 import { Citation } from './Citation';
+import { Quote } from './Quote';
 import { Formula } from './Formula';
 import { FormulaBlock } from './FormulaBlock';
 import { ChemStructure } from './ChemStructure';
@@ -20,6 +21,7 @@ export const mdxComponents = {
   Expandable,
   ExpandableSummary,
   Citation,
+  Quote,
   Formula,
   FormulaBlock,
   ChemStructure,
