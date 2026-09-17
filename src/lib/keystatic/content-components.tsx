@@ -1,5 +1,5 @@
 import { fields } from '@keystatic/core';
-import { block, inline, wrapper } from '@keystatic/core/content-components';
+import { block, inline, wrapper, repeating } from '@keystatic/core/content-components';
 import { renderLatexToHtml } from '@/lib/katex';
 import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/chemistry';
 
@@ -19,16 +19,6 @@ export const contentComponents = {
       }),
       alt: fields.text({ label: 'Alt text' }),
       caption: fields.text({ label: 'Caption', multiline: true }),
-      align: fields.select({
-        label: 'Placement',
-        description: 'Float lets text wrap alongside the figure instead of the figure taking the full width.',
-        options: [
-          { label: 'Full width', value: 'none' },
-          { label: 'Float left (text wraps on the right)', value: 'left' },
-          { label: 'Float right (text wraps on the left)', value: 'right' },
-        ],
-        defaultValue: 'none',
-      }),
     },
     ContentView: (props) => <div>[Figure: {props.value.caption ?? ''}]</div>,
   }),
@@ -186,6 +176,54 @@ export const contentComponents = {
       <div>
         [3D Model{props.value.caption ? `: ${props.value.caption}` : ''} ({props.value.format})]
       </div>
+    ),
+  }),
+
+  // Generalized responsive layout system: Layout/LayoutSidebar are the two
+  // container shapes, LayoutColumn is the shared column marker. The count of
+  // LayoutColumn children IS the column count (enforced by each container's
+  // validation.children), rather than a separate `columns` field that could
+  // disagree with what was actually authored — Keystatic has no cross-field
+  // dynamic validation to keep such a field in sync. forSpecificLocations on
+  // LayoutColumn keeps it out of the general insert menu; it only makes
+  // sense as a child of Layout/LayoutSidebar. ContentViews use inline
+  // styles, not class names, since the admin editor doesn't load the site's
+  // globals.css.
+  LayoutColumn: wrapper({
+    label: 'Column',
+    description: 'A single column of content — insert inside a Layout, not on its own.',
+    forSpecificLocations: true,
+    schema: {},
+    ContentView: ({ children }) => (
+      <div style={{ border: '1px dashed #999', borderRadius: 4, padding: '0.5rem', minWidth: 0, flex: 1 }}>
+        {children}
+      </div>
+    ),
+  }),
+
+  Layout: repeating({
+    label: 'Layout (equal columns)',
+    description: 'Side-by-side columns of equal width (2-4). Stacks to one column on mobile.',
+    schema: {},
+    children: 'LayoutColumn',
+    validation: { children: { min: 2, max: 4 } },
+    ContentView: ({ children }) => (
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>{children}</div>
+    ),
+  }),
+
+  // Which column is "narrow" is simply whichever LayoutColumn is authored
+  // first — reorder the columns to flip it, rather than a separate
+  // left/right field.
+  LayoutSidebar: repeating({
+    label: 'Layout (sidebar + main)',
+    description:
+      'Two columns: the first is narrow, the second is wide. Reorder the columns to flip which side is narrow. Stacks to one column on mobile.',
+    schema: {},
+    children: 'LayoutColumn',
+    validation: { children: { min: 2, max: 2 } },
+    ContentView: ({ children }) => (
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>{children}</div>
     ),
   }),
 };
