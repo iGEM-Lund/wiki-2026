@@ -7,9 +7,23 @@ collection entry — edit or replace it via the Keystatic admin UI at
 
 Inline math example: <Formula latex="E = mc^2" /> sits within a sentence.
 
-<FormulaBlock latex="\int_0^\infty e^{-x^2}\,dx = \frac{\sqrt{\pi}}{2}" />
 
-<ChemStructure smiles="C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@@H]2O)CCC4=CC(=O)CC[C@]34C" caption="Testosterone" />
+
+<Layout>
+  <LayoutColumn>
+    <FormulaBlock latex="\int_0^\infty e^{-x^2}\,dx = \frac{\sqrt{\pi}}{2}" />
+
+
+  </LayoutColumn>
+
+  <LayoutColumn>
+    <ChemStructure smiles="C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@@H]2O)CCC4=CC(=O)CC[C@]34C" caption="Testosterone" />
+
+
+  </LayoutColumn>
+</Layout>
+
+
 
 <ChemReaction smiles="CCO.CC(=O)O>>CCOC(=O)C.O" caption="Esterification: ethanol + acetic acid -> ethyl acetate + water" />
 
@@ -22,4 +36,6 @@ Inline math example: <Formula latex="E = mc^2" /> sits within a sentence.
 </Expandable>
 
 > This is a quote
+
+
 
