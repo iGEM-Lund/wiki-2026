@@ -696,6 +696,12 @@ body {
   left: 0;
   width: 100%;
   height: 100px;
+  /* Sits between the two photo-half layers below (z-index 1 and 3) so it's
+     the SAME single drawn string that reads as passing behind a photo on
+     one side and in front of it on the other -- see the photo-half comment
+     for why this replaced an earlier approach that drew a second,
+     approximated copy of the string on top of each photo. */
+  z-index: 2;
 }
 .figure-carousel__string path {
   fill: none;
@@ -712,89 +718,119 @@ body {
   width: 100%;
   height: 100%;
 }
-.figure-carousel__photo {
+/* Each photo is TWO of these, identically positioned/animated and
+   differing only in z-index and which half of themselves they clip away
+   (see --behind/--front below and the component comment for why) --
+   together they add up to one seamless-looking card, with the genuine
+   string (z-index 2, see .figure-carousel__string) sandwiched between them
+   rather than a second approximated copy of it. */
+.figure-carousel__photo-half {
   position: absolute;
   width: 260px;
   height: 320px;
-  padding: 10px 10px 16px;
+  /* Extra top padding (vs the sides/bottom) gives the punched hole below
+     some real polaroid-style card margin to sit inside, rather than
+     crowding the top edge. */
+  padding: 24px 10px 16px;
   background: var(--bg-alt);
   border: 1px solid var(--border);
   border-radius: 4px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  /* Punches a small transparent circle 11px below the card's top edge so
-     the string (drawn behind it) reads as passing through a real hole. 11px
-     is the gap between the string's own baseline (20px, matching the SVG
-     path's endpoints above) and this card's baseline top (9px) below --
-     keeping the hole fixed there means it tracks the string exactly as the
-     card's top rises and falls with it. Sized close to the string's own
-     5px stroke-width (not much bigger) so the hole reads as a snug window
-     around the string, not a big gap that's mostly background. A separate
-     figure-carousel__thread-front bar is then drawn on top of the whole
-     card, picking up right where the hole leaves off and running the same
-     thickness as the string across the right half only, so the string
-     reads as ducking BEHIND the photo on the left of the hole and coming
-     back IN FRONT of it on the right, like it's actually threaded through
-     rather than just a red smudge painted over the hole. */
-  -webkit-mask-image: radial-gradient(circle 5px at 50% 11px, transparent 99%, black 100%);
-  mask-image: radial-gradient(circle 5px at 50% 11px, transparent 99%, black 100%);
   animation-name: figure-carousel-move, figure-carousel-swing;
   animation-timing-function: linear, ease-in-out;
   animation-iteration-count: infinite, infinite;
   /* left: --figure-carousel-t IS the string's own x-fraction (see the
      string comment above) mapped straight to a percentage of the
-     container, minus half this card's width so the card's horizontal
-     CENTER -- where the hole is -- lands on that fraction, not its left
+     container, minus half this card's width so its horizontal CENTER --
+     where the two halves meet -- lands on that fraction, not its left
      edge.
-     top: baseline 9px + a parabola peaking at +60px at t=0.5 (4*t*(1-t) is
-     the standard 0-at-the-ends, 1-at-the-middle parabola shape). 9px is
-     11px (the mask hole's offset above) less than the string's own 20px
-     baseline, so hole position + that 11px always lands exactly on the
+     top: baseline 8px + a parabola peaking at +60px at t=0.5 (4*t*(1-t) is
+     the standard 0-at-the-ends, 1-at-the-middle parabola shape). 8px is
+     12px (the hole's offset below, see --front's mask) less than the
+     string's own 20px baseline, so the hole always lands exactly on the
      drawn string. */
   left: calc((var(--figure-carousel-t) * 100%) - 130px);
-  top: calc(9px + (4 * var(--figure-carousel-t) * (1 - var(--figure-carousel-t)) * 60px));
-  /* Pivot the swing from the hole, like a real hanging photo, not the card's
-     own center. Rotating around the hole itself (rather than the card
-     center) also means the hole's own on-screen position never moves during
-     the swing, which is what keeps figure-carousel__thread-front (below,
-     unaffected by this same swing) aligned with it at every moment. */
-  transform-origin: 50% 11px;
+  top: calc(8px + (4 * var(--figure-carousel-t) * (1 - var(--figure-carousel-t)) * 60px));
+  /* Pivot the swing from the hole, like a real hanging photo, not the
+     card's own center. Rotating around that point (rather than the card
+     center) also means it stays put during the swing, which is what keeps
+     the --behind and --front halves (which share this exact
+     transform-origin) rotating in lockstep rather than drifting apart at
+     their shared seam. */
+  transform-origin: 50% 12px;
 }
-.figure-carousel__photo img {
+.figure-carousel__photo-half img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-/* The "string in front" half of the thread-through illusion: a short bar
-   the SAME thickness as the string itself (5px, matching
-   figure-carousel__string path's stroke-width), starting exactly at the
-   hole's center and running rightward across the photo's surface -- reading
-   as the string re-emerging from the hole and crossing in front for a
-   short stretch, not a blob painted over the hole. Drawn as a sibling
-   positioned independently of its photo (not a child, since a child would
-   be cut by the photo's own mask above) and painted after every photo in
-   DOM order, so it's never hidden behind one. Deliberately only animated by
-   figure-carousel-move, not figure-carousel-swing -- it represents a fixed
-   point on the string itself, not the swinging photo, and (see the
-   transform-origin comment above) the hole's true position never moves
-   during the swing anyway. */
-.figure-carousel__thread-front {
+/* The punched hole at the seam: BOTH halves carry the exact same mask,
+   centered exactly on their shared boundary (50%, each half's own edge in
+   its own 260px-wide box coordinates -- the same space clip-path above
+   uses), rather than one half owning the whole circle. Each half's
+   clip-path already keeps only ITS OWN side of that circle -- --behind's
+   right edge is the boundary, so only the LEFT half of its circle falls
+   inside its visible region, and vice versa for --front -- so the two
+   halves' surviving semicircles line up and reconstruct one full circle
+   exactly at the seam, physically matching how the card material on
+   either side of a real punched hole would each show half of it, rather
+   than the whole hole belonging to one side or being shifted off the true
+   seam to dodge the clipping (tried that -- it left the hole floating
+   next to the transition instead of at it, looking disconnected from
+   where the string actually ducks under). */
+.figure-carousel__photo-half--behind {
+  z-index: 1;
+  /* 1px past the true 50% seam (not exactly 50%), and --front's clip below
+     mirrors this on its own side -- a hairline anti-aliasing gap showed up
+     running the card's full height when both clips met at exactly the same
+     point, so they overlap by 2px instead. Harmless: --front is the
+     topmost layer, so it simply wins in that sliver, same as it already
+     does everywhere else on its own side. */
+  clip-path: inset(0 calc(50% - 1px) 0 0);
+  -webkit-mask-image: radial-gradient(circle 8px at 50% 12px, transparent 99%, black 100%);
+  mask-image: radial-gradient(circle 8px at 50% 12px, transparent 99%, black 100%);
+}
+.figure-carousel__photo-half--front {
+  z-index: 3;
+  clip-path: inset(0 0 0 calc(50% - 1px));
+  -webkit-mask-image: radial-gradient(circle 8px at 50% 12px, transparent 99%, black 100%);
+  mask-image: radial-gradient(circle 8px at 50% 12px, transparent 99%, black 100%);
+}
+/* A thin ring around the punched hole, matching the card's own 1px border
+   color -- like a grommet around a real hole. Drawn as an ::after on EACH
+   half rather than a separate element: a separate element -- even one
+   given the exact same animation-delay/duration -- turned out to visibly
+   drift out of sync with the actual card over the course of the (very
+   long, 45s+) animation cycle, landing the ring somewhere between two
+   photos entirely. An ::after has no such risk, since it isn't animated
+   independently at all -- it's generated content inside the half itself,
+   so it moves/swings/clips exactly as the half does, automatically, and
+   (being subject to the SAME clip-path as the rest of the half) each half
+   naturally contributes only its own semicircle of the ring, the same way
+   the mask above does for the hole itself. box-sizing: content-box (rather
+   than the border-box set globally) makes width/height literally the
+   content size, so the numbers below are exact, not derived by subtracting
+   a border width back out of a border-box total. 14px content (radius 7px)
+   is deliberately 1px SMALLER than the mask's own 8px hole radius, so the
+   ring overlaps the hole's edge by a px rather than trying to land exactly
+   on it -- measured live, the declared 1.5px border rendered as a
+   fractional ~0.8px actual width (some non-1:1 pixel-scaling quirk of the
+   test environment), and at that thin/odd a width, exact-edge alignment
+   visibly read as a gap; overlapping is robust regardless of exactly how
+   thin the border ends up rendering. */
+.figure-carousel__photo-half--behind::after,
+.figure-carousel__photo-half--front::after {
+  content: '';
   position: absolute;
-  width: 18px;
-  height: 5px;
-  border-radius: 2.5px;
-  background: var(--color-crimson);
-  animation-name: figure-carousel-move;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  /* Starts exactly at the string's own point at this t (see
-     figure-carousel__string's comment for why this is the same formula as
-     the drawn string/the photo's hole) and extends rightward, rather than
-     being centered on it -- centering would put half of this bar to the
-     LEFT of the hole too, over the same area the hole's mask already
-     handles. */
-  left: calc(var(--figure-carousel-t) * 100%);
-  top: calc(20px + (4 * var(--figure-carousel-t) * (1 - var(--figure-carousel-t)) * 60px) - 2.5px);
+  box-sizing: content-box;
+  left: 50%;
+  top: 12px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  transform: translate(-50%, -50%);
 }
 @keyframes figure-carousel-move {
   from {
@@ -1068,10 +1104,6 @@ body {
 :root[data-theme='dark'] .site .figure-carousel__string path {
   /* Same Crimson-fails-contrast-on-Noir swap as world-map__pin above. */
   stroke: var(--color-rose);
-}
-:root[data-theme='dark'] .site .figure-carousel__thread-front {
-  /* Same Crimson-fails-contrast-on-Noir swap as world-map__pin above. */
-  background: var(--color-rose);
 }
 .world-map__pin:focus-visible .world-map__pin-dot {
   outline: 2px solid var(--accent);

@@ -13,7 +13,7 @@ const SWING_SECONDS = 2.4;
 // EACH side (see globals.css's figure-carousel-move keyframes, which run
 // -BUFFER to 1+BUFFER, not 0 to 1) -- must match that file's keyframes
 // exactly, since the delay math below assumes it. Just enough to comfortably
-// clear figure-carousel__photo's 260px width (globals.css) at a typical
+// clear figure-carousel__photo-half's 260px width (globals.css) at a typical
 // article-column width, so a photo's loop restart stays off-screen.
 const BUFFER = 0.4;
 
@@ -58,6 +58,18 @@ const GAP = 0.35;
 // the property reverts to this base value afterward — so reduced-motion
 // visitors see the photos settle into a static, evenly-spread arrangement
 // instead of all piling up off-screen.
+//
+// Each photo renders as TWO identically-positioned, identically-animated
+// halves rather than one card — figure-carousel-photo-half--behind (clipped
+// to its own left half, z-index below the string) and --front (clipped to
+// its own right half, z-index above the string). This is what makes the
+// string read as passing "through" the photo: it's the same single drawn
+// string, with the photo simply stacked around it differently on each
+// side, rather than an approximation drawn on top that has to be kept in
+// sync with the string's own curve (that approach was tried and produced a
+// visible kink wherever the approximation's straight line met the string's
+// actual curve — this way there's nothing to keep in sync, since there's
+// no second copy of the string at all).
 export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouselProps) {
   if (images.length === 0) return null;
   const totalDuration = speedSeconds * (1 + 2 * BUFFER);
@@ -73,8 +85,8 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
             midpoint is exactly a parabola, and — because its x-component is
             then exactly linear in the curve parameter — its equation is
             y = 20 + 4 * x * (1 - x) * 60 for x in [0, 1]. That is the SAME
-            equation figure-carousel__photo's `top` calc() uses (see
-            globals.css), which is what keeps every photo's punched hole
+            equation figure-carousel__photo-half's `top` calc() uses (see
+            globals.css), which is what keeps every photo's clip seam
             sitting exactly on this drawn string as both move/scale. */}
         <path d="M 0,20 Q 50,140 100,20" />
       </svg>
@@ -89,24 +101,15 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
             animationDelay: `${moveDelay}s, ${swingDelay}s`,
           } as CSSProperties;
           return (
-            <div key={index} className="figure-carousel__photo" style={style}>
-              <img src={image.src} alt={image.alt ?? ''} />
+            <div key={index}>
+              <div className="figure-carousel__photo-half figure-carousel__photo-half--behind" style={style}>
+                <img src={image.src} alt={image.alt ?? ''} />
+              </div>
+              <div className="figure-carousel__photo-half figure-carousel__photo-half--front" style={style}>
+                <img src={image.src} alt="" aria-hidden="true" />
+              </div>
             </div>
           );
-        })}
-        {/* Painted in a separate pass, after every photo, so every dot is
-            guaranteed to be on top of every photo regardless of index — see
-            the "in front" half of the thread-through comment on
-            figure-carousel__photo's mask in globals.css. */}
-        {images.map((_, index) => {
-          const t = index * GAP;
-          const moveDelay = -((t + BUFFER) * speedSeconds);
-          const style = {
-            '--figure-carousel-t': t,
-            animationDuration: `${totalDuration}s`,
-            animationDelay: `${moveDelay}s`,
-          } as CSSProperties;
-          return <div key={index} className="figure-carousel__thread-front" style={style} aria-hidden="true" />;
         })}
       </div>
     </div>
