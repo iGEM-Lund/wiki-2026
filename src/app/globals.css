@@ -655,6 +655,71 @@ body {
   font-size: 0.8125rem;
   font-weight: 200;
 }
+
+.figure-carousel {
+  position: relative;
+  height: 260px;
+  margin: 1rem 0;
+  /* The outgoing photo's slide continues past the right edge (see the
+     keyframes' `to: left: 100%` below) rather than stopping flush at the
+     boundary and then being swapped out -- without clipping, that motion
+     would spill outside the component's box instead of reading as the photo
+     exiting off-screen. */
+  overflow: hidden;
+}
+.figure-carousel__string {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--muted);
+}
+.figure-carousel__track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.figure-carousel__photo {
+  position: absolute;
+  left: 0;
+  top: 20px;
+  width: 180px;
+  height: 220px;
+  padding: 10px 10px 16px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  /* Punches a small transparent circle near the top-center so the string
+     behind the card (positioned at the same height, lower z-index by paint
+     order) reads as passing through a real hole rather than just sitting
+     above the photo. */
+  -webkit-mask-image: radial-gradient(circle 4px at 50% 11px, transparent 99%, black 100%);
+  mask-image: radial-gradient(circle 4px at 50% 11px, transparent 99%, black 100%);
+  animation-name: figure-carousel-slide;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+.figure-carousel__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@keyframes figure-carousel-slide {
+  from {
+    left: 0;
+  }
+  to {
+    /* Fully clears the container's right edge (180px card width == the
+       track's 100% mark places its LEFT edge at the boundary, so the whole
+       card is past it) -- the photo visibly slides off-screen rather than
+       stopping flush at the edge and then vanishing the instant the next
+       photo's key swap unmounts it. */
+    left: 100%;
+  }
+}
 .layout {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));

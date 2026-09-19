@@ -23,6 +23,29 @@ export const contentComponents = {
     ContentView: (props) => <div>[Figure: {props.value.caption ?? ''}]</div>,
   }),
 
+  FigureCarousel: block({
+    label: 'Figure Carousel',
+    schema: {
+      images: fields.array(
+        fields.object({
+          src: fields.url({
+            label: 'Image URL',
+            description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
+          }),
+          alt: fields.text({ label: 'Alt text' }),
+        }),
+        { label: 'Figures', itemLabel: (props) => props.fields.alt.value || props.fields.src.value || 'Figure' },
+      ),
+      intervalSeconds: fields.number({
+        label: 'Seconds per photo',
+        description: 'How long each photo takes to slide across the string before the next one starts.',
+        defaultValue: 5,
+        validation: { min: 1 },
+      }),
+    },
+    ContentView: (props) => <div>[Figure Carousel: {(props.value.images ?? []).length} figure(s)]</div>,
+  }),
+
   PdfEmbed: block({
     label: 'PDF Document',
     schema: {
