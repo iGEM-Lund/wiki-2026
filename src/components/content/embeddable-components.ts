@@ -1,4 +1,5 @@
 import { FigureWithCaption } from './FigureWithCaption';
+import { PdfEmbed } from './PdfEmbed';
 import { Expandable } from './Expandable';
 import { ExpandableSummary } from './ExpandableSummary';
 import { Citation } from './Citation';
@@ -22,6 +23,7 @@ import { LayoutColumn } from './LayoutColumn';
 // rather than recursive — no separate guard needed.
 export const embeddableComponents = {
   FigureWithCaption,
+  PdfEmbed,
   Expandable,
   ExpandableSummary,
   Citation,

@@ -23,6 +23,23 @@ export const contentComponents = {
     ContentView: (props) => <div>[Figure: {props.value.caption ?? ''}]</div>,
   }),
 
+  PdfEmbed: block({
+    label: 'PDF Document',
+    schema: {
+      src: fields.url({
+        label: 'PDF URL',
+        description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
+      }),
+      title: fields.text({
+        label: 'Title',
+        description: 'The embed\'s accessible label, and the text used in the "open in new tab" fallback link.',
+        validation: { isRequired: true },
+      }),
+      caption: fields.text({ label: 'Caption (optional)', multiline: true }),
+    },
+    ContentView: (props) => <div>[PDF: {props.value.title ?? ''}]</div>,
+  }),
+
   // The only blocks that need nested rich content, so the only ones using
   // wrapper() instead of block()/inline(). Two components rather than one:
   // ExpandableSummary marks which of Expandable's children is the always-
