@@ -656,24 +656,52 @@ body {
   font-weight: 200;
 }
 
+/* Custom property so the photos' curved travel (top/left below) can be
+   driven by a single continuously-animated number instead of animating
+   top/left directly per keyframe step -- lets one @keyframes block drive
+   both axes from one t, and lets every photo share it while only differing
+   by animation-delay (see FigureCarousel.tsx). Registered (not just `--foo:
+   0`) so the browser knows how to interpolate it as a plain number, not a
+   token string -- unregistered custom properties don't animate smoothly. */
+@property --figure-carousel-t {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
 .figure-carousel {
   position: relative;
-  height: 260px;
+  height: 240px;
   margin: 1rem 0;
-  /* The outgoing photo's slide continues past the right edge (see the
-     keyframes' `to: left: 100%` below) rather than stopping flush at the
-     boundary and then being swapped out -- without clipping, that motion
-     would spill outside the component's box instead of reading as the photo
-     exiting off-screen. */
+  /* Photos travel from off-screen left to off-screen right (see the
+     -160px/+160px buffer in figure-carousel__photo's left calc()) and wrap
+     instantly back to the start of that same off-screen buffer -- never
+     flush against a visible edge -- so the per-photo loop restart is never
+     seen; overflow: hidden clips the whole buffer zone. */
   overflow: hidden;
 }
+/* The string itself: a true parabola (a quadratic Bezier whose control
+   point sits exactly above the horizontal midpoint is mathematically a
+   parabola, and is deliberately positioned so its equation is IDENTICAL to
+   figure-carousel__photo's top calc() below -- see the comment there for
+   the shared baseline/amplitude constants (20px/50px) that keep the drawn
+   string and every photo's hole in visual sync as both move/scale
+   together. */
 .figure-carousel__string {
   position: absolute;
-  top: 30px;
+  top: 0;
   left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--muted);
+  width: 100%;
+  height: 90px;
+}
+.figure-carousel__string path {
+  fill: none;
+  stroke: var(--color-crimson);
+  stroke-width: 3;
+  stroke-linecap: round;
+  /* preserveAspectRatio="none" on the <svg> lets width stretch independently
+     of height (a fluid string across any container width) -- without this,
+     that non-uniform scale would also stretch the stroke into an ellipse. */
+  vector-effect: non-scaling-stroke;
 }
 .figure-carousel__track {
   position: relative;
@@ -682,24 +710,38 @@ body {
 }
 .figure-carousel__photo {
   position: absolute;
-  left: 0;
-  top: 20px;
-  width: 180px;
-  height: 220px;
+  width: 130px;
+  height: 160px;
   padding: 10px 10px 16px;
   background: var(--bg-alt);
   border: 1px solid var(--border);
   border-radius: 4px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  /* Punches a small transparent circle near the top-center so the string
-     behind the card (positioned at the same height, lower z-index by paint
-     order) reads as passing through a real hole rather than just sitting
-     above the photo. */
+  /* Punches a small transparent circle 11px below the card's top edge so
+     the string (drawn behind it) reads as passing through a real hole. 11px
+     is the gap between the string's own baseline (20px, matching the SVG
+     path's endpoints above) and this card's baseline top (9px) below --
+     keeping the hole fixed there means it tracks the string exactly as the
+     card's top rises and falls with it. */
   -webkit-mask-image: radial-gradient(circle 4px at 50% 11px, transparent 99%, black 100%);
   mask-image: radial-gradient(circle 4px at 50% 11px, transparent 99%, black 100%);
-  animation-name: figure-carousel-slide;
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: forwards;
+  animation-name: figure-carousel-move, figure-carousel-swing;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+  /* left: a photo travels from 160px off the left edge to 160px off the
+     right edge (160px > the 130px card width, so it's always fully clear)
+     as --figure-carousel-t runs 0 -> 1.
+     top: baseline 9px + a parabola peaking at +50px when t=0.5 (4*t*(1-t)
+     is the standard 0-at-the-ends, 1-at-the-middle parabola shape) -- 9px
+     is 11px (the mask hole's offset above) less than the string's own 20px
+     baseline, so hole position + this offset always lands exactly on the
+     drawn string, including in the off-screen buffer where the same
+     formula keeps curving smoothly (unseen) rather than jumping. */
+  left: calc(-160px + (var(--figure-carousel-t) * (100% + 320px)));
+  top: calc(9px + (4 * var(--figure-carousel-t) * (1 - var(--figure-carousel-t)) * 50px));
+  /* Pivot the swing from the hole, like a real hanging photo, not the card's
+     own center. */
+  transform-origin: 50% 11px;
 }
 .figure-carousel__photo img {
   display: block;
@@ -707,17 +749,21 @@ body {
   height: 100%;
   object-fit: cover;
 }
-@keyframes figure-carousel-slide {
+@keyframes figure-carousel-move {
   from {
-    left: 0;
+    --figure-carousel-t: 0;
   }
   to {
-    /* Fully clears the container's right edge (180px card width == the
-       track's 100% mark places its LEFT edge at the boundary, so the whole
-       card is past it) -- the photo visibly slides off-screen rather than
-       stopping flush at the edge and then vanishing the instant the next
-       photo's key swap unmounts it. */
-    left: 100%;
+    --figure-carousel-t: 1;
+  }
+}
+@keyframes figure-carousel-swing {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(4deg);
   }
 }
 .layout {
@@ -971,6 +1017,10 @@ body {
      already governing --error and .quote-block. */
   fill: var(--color-rose);
   stroke: var(--color-noir);
+}
+:root[data-theme='dark'] .site .figure-carousel__string path {
+  /* Same Crimson-fails-contrast-on-Noir swap as world-map__pin above. */
+  stroke: var(--color-rose);
 }
 .world-map__pin:focus-visible .world-map__pin-dot {
   outline: 2px solid var(--accent);

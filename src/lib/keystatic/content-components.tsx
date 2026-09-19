@@ -36,10 +36,11 @@ export const contentComponents = {
         }),
         { label: 'Figures', itemLabel: (props) => props.fields.alt.value || props.fields.src.value || 'Figure' },
       ),
-      intervalSeconds: fields.number({
-        label: 'Seconds per photo',
-        description: 'How long each photo takes to slide across the string before the next one starts.',
-        defaultValue: 5,
+      speedSeconds: fields.number({
+        label: 'Seconds to cross the string',
+        description:
+          'How long a single photo takes to travel from one end of the string to the other. All photos move continuously at this same slow, uniform pace — lower is faster.',
+        defaultValue: 20,
         validation: { min: 1 },
       }),
     },
