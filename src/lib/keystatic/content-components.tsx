@@ -252,14 +252,38 @@ export const contentComponents = {
   // this one field. See src/components/content/WorldMap.tsx, which compiles
   // this text at render time with the same @mdx-js/mdx primitive
   // src/lib/mdx/render.ts uses for page content.
+  //
+  // `lat`/`lng` are deliberately fields.text (not fields.number), for a
+  // second, independently discovered Keystatic bug: this field's own values
+  // round-trip through the page's raw MDX source as a JS expression
+  // attribute, e.g. `pins={[{"lat": -33.9249, ...}]}`. Any NEGATIVE number
+  // there parses as an ESTree UnaryExpression ("-" applied to a Literal),
+  // not a Literal itself, and Keystatic's MDX deserializer
+  // (node_modules/@keystatic/core/dist/index-a8452c26.js's
+  // expressionToValue, ~line 26973) only handles Literal/ArrayExpression/
+  // ObjectExpression — a bare negative number throws, surfacing as "Error:
+  // mdxJsxFlowElement has unexpected attributes" the next time ANY writer
+  // opens that page (reproduced 2026-09-19: welcome_example's Cape Town pin,
+  // lat -33.9249, and Boston pin, lng -71.0589 — both southern/western
+  // hemisphere coordinates). A quoted string like "-33.9249" is a Literal
+  // (its value just happens to be a string containing a minus sign), so it
+  // deserializes fine — hence storing lat/lng as text and parseFloat-ing
+  // them in src/components/content/WorldMap.tsx instead of trusting
+  // fields.number's own round-trip.
   WorldMap: block({
     label: 'World Map',
     schema: {
       pins: fields.array(
         fields.object({
           title: fields.text({ label: 'Title', validation: { isRequired: true } }),
-          lat: fields.number({ label: 'Latitude', validation: { min: -90, max: 90 } }),
-          lng: fields.number({ label: 'Longitude', validation: { min: -180, max: 180 } }),
+          lat: fields.text({
+            label: 'Latitude',
+            description: 'A number from -90 to 90, e.g. -33.9249 for Cape Town.',
+          }),
+          lng: fields.text({
+            label: 'Longitude',
+            description: 'A number from -180 to 180, e.g. -71.0589 for Boston.',
+          }),
           body: fields.text({
             label: 'Popup body (MDX)',
             multiline: true,

@@ -6,7 +6,10 @@ import { Citation } from './Citation';
 import { WorldMapClient, type WorldMapClientPin } from './WorldMapClient';
 import { WORLD_MAP_VIEWBOX, projectLatLng, worldLandPath } from '@/lib/world-map';
 
-type WorldMapPin = { title: string; lat: number; lng: number; body: string };
+// lat/lng arrive as strings, not numbers — see the WorldMap schema comment
+// in src/lib/keystatic/content-components.tsx for why (Keystatic's MDX
+// deserializer can't round-trip a negative fields.number value).
+type WorldMapPin = { title: string; lat: string; lng: string; body: string };
 type WorldMapProps = {
   pins?: WorldMapPin[];
   // Injected by src/lib/mdx/render.ts, the same way it injects Citation's
@@ -46,10 +49,14 @@ async function compilePinBody(
 export async function WorldMap({ pins = [], referenceLookup = {} }: WorldMapProps) {
   const projected: WorldMapClientPin[] = [];
   for (const [index, pin] of pins.entries()) {
-    const point = projectLatLng(pin.lat, pin.lng);
-    // Pins with out-of-range/undefined coordinates project to null (see
-    // GeoProjection's own documented behavior) — skip them rather than
-    // rendering a pin nobody can see or breaking the whole map.
+    const lat = Number.parseFloat(pin.lat);
+    const lng = Number.parseFloat(pin.lng);
+    // Pins with unparsable/out-of-range/undefined coordinates project to
+    // NaN/null (see GeoProjection's own documented behavior for the latter)
+    // — skip them rather than rendering a pin nobody can see or breaking the
+    // whole map.
+    if (Number.isNaN(lat) || Number.isNaN(lng)) continue;
+    const point = projectLatLng(lat, lng);
     if (!point) continue;
     const Body = await compilePinBody(pin.body, referenceLookup);
     projected.push({
