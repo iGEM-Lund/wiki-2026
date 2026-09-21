@@ -5,8 +5,8 @@
 #
 # `main` on GitLab is protected against force pushes (and teams don't get
 # Settings access to change that), so this doesn't force-push. Instead it
-# builds a merge commit — tree content exactly this repo's `main`, but with
-# GitLab's current main tip as first parent — so publishing is always a
+# builds a merge commit, tree content exactly this repo's `main`, but with
+# GitLab's current main tip as first parent, so publishing is always a
 # fast-forward from GitLab's point of view. That also leaves a real commit
 # history of every publish on GitLab's side, instead of erasing it each time.
 #
@@ -16,10 +16,10 @@
 # (iGEM GitLab)").
 #
 # Pushes over HTTPS, not SSH: iGEM's GitLab serves its web/git-http traffic
-# through CloudFront, which doesn't proxy raw SSH — port 22 just hangs,
+# through CloudFront, which doesn't proxy raw SSH (port 22 just hangs),
 # regardless of local network. Auth comes from a GitLab access token
 # (write_repository scope) stored in ~/.netrc, which git's http backend
-# reads automatically — no env var to export on every run. See README.md,
+# reads automatically; no env var to export on every run. See README.md,
 # "Pushing to production (iGEM GitLab)" for how to set that up.
 set -euo pipefail
 
@@ -35,7 +35,7 @@ if [[ "$current_branch" != "main" ]]; then
 fi
 
 if [[ -n "$(git status --porcelain)" ]]; then
-  echo "error: working tree is not clean — commit or stash changes first" >&2
+  echo "error: working tree is not clean; commit or stash changes first" >&2
   exit 1
 fi
 
@@ -43,7 +43,7 @@ git fetch origin main
 local_sha="$(git rev-parse main)"
 origin_sha="$(git rev-parse origin/main)"
 if [[ "$local_sha" != "$origin_sha" ]]; then
-  echo "error: local 'main' does not match 'origin/main' — pull/push to GitHub first" >&2
+  echo "error: local 'main' does not match 'origin/main'; pull/push to GitHub first" >&2
   exit 1
 fi
 

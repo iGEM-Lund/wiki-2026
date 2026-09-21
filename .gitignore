@@ -5,7 +5,7 @@
 /.next/
 /out/
 
-# generated Keystatic admin routes — see scripts/keystatic-routes.mjs.
+# generated Keystatic admin routes; see scripts/keystatic-routes.mjs.
 # These are copied in from keystatic-admin/ for dev/staging and removed
 # entirely for the production export build. Never hand-edit these paths.
 /src/app/keystatic/

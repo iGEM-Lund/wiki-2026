@@ -6,14 +6,14 @@ const notFound = async () => new Response('Not found', { status: 404 });
 const rawHandlers = showAdminUI ? makeRouteHandler({ config: keystaticConfig }) : { GET: notFound, POST: notFound };
 
 // Under `next start` (staging, behind Caddy), Next builds request.url from
-// its own bind address/port rather than the incoming Host header — a
+// its own bind address/port rather than the incoming Host header, a
 // documented internal quirk (see next-server.js's initUrl construction),
 // not something fixable via next.config. Keystatic derives its GitHub OAuth
 // redirect_uri straight from request.url, so uncorrected it comes out as
 // https://127.0.0.1:3000/... instead of the public staging domain, and
 // GitHub rejects it as an unregistered callback URL. Rebuild the request
-// with the real public origin — read directly from the headers Caddy
-// forwards — before handing off to Keystatic.
+// with the real public origin, read directly from the headers Caddy
+// forwards, before handing off to Keystatic.
 function withPublicOrigin(handler: (req: Request) => Promise<Response>) {
   return async (request: Request) => {
     const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host');
@@ -34,7 +34,7 @@ const handlers = {
   POST: withPublicOrigin(rawHandlers.POST),
 };
 
-// Defense-in-depth only — see keystatic-admin/layout.tsx. Named exports
+// Defense-in-depth only; see keystatic-admin/layout.tsx. Named exports
 // (rather than a conditional module.exports) keep Next's static route-handler
 // analysis intact.
 export const { GET, POST } = handlers;

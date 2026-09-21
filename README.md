@@ -3,7 +3,7 @@
 ## What this is
 
 A Next.js App Router site, authored via [Keystatic](https://keystatic.com) in GitHub mode
-so the whole team — not just the infra committee — can write MDX content without
+so the whole team, not just the infra committee, can write MDX content without
 touching code. One codebase, two deployment targets:
 
 - **Staging**: this Next app runs as a live Node process on our Hetzner VPS behind
@@ -18,11 +18,11 @@ touching code. One codebase, two deployment targets:
 - **This repo** (`iGEM-Lund/wiki-2026` on GitHub) is where writing and staging
   happen. Keystatic's GitHub-mode storage reads/writes content here directly.
 - **iGEM's GitLab repo** is a separate, frozen mirror. It only ever receives the
-  production build's *source* (this codebase, mirrored) — iGEM's own
+  production build's *source* (this codebase, mirrored). iGEM's own
   `.gitlab-ci.yml`-driven pipeline runs `npm ci && npm run build` itself and
   publishes the static output via GitLab Pages. iGEM does not accept pre-built HTML.
 - `content/**/*.mdx` is committed to git. Images, PDFs, and other documents are
-  **not** — see "Images, PDFs, videos" below.
+  **not**; see "Images, PDFs, videos" below.
 
 ## Getting started (local dev)
 
@@ -49,26 +49,26 @@ creating a GitHub App scoped to `iGEM-Lund/wiki-2026`; the resulting
 production/export path. `scripts/keystatic-routes.mjs` physically copies
 Keystatic's admin route files from `keystatic-admin/` into `src/app/` before
 dev/staging builds (`link`), and removes them before the production build
-(`unlink`) — see the comment at the top of that script for why runtime
+(`unlink`); see the comment at the top of that script for why runtime
 feature-flagging alone can't work here (Next statically analyzes route
 handlers at build time, and a `POST`-exporting route anywhere in the tree
 breaks `output: 'export'` regardless of any `if` check inside it).
 
-`BUILD_TARGET`, not `NODE_ENV`, is the flag used throughout — `next start`
+`BUILD_TARGET`, not `NODE_ENV`, is the flag used throughout: `next start`
 always sets its own internal `NODE_ENV=production`, so `NODE_ENV` can't
 distinguish staging from the production export build.
 
 ## Content model
 
 - **`pages` collection** (`content/pages/<slug>/index.mdx`): `title` and MDX
-  `content`. Every page on the site is one of these — including the
+  `content`. Every page on the site is one of these, including the
   mandatory iGEM Standard URL judging pages (Project Description, Human
   Practices, ...). There's no separate singleton mechanism for them; whoever
   creates those pages is responsible for giving them the exact slugs iGEM's
   Judging Form links to (`project-description`, `human-practices`, ...) and
   for not renaming or deleting them afterward. Routing is a flat
   `/[slug]` (`src/app/(site)/[slug]/page.tsx`).
-- **`navigation` singleton** drives the entire top nav — it's editorially
+- **`navigation` singleton** drives the entire top nav; it's editorially
   curated, not derived from collection fields. Each item has a name, an icon
   (a searchable `lucide-react` picker or a custom image URL), and either a
   direct link or a dropdown of links, each pointing at a `pages` entry via a
@@ -84,7 +84,7 @@ distinguish staging from the production export build.
 2. Register it for the editor in `src/lib/keystatic/content-components.tsx`
    using `block()` / `wrapper()` / `inline()` / `mark()` from
    `@keystatic/core/content-components`, using the **same key name**.
-3. Restart `npm run dev` — it should now appear in the Keystatic MDX editor
+3. Restart `npm run dev`; it should now appear in the Keystatic MDX editor
    toolbar.
 
 The two maps are separate on purpose: `content-components.tsx` only governs
@@ -113,12 +113,12 @@ git pull && npm ci && npm run build:staging && sudo systemctl restart igem-wiki
 
 iGEM auto-provisions `gitlab.igem.org/2026/lund`, pre-seeded with their own
 Vite/React starter template (including its own `.gitlab-ci.yml`, which builds
-that template with `yarn`). We don't use that template — instead we mirror
+that template with `yarn`). We don't use that template; instead we mirror
 *this* codebase there, replacing the entire tree (their starter's
 `.gitlab-ci.yml` included) with ours.
 
 `main` on GitLab is protected against force pushes, and teams don't get
-Settings access to loosen that — so the mirror isn't a force push. It's a
+Settings access to loosen that, so the mirror isn't a force push. It's a
 generated merge commit whose *tree* is exactly this repo's `main`, but whose
 first parent is whatever GitLab's `main` currently points to, making every
 publish a legitimate fast-forward from GitLab's side. Side benefit: GitLab
@@ -126,7 +126,7 @@ ends up with a real history of every publish, instead of losing it each time.
 
 Run `npm run deploy:production` (or `bash scripts/deploy-production.sh`
 directly) from a clean, up-to-date `main`. It's deliberately manual, not
-CI-automated — a push to GitLab immediately rebuilds and republishes the
+CI-automated: a push to GitLab immediately rebuilds and republishes the
 live, judged wiki, so it should only happen when someone means to publish.
 The script:
 
@@ -138,7 +138,7 @@ The script:
 3. Prompts for confirmation, then builds and pushes the merge commit
    described above to `https://gitlab.igem.org/2026/lund.git`.
 
-**Auth is HTTPS + an access token, not SSH** — iGEM's GitLab serves its
+**Auth is HTTPS + an access token, not SSH**: iGEM's GitLab serves its
 web/git-http traffic through CloudFront, which doesn't proxy raw SSH (port
 22 just hangs, regardless of your network), so a normal SSH remote can't
 connect. One-time setup:
@@ -157,7 +157,7 @@ connect. One-time setup:
    be exported before each deploy.
 
 Once pushed, iGEM's GitLab CI takes over: our `.gitlab-ci.yml` runs three
-stages — `build` (`npm ci && npm run build`), `verify`
+stages: `build` (`npm ci && npm run build`), `verify`
 (`scripts/verify-export.mjs`, which fails the pipeline if `out/keystatic` or
 `out/api` ever exist), and `pages` (publishes `out/` as GitLab Pages). Check
 progress at `https://gitlab.igem.org/2026/lund/-/pipelines`.
@@ -179,7 +179,7 @@ One thing this checklist should specifically surface, since it hasn't been
 verified against iGEM's actual hosting yet: whether GitLab Pages' URL/trailing-
 slash behavior matches `next.config.ts`'s `trailingSlash: true` assumption.
 
-(iGEM's GitLab does pre-seed repos with their own starter `.gitlab-ci.yml` —
+(iGEM's GitLab does pre-seed repos with their own starter `.gitlab-ci.yml`,
 confirmed by inspecting the template. `deploy-production.sh`'s mirror push
 resolves this by replacing the whole tree, that file included, with ours.)
 
@@ -187,7 +187,7 @@ resolves this by replacing the whole tree, that file included, with ours.)
 
 - **A stray `src/app/keystatic` or `src/app/api/keystatic` got committed by
   accident**: these are gitignored generated artifacts (see
-  `scripts/keystatic-routes.mjs`) — delete them, they'll be regenerated by
+  `scripts/keystatic-routes.mjs`): delete them, they'll be regenerated by
   `predev`/`prebuild:staging` as needed.
 - **Keystatic GitHub App auth issues**: recheck the four `KEYSTATIC_GITHUB_*`
   env vars and that the GitHub App has been granted access to

@@ -1,5 +1,5 @@
 // Deep subpath (not the `lucide-react/dynamic` client component) so this
-// resolves the icon during the server render / static build — the SVG ends
+// resolves the icon during the server render / static build; the SVG ends
 // up baked into the prerendered HTML, no client-side fetch or hydration
 // flash, which matters for the `output: 'export'` production build.
 import dynamicIconImports from 'lucide-react/dynamicIconImports.mjs';

@@ -2,7 +2,7 @@ import * as OCL from 'openchemlib';
 
 // Shared by both the site-render components (src/components/content/Chem*)
 // and the Keystatic editor previews (src/lib/keystatic/content-components.tsx)
-// so the two stay visually in sync — same pattern as src/lib/katex.ts.
+// so the two stay visually in sync; same pattern as src/lib/katex.ts.
 
 function escapeHtml(s: string): string {
   return s
@@ -19,13 +19,13 @@ function moleculeSvg(smiles: string, width: number, height: number): string {
   // option to configure it. Swap it for currentColor so bonds inherit the
   // page's text color and stay visible against a transparent/dark
   // background, the same way KaTeX's output already does. Heteroatom colors
-  // (e.g. red oxygen) are left as-is — they're saturated enough to read on
+  // (e.g. red oxygen) are left as-is; they're saturated enough to read on
   // both light and dark backgrounds.
   return svg.replaceAll('rgb(0,0,0)', 'currentColor');
 }
 
 // A single molecule's 2D structure. Invalid SMILES renders inline as a red
-// error rather than throwing, so one bad structure never breaks the build —
+// error rather than throwing, so one bad structure never breaks the build;
 // the same rule katex.ts follows with throwOnError: false.
 export function renderSmilesToStructureSvg(smiles: string): string {
   try {

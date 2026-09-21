@@ -15,7 +15,7 @@ const FONT_SIZES: { value: FontSize; label: string }[] = [
 // Every setting mirrors onto a data-* attribute on <html> (same pattern the
 // old theme-toggle used for data-theme) so plain CSS can react to it, and
 // into localStorage under its own key so the blocking init script in the
-// root layout can apply it before first paint — see themeInitScript in
+// root layout can apply it before first paint; see themeInitScript in
 // src/app/layout.tsx, which this component's storage keys/values must stay
 // in sync with.
 export function AccessibilityMenu() {

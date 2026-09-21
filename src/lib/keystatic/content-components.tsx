@@ -5,7 +5,7 @@ import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/ch
 
 // Editor-side registration only: these govern what writers can insert in the
 // MDX field's toolbar and how each component previews inside the Keystatic
-// admin UI. The site's actual rendering uses a SEPARATE map — see
+// admin UI. The site's actual rendering uses a SEPARATE map; see
 // src/components/content/index.ts. Both maps must share the same key names
 // (FigureWithCaption, Citation) so the MDX tags written here resolve
 // correctly when rendered on the live site.
@@ -39,7 +39,7 @@ export const contentComponents = {
       speedSeconds: fields.number({
         label: 'Seconds to cross the string',
         description:
-          'How long a single photo takes to travel from one end of the string to the other. All photos move continuously at this same slow, uniform pace — lower is faster.',
+          'How long a single photo takes to travel from one end of the string to the other. All photos move continuously at this same slow, uniform pace; lower is faster.',
         defaultValue: 25,
         validation: { min: 1 },
       }),
@@ -67,7 +67,7 @@ export const contentComponents = {
   // The only blocks that need nested rich content, so the only ones using
   // wrapper() instead of block()/inline(). Two components rather than one:
   // ExpandableSummary marks which of Expandable's children is the always-
-  // visible teaser (written as its first child) — this only relies on
+  // visible teaser (written as its first child); this only relies on
   // wrapper()'s plain top-level `children`, not a named child-field region
   // nested inside another wrapper's schema, which Keystatic's docs don't
   // show as a supported combination and this repo has no running
@@ -82,7 +82,7 @@ export const contentComponents = {
 
   ExpandableSummary: wrapper({
     label: 'Expandable Summary',
-    description: 'The always-visible teaser — insert as the first item inside an Expandable.',
+    description: 'The always-visible teaser; insert as the first item inside an Expandable.',
     schema: {},
     ContentView: ({ children }) => <strong>{children}</strong>,
   }),
@@ -96,7 +96,7 @@ export const contentComponents = {
     ContentView: (props) => (
       <blockquote>
         {props.value.quote ?? ''}
-        {props.value.quotee ? <div>— {props.value.quotee}</div> : null}
+        {props.value.quotee ? <div>- {props.value.quotee}</div> : null}
       </blockquote>
     ),
   }),
@@ -110,10 +110,10 @@ export const contentComponents = {
         validation: { isRequired: true },
       }),
     },
-    // ContentView only receives the raw field value — for a relationship
+    // ContentView only receives the raw field value; for a relationship
     // field that's just the target's slug, not its resolved short form
     // (Keystatic doesn't expose resolved relationship labels to
-    // ContentView) — but the slug is still derived from the short form and
+    // ContentView), but the slug is still derived from the short form and
     // reads well enough to identify the citation at a glance without
     // opening the editor. The picker itself (opened on click) searches and
     // lists references by short form, since that's the references
@@ -137,7 +137,7 @@ export const contentComponents = {
     schema: {
       latex: fields.text({
         label: 'LaTeX',
-        description: 'Inline math, e.g. x^2 + y^2 = z^2 — rendered with KaTeX.',
+        description: 'Inline math, e.g. x^2 + y^2 = z^2, rendered with KaTeX.',
       }),
     },
     // Rendered with the same KaTeX helper the live site uses, so the
@@ -154,7 +154,7 @@ export const contentComponents = {
       latex: fields.text({
         label: 'LaTeX',
         multiline: true,
-        description: 'Display math on its own centered line — rendered with KaTeX.',
+        description: 'Display math on its own centered line, rendered with KaTeX.',
       }),
     },
     ContentView: (props) => (
@@ -168,7 +168,7 @@ export const contentComponents = {
       smiles: fields.text({
         label: 'SMILES',
         description:
-          'A SMILES string, e.g. testosterone: C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@@H]2O)CCC4=CC(=O)CC[C@]34C — rendered as a 2D structure.',
+          'A SMILES string, e.g. testosterone: C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@@H]2O)CCC4=CC(=O)CC[C@]34C, rendered as a 2D structure.',
       }),
       caption: fields.text({ label: 'Caption (optional)' }),
     },
@@ -193,7 +193,7 @@ export const contentComponents = {
   }),
 
   // Renders as a live WebGL viewer only on the published/staging site (see
-  // src/components/content/MoleculeViewer.tsx) — the editor preview below
+  // src/components/content/MoleculeViewer.tsx); the editor preview below
   // stays a static placeholder rather than spinning up a real 3Dmol
   // instance per keystroke.
   MoleculeViewer: block({
@@ -234,20 +234,20 @@ export const contentComponents = {
     ),
   }),
 
-  // Pins are a repeating fields.array(fields.object(...)) — proven elsewhere
+  // Pins are a repeating fields.array(fields.object(...)); proven elsewhere
   // in this codebase only at the top-level keystatic.config.ts schema (the
   // navigation singleton's dropdown items), not yet inside a
   // content-component's own schema, but the field types themselves are the
   // same ones already exercised there.
   //
-  // `body` is deliberately fields.text (raw MDX source), NOT fields.mdx —
+  // `body` is deliberately fields.text (raw MDX source), NOT fields.mdx;
   // verified against the installed @keystatic/core@0.5.50 runtime
   // (node_modules/@keystatic/core/dist/index-a8452c26.js:20037-20038, and a
   // second call path at :18507) that any field with formKind 'content'
   // (what fields.mdx/fields.document both are) throws Error('Not
   // implemented') the moment it's nested inside fields.array/fields.object
   // and a writer reopens the page for editing. So a pin's popup body is
-  // hand-typed raw MDX in a plain multiline textarea — writers can still
+  // hand-typed raw MDX in a plain multiline textarea; writers can still
   // embed other content components (e.g. <Citation reference="slug" />),
   // they just don't get Keystatic's rich-text toolbar/component-picker for
   // this one field. See src/components/content/WorldMap.tsx, which compiles
@@ -262,13 +262,13 @@ export const contentComponents = {
   // not a Literal itself, and Keystatic's MDX deserializer
   // (node_modules/@keystatic/core/dist/index-a8452c26.js's
   // expressionToValue, ~line 26973) only handles Literal/ArrayExpression/
-  // ObjectExpression — a bare negative number throws, surfacing as "Error:
+  // ObjectExpression; a bare negative number throws, surfacing as "Error:
   // mdxJsxFlowElement has unexpected attributes" the next time ANY writer
   // opens that page (reproduced 2026-09-19: welcome_example's Cape Town pin,
-  // lat -33.9249, and Boston pin, lng -71.0589 — both southern/western
+  // lat -33.9249, and Boston pin, lng -71.0589, both southern/western
   // hemisphere coordinates). A quoted string like "-33.9249" is a Literal
   // (its value just happens to be a string containing a minus sign), so it
-  // deserializes fine — hence storing lat/lng as text and parseFloat-ing
+  // deserializes fine; hence storing lat/lng as text and parseFloat-ing
   // them in src/components/content/WorldMap.tsx instead of trusting
   // fields.number's own round-trip.
   WorldMap: block({
@@ -289,13 +289,13 @@ export const contentComponents = {
             label: 'Popup body (MDX)',
             multiline: true,
             description:
-              'Raw MDX — plain formatting, or hand-embed other components, e.g. <Citation reference="slug" />.',
+              'Raw MDX: plain formatting, or hand-embed other components, e.g. <Citation reference="slug" />.',
           }),
         }),
         { label: 'Pins', itemLabel: (props) => props.fields.title.value || 'Pin' },
       ),
     },
-    // Cheap static placeholder, same MoleculeViewer precedent above —
+    // Cheap static placeholder, same MoleculeViewer precedent above;
     // never a live interactive map inside the admin editor.
     ContentView: (props) => <div>[World Map: {(props.value.pins ?? []).length} pin(s)]</div>,
   }),
@@ -304,7 +304,7 @@ export const contentComponents = {
   // container shapes, LayoutColumn is the shared column marker. The count of
   // LayoutColumn children IS the column count (enforced by each container's
   // validation.children), rather than a separate `columns` field that could
-  // disagree with what was actually authored — Keystatic has no cross-field
+  // disagree with what was actually authored; Keystatic has no cross-field
   // dynamic validation to keep such a field in sync. forSpecificLocations on
   // LayoutColumn keeps it out of the general insert menu; it only makes
   // sense as a child of Layout/LayoutSidebar. ContentViews use inline
@@ -312,7 +312,7 @@ export const contentComponents = {
   // globals.css.
   LayoutColumn: wrapper({
     label: 'Column',
-    description: 'A single column of content — insert inside a Layout, not on its own.',
+    description: 'A single column of content; insert inside a Layout, not on its own.',
     forSpecificLocations: true,
     schema: {},
     ContentView: ({ children }) => (
@@ -334,7 +334,7 @@ export const contentComponents = {
   }),
 
   // Which column is "narrow" is simply whichever LayoutColumn is authored
-  // first — reorder the columns to flip it, rather than a separate
+  // first; reorder the columns to flip it, rather than a separate
   // left/right field.
   LayoutSidebar: repeating({
     label: 'Layout (sidebar + main)',

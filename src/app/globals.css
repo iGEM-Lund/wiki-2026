@@ -4,18 +4,18 @@
   color-scheme: light;
 
   /* Text size is opt-in only too, via the accessibility menu's data-font-size
-     attribute — scaling the root font-size scales every rem unit in the
+     attribute: scaling the root font-size scales every rem unit in the
      site with it. */
   font-size: 100%;
 
-  /* In-page jumps (TOC clicks, citation refs) animate instead of snapping —
+  /* In-page jumps (TOC clicks, citation refs) animate instead of snapping;
      the reduced-motion rules below already override this back to `auto`.
      scroll-padding-top keeps the target heading clear of the fixed header,
      the same offset the TOC pane itself uses. */
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-height, 6rem) + 1rem);
 
-  /* AnTigone brand kit (Canva) — teal palette is primary, pink is secondary. */
+  /* AnTigone brand kit (Canva): teal palette is primary, pink is secondary. */
   --color-pearl: #fef8f4;
   --color-shallows: #e8f4f4;
   --color-peacock: #008080;
@@ -42,7 +42,7 @@ body {
 
 .site {
   /* Light mode: pale surface (Pearl/Shallows), Depths for headings, Truffle
-     for body text — the brand guideline's "dark text on a pale background". */
+     for body text: the brand guideline's "dark text on a pale background". */
   --bg: var(--color-pearl);
   --bg-alt: var(--color-shallows);
   --text: var(--color-truffle);
@@ -62,12 +62,12 @@ body {
 }
 
 /* Dark mode is opt-in only, via the header toggle's explicit data-theme
-   attribute — the site never follows prefers-color-scheme. */
+   attribute; the site never follows prefers-color-scheme. */
 :root[data-theme='dark'] {
   color-scheme: dark;
 }
 :root[data-theme='dark'] .site {
-  /* Dark mode: Truffle-over-Noir surfaces, pale text — the guideline's
+  /* Dark mode: Truffle-over-Noir surfaces, pale text: the guideline's
      "pale text on a dark background" mode, never mixed with light mode. */
   --bg: var(--color-noir);
   --bg-alt: var(--color-truffle);
@@ -79,7 +79,7 @@ body {
 }
 
 /* Text size and dyslexia-friendly font are opt-in only too, via the
-   accessibility menu's data-font-size/data-font attributes — same
+   accessibility menu's data-font-size/data-font attributes; same
    never-inherit-OS-preference philosophy as data-theme above. */
 :root[data-font-size='large'] {
   font-size: 112.5%;
@@ -234,7 +234,7 @@ body {
     animation: antigone-knot-in 0.55s cubic-bezier(0.34, 1.9, 0.64, 1) 1.6s forwards;
   }
   /* Changing animation-name on :hover restarts the animation even though the
-     keyframes are identical to the mount-time ones — replay without JS. */
+     keyframes are identical to the mount-time ones; replay without JS. */
   .site__brand:hover .antigone-logo__line {
     animation-name: antigone-draw-replay;
   }
@@ -282,7 +282,7 @@ body {
 }
 
 /* Wraps the toggle button + <nav> as siblings without adding a box of its
-   own — `display: contents` keeps the header's flex gap between brand,
+   own; `display: contents` keeps the header's flex gap between brand,
    nav items and the a11y menu exactly as if the toggle/nav were direct
    header children, while still letting `[data-open]` below target the
    drawer state. */
@@ -290,7 +290,7 @@ body {
   display: contents;
 }
 
-/* Only ever shown below 48rem (see the media query below) — desktop keeps
+/* Only ever shown below 48rem (see the media query below); desktop keeps
    the always-visible hover nav and never renders this. */
 .site__nav-toggle {
   display: none;
@@ -330,13 +330,13 @@ body {
   position: relative;
   z-index: 2;
   cursor: default;
-  /* No border/background/width of its own — the panel behind it (same
+  /* No border/background/width of its own; the panel behind it (same
      position, lower z-index) is the only thing that ever draws a box, so
      there's nothing for this trigger to visually clash or misalign with,
      no matter how it's transformed. It's kept at its own natural content
      width (see .site__nav-dropdown below) rather than stretched or padded
      out to fit its menu, so the *visible* gap between it and its neighbors
-     is exactly the flex `gap` — same as a plain link. */
+     is exactly the flex `gap`, same as a plain link. */
   transition: transform 0.36s cubic-bezier(0.34, 1.9, 0.64, 1);
 }
 /* Permanently kill the generic .site__nav-item hover tint on the trigger:
@@ -355,7 +355,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* The trigger is the only child that ever takes up flex layout space —
+  /* The trigger is the only child that ever takes up flex layout space;
      it keeps its own natural width, so this lane is exactly as wide as a
      plain nav link's and the flex `gap` alone gives every nav button
      (plain links and dropdown triggers alike) the same visible whitespace,
@@ -375,19 +375,19 @@ body {
      closing: shrink vertically -> fade out
    Without this split, closing reused the opening's delays, which meant the
    height snapped back immediately while the color was still waiting out its
-   (now-backwards) delay — reads as an instant, unanimated collapse. */
+   (now-backwards) delay, which reads as an instant, unanimated collapse. */
 
 /* The one and only bordered/rounded box. It starts at the same top edge as
    the trigger (a spacer below reserves the trigger's own footprint) and
    sizes itself to fit its longest menu label (capped, so one very long
-   label can't blow out the header), centered under the trigger — same as
-   the trigger's own icon+label are centered in .site__nav-item — so the
+   label can't blow out the header), centered under the trigger, same as
+   the trigger's own icon+label are centered in .site__nav-item, so the
    trigger reads as sitting in the middle of the card it opens, not pinned
    to its top-left corner. Absolutely positioned (not stretched, never
    transformed, and never contributing to .site__nav-dropdown's own layout
-   width — see above) so it floats over the page and, if wider than its
-   lane, out over the `gap` on either side (generous enough — see .site__nav
-   — that a capped-width panel never reaches a neighboring nav button)
+   width; see above) so it floats over the page and, if wider than its
+   lane, out over the `gap` on either side (generous enough, see .site__nav,
+   and that a capped-width panel never reaches a neighboring nav button)
    instead of pushing content down or forcing every lane to pre-reserve its
    menu's full width. Its own edges never move, so nothing (like the
    trigger's hover pop) can ever throw it out of alignment with itself. */
@@ -864,7 +864,7 @@ body {
   align-items: start;
 }
 .layout__column {
-  min-width: 0; /* lets grid items shrink below intrinsic content width — images, KaTeX, the 3D viewer canvas */
+  min-width: 0; /* lets grid items shrink below intrinsic content width (images, KaTeX, the 3D viewer canvas) */
 }
 .layout__column > :first-child {
   margin-top: 0;
@@ -887,7 +887,7 @@ body {
   color: var(--error);
 }
 
-/* Crimson/Rose/Blush is the brand's secondary (pink) palette — see the
+/* Crimson/Rose/Blush is the brand's secondary (pink) palette; see the
    --color-* declarations at the top of this file. Crimson fails contrast
    on the dark-mode Noir background (same reasoning as --error above), so
    the card swaps to a crimson-tinted dark surface with Rose text instead
@@ -935,7 +935,7 @@ body {
   color: var(--quote-accent);
 }
 .quote-block__quotee::before {
-  content: '— ';
+  content: '- ';
 }
 
 .expandable {
@@ -1044,7 +1044,7 @@ body {
   margin-top: 0.5rem;
 }
 
-/* Stylized world map with pins — see src/components/content/WorldMap.tsx
+/* Stylized world map with pins; see src/components/content/WorldMap.tsx
    (server: compiles pin bodies, projects lat/lng) and WorldMapClient.tsx
    ('use client': hand-rolled pan/zoom, hover tooltip, click-sticky popup). */
 .world-map {
@@ -1096,7 +1096,7 @@ body {
   stroke: var(--color-rose);
 }
 :root[data-theme='dark'] .site .world-map__pin-dot {
-  /* Crimson fails contrast on the dark-mode Noir background — same rule
+  /* Crimson fails contrast on the dark-mode Noir background; same rule
      already governing --error and .quote-block. */
   fill: var(--color-rose);
   stroke: var(--color-noir);
@@ -1192,7 +1192,7 @@ article p {
 }
 
 .toc {
-  /* Fixed to the viewport, not sticky within the article — it stays in
+  /* Fixed to the viewport, not sticky within the article; it stays in
      place for the whole scroll instead of unsticking near the bottom.
      `top`/`max-height` key off --header-height (set by HeaderHeightSync)
      since the fixed header's own height varies with nav wrapping; 6rem is
@@ -1237,7 +1237,7 @@ article p {
   font-weight: 500;
 }
 .toc__toggle {
-  /* Only ever shown on mobile (see the media query below) — desktop keeps
+  /* Only ever shown on mobile (see the media query below); desktop keeps
      the always-visible fixed sidebar. */
   display: none;
 }
@@ -1280,7 +1280,7 @@ article p {
 
   .toc__toggle {
     /* Positioned (not static) and stacked above .toc__panel below, so the
-       button stays visible and clickable — as the drawer's close control —
+       button stays visible and clickable, as the drawer's close control,
        even once the drawer slides over its bottom-right corner. */
     position: relative;
     z-index: 2;
@@ -1320,7 +1320,7 @@ article p {
 
 /* Below this width there's no hover to drive the dropdown nav (nothing to
    hover on touch), so it collapses into a toggle button that slides the
-   whole nav in as a right-side drawer — the same pattern as the page-outline
+   whole nav in as a right-side drawer, the same pattern as the page-outline
    drawer above. Each group's links are always expanded (a flat, scrollable
    list) rather than hidden behind a second hover interaction that doesn't
    exist here. Desktop's hover/focus-within styles live entirely outside

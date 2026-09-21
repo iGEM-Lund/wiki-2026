@@ -7,7 +7,7 @@ import { Citation } from '@/components/content/Citation';
 import { WorldMap } from '@/components/content/WorldMap';
 import { rehypeCollectHeadings, type HeadingItem } from '@/lib/headings';
 
-// fields.mdx() stores raw MDX source text — unlike the older fields.document,
+// fields.mdx() stores raw MDX source text; unlike the older fields.document,
 // there's no pre-parsed document tree to walk, so rendering requires actually
 // compiling the MDX via @mdx-js/mdx at request/build time.
 export async function renderMdx(
@@ -24,13 +24,13 @@ export async function renderMdx(
     rehypePlugins: [rehypeSlug, [rehypeCollectHeadings, headings]],
   });
 
-  // Override Citation with the page's resolved reference lookup bound in —
+  // Override Citation with the page's resolved reference lookup bound in;
   // the MDX-authored `reference` prop is just a slug, and only render.ts's
   // caller (the page) knows the resolved short forms for this render.
   const components = {
     ...mdxComponents,
     Citation: (props: { reference?: string | null }) => Citation({ ...props, lookup: referenceLookup }),
-    // Pin popup bodies are raw MDX that may embed <Citation> — forward the
+    // Pin popup bodies are raw MDX that may embed <Citation>; forward the
     // same resolved lookup so those resolve too, not just top-level ones.
     WorldMap: (props: Parameters<typeof WorldMap>[0]) => WorldMap({ ...props, referenceLookup }),
   };

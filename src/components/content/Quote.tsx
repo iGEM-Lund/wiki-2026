@@ -4,7 +4,7 @@ type QuoteProps = {
 };
 
 // Two curved swooshes standing in for a quotation mark, drawn the same way
-// as the AnTigone logo mark (src/components/antigone-logo.tsx) — open
+// as the AnTigone logo mark (src/components/antigone-logo.tsx); open
 // currentColor strokes with round caps/joins so there isn't a single sharp
 // corner in the glyph, unlike a typographic " character.
 function QuoteMark() {

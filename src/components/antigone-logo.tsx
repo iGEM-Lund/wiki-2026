@@ -7,7 +7,7 @@ import type { CSSProperties } from 'react';
 // The original artwork's line art is one compound `<path>` made of 7 disconnected
 // strokes (a browser quirk means `pathLength` + `stroke-dashoffset` on a compound
 // path restarts the dash phase at every subpath, which draws all 7 as tiny
-// simultaneous stubs instead of one continuous line — verified in-browser). Splitting
+// simultaneous stubs instead of one continuous line, verified in-browser). Splitting
 // them into 7 standalone paths, each with its own `pathLength="1"`, lets each one
 // draw start-to-finish, and CSS staggers them nose-to-tail in their original
 // drawing order so it still reads as one pen tracing the whole mark. The last

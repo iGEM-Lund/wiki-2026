@@ -7,7 +7,7 @@
 // outright, regardless of any runtime feature flag inside it. The only fix
 // is for the files to be physically absent before Next scans the tree.
 //
-// src/app/keystatic/ and src/app/api/keystatic/ are gitignored — they are
+// src/app/keystatic/ and src/app/api/keystatic/ are gitignored; they are
 // generated artifacts, never the source of truth (that's keystatic-admin/).
 import { existsSync, mkdirSync, copyFileSync, rmSync, readdirSync, rmdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';

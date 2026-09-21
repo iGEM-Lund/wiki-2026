@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 
 // The header is fixed but not a fixed height (nav content can wrap), so
-// anything that needs to clear it — its own top padding, the TOC's offset —
+// anything that needs to clear it, its own top padding, the TOC's offset,
 // reads the --header-height custom property this sets instead of a guessed
 // constant.
 export function HeaderHeightSync() {

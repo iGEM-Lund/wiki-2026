@@ -7,7 +7,7 @@ import KeystaticApp from './keystatic';
 // matters if that removal step is ever bypassed.
 //
 // Per Keystatic's own Next.js integration pattern, this layout renders the
-// admin SPA directly rather than `children` — the catch-all page.tsx
+// admin SPA directly rather than `children`; the catch-all page.tsx
 // alongside it is a no-op placeholder.
 export default function KeystaticLayout() {
   if (!showAdminUI) {

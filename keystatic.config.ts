@@ -2,7 +2,7 @@ import { config, collection, singleton, fields } from '@keystatic/core';
 import { contentComponents } from './src/lib/keystatic/content-components';
 import { ICON_NAMES } from './src/lib/icon-names';
 
-// Defense-in-depth only — the primary exclusion mechanism for the production
+// Defense-in-depth only; the primary exclusion mechanism for the production
 // export build is that scripts/keystatic-routes.mjs physically removes the
 // admin route files before `next build` runs. See keystatic-admin/layout.tsx
 // and keystatic-admin/route.ts for where this flag is consumed.
@@ -12,7 +12,7 @@ export const showAdminUI = process.env.BUILD_TARGET !== 'production';
 // entry's) icon is either picked from the bundled lucide-react library
 // (rendered as inline SVG at build time, see src/components/nav-icon.tsx)
 // or a custom image URL, uploaded via teams.igem.org/6160/deliverables/wiki/uploads like every
-// other image reference in this project — never a Keystatic image-upload
+// other image reference in this project, never a Keystatic image-upload
 // field, which would commit the binary into the repo.
 const iconField = fields.conditional(
   fields.select({
@@ -40,7 +40,7 @@ const iconField = fields.conditional(
 // Shared by the navigation singleton below: what a nav link (top-level or
 // inside a dropdown) points at. Every required iGEM Standard URL Page
 // (Project Description, Human Practices, ...) is just a `pages` entry with
-// the exact slug iGEM's Judging Form expects — there's no separate
+// the exact slug iGEM's Judging Form expects; there's no separate
 // singleton mechanism for them, so this only ever points at `pages`.
 const linkTargetField = fields.relationship({ label: 'Page', collection: 'pages' });
 
@@ -78,8 +78,8 @@ export default config({
     repo: { owner: 'iGEM-Lund', name: 'wiki-2026' },
   },
   collections: {
-    // Every page on the site — including the mandatory iGEM Standard URL
-    // Pages — is an entry here. There's no separate singleton mechanism for
+    // Every page on the site, including the mandatory iGEM Standard URL
+    // Pages, is an entry here. There's no separate singleton mechanism for
     // "special" pages: whoever creates the Project Description / Human
     // Practices pages is responsible for giving them the exact slugs iGEM's
     // Judging Form links to (project-description, human-practices, ...) and
@@ -105,7 +105,7 @@ export default config({
     }),
     // Bibliography entries, cited from page content via the Citation content
     // component (see src/lib/keystatic/content-components.tsx). No MDX field
-    // here — just the two forms of a citation — so this is a flat, data-only
+    // here, just the two forms of a citation, so this is a flat, data-only
     // collection (one YAML file per entry), the same shape as the navigation
     // singleton below.
     bibliography: collection({
@@ -118,7 +118,7 @@ export default config({
         shortForm: fields.slug({
           name: {
             label: 'Short Form',
-            description: 'e.g. "Barker et al. (2020)" — how this reference reads inline.',
+            description: 'e.g. "Barker et al. (2020)": how this reference reads inline.',
             validation: { isRequired: true },
           },
         }),
@@ -132,7 +132,7 @@ export default config({
     }),
   },
   singletons: {
-    // Editorially-curated nav tree — see src/lib/nav.ts (resolves this into
+    // Editorially-curated nav tree; see src/lib/nav.ts (resolves this into
     // render-ready data) and src/app/(site)/layout.tsx (renders it). Not a
     // slug-derived structure: writers place items and, per item, choose a
     // direct link or a dropdown of links, each pointing at a `pages` entry.

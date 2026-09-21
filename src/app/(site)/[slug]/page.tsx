@@ -5,7 +5,7 @@ import { resolveCitedReferences, toReferenceLookup } from '@/lib/references';
 import { buildHeadingTree } from '@/lib/headings';
 import { TableOfContents } from '@/components/table-of-contents';
 
-// Every page on the site — including the mandatory iGEM Standard URL Pages —
+// Every page on the site, including the mandatory iGEM Standard URL Pages,
 // is a `pages` collection entry, so one route serves all of them.
 
 export async function generateStaticParams() {
@@ -13,7 +13,7 @@ export async function generateStaticParams() {
   return pages.map(({ slug }) => ({ slug }));
 }
 
-// No routes beyond the ones enumerated by generateStaticParams — required
+// No routes beyond the ones enumerated by generateStaticParams; required
 // for `output: 'export'`, which cannot serve routes on demand.
 export const dynamicParams = false;
 

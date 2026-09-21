@@ -18,10 +18,10 @@ const SWING_SECONDS = 2.4;
 const BUFFER = 0.4;
 
 // Fixed spacing between consecutive photos, as a fraction of the string's
-// own visible length — NOT 1 / images.length. Spacing photos evenly across
+// own visible length; NOT 1 / images.length. Spacing photos evenly across
 // the visible string regardless of count would force them to overlap
 // whenever images.length * cardWidth exceeds the string's own width (with a
-// 260px card, that's as few as 4-5 images on a typical article column) —
+// 260px card, that's as few as 4-5 images on a typical article column);
 // this instead gives every photo the same real-world gap no matter how many
 // there are: few images end up sparse with visible gaps, many end up queued
 // further back in the (invisible) buffer rather than crammed on top of each
@@ -34,14 +34,14 @@ const GAP = 0.35;
 // both this component's inline style and the shared CSS top/left calc()s
 // read from), rather than one photo at a time swapping in and out. Photos
 // are evenly spread along that shared loop by giving each a negative
-// animation-delay proportional to its index (offset by GAP, not 1/count —
-// see GAP above) — a well-established CSS trick for turning one looping
-// animation into N evenly-spaced, independently looping copies — so
+// animation-delay proportional to its index (offset by GAP, not 1/count,
+// see GAP above), a well-established CSS trick for turning one looping
+// animation into N evenly-spaced, independently looping copies, so
 // multiple photos are always visible moving together.
 //
 // speedSeconds is how long a photo takes to cross the VISIBLE string
 // (--figure-carousel-t: 0 to 1), which is what the Keystatic field
-// describes — but the actual CSS animation-duration has to cover the WIDER
+// describes, but the actual CSS animation-duration has to cover the WIDER
 // -BUFFER..1+BUFFER range at the same constant speed, so it's scaled up by
 // (1 + 2*BUFFER). animation-delay is derived the same way: a photo whose
 // "natural" spread position is visible-fraction t should already be
@@ -55,12 +55,12 @@ const GAP = 0.35;
 // shared initial-value of 0. That matters under prefers-reduced-motion:
 // globals.css's global reduced-motion rule forces every animation to a
 // single near-instant iteration, and without animation-fill-mode: forwards,
-// the property reverts to this base value afterward — so reduced-motion
+// the property reverts to this base value afterward, so reduced-motion
 // visitors see the photos settle into a static, evenly-spread arrangement
 // instead of all piling up off-screen.
 //
 // Each photo renders as TWO identically-positioned, identically-animated
-// halves rather than one card — figure-carousel-photo-half--behind (clipped
+// halves rather than one card: figure-carousel-photo-half--behind (clipped
 // to its own left half, z-index below the string) and --front (clipped to
 // its own right half, z-index above the string). This is what makes the
 // string read as passing "through" the photo: it's the same single drawn
@@ -68,7 +68,7 @@ const GAP = 0.35;
 // side, rather than an approximation drawn on top that has to be kept in
 // sync with the string's own curve (that approach was tried and produced a
 // visible kink wherever the approximation's straight line met the string's
-// actual curve — this way there's nothing to keep in sync, since there's
+// actual curve; this way there's nothing to keep in sync, since there's
 // no second copy of the string at all).
 export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouselProps) {
   if (images.length === 0) return null;
@@ -82,8 +82,8 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
         aria-hidden="true"
       >
         {/* A quadratic Bezier with its control point directly above the
-            midpoint is exactly a parabola, and — because its x-component is
-            then exactly linear in the curve parameter — its equation is
+            midpoint is exactly a parabola, and (because its x-component is
+            then exactly linear in the curve parameter) its equation is
             y = 20 + 4 * x * (1 - x) * 60 for x in [0, 1]. That is the SAME
             equation figure-carousel__photo-half's `top` calc() uses (see
             globals.css), which is what keeps every photo's clip seam

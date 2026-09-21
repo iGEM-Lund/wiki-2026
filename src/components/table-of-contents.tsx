@@ -33,7 +33,7 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   // property (set by HeaderHeightSync) via CSS, not this state.
   const [headerHeight, setHeaderHeight] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
-  // Mobile only (see the max-width media query in globals.css — desktop
+  // Mobile only (see the max-width media query in globals.css; desktop
   // always renders the fixed sidebar and ignores this): the pane stays a
   // floating toggle button until tapped, then slides in from the right as
   // an overlay instead of eating into the reading width.
@@ -63,7 +63,7 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
 
     const visible = new Set<string>();
     // The "active" band runs from just below the fixed header down to 70% of
-    // the viewport — but on a short viewport with a tall header (e.g. mobile,
+    // the viewport, but on a short viewport with a tall header (e.g. mobile,
     // where the nav wraps to multiple rows), that 70% cutoff can land above
     // the header itself, inverting the band so nothing ever intersects it.
     // Clamping the bottom margin keeps the band at least 120px tall.

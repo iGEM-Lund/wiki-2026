@@ -5,7 +5,7 @@ import type { Topology, GeometryCollection } from 'topojson-specification';
 import land from 'world-atlas/land-110m.json';
 
 // Shared by src/components/content/WorldMap.tsx (site render) and, if ever
-// needed, the Keystatic editor preview — same "compute once at module
+// needed, the Keystatic editor preview; same "compute once at module
 // scope, pure math, no DOM" pattern as src/lib/chemistry.ts / katex.ts.
 
 export const WORLD_MAP_VIEWBOX = { width: 960, height: 500 };
@@ -17,11 +17,11 @@ const rawTopology = land as unknown as Topology<{ land: GeometryCollection }>;
 // of tiny islands) for a deliberately "not too detailed" stylized map.
 // Simplify further: presimplify() weights every point by how much visual
 // detail removing it would lose, simplify() drops the least-significant
-// 20% of points (quantile 0.2 — picked by visual comparison, see the
+// 20% of points (quantile 0.2, picked by visual comparison, see the
 // map-*.png trials in this feature's dev session; more aggressive values
 // started producing jagged/degenerate shapes), then filterAttachedWeight
 // drops landmasses smaller than 0.04 steradians (clears most small island
-// clutter — e.g. Caribbean/Indonesian fragments — while keeping every
+// clutter (e.g. Caribbean/Indonesian fragments) while keeping every
 // continent and larger island intact).
 const presimplified = presimplify(rawTopology);
 const simplified = simplify(presimplified, quantile(presimplified, 0.2));
@@ -40,7 +40,7 @@ const projection = geoEqualEarth().fitSize(
 );
 const pathGenerator = geoPath(projection);
 
-// Computed once at module load — every page rendering a WorldMap reuses the
+// Computed once at module load; every page rendering a WorldMap reuses the
 // same precomputed path string rather than re-projecting the landmass data
 // on every request.
 export const worldLandPath = pathGenerator(landFeature) ?? '';

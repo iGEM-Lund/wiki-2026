@@ -21,11 +21,11 @@ type Transform = { x: number; y: number; k: number };
 const MIN_SCALE = 1;
 const MAX_SCALE = 8;
 // Pixels of pointer movement below which a press+release is still treated
-// as a click rather than a drag — distinguishes "pan-release" from
+// as a click rather than a drag; distinguishes "pan-release" from
 // "click empty map to close the open popup".
 const DRAG_CLICK_THRESHOLD = 5;
 
-// No pan/zoom library — see src/lib/keystatic/content-components.tsx's
+// No pan/zoom library; see src/lib/keystatic/content-components.tsx's
 // WorldMap comment and the repo's minimal, single-purpose-dependency style
 // (3dmol/openchemlib/katex are each a narrow direct import, no wrapper
 // frameworks) for why this is hand-rolled instead of d3-zoom.
@@ -42,7 +42,7 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
   const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
   const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
   const justDraggedRef = useRef(false);
-  // Which pin (if any) the current press started on, and its DOM element —
+  // Which pin (if any) the current press started on, and its DOM element,
   // captured at pointerdown, BEFORE setPointerCapture below retargets every
   // later event (including the eventual click) to the <svg> itself. Pin
   // activation is decided entirely from this + the drag threshold on
@@ -57,7 +57,7 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
   function clampTransform(next: Transform): Transform {
     // The transformed content spans [x, x + width*k] x [y, y + height*k] in
     // viewBox space. Constraining x to [width*(1-k), 0] (and y likewise)
-    // keeps that span always fully covering the viewBox — the map can be
+    // keeps that span always fully covering the viewBox; the map can be
     // panned within its own zoomed-in bounds, but never dragged far enough
     // to show empty space past its edge. At k=1 this collapses to exactly
     // x=0, y=0 (nothing to pan when not zoomed in, which is correct).
@@ -119,7 +119,7 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewBox.width, viewBox.height]);
 
-  // Closing on a pointerdown outside the whole map (not just the popup) —
+  // Closing on a pointerdown outside the whole map (not just the popup);
   // clicks on pins/background/the popup itself are handled by their own,
   // more precise handlers below; this is only for "clicked elsewhere on
   // the page while a popup was open."
@@ -186,7 +186,7 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
     lastPointerRef.current = null;
     pressedPinRef.current = null;
     setIsDragging(false);
-    if (wasDrag) return; // a drag-release, not a click — leave state as-is
+    if (wasDrag) return; // a drag-release, not a click; leave state as-is
     if (pressedPin) {
       handlePinActivate(pressedPin.id, pressedPin.element);
     } else {
@@ -253,7 +253,7 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
                 }}
               >
                 {/* Physical pin: a thin needle from the local origin (the
-                    exact projected lat/lng point) up to a round head —
+                    exact projected lat/lng point) up to a round head,
                     drawn as a line then a circle on top, so the circle
                     naturally covers the needle's upper end. */}
                 <line className="world-map__pin-needle" x1={0} y1={0} x2={0} y2={-13} />

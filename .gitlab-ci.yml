@@ -1,11 +1,11 @@
 # Runs in iGEM's GitLab, against the mirror of this repo. iGEM does not
-# accept pre-built HTML — this pipeline must run `npm ci && npm run build`
+# accept pre-built HTML; this pipeline must run `npm ci && npm run build`
 # itself. `npm run build` is the production/export path by default (see
 # package.json + scripts/keystatic-routes.mjs): it strips Keystatic's admin
 # routes before `next build` runs with BUILD_TARGET=production, output:'export'.
 #
 # iGEM's GitLab does pre-seed the repo with its own starter .gitlab-ci.yml
-# (a Vite/yarn Pages template) — confirmed by inspecting the template.
+# (a Vite/yarn Pages template), confirmed by inspecting the template.
 # scripts/deploy-production.sh's mirror push replaces the whole tree,
 # this file included, so it fully overwrites theirs; no reconciling needed.
 stages:

@@ -5,7 +5,7 @@ import katex from 'katex';
 // so the two stay visually in sync. `throwOnError: false` matters here: an
 // author mid-edit will often have invalid/incomplete LaTeX, and KaTeX's
 // default behavior for that is to render the offending part inline in red
-// rather than throw — which is what we want in both the editor preview and a
+// rather than throw, which is what we want in both the editor preview and a
 // published page (never let one bad formula break the whole build/page).
 export function renderLatexToHtml(latex: string, displayMode: boolean): string {
   return katex.renderToString(latex, {

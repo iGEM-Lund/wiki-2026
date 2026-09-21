@@ -9,7 +9,7 @@ const HEADING_TAGS = new Set(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
 
 // @mdx-js/mdx passes mdxJsxFlowElement/mdxJsxTextElement nodes through
 // remark-rehype untouched, so an <Expandable> in MDX source survives into
-// this hast tree as one of those node types rather than being flattened —
+// this hast tree as one of those node types rather than being flattened;
 // hast's own Element type doesn't cover them, hence the structural check.
 function isExpandableElement(node: unknown): boolean {
   return (
@@ -31,7 +31,7 @@ export function rehypeCollectHeadings(headings: HeadingItem[]) {
     visitParents(tree, 'element', (node: Element, ancestors) => {
       if (!HEADING_TAGS.has(node.tagName)) return;
       // A heading inside an <Expandable> body still gets an anchor id (for
-      // direct links) but shouldn't appear in the page outline — the
+      // direct links) but shouldn't appear in the page outline; the
       // outline assumes every target is visible on scroll, and a heading
       // hidden inside a closed <details> doesn't reliably auto-expand.
       if (ancestors.some(isExpandableElement)) return;

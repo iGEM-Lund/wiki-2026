@@ -7,7 +7,7 @@ type PdfEmbedProps = {
 // Plain <iframe>, not a PDF.js/library viewer: content PDFs are always
 // external static.igem.wiki URLs (uploaded via
 // teams.igem.org/6160/deliverables/wiki/uploads), and every evergreen
-// browser renders a PDF natively inside an iframe — same reasoning as
+// browser renders a PDF natively inside an iframe; same reasoning as
 // FigureWithCaption's plain <img>. The "open in new tab" link is a fallback
 // for browsers/settings that force-download instead of rendering inline.
 export function PdfEmbed({ src, title = 'PDF document', caption }: PdfEmbedProps) {

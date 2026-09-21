@@ -14,14 +14,14 @@ type MoleculeViewerProps = {
 };
 
 // Interactive 3D structure viewer (proteins, ligands, small molecules) built
-// on 3Dmol.js. Unlike the rest of src/components/content — which render to
-// static markup so pages ship with no client JS — a rotate/zoom viewer needs
+// on 3Dmol.js. Unlike the rest of src/components/content, which render to
+// static markup so pages ship with no client JS; a rotate/zoom viewer needs
 // a live WebGL canvas and mouse-driven camera controls, so this is the one
 // content component that runs client-side.
 //
 // 3Dmol itself touches `document` at module load time, so it's dynamically
 // imported inside the effect (browser-only) rather than at the top of the
-// file — a static import would blow up prerendering during `next build`
+// file; a static import would blow up prerendering during `next build`
 // (both the staging SSR build and the production static export).
 // 3Dmol wires drag-to-rotate, scroll-to-zoom, and right-drag-to-pan onto the
 // viewer automatically, so no extra control wiring is needed here.

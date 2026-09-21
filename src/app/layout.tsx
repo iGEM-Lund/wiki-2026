@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 // Blocking script so stored accessibility choices (theme, dyslexia-friendly
-// font, text size, reduced motion) apply before first paint — without it the
+// font, text size, reduced motion) apply before first paint; without it the
 // page would flash the defaults, then swap once accessibility-menu.tsx's
 // effect runs. Storage keys/values here must stay in sync with that file.
 const themeInitScript = `(function(){try{

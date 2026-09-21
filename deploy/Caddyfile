@@ -11,7 +11,7 @@ wiki.igemlund.org {
     # Explicit Host/X-Forwarded-Proto: keystatic-admin/route.ts reads these
     # to work out the app's real public origin for GitHub OAuth (Next's own
     # request.url ignores Host and reports its own bind address under
-    # `next start` — see the comment there for the full story).
+    # `next start`; see the comment there for the full story).
     reverse_proxy 127.0.0.1:3000 {
         header_up Host {host}
         header_up X-Forwarded-Proto {scheme}
