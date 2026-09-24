@@ -1,4 +1,6 @@
-import type { CSSProperties } from 'react';
+'use client';
+
+import { useEffect, useRef, type CSSProperties } from 'react';
 
 type FigureCarouselImage = { src: string; alt?: string };
 
@@ -7,74 +9,249 @@ type FigureCarouselProps = {
   speedSeconds?: number;
 };
 
+// Card size scales with the carousel's own width (so a phone gets smaller
+// cards instead of overlapping full-size ones), capped at the desktop size.
+const MAX_CARD_W = 260;
+const MIN_CARD_W = 150;
+const CARD_W_FRACTION = 0.55;
+const CARD_RATIO = 320 / 260;
+// Minimum horizontal gap between two neighbouring cards. Spacing never
+// drops below cardW + GAP_PX, which is what rules out overlap at any width.
+const GAP_PX = 24;
+// Extra off-screen distance past each end of the string, so a card is fully
+// hidden (swing and shadow included) before it wraps to the other side.
+const EDGE_MARGIN = 24;
+// String geometry, shared with the SVG path below: the string sits
+// STRING_BASE px from the top at both ends and sags SAG px at the middle.
+// HOLE_OFFSET is where the punched hole sits below each card's top edge
+// (must match the 12px in globals.css's photo-half mask and ring).
+const STRING_BASE = 20;
+const SAG = 60;
+const HOLE_OFFSET = 12;
 const SWING_SECONDS = 2.4;
+// Reduced motion: how long each set of frozen figures stays up before the
+// next set replaces it.
+const SWAP_SECONDS = 5;
+// Width assumed for the server render, before the real width is measured.
+const DEFAULT_WIDTH = 720;
+// Longest frame step the animation will take, so returning to a
+// backgrounded tab doesn't make every card jump ahead.
+const MAX_FRAME_SECONDS = 0.1;
 
-// Fraction of the string's own length used as an off-screen travel buffer on
-// EACH side (see globals.css's figure-carousel-move keyframes, which run
-// -BUFFER to 1+BUFFER, not 0 to 1) -- must match that file's keyframes
-// exactly, since the delay math below assumes it. Just enough to comfortably
-// clear figure-carousel__photo-half's 260px width (globals.css) at a typical
-// article-column width, so a photo's loop restart stays off-screen.
-const BUFFER = 0.4;
+type Geometry = { width: number; cardW: number; cardH: number; pitch: number };
+type Position = { x: number; y: number };
 
-// Fixed spacing between consecutive photos, as a fraction of the string's
-// own visible length; NOT 1 / images.length. Spacing photos evenly across
-// the visible string regardless of count would force them to overlap
-// whenever images.length * cardWidth exceeds the string's own width (with a
-// 260px card, that's as few as 4-5 images on a typical article column);
-// this instead gives every photo the same real-world gap no matter how many
-// there are: few images end up sparse with visible gaps, many end up queued
-// further back in the (invisible) buffer rather than crammed on top of each
-// other, like a real clothesline that just runs out of room.
-const GAP = 0.35;
+function geometry(width: number): Geometry {
+  const cardW = Math.round(Math.min(MAX_CARD_W, Math.max(MIN_CARD_W, width * CARD_W_FRACTION)));
+  return { width, cardW, cardH: Math.round(cardW * CARD_RATIO), pitch: cardW + GAP_PX };
+}
 
-// Pure CSS, no client JS: every photo continuously travels the string's
-// parabola on its own infinite loop (globals.css's figure-carousel-move
-// keyframes, which animate the --figure-carousel-t custom property that
-// both this component's inline style and the shared CSS top/left calc()s
-// read from), rather than one photo at a time swapping in and out. Photos
-// are evenly spread along that shared loop by giving each a negative
-// animation-delay proportional to its index (offset by GAP, not 1/count,
-// see GAP above), a well-established CSS trick for turning one looping
-// animation into N evenly-spaced, independently looping copies, so
-// multiple photos are always visible moving together.
-//
-// speedSeconds is how long a photo takes to cross the VISIBLE string
-// (--figure-carousel-t: 0 to 1), which is what the Keystatic field
-// describes, but the actual CSS animation-duration has to cover the WIDER
-// -BUFFER..1+BUFFER range at the same constant speed, so it's scaled up by
-// (1 + 2*BUFFER). animation-delay is derived the same way: a photo whose
-// "natural" spread position is visible-fraction t should already be
-// (t + BUFFER) * speedSeconds seconds into that wider cycle at load time
-// (BUFFER accounts for the off-screen head start before t=0 is reached). A
-// negative delay beyond a full cycle just wraps (CSS applies it modulo the
-// duration), so this works unchanged how ever many images there are.
-//
-// Each photo also sets its OWN base --figure-carousel-t (its position if
-// the animation weren't running) rather than relying on the @property's
-// shared initial-value of 0. That matters under prefers-reduced-motion:
-// globals.css's global reduced-motion rule forces every animation to a
-// single near-instant iteration, and without animation-fill-mode: forwards,
-// the property reverts to this base value afterward, so reduced-motion
-// visitors see the photos settle into a static, evenly-spread arrangement
-// instead of all piling up off-screen.
-//
-// Each photo renders as TWO identically-positioned, identically-animated
-// halves rather than one card: figure-carousel-photo-half--behind (clipped
-// to its own left half, z-index below the string) and --front (clipped to
-// its own right half, z-index above the string). This is what makes the
-// string read as passing "through" the photo: it's the same single drawn
-// string, with the photo simply stacked around it differently on each
-// side, rather than an approximation drawn on top that has to be kept in
-// sync with the string's own curve (that approach was tried and produced a
-// visible kink wherever the approximation's straight line met the string's
-// actual curve; this way there's nothing to keep in sync, since there's
-// no second copy of the string at all).
-export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouselProps) {
-  if (images.length === 0) return null;
-  const totalDuration = speedSeconds * (1 + 2 * BUFFER);
+// Top-left corner of a card whose center sits at centerX px, following the
+// string's parabola so the hole always lands on the drawn string. x is
+// clamped only far outside the visible string (queued cards), where the
+// unclamped parabola would send them hundreds of px off vertically.
+function cardPosition(g: Geometry, centerX: number): Position {
+  const x = Math.min(1.5, Math.max(-0.5, centerX / g.width));
+  return {
+    x: centerX - g.cardW / 2,
+    y: STRING_BASE - HOLE_OFFSET + 4 * x * (1 - x) * SAG,
+  };
+}
+
+// Frozen layout: as many cards as fit side by side without overlapping,
+// evenly spread across the visible string. With more figures than slots,
+// slot j shows figure (page * slots + j) mod count, so stepping `page`
+// cycles every figure through; the rest are parked off-screen (still in
+// the DOM, so their images stay loaded and their alt text stays readable).
+function staticLayout(g: Geometry, count: number, page: number) {
+  const slots = Math.max(1, Math.min(count, Math.floor((g.width + GAP_PX) / g.pitch)));
+  const parked: Position = { x: -10 * g.width, y: 0 };
+  const positions = new Array<Position>(count).fill(parked);
+  for (let j = 0; j < slots; j++) {
+    const index = (page * slots + j) % count;
+    positions[index] = cardPosition(g, ((j + 0.5) * g.width) / slots);
+  }
+  return { positions, slots };
+}
+
+// Every card travels one shared closed loop, spaced exactly loop / count
+// apart, so the spacing is always uniform. The loop is the visible string
+// plus just enough off-screen room for one card to fully leave on the right
+// and fully enter on the left, so a card that exits on the right reappears
+// on the left right away. Only when count * pitch no longer fits in that is
+// the loop lengthened, and the extra length becomes an invisible queue off
+// the left end where cards wait their turn to enter.
+function loopLength(g: Geometry, count: number) {
+  return Math.max(g.width + g.cardW + 2 * EDGE_MARGIN, count * g.pitch);
+}
+
+// Center x where a card has fully left the string on the right; phase 0..1
+// maps a card from (exitX - loop) up to exitX.
+function exitX(g: Geometry) {
+  return g.width + g.cardW / 2 + EDGE_MARGIN;
+}
+
+function movingPosition(g: Geometry, count: number, index: number, phase: number) {
+  const u = (((phase - index / count) % 1) + 1) % 1;
+  return cardPosition(g, exitX(g) - (1 - u) * loopLength(g, count));
+}
+
+// Phase that puts the first figure just inside the right end of the string
+// with the rest following behind it, so the string starts out populated.
+function initialPhase(g: Geometry, count: number) {
+  const loop = loopLength(g, count);
+  return 1 - (exitX(g) - (g.width - g.cardW / 2)) / loop;
+}
+
+// Matches globals.css: the OS setting wins, and the accessibility menu's
+// data-motion attribute can additionally turn motion off.
+function prefersReducedMotion() {
   return (
-    <div className="figure-carousel">
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    document.documentElement.getAttribute('data-motion') === 'reduce'
+  );
+}
+
+// Each photo renders as TWO identically positioned halves rather than one
+// card: figure-carousel__photo-half--behind (clipped to its own left half,
+// z-index below the string) and --front (clipped to its own right half,
+// z-index above the string). This is what makes the string read as passing
+// "through" the photo: it's the same single drawn string, with the photo
+// simply stacked around it differently on each side. The two halves share a
+// plain wrapper that only carries the --x/--y custom properties they both
+// translate by; the wrapper deliberately has no transform, opacity or
+// z-index, since any of those would give it its own stacking context and
+// stop the halves from sandwiching the string.
+//
+// Position is driven from JS (one requestAnimationFrame loop writing --x/--y
+// straight to the DOM, no React re-renders) because both the loop length
+// and the card size depend on the carousel's measured width. The gentle
+// swing stays a CSS animation on the halves, which the site-wide reduced
+// motion rule already switches off.
+export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouselProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const photoRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const count = images.length;
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || count === 0) return;
+
+    let g = geometry(root.clientWidth || DEFAULT_WIDTH);
+    let reduce = prefersReducedMotion();
+    let onScreen = true;
+    let phase = initialPhase(g, count);
+    let page = 0;
+    let frame = 0;
+    let lastTime = 0;
+    let swapTimer: ReturnType<typeof setInterval> | undefined;
+
+    function place(positions: Position[]) {
+      positions.forEach((p, i) => {
+        const el = photoRefs.current[i];
+        if (!el) return;
+        el.style.setProperty('--x', `${p.x}px`);
+        el.style.setProperty('--y', `${p.y}px`);
+      });
+    }
+
+    function placeMoving() {
+      const positions: Position[] = [];
+      for (let i = 0; i < count; i++) positions.push(movingPosition(g, count, i, phase));
+      place(positions);
+    }
+
+    function placeStatic() {
+      const layout = staticLayout(g, count, page);
+      place(layout.positions);
+      return layout.slots;
+    }
+
+    function tick(time: number) {
+      const dt = lastTime ? Math.min(MAX_FRAME_SECONDS, (time - lastTime) / 1000) : 0;
+      lastTime = time;
+      // speedSeconds is the time to cross the visible string, so the speed
+      // is width / speedSeconds px/s, expressed as a fraction of the loop.
+      phase = (phase + (dt * g.width) / speedSeconds / loopLength(g, count)) % 1;
+      placeMoving();
+      frame = requestAnimationFrame(tick);
+    }
+
+    function stop() {
+      cancelAnimationFrame(frame);
+      lastTime = 0;
+      clearInterval(swapTimer);
+      swapTimer = undefined;
+    }
+
+    function start() {
+      stop();
+      if (reduce) {
+        const slots = placeStatic();
+        if (count > slots && onScreen) {
+          swapTimer = setInterval(() => {
+            page += 1;
+            placeStatic();
+          }, SWAP_SECONDS * 1000);
+        }
+      } else {
+        placeMoving();
+        if (onScreen) frame = requestAnimationFrame(tick);
+      }
+    }
+
+    function applySize() {
+      root!.style.setProperty('--card-w', `${g.cardW}px`);
+      root!.style.setProperty('--card-h', `${g.cardH}px`);
+    }
+
+    applySize();
+    start();
+
+    const resize = new ResizeObserver(() => {
+      const width = root.clientWidth;
+      if (!width || width === g.width) return;
+      g = geometry(width);
+      applySize();
+      start();
+    });
+    resize.observe(root);
+
+    const visibility = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      start();
+    });
+    visibility.observe(root);
+
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onMotionChange = () => {
+      const next = prefersReducedMotion();
+      if (next === reduce) return;
+      reduce = next;
+      if (!reduce) phase = initialPhase(g, count);
+      start();
+    };
+    media.addEventListener('change', onMotionChange);
+    const attributes = new MutationObserver(onMotionChange);
+    attributes.observe(document.documentElement, { attributes: true, attributeFilter: ['data-motion'] });
+
+    return () => {
+      stop();
+      resize.disconnect();
+      visibility.disconnect();
+      attributes.disconnect();
+      media.removeEventListener('change', onMotionChange);
+    };
+  }, [count, speedSeconds]);
+
+  if (count === 0) return null;
+
+  // Server render (and first client render): the frozen layout at an assumed
+  // width, so nothing moves before JS has measured the real one.
+  const initial = staticLayout(geometry(DEFAULT_WIDTH), count, 0).positions;
+
+  return (
+    <div className="figure-carousel" ref={rootRef}>
       <svg
         className="figure-carousel__string"
         viewBox="0 0 100 100"
@@ -84,28 +261,31 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
         {/* A quadratic Bezier with its control point directly above the
             midpoint is exactly a parabola, and (because its x-component is
             then exactly linear in the curve parameter) its equation is
-            y = 20 + 4 * x * (1 - x) * 60 for x in [0, 1]. That is the SAME
-            equation figure-carousel__photo-half's `top` calc() uses (see
-            globals.css), which is what keeps every photo's clip seam
-            sitting exactly on this drawn string as both move/scale. */}
-        <path d="M 0,20 Q 50,140 100,20" />
+            y = STRING_BASE + 4 * x * (1 - x) * SAG for x in [0, 1]. That is
+            the same equation cardPosition() uses, which is what keeps every
+            photo's hole sitting exactly on this drawn string. */}
+        <path d={`M 0,${STRING_BASE} Q 50,${STRING_BASE + 2 * SAG} 100,${STRING_BASE}`} />
       </svg>
       <div className="figure-carousel__track">
         {images.map((image, index) => {
-          const t = index * GAP;
-          const moveDelay = -((t + BUFFER) * speedSeconds);
-          const swingDelay = -(t * SWING_SECONDS);
-          const style = {
-            '--figure-carousel-t': t,
-            animationDuration: `${totalDuration}s, ${SWING_SECONDS}s`,
-            animationDelay: `${moveDelay}s, ${swingDelay}s`,
+          const wrapperStyle = {
+            '--x': `${initial[index].x}px`,
+            '--y': `${initial[index].y}px`,
           } as CSSProperties;
+          const halfStyle: CSSProperties = { animationDelay: `${-(index / count) * SWING_SECONDS}s` };
           return (
-            <div key={index}>
-              <div className="figure-carousel__photo-half figure-carousel__photo-half--behind" style={style}>
+            <div
+              key={index}
+              className="figure-carousel__photo"
+              style={wrapperStyle}
+              ref={(el) => {
+                photoRefs.current[index] = el;
+              }}
+            >
+              <div className="figure-carousel__photo-half figure-carousel__photo-half--behind" style={halfStyle}>
                 <img src={image.src} alt={image.alt ?? ''} />
               </div>
-              <div className="figure-carousel__photo-half figure-carousel__photo-half--front" style={style}>
+              <div className="figure-carousel__photo-half figure-carousel__photo-half--front" style={halfStyle}>
                 <img src={image.src} alt="" aria-hidden="true" />
               </div>
             </div>

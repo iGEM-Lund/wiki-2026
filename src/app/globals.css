@@ -656,40 +656,27 @@ body {
   font-weight: 200;
 }
 
-/* Custom property so the photos' curved travel (top/left below) can be
-   driven by a single continuously-animated number instead of animating
-   top/left directly per keyframe step -- lets one @keyframes block drive
-   both axes from one t, and lets every photo share it while only differing
-   by animation-delay (see FigureCarousel.tsx). Registered (not just `--foo:
-   0`) so the browser knows how to interpolate it as a plain number, not a
-   token string -- unregistered custom properties don't animate smoothly. */
-@property --figure-carousel-t {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 0;
-}
 .figure-carousel {
   position: relative;
-  height: 420px;
+  /* --card-w/--card-h are set by FigureCarousel.tsx from the measured
+     width (smaller cards on narrow screens); these are the desktop defaults
+     used until then. The height leaves room for the string's sag, the card
+     itself and a little swing. */
+  --card-w: 260px;
+  --card-h: 320px;
+  height: calc(var(--card-h) + 100px);
   margin: 1rem 0;
-  /* --figure-carousel-t runs from -0.5 to 1.5, not 0 to 1 (see
-     figure-carousel-move below) -- 0/1 are the string's own two ends, and
-     the extra 0.5 on each side is off-screen travel where a photo's loop
-     restart (1.5 wrapping back to -0.5) actually happens, unseen. overflow:
-     hidden clips that whole buffer zone. */
+  /* Cards travel (or are parked) past both ends of the string, off-screen;
+     this clips that whole zone. */
   overflow: hidden;
 }
 /* The string itself: a true parabola. A quadratic Bezier whose control
    point sits directly above the curve's own horizontal midpoint has an
    x-component that is exactly linear in the curve parameter, which makes
    its y-as-a-function-of-x equation come out to a plain
-   `baseline + 4*x*(1-x)*amplitude` -- deliberately the SAME equation (same
-   baseline/amplitude constants) as figure-carousel__photo's `top` calc()
-   below, and critically, the SAME x here IS --figure-carousel-t (0 = this
-   path's start, 1 = its end) -- so the string and every photo's hole stay
-   in sync as photos move, including through the off-screen buffer, where
-   the identical formula keeps curving smoothly (unseen) rather than
-   producing a different shape than what the cards are following. */
+   `baseline + 4*x*(1-x)*sag`, the same equation FigureCarousel.tsx's
+   cardPosition() places every card's hole on, so the string and the holes
+   stay in sync as photos move. */
 .figure-carousel__string {
   position: absolute;
   top: 0;
@@ -724,10 +711,20 @@ body {
    together they add up to one seamless-looking card, with the genuine
    string (z-index 2, see .figure-carousel__string) sandwiched between them
    rather than a second approximated copy of it. */
+/* Plain wrapper for one photo's two halves. It only carries the --x/--y
+   custom properties (written every frame by FigureCarousel.tsx) that both
+   halves inherit and translate by. display: contents keeps it out of layout
+   entirely, so it can never become a stacking context that would stop the
+   halves from sandwiching the string. */
+.figure-carousel__photo {
+  display: contents;
+}
 .figure-carousel__photo-half {
   position: absolute;
-  width: 260px;
-  height: 320px;
+  left: 0;
+  top: 0;
+  width: var(--card-w);
+  height: var(--card-h);
   /* Extra top padding (vs the sides/bottom) gives the punched hole below
      some real polaroid-style card margin to sit inside, rather than
      crowding the top edge. */
@@ -736,21 +733,10 @@ body {
   border: 1px solid var(--border);
   border-radius: 4px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  animation-name: figure-carousel-move, figure-carousel-swing;
-  animation-timing-function: linear, ease-in-out;
-  animation-iteration-count: infinite, infinite;
-  /* left: --figure-carousel-t IS the string's own x-fraction (see the
-     string comment above) mapped straight to a percentage of the
-     container, minus half this card's width so its horizontal CENTER --
-     where the two halves meet -- lands on that fraction, not its left
-     edge.
-     top: baseline 8px + a parabola peaking at +60px at t=0.5 (4*t*(1-t) is
-     the standard 0-at-the-ends, 1-at-the-middle parabola shape). 8px is
-     12px (the hole's offset below, see --front's mask) less than the
-     string's own 20px baseline, so the hole always lands exactly on the
-     drawn string. */
-  left: calc((var(--figure-carousel-t) * 100%) - 130px);
-  top: calc(8px + (4 * var(--figure-carousel-t) * (1 - var(--figure-carousel-t)) * 60px));
+  /* The standalone translate property (not transform) so it composes with
+     the swing animation's transform: rotate() instead of fighting it. */
+  translate: var(--x, 0) var(--y, 0);
+  animation: figure-carousel-swing 2.4s ease-in-out infinite;
   /* Pivot the swing from the hole, like a real hanging photo, not the
      card's own center. Rotating around that point (rather than the card
      center) also means it stays put during the swing, which is what keeps
@@ -767,7 +753,7 @@ body {
 }
 /* The punched hole at the seam: BOTH halves carry the exact same mask,
    centered exactly on their shared boundary (50%, each half's own edge in
-   its own 260px-wide box coordinates -- the same space clip-path above
+   its own card-wide box coordinates, the same space clip-path above
    uses), rather than one half owning the whole circle. Each half's
    clip-path already keeps only ITS OWN side of that circle -- --behind's
    right edge is the boundary, so only the LEFT half of its circle falls
@@ -831,14 +817,6 @@ body {
   border-radius: 50%;
   border: 2px solid var(--border);
   transform: translate(-50%, -50%);
-}
-@keyframes figure-carousel-move {
-  from {
-    --figure-carousel-t: -0.4;
-  }
-  to {
-    --figure-carousel-t: 1.4;
-  }
 }
 @keyframes figure-carousel-swing {
   0%,
