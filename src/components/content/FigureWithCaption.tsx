@@ -1,3 +1,5 @@
+import { ZoomableImage } from './ZoomableImage';
+
 type FigureWithCaptionProps = {
   src?: string;
   alt?: string;
@@ -7,10 +9,11 @@ type FigureWithCaptionProps = {
 // Plain <img>, not next/image: content images are always external
 // static.igem.wiki URLs (uploaded via teams.igem.org/6160/deliverables/wiki/uploads), and Image
 // Optimization is off anyway for the static export build (see next.config.ts).
+// ZoomableImage adds the hover zoom and click-to-enlarge lightbox.
 export function FigureWithCaption({ src, alt = '', caption }: FigureWithCaptionProps) {
   return (
     <figure className="figure-with-caption">
-      {src ? <img src={src} alt={alt} /> : null}
+      {src ? <ZoomableImage src={src} alt={alt} caption={caption} /> : null}
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
   );

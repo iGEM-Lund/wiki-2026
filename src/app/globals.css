@@ -650,6 +650,35 @@ body {
 .figure-with-caption img {
   max-width: 100%;
 }
+/* Clickable image that opens the Lightbox (ZoomableImage.tsx): a reset
+   <button> so it looks like the bare image, zooming in slightly on hover
+   or keyboard focus. */
+.zoomable-image {
+  display: block;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: zoom-in;
+}
+.zoomable-image img {
+  display: block;
+  transition: scale 0.2s ease, box-shadow 0.2s ease;
+}
+.zoomable-image:hover img,
+.zoomable-image:focus-visible img {
+  scale: 1.03;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+.zoomable-image:focus-visible {
+  outline: none;
+}
+.zoomable-image:focus-visible img {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 .figure-with-caption figcaption {
   color: var(--muted);
   font-size: 0.8125rem;
@@ -737,13 +766,43 @@ body {
      the swing animation's transform: rotate() instead of fighting it. */
   translate: var(--x, 0) var(--y, 0);
   animation: figure-carousel-swing 2.4s ease-in-out infinite;
-  /* Pivot the swing from the hole, like a real hanging photo, not the
-     card's own center. Rotating around that point (rather than the card
+  /* Pivot the swing (and hover zoom) from where the string touches the top
+     of the hole (hole center 12px minus FigureCarousel.tsx's 5px HANG_DROP),
+     like a real hanging photo, not the card's own center. Rotating around that point (rather than the card
      center) also means it stays put during the swing, which is what keeps
      the --behind and --front halves (which share this exact
      transform-origin) rotating in lockstep rather than drifting apart at
      their shared seam. */
-  transform-origin: 50% 12px;
+  transform-origin: 50% 7px;
+}
+/* The --behind half is the photo's <button> (see FigureCarousel.tsx);
+   undo the default button look so it matches the --front half exactly. */
+button.figure-carousel__photo-half {
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  appearance: none;
+}
+.figure-carousel__photo-half {
+  cursor: zoom-in;
+  transition: scale 0.2s ease;
+}
+/* Hovered or keyboard-focused photo: FigureCarousel.tsx pauses the travel,
+   and here the photo zooms in slightly (about its hole, via the shared
+   transform-origin, so it stays hanging on the string) and stops swinging.
+   The focus ring is drawn on both halves, inset so their clip-paths don't
+   cut it off; each half contributes its own side of the ring. */
+.figure-carousel__photo:hover > .figure-carousel__photo-half,
+.figure-carousel__photo:has(:focus-visible) > .figure-carousel__photo-half {
+  scale: 1.05;
+  animation-play-state: paused;
+}
+.figure-carousel__photo-half:focus-visible {
+  outline: none;
+}
+.figure-carousel__photo:has(:focus-visible) > .figure-carousel__photo-half {
+  outline: 2px solid var(--accent);
+  outline-offset: -4px;
 }
 .figure-carousel__photo-half img {
   display: block;
@@ -825,6 +884,89 @@ body {
   }
   50% {
     transform: rotate(2deg);
+  }
+}
+/* Full-screen figure view (Lightbox.tsx). A modal <dialog> sits in the
+   top layer and spans the whole viewport; the image is scaled up (or down)
+   to fill it with object-fit: contain, so even small uploads get a big,
+   undistorted view. Scrolling the page behind it is locked while open. */
+html:has(dialog.lightbox[open]) {
+  overflow: hidden;
+}
+.lightbox {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 1.5rem;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: zoom-out;
+}
+.lightbox[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: lightbox-in 0.2s ease-out;
+}
+.lightbox::backdrop {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}
+.lightbox__figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+.lightbox__figure img {
+  display: block;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  object-fit: contain;
+}
+.lightbox__figure figcaption {
+  flex: none;
+  max-width: 60rem;
+  cursor: text;
+  font-size: 0.9375rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.85);
+}
+.lightbox__close {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  cursor: pointer;
+}
+.lightbox__close:hover,
+.lightbox__close:focus-visible {
+  background: rgba(255, 255, 255, 0.15);
+}
+.lightbox__close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    scale: 0.97;
   }
 }
 .layout {

@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { Lightbox } from './Lightbox';
 
 type FigureCarouselImage = { src: string; alt?: string };
 
@@ -25,9 +26,14 @@ const EDGE_MARGIN = 24;
 // STRING_BASE px from the top at both ends and sags SAG px at the middle.
 // HOLE_OFFSET is where the punched hole sits below each card's top edge
 // (must match the 12px in globals.css's photo-half mask and ring).
+// HANG_DROP lowers each card so the string rests against the TOP edge of its
+// 8px-radius hole (string center 5px above the hole center, leaving room for
+// the ~5px stroke) instead of threading through the middle, so the photo
+// reads as actually hanging from it.
 const STRING_BASE = 20;
 const SAG = 60;
 const HOLE_OFFSET = 12;
+const HANG_DROP = 5;
 const SWING_SECONDS = 2.4;
 // Reduced motion: how long each set of frozen figures stays up before the
 // next set replaces it.
@@ -47,14 +53,14 @@ function geometry(width: number): Geometry {
 }
 
 // Top-left corner of a card whose center sits at centerX px, following the
-// string's parabola so the hole always lands on the drawn string. x is
+// string's parabola so the hole always hangs from the drawn string. x is
 // clamped only far outside the visible string (queued cards), where the
 // unclamped parabola would send them hundreds of px off vertically.
 function cardPosition(g: Geometry, centerX: number): Position {
   const x = Math.min(1.5, Math.max(-0.5, centerX / g.width));
   return {
     x: centerX - g.cardW / 2,
-    y: STRING_BASE - HOLE_OFFSET + 4 * x * (1 - x) * SAG,
+    y: STRING_BASE - HOLE_OFFSET + HANG_DROP + 4 * x * (1 - x) * SAG,
   };
 }
 
@@ -128,10 +134,22 @@ function prefersReducedMotion() {
 // and the card size depend on the carousel's measured width. The gentle
 // swing stays a CSS animation on the halves, which the site-wide reduced
 // motion rule already switches off.
+//
+// Hovering or keyboard-focusing a photo pauses the carousel (and globals.css
+// zooms that photo in slightly); clicking it opens it in the Lightbox, which
+// also keeps the carousel paused while open. The --behind half is a real
+// <button> (named by its image's alt text) so this works by keyboard too.
 export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouselProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const photoRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const hoveredRef = useRef(false);
+  const lightboxOpenRef = useRef(false);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const count = images.length;
+
+  useEffect(() => {
+    lightboxOpenRef.current = openIndex !== null;
+  }, [openIndex]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -145,6 +163,7 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
     let frame = 0;
     let lastTime = 0;
     let swapTimer: ReturnType<typeof setInterval> | undefined;
+    const paused = () => hoveredRef.current || lightboxOpenRef.current;
 
     function place(positions: Position[]) {
       positions.forEach((p, i) => {
@@ -168,7 +187,7 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
     }
 
     function tick(time: number) {
-      const dt = lastTime ? Math.min(MAX_FRAME_SECONDS, (time - lastTime) / 1000) : 0;
+      const dt = lastTime && !paused() ? Math.min(MAX_FRAME_SECONDS, (time - lastTime) / 1000) : 0;
       lastTime = time;
       // speedSeconds is the time to cross the visible string, so the speed
       // is width / speedSeconds px/s, expressed as a fraction of the loop.
@@ -190,6 +209,7 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
         const slots = placeStatic();
         if (count > slots && onScreen) {
           swapTimer = setInterval(() => {
+            if (paused()) return;
             page += 1;
             placeStatic();
           }, SWAP_SECONDS * 1000);
@@ -223,6 +243,32 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
     });
     visibility.observe(root);
 
+    // Pause while the pointer is over a photo or keyboard focus is on one.
+    // Events bubble up from the halves, so one listener on the root covers
+    // every photo.
+    const onPhoto = (target: EventTarget | null) =>
+      target instanceof Element && target.closest('.figure-carousel__photo-half') !== null;
+    const onPointerOver = (event: PointerEvent) => {
+      hoveredRef.current = onPhoto(event.target);
+    };
+    const onPointerLeave = () => {
+      hoveredRef.current = false;
+    };
+    // Keyboard focus only (:focus-visible): a mouse click also focuses the
+    // button, and focus returns to it when the Lightbox closes, which would
+    // otherwise leave the carousel paused until the visitor clicked elsewhere.
+    const onFocusIn = (event: FocusEvent) => {
+      hoveredRef.current =
+        onPhoto(event.target) && (event.target as Element).matches(':focus-visible');
+    };
+    const onFocusOut = () => {
+      hoveredRef.current = false;
+    };
+    root.addEventListener('pointerover', onPointerOver);
+    root.addEventListener('pointerleave', onPointerLeave);
+    root.addEventListener('focusin', onFocusIn);
+    root.addEventListener('focusout', onFocusOut);
+
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     const onMotionChange = () => {
       const next = prefersReducedMotion();
@@ -241,6 +287,10 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
       visibility.disconnect();
       attributes.disconnect();
       media.removeEventListener('change', onMotionChange);
+      root.removeEventListener('pointerover', onPointerOver);
+      root.removeEventListener('pointerleave', onPointerLeave);
+      root.removeEventListener('focusin', onFocusIn);
+      root.removeEventListener('focusout', onFocusOut);
     };
   }, [count, speedSeconds]);
 
@@ -281,10 +331,16 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
               ref={(el) => {
                 photoRefs.current[index] = el;
               }}
+              onClick={() => setOpenIndex(index)}
             >
-              <div className="figure-carousel__photo-half figure-carousel__photo-half--behind" style={halfStyle}>
+              <button
+                type="button"
+                className="figure-carousel__photo-half figure-carousel__photo-half--behind"
+                style={halfStyle}
+                aria-label={image.alt ? undefined : `Enlarge figure ${index + 1}`}
+              >
                 <img src={image.src} alt={image.alt ?? ''} />
-              </div>
+              </button>
               <div className="figure-carousel__photo-half figure-carousel__photo-half--front" style={halfStyle}>
                 <img src={image.src} alt="" aria-hidden="true" />
               </div>
@@ -292,6 +348,9 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
           );
         })}
       </div>
+      {openIndex !== null ? (
+        <Lightbox src={images[openIndex].src} alt={images[openIndex].alt} onClose={() => setOpenIndex(null)} />
+      ) : null}
     </div>
   );
 }
