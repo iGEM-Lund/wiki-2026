@@ -144,11 +144,17 @@ async function renderGlb(container: HTMLElement, buffer: ArrayBuffer): Promise<(
   controls.addEventListener('change', render);
 
   // Frame the whole model: center the orbit on it and back the camera off
-  // far enough that its bounding sphere fits the vertical field of view.
-  const sphere = new THREE.Box3().setFromObject(gltf.scene).getBoundingSphere(new THREE.Sphere());
-  const distance = sphere.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2));
-  controls.target.copy(sphere.center);
-  camera.position.copy(sphere.center).add(new THREE.Vector3(0, 0, distance * 1.1));
+  // until its bounding box fills the view, whichever of width or height is
+  // the tighter fit for the container's shape.
+  const box = new THREE.Box3().setFromObject(gltf.scene);
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const aspect = container.clientWidth / container.clientHeight || 1;
+  const tanHalfFov = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  const distance =
+    Math.max(size.y / 2 / tanHalfFov, size.x / 2 / (tanHalfFov * aspect)) * 1.15 + size.z / 2;
+  controls.target.copy(center);
+  camera.position.copy(center).add(new THREE.Vector3(0, 0, distance));
   camera.near = distance / 100;
   camera.far = distance * 10;
   controls.update();
