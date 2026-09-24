@@ -202,7 +202,7 @@ export const contentComponents = {
       modelUrl: fields.url({
         label: 'Model file URL',
         description:
-          'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here (PDB, mmCIF, SDF, MOL2, or XYZ format).',
+          'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here. iGEM rejects plain-text files like .pdb, so export the structure from ChimeraX as GLB (File > Save, format glTF .glb). PDB, mmCIF, SDF, MOL2 and XYZ also work if hosted elsewhere.',
       }),
       format: fields.select({
         label: 'File format',
@@ -212,11 +212,13 @@ export const contentComponents = {
           { label: 'SDF', value: 'sdf' },
           { label: 'MOL2', value: 'mol2' },
           { label: 'XYZ', value: 'xyz' },
+          { label: 'GLB (3D mesh, e.g. ChimeraX export)', value: 'glb' },
         ],
         defaultValue: 'pdb',
       }),
       style: fields.select({
         label: 'Rendering style',
+        description: 'Ignored for GLB files, which keep the look they were exported with.',
         options: [
           { label: 'Cartoon', value: 'cartoon' },
           { label: 'Stick', value: 'stick' },
