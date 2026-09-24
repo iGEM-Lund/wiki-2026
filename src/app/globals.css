@@ -687,11 +687,10 @@ body {
 
 .figure-carousel {
   position: relative;
-  /* --card-w/--card-h are set by FigureCarousel.tsx from the measured
-     width (smaller cards on narrow screens); these are the desktop defaults
-     used until then. The height leaves room for the string's sag, the card
-     itself and a little swing. */
-  --card-w: 260px;
+  /* --card-h is the tallest card's height, set by FigureCarousel.tsx from
+     the measured width and the images' aspect ratios (this is the desktop
+     default used until then). The height leaves room for the string's sag,
+     the card itself and a little swing. */
   --card-h: 320px;
   height: calc(var(--card-h) + 100px);
   margin: 1rem 0;
@@ -752,8 +751,10 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  width: var(--card-w);
-  height: var(--card-h);
+  /* Each card's own size (set per photo by FigureCarousel.tsx so it
+     matches that image's aspect ratio). */
+  width: var(--w, 260px);
+  height: var(--h, 320px);
   /* Extra top padding (vs the sides/bottom) gives the punched hole below
      some real polaroid-style card margin to sit inside, rather than
      crowding the top edge. */

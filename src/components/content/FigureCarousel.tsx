@@ -10,14 +10,26 @@ type FigureCarouselProps = {
   speedSeconds?: number;
 };
 
-// Card size scales with the carousel's own width (so a phone gets smaller
-// cards instead of overlapping full-size ones), capped at the desktop size.
-const MAX_CARD_W = 260;
-const MIN_CARD_W = 150;
-const CARD_W_FRACTION = 0.55;
-const CARD_RATIO = 320 / 260;
-// Minimum horizontal gap between two neighbouring cards. Spacing never
-// drops below cardW + GAP_PX, which is what rules out overlap at any width.
+// Every photo gets the same image height and keeps its own aspect ratio
+// (so portrait, square and landscape shots are never cropped to one shape);
+// its card width follows from that. The shared height scales with the
+// carousel's own width, so a phone gets smaller cards, capped at the desktop
+// size. BASE_IMG_H is the desktop image height; PAD_X/PAD_Y are the card's
+// white margin around the image: globals.css's .figure-carousel__photo-half
+// padding (24/10/16px) plus its 1px border on each side.
+const BASE_IMG_H = 280;
+const MIN_SCALE = 0.58;
+const WIDTH_FOR_FULL_SCALE = 470;
+const PAD_X = 22;
+const PAD_Y = 42;
+// Aspect ratio (width / height) used until an image has loaded, and the
+// range real ratios are clamped to, so an extreme panorama or sliver still
+// gets a sensible card (only such outliers get cropped).
+const DEFAULT_ASPECT = 240 / 280;
+const MIN_ASPECT = 0.5;
+const MAX_ASPECT = 3;
+// Minimum horizontal gap between two neighbouring cards' edges. Gaps never
+// drop below this, which is what rules out overlap at any width.
 const GAP_PX = 24;
 // Extra off-screen distance past each end of the string, so a card is fully
 // hidden (swing and shadow included) before it wraps to the other side.
@@ -44,69 +56,104 @@ const DEFAULT_WIDTH = 720;
 // backgrounded tab doesn't make every card jump ahead.
 const MAX_FRAME_SECONDS = 0.1;
 
-type Geometry = { width: number; cardW: number; cardH: number; pitch: number };
+type Size = { w: number; h: number };
 type Position = { x: number; y: number };
+// Everything that depends on the measured width and the images' ratios.
+type Layout = {
+  width: number;
+  sizes: Size[];
+  maxW: number;
+  // Distance along the loop from the first card's center to each card's
+  // center (moving layout; see computeLayout).
+  offsets: number[];
+  loop: number;
+};
 
-function geometry(width: number): Geometry {
-  const cardW = Math.round(Math.min(MAX_CARD_W, Math.max(MIN_CARD_W, width * CARD_W_FRACTION)));
-  return { width, cardW, cardH: Math.round(cardW * CARD_RATIO), pitch: cardW + GAP_PX };
+function cardSize(width: number, aspect: number): Size {
+  const scale = Math.min(1, Math.max(MIN_SCALE, width / WIDTH_FOR_FULL_SCALE));
+  const a = Math.min(MAX_ASPECT, Math.max(MIN_ASPECT, aspect));
+  let imgH = BASE_IMG_H * scale;
+  // A wide image on a narrow screen: shrink it (keeping its ratio) so the
+  // card still fits on the string with a gap on either side.
+  const maxImgW = width - 2 * GAP_PX - PAD_X;
+  if (imgH * a > maxImgW) imgH = maxImgW / a;
+  return { w: Math.round(imgH * a + PAD_X), h: Math.round(imgH + PAD_Y) };
+}
+
+// Every card travels one shared closed loop with equal gaps between card
+// edges, so the spacing is always uniform whatever the cards' widths. The
+// loop is the visible string plus just enough off-screen room for the
+// widest card to fully leave on the right and fully enter on the left, so
+// a card that exits on the right reappears on the left right away. Only
+// when the cards plus minimum gaps no longer fit in that is the loop
+// lengthened, and the extra length becomes an invisible queue off the left
+// end where cards wait their turn to enter.
+function computeLayout(width: number, aspects: number[]): Layout {
+  const sizes = aspects.map((a) => cardSize(width, a));
+  const maxW = Math.max(...sizes.map((s) => s.w));
+  const total = sizes.reduce((sum, s) => sum + s.w, 0);
+  const loop = Math.max(width + maxW + 2 * EDGE_MARGIN, total + sizes.length * GAP_PX);
+  const gap = (loop - total) / sizes.length;
+  const offsets = [0];
+  for (let i = 1; i < sizes.length; i++) {
+    offsets.push(offsets[i - 1] + sizes[i - 1].w / 2 + gap + sizes[i].w / 2);
+  }
+  return { width, sizes, maxW, offsets, loop };
 }
 
 // Top-left corner of a card whose center sits at centerX px, following the
-// string's parabola so the hole always hangs from the drawn string. x is
-// clamped only far outside the visible string (queued cards), where the
-// unclamped parabola would send them hundreds of px off vertically.
-function cardPosition(g: Geometry, centerX: number): Position {
-  const x = Math.min(1.5, Math.max(-0.5, centerX / g.width));
+// string's parabola so the hole always hangs from the drawn string.
+// Past either end of the string (where the drawn string stops) a card keeps
+// the end height instead of climbing the parabola out through the top edge.
+function cardPosition(l: Layout, index: number, centerX: number): Position {
+  const x = Math.min(1, Math.max(0, centerX / l.width));
   return {
-    x: centerX - g.cardW / 2,
+    x: centerX - l.sizes[index].w / 2,
     y: STRING_BASE - HOLE_OFFSET + HANG_DROP + 4 * x * (1 - x) * SAG,
   };
 }
 
-// Frozen layout: as many cards as fit side by side without overlapping,
-// evenly spread across the visible string. With more figures than slots,
-// slot j shows figure (page * slots + j) mod count, so stepping `page`
-// cycles every figure through; the rest are parked off-screen (still in
-// the DOM, so their images stay loaded and their alt text stays readable).
-function staticLayout(g: Geometry, count: number, page: number) {
-  const slots = Math.max(1, Math.min(count, Math.floor((g.width + GAP_PX) / g.pitch)));
-  const parked: Position = { x: -10 * g.width, y: 0 };
-  const positions = new Array<Position>(count).fill(parked);
-  for (let j = 0; j < slots; j++) {
-    const index = (page * slots + j) % count;
-    positions[index] = cardPosition(g, ((j + 0.5) * g.width) / slots);
+// Frozen layout: starting from figure `first`, as many cards as fit side by
+// side without overlapping, spread across the visible string with equal
+// gaps. Returns how many were shown, so the next set can start right after
+// them and every figure gets its turn; the rest are parked off-screen
+// (still in the DOM, so their images stay loaded and their alt text stays
+// readable).
+function staticLayout(l: Layout, first: number) {
+  const count = l.sizes.length;
+  const shown: number[] = [first % count];
+  let used = l.sizes[first % count].w;
+  while (shown.length < count) {
+    const next = (first + shown.length) % count;
+    if (used + GAP_PX + l.sizes[next].w > l.width) break;
+    used += GAP_PX + l.sizes[next].w;
+    shown.push(next);
   }
-  return { positions, slots };
+  const gap = (l.width - used) / shown.length;
+  const positions = new Array<Position>(count).fill({ x: -10 * l.width, y: 0 });
+  let left = gap / 2;
+  for (const index of shown) {
+    positions[index] = cardPosition(l, index, left + l.sizes[index].w / 2);
+    left += l.sizes[index].w + gap;
+  }
+  return { positions, shown: shown.length };
 }
 
-// Every card travels one shared closed loop, spaced exactly loop / count
-// apart, so the spacing is always uniform. The loop is the visible string
-// plus just enough off-screen room for one card to fully leave on the right
-// and fully enter on the left, so a card that exits on the right reappears
-// on the left right away. Only when count * pitch no longer fits in that is
-// the loop lengthened, and the extra length becomes an invisible queue off
-// the left end where cards wait their turn to enter.
-function loopLength(g: Geometry, count: number) {
-  return Math.max(g.width + g.cardW + 2 * EDGE_MARGIN, count * g.pitch);
+// Center x where the widest card has fully left the string on the right;
+// phase 0..1 maps a card from (exitX - loop) up to exitX.
+function exitX(l: Layout) {
+  return l.width + l.maxW / 2 + EDGE_MARGIN;
 }
 
-// Center x where a card has fully left the string on the right; phase 0..1
-// maps a card from (exitX - loop) up to exitX.
-function exitX(g: Geometry) {
-  return g.width + g.cardW / 2 + EDGE_MARGIN;
-}
-
-function movingPosition(g: Geometry, count: number, index: number, phase: number) {
-  const u = (((phase - index / count) % 1) + 1) % 1;
-  return cardPosition(g, exitX(g) - (1 - u) * loopLength(g, count));
+function movingPosition(l: Layout, index: number, phase: number) {
+  const u = (((phase - l.offsets[index] / l.loop) % 1) + 1) % 1;
+  return cardPosition(l, index, exitX(l) - (1 - u) * l.loop);
 }
 
 // Phase that puts the first figure just inside the right end of the string
 // with the rest following behind it, so the string starts out populated.
-function initialPhase(g: Geometry, count: number) {
-  const loop = loopLength(g, count);
-  return 1 - (exitX(g) - (g.width - g.cardW / 2)) / loop;
+function initialPhase(l: Layout) {
+  return 1 - (exitX(l) - (l.width - l.sizes[0].w / 2)) / l.loop;
 }
 
 // Matches globals.css: the OS setting wins, and the accessibility menu's
@@ -131,7 +178,8 @@ function prefersReducedMotion() {
 //
 // Position is driven from JS (one requestAnimationFrame loop writing --x/--y
 // straight to the DOM, no React re-renders) because both the loop length
-// and the card size depend on the carousel's measured width. The gentle
+// and the card sizes depend on the carousel's measured width and on each
+// image's real aspect ratio, which is only known once it has loaded. The gentle
 // swing stays a CSS animation on the halves, which the site-wide reduced
 // motion rule already switches off.
 //
@@ -155,11 +203,12 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
     const root = rootRef.current;
     if (!root || count === 0) return;
 
-    let g = geometry(root.clientWidth || DEFAULT_WIDTH);
+    const aspects = new Array<number>(count).fill(DEFAULT_ASPECT);
+    let l = computeLayout(root.clientWidth || DEFAULT_WIDTH, aspects);
     let reduce = prefersReducedMotion();
     let onScreen = true;
-    let phase = initialPhase(g, count);
-    let page = 0;
+    let phase = initialPhase(l);
+    let first = 0;
     let frame = 0;
     let lastTime = 0;
     let swapTimer: ReturnType<typeof setInterval> | undefined;
@@ -176,14 +225,14 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
 
     function placeMoving() {
       const positions: Position[] = [];
-      for (let i = 0; i < count; i++) positions.push(movingPosition(g, count, i, phase));
+      for (let i = 0; i < count; i++) positions.push(movingPosition(l, i, phase));
       place(positions);
     }
 
     function placeStatic() {
-      const layout = staticLayout(g, count, page);
+      const layout = staticLayout(l, first);
       place(layout.positions);
-      return layout.slots;
+      return layout.shown;
     }
 
     function tick(time: number) {
@@ -191,7 +240,7 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
       lastTime = time;
       // speedSeconds is the time to cross the visible string, so the speed
       // is width / speedSeconds px/s, expressed as a fraction of the loop.
-      phase = (phase + (dt * g.width) / speedSeconds / loopLength(g, count)) % 1;
+      phase = (phase + (dt * l.width) / speedSeconds / l.loop) % 1;
       placeMoving();
       frame = requestAnimationFrame(tick);
     }
@@ -206,12 +255,12 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
     function start() {
       stop();
       if (reduce) {
-        const slots = placeStatic();
-        if (count > slots && onScreen) {
+        let shown = placeStatic();
+        if (count > shown && onScreen) {
           swapTimer = setInterval(() => {
             if (paused()) return;
-            page += 1;
-            placeStatic();
+            first = (first + shown) % count;
+            shown = placeStatic();
           }, SWAP_SECONDS * 1000);
         }
       } else {
@@ -220,22 +269,50 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
       }
     }
 
-    function applySize() {
-      root!.style.setProperty('--card-w', `${g.cardW}px`);
-      root!.style.setProperty('--card-h', `${g.cardH}px`);
+    function applySizes() {
+      l.sizes.forEach((size, i) => {
+        const el = photoRefs.current[i];
+        if (!el) return;
+        el.style.setProperty('--w', `${size.w}px`);
+        el.style.setProperty('--h', `${size.h}px`);
+      });
+      root!.style.setProperty('--card-h', `${Math.max(...l.sizes.map((s) => s.h))}px`);
     }
 
-    applySize();
+    // Recompute the layout (new width or a newly known aspect ratio) while
+    // keeping the carousel where it is along its loop.
+    function relayout(width: number) {
+      l = computeLayout(width, aspects);
+      applySizes();
+      start();
+    }
+
+    applySizes();
     start();
 
     const resize = new ResizeObserver(() => {
       const width = root.clientWidth;
-      if (!width || width === g.width) return;
-      g = geometry(width);
-      applySize();
-      start();
+      if (width && width !== l.width) relayout(width);
     });
     resize.observe(root);
+
+    // Read each image's real aspect ratio as soon as it is known (it may
+    // already have loaded before this effect ran).
+    const imageCleanups: (() => void)[] = [];
+    photoRefs.current.slice(0, count).forEach((el, i) => {
+      const img = el?.querySelector('img');
+      if (!img) return;
+      const read = () => {
+        if (!img.naturalWidth || !img.naturalHeight) return;
+        const aspect = img.naturalWidth / img.naturalHeight;
+        if (Math.abs(aspect - aspects[i]) < 0.001) return;
+        aspects[i] = aspect;
+        relayout(l.width);
+      };
+      if (img.complete) read();
+      img.addEventListener('load', read);
+      imageCleanups.push(() => img.removeEventListener('load', read));
+    });
 
     const visibility = new IntersectionObserver(([entry]) => {
       onScreen = entry.isIntersecting;
@@ -274,7 +351,7 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
       const next = prefersReducedMotion();
       if (next === reduce) return;
       reduce = next;
-      if (!reduce) phase = initialPhase(g, count);
+      if (!reduce) phase = initialPhase(l);
       start();
     };
     media.addEventListener('change', onMotionChange);
@@ -283,6 +360,7 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
 
     return () => {
       stop();
+      imageCleanups.forEach((cleanup) => cleanup());
       resize.disconnect();
       visibility.disconnect();
       attributes.disconnect();
@@ -298,7 +376,8 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
 
   // Server render (and first client render): the frozen layout at an assumed
   // width, so nothing moves before JS has measured the real one.
-  const initial = staticLayout(geometry(DEFAULT_WIDTH), count, 0).positions;
+  const initialLayout = computeLayout(DEFAULT_WIDTH, new Array<number>(count).fill(DEFAULT_ASPECT));
+  const initial = staticLayout(initialLayout, 0).positions;
 
   return (
     <div className="figure-carousel" ref={rootRef}>
@@ -321,6 +400,8 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
           const wrapperStyle = {
             '--x': `${initial[index].x}px`,
             '--y': `${initial[index].y}px`,
+            '--w': `${initialLayout.sizes[index].w}px`,
+            '--h': `${initialLayout.sizes[index].h}px`,
           } as CSSProperties;
           const halfStyle: CSSProperties = { animationDelay: `${-(index / count) * SWING_SECONDS}s` };
           return (
