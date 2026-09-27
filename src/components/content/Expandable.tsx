@@ -1,28 +1,31 @@
 import { Children, isValidElement, type ReactNode } from 'react';
-import { ChevronDown } from 'lucide-react';
 import { ExpandableSummary } from './ExpandableSummary';
+import { ExpandableTitle } from './ExpandableTitle';
+import { ExpandableClient } from './ExpandableClient';
 
 type ExpandableProps = {
   defaultOpen?: boolean;
   children?: ReactNode;
 };
 
-// The always-visible teaser is authored as the first <ExpandableSummary>
-// child rather than a flat prop, so it can hold rich inline MDX (emphasis,
-// a <Citation>, ...) instead of being limited to plain text.
+// The optional heading and the always-visible teaser are authored as
+// <ExpandableTitle> / <ExpandableSummary> children rather than flat props, so
+// they can hold rich inline MDX (emphasis, a <Citation>, ...) instead of being
+// limited to plain text. Everything else is the collapsible body.
 export function Expandable({ defaultOpen = false, children }: ExpandableProps) {
   const items = Children.toArray(children);
-  const summaryIndex = items.findIndex((child) => isValidElement(child) && child.type === ExpandableSummary);
-  const summary = summaryIndex === -1 ? null : items[summaryIndex];
-  const body = summaryIndex === -1 ? items : items.filter((_, index) => index !== summaryIndex);
+  const isMarker = (child: ReactNode, type: unknown) => isValidElement(child) && child.type === type;
+  const title = items.find((child) => isMarker(child, ExpandableTitle)) ?? null;
+  const summary = items.find((child) => isMarker(child, ExpandableSummary)) ?? null;
+  const body = items.filter((child) => !isMarker(child, ExpandableTitle) && !isMarker(child, ExpandableSummary));
 
   return (
-    <details className="expandable" open={defaultOpen}>
-      <summary className="expandable__summary">
-        <span>{summary}</span>
-        <ChevronDown className="expandable__icon" aria-hidden size={16} />
-      </summary>
-      <div className="expandable__body">{body}</div>
-    </details>
+    <ExpandableClient
+      defaultOpen={defaultOpen}
+      title={title}
+      summary={summary}
+    >
+      {body}
+    </ExpandableClient>
   );
 }

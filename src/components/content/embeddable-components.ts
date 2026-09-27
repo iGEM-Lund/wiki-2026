@@ -4,6 +4,7 @@ import { PdfEmbed } from './PdfEmbed';
 import { ShortVideoFeed } from './ShortVideoFeed';
 import { Expandable } from './Expandable';
 import { ExpandableSummary } from './ExpandableSummary';
+import { ExpandableTitle } from './ExpandableTitle';
 import { Citation } from './Citation';
 import { Quote } from './Quote';
 import { Formula } from './Formula';
@@ -30,6 +31,7 @@ export const embeddableComponents = {
   ShortVideoFeed,
   Expandable,
   ExpandableSummary,
+  ExpandableTitle,
   Citation,
   Quote,
   Formula,

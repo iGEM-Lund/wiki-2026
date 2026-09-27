@@ -33,7 +33,7 @@ export function rehypeCollectHeadings(headings: HeadingItem[]) {
       // A heading inside an <Expandable> body still gets an anchor id (for
       // direct links) but shouldn't appear in the page outline; the
       // outline assumes every target is visible on scroll, and a heading
-      // hidden inside a closed <details> doesn't reliably auto-expand.
+      // hidden inside a collapsed Expandable body is not reachable.
       if (ancestors.some(isExpandableElement)) return;
       const id = node.properties?.id;
       if (typeof id !== 'string') return;

@@ -89,9 +89,10 @@ export const contentComponents = {
   }),
 
   // The only blocks that need nested rich content, so the only ones using
-  // wrapper() instead of block()/inline(). Two components rather than one:
-  // ExpandableSummary marks which of Expandable's children is the always-
-  // visible teaser (written as its first child); this only relies on
+  // wrapper() instead of block()/inline(). Three components rather than one:
+  // ExpandableTitle and ExpandableSummary mark which of Expandable's children
+  // are the optional heading and the always-visible teaser (written as its
+  // first children); this only relies on
   // wrapper()'s plain top-level `children`, not a named child-field region
   // nested inside another wrapper's schema, which Keystatic's docs don't
   // show as a supported combination and this repo has no running
@@ -102,6 +103,13 @@ export const contentComponents = {
       defaultOpen: fields.checkbox({ label: 'Expanded by default', defaultValue: false }),
     },
     ContentView: ({ children }) => <div>{children}</div>,
+  }),
+
+  ExpandableTitle: wrapper({
+    label: 'Expandable Title',
+    description: 'Optional heading for an Expandable; insert as the first item inside it, above the Expandable Summary.',
+    schema: {},
+    ContentView: ({ children }) => <strong style={{ fontSize: '1.2em' }}>{children}</strong>,
   }),
 
   ExpandableSummary: wrapper({

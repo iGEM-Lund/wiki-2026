@@ -1065,32 +1065,99 @@ html:has(dialog.lightbox[open]) {
 }
 
 .expandable {
-  margin: 1rem 0;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  margin: 1.5rem 0;
+  padding: 1.5rem 1.75rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
   background: var(--bg-alt);
-  padding: 0.75rem 1rem;
+  /* Clips the title band to the card's rounded corners; `clip` rather than
+     `hidden` so the card doesn't become a scroll container. */
+  overflow: clip;
 }
-.expandable__summary {
+/* A filled header band: negative margins pull it out over the card's
+   padding so it spans edge to edge, flush with the left accent stripe. */
+.site .expandable__title {
+  margin: -1.5rem -1.75rem 1.25rem;
+  padding: 1rem 1.75rem;
+  background: linear-gradient(135deg, var(--color-peacock), var(--color-depths));
+  font-family: var(--font-heading);
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-pearl);
+}
+.expandable__title > :first-child,
+.expandable__summary > :first-child,
+.expandable__body-inner > :first-child {
+  margin-top: 0;
+}
+.expandable__title > :last-child,
+.expandable__summary > :last-child,
+.expandable__body-inner > :last-child {
+  margin-bottom: 0;
+}
+/* Collapsing grid-template-rows to 0fr and back to 1fr animates the body to
+   its real content height with no JS measuring; the inner wrapper's
+   min-height: 0 + overflow: hidden is what lets the row shrink to nothing. */
+.expandable__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease;
+}
+.expandable__body-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.expandable[data-open='true'] .expandable__body {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.expandable[data-open='true'] .expandable__body-inner {
+  padding-top: 1rem;
+}
+.expandable__toggle {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem 0 0.5rem;
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   cursor: pointer;
-  list-style: none;
 }
-.expandable__summary::-webkit-details-marker {
-  display: none;
+.expandable__toggle:hover {
+  color: var(--heading);
+}
+.expandable__toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
 }
 .expandable__icon {
   flex: 0 0 auto;
-  transition: transform 0.15s ease;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.expandable[open] .expandable__icon {
+.expandable__toggle:hover .expandable__icon {
+  transform: translateY(2px);
+}
+.expandable[data-open='true'] .expandable__icon {
   transform: rotate(180deg);
 }
-.expandable__body {
-  margin-top: 0.75rem;
+.expandable[data-open='true'] .expandable__toggle:hover .expandable__icon {
+  transform: rotate(180deg) translateY(2px);
 }
 
 .formula--block {
