@@ -58,7 +58,7 @@ items:
         - label: Attributions
           target: Attributions
         - label: Sponsors
-          target: people_sponsors-and-partners
+          target: people_sponsors-and-collaborators
   - name: Contributions
     icon:
       discriminant: library
