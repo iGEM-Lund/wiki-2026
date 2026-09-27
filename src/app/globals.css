@@ -47,6 +47,10 @@ body {
   --bg-alt: var(--color-shallows);
   --text: var(--color-truffle);
   --heading: var(--color-depths);
+  /* Logo, wordmark, h1, h5 and h6: Peacock, the brand's primary teal.
+     h2/h3 use --heading (Depths), h4 uses --heading-minor (Crimson). */
+  --title: var(--color-peacock);
+  --heading-minor: var(--color-crimson);
   --accent: var(--color-peacock);
   --error: var(--color-crimson);
   --border: color-mix(in srgb, var(--text) 25%, var(--bg));
@@ -73,8 +77,11 @@ body {
   --bg-alt: var(--color-truffle);
   --text: var(--color-pearl);
   --heading: var(--color-shallows);
+  /* Peacock is only ~3.9:1 on Noir, too low for the smaller headings. */
+  --title: var(--color-shallows);
   /* Crimson fails contrast on Noir; Rose (same pink palette) is the
-     accessible stand-in for error/missing states in dark mode. */
+     accessible stand-in for error/missing states and h4s in dark mode. */
+  --heading-minor: var(--color-rose);
   --error: var(--color-rose);
 }
 
@@ -128,9 +135,16 @@ body {
 .site h5,
 .site h6 {
   font-family: var(--font-heading);
-  color: var(--heading);
+  color: var(--title);
   line-height: 1.2;
   margin: 1.5em 0 0.5em;
+}
+.site h2,
+.site h3 {
+  color: var(--heading);
+}
+.site h4 {
+  color: var(--heading-minor);
 }
 /* Sizes adapted from the brand guideline's print-point scale (Title 60pt /
    Heading 32pt / Subtitle 24pt / Section Header 16pt / Subheading 12pt) to a
@@ -195,7 +209,7 @@ body {
   height: 3.5rem;
   width: auto;
   flex-shrink: 0;
-  color: var(--heading);
+  color: var(--title);
 }
 /* Proportions taken from the brand kit's horizontal banner (Canva): the mark is
    ~2.44x the wordmark's cap height, Fredoka Light's stem roughly matches the
@@ -206,7 +220,7 @@ body {
   font-weight: 300;
   font-size: 2.1rem;
   line-height: 1;
-  color: var(--heading);
+  color: var(--title);
 }
 
 /* AnTigone brand mark: the line traces itself in like it's being hand-drawn,

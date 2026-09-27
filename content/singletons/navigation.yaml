@@ -53,7 +53,7 @@ items:
   - name: People
     icon:
       discriminant: library
-      value: person-standing
+      value: users
     linkMode:
       discriminant: dropdown
       value:
