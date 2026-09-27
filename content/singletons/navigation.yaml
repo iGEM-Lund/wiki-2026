@@ -21,16 +21,16 @@ items:
     linkMode:
       discriminant: dropdown
       value:
-        - label: Parts
-          target: engineering_parts
-        - label: Design-Build-Test-Learn Cycle
-          target: engineering_DBTL
+        - label: Contributions
+          target: technical_contribution
+        - label: 'Engineering '
+          target: technical_DBTL
         - label: Modelling
-          target: engineering_modelling
-        - label: Protocols
-          target: engineering_notebooks-and-protocols
-        - label: Safety
-          target: engineering_safety
+          target: technical_modelling
+        - label: Notebooks and Protocols
+          target: technical_notebooks-and-protocols
+        - label: Safety and Security
+          target: technical_safety_security
   - name: Engagement
     icon:
       discriminant: library
