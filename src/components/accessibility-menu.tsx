@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Accessibility, Moon, Sun } from 'lucide-react';
+import { Moon, PersonStanding, Sun } from 'lucide-react';
 
 type Theme = 'light' | 'dark';
 type FontSize = 'default' | 'large' | 'larger';
@@ -95,7 +95,7 @@ export function AccessibilityMenu() {
         aria-controls="a11y-panel"
         aria-label="Accessibility options"
       >
-        <Accessibility size={18} />
+        <PersonStanding size={18} />
       </button>
       {open && (
         <div id="a11y-panel" role="menu" className="site__a11y-panel">
