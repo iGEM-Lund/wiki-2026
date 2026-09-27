@@ -18,6 +18,13 @@ export type ResolvedVideo = {
   poster?: string;
   // The page the video can be watched on, linked from the feed.
   href?: string;
+  // Video Universe videos only: the id the feed uses to refresh the counts
+  // live in the visitor's browser (allowed: iGEM's wiki rules permit
+  // runtime requests to igem.org domains), and the counts as of the build,
+  // shown until (or if) that refresh succeeds.
+  videoUniverseId?: string;
+  likes?: number;
+  views?: number;
   // Set instead of src when the link couldn't be resolved; shown in place
   // of that one clip rather than breaking the whole page or build.
   error?: string;
@@ -25,7 +32,10 @@ export type ResolvedVideo = {
 
 type PeerTubeFile = { resolution: { id: number }; fileUrl: string };
 type PeerTubeVideo = {
+  uuid: string;
   url?: string;
+  likes?: number;
+  views?: number;
   previewPath?: string;
   files?: PeerTubeFile[];
   streamingPlaylists?: { files?: PeerTubeFile[] }[];
@@ -34,6 +44,10 @@ type PeerTubeVideo = {
 // Accepts the share link (/w/<short id>), the watch URL and the embed URL.
 function videoId(url: URL) {
   return url.pathname.match(/^\/(?:w|videos\/watch|videos\/embed)\/([A-Za-z0-9-]+)\/?$/)?.[1] ?? null;
+}
+
+export function videoUniverseApiUrl(id: string) {
+  return `https://${VIDEO_UNIVERSE}/api/v1/videos/${id}`;
 }
 
 export const resolveVideo = cache(async (raw: string): Promise<ResolvedVideo> => {
@@ -53,7 +67,7 @@ export const resolveVideo = cache(async (raw: string): Promise<ResolvedVideo> =>
     // No caching options on purpose: any revalidate here would turn the
     // otherwise fully static page into an ISR one. Pages are rebuilt on
     // every deploy anyway, which re-resolves the link.
-    const response = await fetch(`https://${VIDEO_UNIVERSE}/api/v1/videos/${id}`);
+    const response = await fetch(videoUniverseApiUrl(id));
     // PeerTube answers 400 (not 404) for an id that isn't a valid one.
     if (response.status === 400 || response.status === 404) throw new Error('no such video on Video Universe');
     if (!response.ok) throw new Error(`Video Universe answered ${response.status}`);
@@ -69,6 +83,9 @@ export const resolveVideo = cache(async (raw: string): Promise<ResolvedVideo> =>
       src: file.fileUrl,
       poster: video.previewPath ? `https://${VIDEO_UNIVERSE}${video.previewPath}` : undefined,
       href: video.url ?? raw,
+      videoUniverseId: video.uuid,
+      likes: video.likes,
+      views: video.views,
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

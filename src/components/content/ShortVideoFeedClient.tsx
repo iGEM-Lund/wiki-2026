@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react';
-import { ChevronDown, ChevronUp, Play, Volume2, VolumeX } from 'lucide-react';
-import type { ResolvedVideo } from '@/lib/video-universe';
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react';
+import { ChevronDown, ChevronUp, Eye, Heart, Play, Volume2, VolumeX } from 'lucide-react';
+import { videoUniverseApiUrl, type ResolvedVideo } from '@/lib/video-universe';
 
 export type ShortVideo = ResolvedVideo & { title?: string; caption?: string };
 
@@ -22,6 +22,45 @@ const FLICK_VELOCITY = 0.5;
 const FLICK_WINDOW_MS = 100;
 // Fallback for browsers without the scrollend event.
 const SETTLE_FALLBACK_MS = 600;
+
+// Two taps within this window are a double tap (like); a single tap only
+// toggles play once the window has passed without a second one.
+const DOUBLE_TAP_MS = 280;
+// How long a double-tap heart stays on screen; matches globals.css's
+// short-feed-burst animation.
+const BURST_MS = 900;
+// Local likes, per browser: purely "for the feel". The wiki is static and
+// may only talk to igem.org domains, so there's nowhere to store a shared
+// like, and liking on Video Universe itself needs a Video Universe login.
+const LIKES_STORAGE_KEY = 'short-feed-likes';
+
+const compactNumber = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
+
+type Stats = { likes?: number; views?: number };
+type Burst = { id: number; index: number; x: number; y: number; tilt: number };
+
+// Storage can be missing or throw (private windows, blocked site data);
+// likes then just don't persist.
+function readLikes(): Set<string> {
+  try {
+    const stored: unknown = JSON.parse(localStorage.getItem(LIKES_STORAGE_KEY) ?? '[]');
+    return new Set(Array.isArray(stored) ? stored.filter((key) => typeof key === 'string') : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function writeLikes(likes: Set<string>) {
+  try {
+    localStorage.setItem(LIKES_STORAGE_KEY, JSON.stringify([...likes]));
+  } catch {
+    // Not persisted; the like still shows for this visit.
+  }
+}
+
+function likeKey(video: ShortVideo) {
+  return video.videoUniverseId ?? video.src ?? null;
+}
 
 type Drag = {
   pointerId: number;
@@ -53,6 +92,13 @@ function prefersReducedMotion() {
 // speaker button unmutes the whole feed, and the arrow buttons / arrow keys
 // step between clips. With reduced motion nothing autoplays: each clip
 // waits for a tap.
+//
+// Like Reels, each clip has a like button (double-tapping the clip also
+// likes it, with a heart burst where you tapped) and shows its like and
+// view counts. The counts are Video Universe's, refreshed from its API
+// once the feed is first on screen; the like itself is local to the
+// visitor's browser and adds 1 to the like count shown to that visitor
+// only.
 export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -72,11 +118,41 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
   const [dragging, setDragging] = useState(false);
   const dragRef = useRef<Drag | null>(null);
   const suppressClickRef = useRef(false);
+  const [liked, setLiked] = useState<Set<string>>(() => new Set());
+  const [stats, setStats] = useState<Stats[]>(() => videos.map(({ likes, views }) => ({ likes, views })));
+  const statsFetchedRef = useRef(false);
+  const [bursts, setBursts] = useState<Burst[]>([]);
+  const burstIdRef = useRef(0);
+  const tapTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  // Last double tap, so a third or fourth quick tap adds another heart
+  // instead of pausing.
+  const lastBurstRef = useRef(0);
   const count = videos.length;
 
   useEffect(() => {
     setWantPlay(!prefersReducedMotion());
+    setLiked(readLikes());
+    return () => clearTimeout(tapTimerRef.current);
   }, []);
+
+  // Refresh the build-time counts from Video Universe, once, the first time
+  // the feed comes on screen. A failed request just keeps the build-time
+  // numbers.
+  useEffect(() => {
+    if (!onScreen || statsFetchedRef.current) return;
+    // Deliberately not aborted on cleanup: onScreen flipping back to false
+    // mid-request would otherwise cancel it for good.
+    statsFetchedRef.current = true;
+    videos.forEach((video, index) => {
+      if (!video.videoUniverseId) return;
+      fetch(videoUniverseApiUrl(video.videoUniverseId))
+        .then((response) => (response.ok ? response.json() : Promise.reject(new Error(String(response.status)))))
+        .then(({ likes, views }: Stats) => {
+          setStats((current) => current.map((stat, i) => (i === index ? { likes, views } : stat)));
+        })
+        .catch(() => {});
+    });
+  }, [onScreen, videos]);
 
   // Which clip is in view. A new clip starts from the top and autoplays
   // again even if the previous one had been paused.
@@ -229,6 +305,55 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
     viewport.scrollTo({ top: target * height, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
   }
 
+  function setLike(index: number, value: boolean) {
+    const key = likeKey(videos[index]);
+    if (!key) return;
+    setLiked((current) => {
+      const next = new Set(current);
+      if (value) next.add(key);
+      else next.delete(key);
+      writeLikes(next);
+      return next;
+    });
+  }
+
+  function togglePlay(index: number) {
+    setWantPlay(videoRefs.current[index]?.paused ?? true);
+  }
+
+  // Single tap: play/pause, but only once DOUBLE_TAP_MS has passed with no
+  // second tap. Double tap: like (never unlike, same as Instagram) with a
+  // heart where the tap landed. Keyboard activation (detail 0) can't double
+  // tap, so it toggles play straight away.
+  function onTap(event: MouseEvent<HTMLButtonElement>, index: number) {
+    if (event.detail === 0) {
+      togglePlay(index);
+      return;
+    }
+    const doubleTap = tapTimerRef.current !== undefined || event.timeStamp - lastBurstRef.current < DOUBLE_TAP_MS;
+    clearTimeout(tapTimerRef.current);
+    tapTimerRef.current = undefined;
+    if (!doubleTap) {
+      tapTimerRef.current = setTimeout(() => {
+        tapTimerRef.current = undefined;
+        togglePlay(index);
+      }, DOUBLE_TAP_MS);
+      return;
+    }
+    lastBurstRef.current = event.timeStamp;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const burst: Burst = {
+      id: burstIdRef.current++,
+      index,
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+      tilt: Math.round(Math.random() * 30 - 15),
+    };
+    setBursts((current) => [...current, burst]);
+    setTimeout(() => setBursts((current) => current.filter((b) => b.id !== burst.id)), BURST_MS);
+    setLike(index, true);
+  }
+
   function onClickCapture(event: MouseEvent<HTMLDivElement>) {
     if (!suppressClickRef.current) return;
     suppressClickRef.current = false;
@@ -253,6 +378,10 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
   }
 
   const current = videos[active];
+  const likedHere = (index: number) => {
+    const key = likeKey(videos[index]);
+    return key !== null && liked.has(key);
+  };
 
   return (
     <div className="short-feed">
@@ -308,12 +437,23 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
                     className="short-feed__tap"
                     aria-label={index === active && playing ? 'Pause video' : 'Play video'}
                     tabIndex={index === active ? 0 : -1}
-                    onClick={() => setWantPlay(!(index === active && playing))}
+                    onClick={(event) => onTap(event, index)}
                   >
                     {index === active && !playing ? (
                       <Play className="short-feed__play-icon" aria-hidden="true" fill="currentColor" />
                     ) : null}
                   </button>
+                  {bursts
+                    .filter((burst) => burst.index === index)
+                    .map((burst) => (
+                      <Heart
+                        key={burst.id}
+                        className="short-feed__burst"
+                        style={{ left: burst.x, top: burst.y, '--tilt': `${burst.tilt}deg` } as CSSProperties}
+                        fill="currentColor"
+                        aria-hidden="true"
+                      />
+                    ))}
                 </>
               ) : (
                 <p className="short-feed__error">{video.error}</p>
@@ -332,6 +472,35 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
                     >
                       Watch on iGEM Video Universe ↗
                     </a>
+                  ) : null}
+                </div>
+              ) : null}
+              {video.src ? (
+                <div className="short-feed__actions">
+                  <button
+                    type="button"
+                    className={`short-feed__like${likedHere(index) ? ' short-feed__like--on' : ''}`}
+                    aria-label="Like"
+                    aria-pressed={likedHere(index)}
+                    tabIndex={index === active ? 0 : -1}
+                    onClick={() => setLike(index, !likedHere(index))}
+                  >
+                    <Heart aria-hidden="true" fill={likedHere(index) ? 'currentColor' : 'none'} />
+                  </button>
+                  {stats[index]?.likes !== undefined ? (
+                    <span className="short-feed__count">
+                      {compactNumber.format(stats[index].likes! + (likedHere(index) ? 1 : 0))}
+                      <span className="short-feed__sr-only"> likes</span>
+                    </span>
+                  ) : null}
+                  {stats[index]?.views !== undefined ? (
+                    <>
+                      <Eye className="short-feed__stat-icon" aria-hidden="true" />
+                      <span className="short-feed__count">
+                        {compactNumber.format(stats[index].views!)}
+                        <span className="short-feed__sr-only"> views</span>
+                      </span>
+                    </>
                   ) : null}
                 </div>
               ) : null}
