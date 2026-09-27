@@ -13,7 +13,7 @@ import '@fontsource/opendyslexic/700.css';
 import { getNav } from '@/lib/nav';
 import { AntigoneLogoMark } from '@/components/antigone-logo';
 import { NavIcon } from '@/components/nav-icon';
-import { NavDropdownLink } from '@/components/nav-dropdown-link';
+import { NavLink } from '@/components/nav-link';
 import { MobileNav } from '@/components/mobile-nav';
 import { AccessibilityMenu } from '@/components/accessibility-menu';
 import { HeaderHeightSync } from '@/components/header-height-sync';
@@ -38,25 +38,23 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
           <nav className="site__nav" id="site-nav">
             {nav.map((item) =>
               item.kind === 'link' ? (
-                <Link key={item.name} href={item.target.href} className="site__nav-item">
+                <NavLink key={item.name} href={item.target.href} className="site__nav-item">
                   <NavIcon icon={item.icon} size={18} />
                   {item.name}
-                </Link>
+                </NavLink>
               ) : (
-                <div key={item.name} className="site__nav-dropdown">
-                  <span className="site__nav-item site__nav-item--trigger">
+                <div key={item.name} className="site__nav-group">
+                  <span className="site__nav-item site__nav-group-label">
                     <NavIcon icon={item.icon} size={18} />
                     {item.name}
                   </span>
-                  <div className="site__nav-dropdown-panel">
-                    <ul className="site__nav-dropdown-menu">
-                      {item.items.map((entry) => (
-                        <li key={entry.target.href}>
-                          <NavDropdownLink href={entry.target.href}>{entry.label}</NavDropdownLink>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <ul className="site__nav-group-links">
+                    {item.items.map((entry) => (
+                      <li key={entry.target.href}>
+                        <NavLink href={entry.target.href}>{entry.label}</NavLink>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               ),
             )}

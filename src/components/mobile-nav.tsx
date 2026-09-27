@@ -5,10 +5,10 @@ import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 
-// Below 48rem (see globals.css) the hover-driven dropdown nav has no touch
-// equivalent, so it's replaced by a toggle button that slides the whole nav
-// in as a right-side drawer, same pattern as the page-outline drawer.
-// Desktop ignores `open` entirely and keeps the always-visible hover nav.
+// Below 48rem (see globals.css) the nav sidebar would eat most of the
+// screen, so the header becomes a top bar and this toggle slides the nav in
+// as a left-side drawer, same pattern as the page-outline drawer. Wider
+// screens ignore `open` entirely and keep the always-visible sidebar.
 export function MobileNav({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);

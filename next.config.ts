@@ -23,6 +23,9 @@ const nextConfig: NextConfig = {
   // not support trailingSlash. Keystatic is stripped from the production build,
   // so scoping this flag to the export target fixes login with no prod impact.
   trailingSlash: isProductionExport,
+  // Dev-only badge; its default bottom-left corner covers the accessibility
+  // button at the foot of the nav sidebar.
+  devIndicators: { position: 'top-right' },
 };
 
 export default nextConfig;
