@@ -70,10 +70,3 @@ items:
     linkMode:
       discriminant: link
       value: contributions
-  - name: Awards
-    icon:
-      discriminant: library
-      value: circle
-    linkMode:
-      discriminant: link
-      value: awards_won
