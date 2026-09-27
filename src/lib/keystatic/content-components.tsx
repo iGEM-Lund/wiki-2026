@@ -64,6 +64,30 @@ export const contentComponents = {
     ContentView: (props) => <div>[PDF: {props.value.title ?? ''}]</div>,
   }),
 
+  // Rendered as a live player only on the site (see
+  // src/components/content/ShortVideoFeed.tsx, which also turns Video
+  // Universe links into playable files); the editor preview stays a static
+  // placeholder, same as MoleculeViewer below.
+  ShortVideoFeed: block({
+    label: 'Short Video Feed',
+    description: 'Vertical short-form videos viewed one at a time, scrolled through like Instagram Reels.',
+    schema: {
+      videos: fields.array(
+        fields.object({
+          url: fields.url({
+            label: 'Video URL',
+            description:
+              'Upload the video to the iGEM Video Universe (video.igem.org) and paste its link here, e.g. https://video.igem.org/w/abc123. Portrait (9:16) videos fit best. A direct .mp4 link also works.',
+          }),
+          title: fields.text({ label: 'Title (optional)' }),
+          caption: fields.text({ label: 'Caption (optional)', multiline: true }),
+        }),
+        { label: 'Videos', itemLabel: (props) => props.fields.title.value || props.fields.url.value || 'Video' },
+      ),
+    },
+    ContentView: (props) => <div>[Short Video Feed: {(props.value.videos ?? []).length} video(s)]</div>,
+  }),
+
   // The only blocks that need nested rich content, so the only ones using
   // wrapper() instead of block()/inline(). Two components rather than one:
   // ExpandableSummary marks which of Expandable's children is the always-

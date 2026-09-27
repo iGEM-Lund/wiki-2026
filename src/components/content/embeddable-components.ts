@@ -1,6 +1,7 @@
 import { FigureWithCaption } from './FigureWithCaption';
 import { FigureCarousel } from './FigureCarousel';
 import { PdfEmbed } from './PdfEmbed';
+import { ShortVideoFeed } from './ShortVideoFeed';
 import { Expandable } from './Expandable';
 import { ExpandableSummary } from './ExpandableSummary';
 import { Citation } from './Citation';
@@ -26,6 +27,7 @@ export const embeddableComponents = {
   FigureWithCaption,
   FigureCarousel,
   PdfEmbed,
+  ShortVideoFeed,
   Expandable,
   ExpandableSummary,
   Citation,
