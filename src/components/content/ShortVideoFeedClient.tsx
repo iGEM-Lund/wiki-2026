@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react';
-import { ChevronDown, ChevronUp, Eye, Heart, Play, Volume2, VolumeX } from 'lucide-react';
+import { Eye, Heart, Play, Volume2, VolumeX } from 'lucide-react';
 import { videoUniverseApiUrl, type ResolvedVideo } from '@/lib/video-universe';
 
 export type ShortVideo = ResolvedVideo & { title?: string; caption?: string };
@@ -89,8 +89,8 @@ function prefersReducedMotion() {
 // since desktop browsers don't scroll on a drag: the clip follows the
 // pointer, then settles on the next/previous clip or springs back. Tapping
 // a clip pauses it, the
-// speaker button unmutes the whole feed, and the arrow buttons / arrow keys
-// step between clips. With reduced motion nothing autoplays: each clip
+// speaker button unmutes the whole feed, and the arrow keys step between
+// clips. With reduced motion nothing autoplays: each clip
 // waits for a tap.
 //
 // Like Reels, each clip has a like button (double-tapping the clip also
@@ -525,21 +525,6 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
           <div className="short-feed__progress-bar" ref={barRef} />
         </div>
       </div>
-      {count > 1 ? (
-        <div className="short-feed__nav">
-          <button type="button" aria-label="Previous video" disabled={active === 0} onClick={() => goTo(active - 1)}>
-            <ChevronUp aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            aria-label="Next video"
-            disabled={active === count - 1}
-            onClick={() => goTo(active + 1)}
-          >
-            <ChevronDown aria-hidden="true" />
-          </button>
-        </div>
-      ) : null}
     </div>
   );
 }
