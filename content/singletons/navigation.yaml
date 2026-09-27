@@ -40,12 +40,16 @@ items:
       value:
         - label: Human Practices
           target: human-practices
+        - label: Economical Assessment
+          target: economical-assessment
         - label: Sustainability
           target: sustainability
         - label: Education
           target: education
         - label: Collaborations
           target: collaborations
+        - label: PMOS
+          target: pmos
   - name: People
     icon:
       discriminant: library
