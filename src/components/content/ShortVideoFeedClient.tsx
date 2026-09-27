@@ -90,8 +90,9 @@ function prefersReducedMotion() {
 // pointer, then settles on the next/previous clip or springs back. Tapping
 // a clip pauses it, the
 // speaker button unmutes the whole feed, and the arrow keys step between
-// clips. With reduced motion nothing autoplays: each clip
-// waits for a tap.
+// clips. With reduced motion the first clip doesn't start by itself on
+// page load; switching to a clip is the visitor's own action, though, so
+// that clip plays either way.
 //
 // Like Reels, each clip has a like button (double-tapping the clip also
 // likes it, with a heart burst where you tapped) and shows its like and
@@ -155,7 +156,9 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
   }, [onScreen, videos]);
 
   // Which clip is in view. A new clip starts from the top and autoplays
-  // again even if the previous one had been paused.
+  // again even if the previous one had been paused, reduced motion
+  // included: only a visitor's swipe, drag, wheel or key press switches
+  // clips, so playing the one they switched to is their choice.
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
@@ -166,7 +169,7 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
           if (!entry.isIntersecting || index === -1 || index === activeRef.current) continue;
           activeRef.current = index;
           setActive(index);
-          setWantPlay(!prefersReducedMotion());
+          setWantPlay(true);
         }
       },
       { root: viewport, threshold: ACTIVE_THRESHOLD },
