@@ -14,7 +14,7 @@ items:
           target: project_results
         - label: Proof of Concept
           target: project_proof-of-concept
-  - name: Engineering
+  - name: Technical
     icon:
       discriminant: library
       value: test-tubes
