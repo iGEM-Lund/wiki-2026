@@ -1033,7 +1033,7 @@ html:has(dialog.lightbox[open]) {
 }
 .quote-block__mark {
   position: absolute;
-  top: 1.15rem;
+  top: -0.55rem;
   right: 1.25rem;
   width: 2.75rem;
   height: auto;
