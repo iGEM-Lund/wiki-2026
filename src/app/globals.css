@@ -1879,3 +1879,35 @@ article p {
     bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px) + 3rem + 0.5rem);
   }
 }
+
+.table-scroll {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.table-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+.table-scroll th,
+.table-scroll td {
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+}
+.table-scroll thead th {
+  background: var(--bg-alt);
+  color: var(--heading);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.table-scroll tbody tr:last-child td {
+  border-bottom: none;
+}
+.table-scroll tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--bg-alt) 45%, var(--bg));
+}

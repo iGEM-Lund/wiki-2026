@@ -1,9 +1,11 @@
 import { evaluate } from '@mdx-js/mdx';
 import * as runtime from 'react/jsx-runtime';
 import rehypeSlug from 'rehype-slug';
+import remarkGfm from 'remark-gfm';
 import type { ComponentType } from 'react';
 import { mdxComponents } from '@/components/content';
 import { Citation } from '@/components/content/Citation';
+import { Table } from '@/components/content/Table';
 import { WorldMap } from '@/components/content/WorldMap';
 import { rehypeCollectHeadings, type HeadingItem } from '@/lib/headings';
 
@@ -18,6 +20,9 @@ export async function renderMdx(
   const { default: MDXContent } = await evaluate(source, {
     ...runtime,
     baseUrl: import.meta.url,
+    // Keystatic's editor writes GFM (pipe tables, strikethrough); plain MDX
+    // doesn't parse those, so without this tables render as literal pipes.
+    remarkPlugins: [remarkGfm],
     // rehype-slug gives every heading a stable `id` (so the outline's links
     // and the References section's anchors both resolve); the collector
     // runs after it to read those ids back out for the page outline.
@@ -29,6 +34,7 @@ export async function renderMdx(
   // caller (the page) knows the resolved short forms for this render.
   const components = {
     ...mdxComponents,
+    table: Table,
     Citation: (props: { reference?: string | null }) => Citation({ ...props, lookup: referenceLookup }),
     // Pin popup bodies are raw MDX that may embed <Citation>; forward the
     // same resolved lookup so those resolve too, not just top-level ones.
