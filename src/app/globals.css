@@ -1195,6 +1195,22 @@ html:has(dialog.lightbox[open]) {
   scroll-snap-type: y mandatory;
   scrollbar-width: none;
 }
+.short-feed__viewport {
+  cursor: grab;
+  /* A mouse drag moves the clips (ShortVideoFeedClient.tsx), so it must not
+     select caption text along the way. */
+  user-select: none;
+  -webkit-user-select: none;
+}
+/* Snapping is off while a drag moves the clips and until the release has
+   settled; see ShortVideoFeedClient.tsx. */
+.short-feed__viewport--dragging {
+  scroll-snap-type: none;
+}
+.short-feed__viewport--dragging,
+.short-feed__viewport--dragging * {
+  cursor: grabbing;
+}
 .short-feed__viewport::-webkit-scrollbar {
   display: none;
 }

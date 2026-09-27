@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react';
 import { ChevronDown, ChevronUp, Play, Volume2, VolumeX } from 'lucide-react';
 import type { ResolvedVideo } from '@/lib/video-universe';
 
@@ -11,6 +11,27 @@ export type ShortVideo = ResolvedVideo & { title?: string; caption?: string };
 const ACTIVE_THRESHOLD = 0.6;
 // Share of the whole feed that must be on screen for anything to play.
 const ON_SCREEN_THRESHOLD = 0.5;
+// Mouse drags: how far the pointer must move before a press counts as a
+// drag rather than a click, how far (as a share of the frame's height) a
+// drag must go to switch clips, and how fast a shorter flick must be
+// (px/ms) to switch anyway.
+const DRAG_START_PX = 6;
+const DRAG_SWITCH_SHARE = 0.2;
+const FLICK_VELOCITY = 0.5;
+// A flick only counts if the pointer was still moving this recently.
+const FLICK_WINDOW_MS = 100;
+// Fallback for browsers without the scrollend event.
+const SETTLE_FALLBACK_MS = 600;
+
+type Drag = {
+  pointerId: number;
+  startY: number;
+  startTop: number;
+  lastY: number;
+  lastTime: number;
+  velocity: number;
+  moved: boolean;
+};
 
 // Same check as FigureCarousel.tsx: the OS setting, or the accessibility
 // menu's data-motion attribute.
@@ -24,7 +45,11 @@ function prefersReducedMotion() {
 // Instagram Reels style: a phone-shaped frame that scrolls vertically one
 // clip at a time (CSS scroll snapping, so touch swipes, wheels and
 // trackpads all work natively). Whichever clip is in view plays muted and
-// looping; the rest are paused and rewound. Tapping a clip pauses it, the
+// looping; the rest are paused and rewound. Touch swipes are the
+// browser's own snapped scrolling; mouse (and pen) drags are handled here,
+// since desktop browsers don't scroll on a drag: the clip follows the
+// pointer, then settles on the next/previous clip or springs back. Tapping
+// a clip pauses it, the
 // speaker button unmutes the whole feed, and the arrow buttons / arrow keys
 // step between clips. With reduced motion nothing autoplays: each clip
 // waits for a tap.
@@ -41,6 +66,12 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
   const [onScreen, setOnScreen] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
+  // Scroll snapping is switched off while a mouse drag moves the clips
+  // (it would fight every scrollTop write) and until the release has
+  // settled.
+  const [dragging, setDragging] = useState(false);
+  const dragRef = useRef<Drag | null>(null);
+  const suppressClickRef = useRef(false);
   const count = videos.length;
 
   useEffect(() => {
@@ -125,6 +156,86 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
     });
   }
 
+  function onPointerDown(event: PointerEvent<HTMLDivElement>) {
+    const viewport = viewportRef.current;
+    if (!viewport || event.pointerType === 'touch' || event.button !== 0) return;
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startY: event.clientY,
+      startTop: viewport.scrollTop,
+      lastY: event.clientY,
+      lastTime: event.timeStamp,
+      velocity: 0,
+      moved: false,
+    };
+  }
+
+  function onPointerMove(event: PointerEvent<HTMLDivElement>) {
+    const drag = dragRef.current;
+    const viewport = viewportRef.current;
+    if (!drag || !viewport || event.pointerId !== drag.pointerId) return;
+    const dy = event.clientY - drag.startY;
+    if (!drag.moved) {
+      if (Math.abs(dy) < DRAG_START_PX) return;
+      drag.moved = true;
+      viewport.setPointerCapture(event.pointerId);
+      setDragging(true);
+    }
+    const dt = event.timeStamp - drag.lastTime;
+    if (dt > 0) drag.velocity = (event.clientY - drag.lastY) / dt;
+    drag.lastY = event.clientY;
+    drag.lastTime = event.timeStamp;
+    viewport.scrollTop = drag.startTop - dy;
+  }
+
+  function onPointerEnd(event: PointerEvent<HTMLDivElement>) {
+    const drag = dragRef.current;
+    const viewport = viewportRef.current;
+    if (!drag || event.pointerId !== drag.pointerId) return;
+    dragRef.current = null;
+    if (!drag.moved || !viewport) return;
+    // The click that follows this release must not also toggle play.
+    suppressClickRef.current = true;
+    setTimeout(() => {
+      suppressClickRef.current = false;
+    });
+
+    const height = viewport.clientHeight;
+    const from = Math.round(drag.startTop / height);
+    const dy = event.clientY - drag.startY;
+    const velocity = event.timeStamp - drag.lastTime < FLICK_WINDOW_MS ? drag.velocity : 0;
+    let target = from;
+    if (event.type === 'pointerup') {
+      // Dragging up (negative dy) brings in the next clip, like a swipe.
+      if (dy < -height * DRAG_SWITCH_SHARE || velocity < -FLICK_VELOCITY) target = from + 1;
+      else if (dy > height * DRAG_SWITCH_SHARE || velocity > FLICK_VELOCITY) target = from - 1;
+    }
+    target = Math.min(count - 1, Math.max(0, target));
+
+    // Snapping comes back on only once the settle scroll has finished, or
+    // it would jump straight to the nearest clip mid-animation.
+    let settled = false;
+    const settle = () => {
+      if (settled) return;
+      settled = true;
+      viewport.removeEventListener('scrollend', settle);
+      // Finish exactly on the clip even if the smooth scroll was cut short
+      // (another scroll, or a backgrounded tab that never animated it).
+      viewport.scrollTo({ top: target * height });
+      setDragging(false);
+    };
+    viewport.addEventListener('scrollend', settle);
+    setTimeout(settle, SETTLE_FALLBACK_MS);
+    viewport.scrollTo({ top: target * height, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  }
+
+  function onClickCapture(event: MouseEvent<HTMLDivElement>) {
+    if (!suppressClickRef.current) return;
+    suppressClickRef.current = false;
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     const actions: Record<string, () => void> = {
       ArrowDown: () => goTo(active + 1),
@@ -147,13 +258,21 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
     <div className="short-feed">
       <div className="short-feed__frame">
         <div
-          className="short-feed__viewport"
+          className={`short-feed__viewport${dragging ? ' short-feed__viewport--dragging' : ''}`}
           ref={viewportRef}
           tabIndex={0}
           role="region"
           aria-roledescription="carousel"
           aria-label="Short videos. Use the up and down arrow keys to switch video, space to pause and M to unmute."
           onKeyDown={onKeyDown}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerEnd}
+          onPointerCancel={onPointerEnd}
+          onClickCapture={onClickCapture}
+          // Stops the source link (or anything else draggable) from starting
+          // a native drag-and-drop instead of moving the clips.
+          onDragStart={(event) => event.preventDefault()}
         >
           {videos.map((video, index) => (
             <div
