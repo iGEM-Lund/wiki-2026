@@ -197,13 +197,6 @@ body {
   flex-shrink: 0;
   color: var(--heading);
 }
-/* Thickened so the mark's line matches the wordmark's letter strokes: Fredoka
-   400's stem is ~0.09em (~2.2px at 1.5rem), and at 3.5rem tall the 115-unit
-   viewBox renders at ~0.49px per unit, so ~4.5 units lands on the same width.
-   Retune both together if either size changes. */
-.site__brand-mark .antigone-logo__line {
-  stroke-width: 4.5;
-}
 .site__brand-name {
   font-family: var(--font-heading);
   font-weight: 400;
