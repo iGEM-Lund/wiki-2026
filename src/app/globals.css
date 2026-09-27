@@ -26,6 +26,13 @@
   --color-rose: #d4a0b0;
   --color-crimson: #7e0c28;
 
+  /* Width of the nav sidebar, and of the matching right-hand rail the page
+     outline sits in, so the reading column between them is centred. */
+  --sidebar-width: 16rem;
+  /* Only non-zero while the header is a top bar (mobile); see
+     HeaderHeightSync. */
+  --header-height: 0px;
+
   --font-heading: 'Fredoka', system-ui, sans-serif;
   --font-body: 'Poppins', system-ui, sans-serif;
 }
@@ -184,18 +191,24 @@ body {
   font-size: 1.0625rem;
 }
 
+/* Desktop: a fixed left sidebar holding the brand, the whole nav and the
+   accessibility menu. Below 48rem it turns back into a slim top bar with
+   a drawer (see the mobile media query further down). No overflow of its
+   own: the nav scrolls instead, so the accessibility panel can pop out
+   past the sidebar's right edge without being clipped. */
 .site__header {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
+  bottom: 0;
   z-index: 100;
   display: flex;
-  gap: 2rem;
-  align-items: center;
-  padding: 1rem 1.5rem;
+  flex-direction: column;
+  gap: 1.75rem;
+  width: var(--sidebar-width);
+  padding: 1.5rem 1rem;
   background: var(--bg);
-  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
 }
 
 .site__brand {
@@ -249,7 +262,7 @@ body {
   .antigone-logo__knot {
     opacity: 0;
     /* Starts right as the last stroke (the small loop) closes; overshoot
-       easing matches the nav dropdown trigger's "pop" feel. */
+       easing gives it a small "pop". */
     animation: antigone-knot-in 0.55s cubic-bezier(0.34, 1.9, 0.64, 1) 1.6s forwards;
   }
   /* Changing animation-name on :hover restarts the animation even though the
@@ -301,231 +314,86 @@ body {
 }
 
 /* Wraps the toggle button + <nav> as siblings without adding a box of its
-   own; `display: contents` keeps the header's flex gap between brand,
-   nav items and the a11y menu exactly as if the toggle/nav were direct
-   header children, while still letting `[data-open]` below target the
-   drawer state. */
+   own; `display: contents` keeps the nav a direct flex child of the header
+   in both layouts, while still letting `[data-open]` below target the
+   mobile drawer state. */
 .site__nav-wrap {
   display: contents;
 }
 
-/* Only ever shown below 48rem (see the media query below); desktop keeps
-   the always-visible hover nav and never renders this. */
+/* Only ever shown below 48rem (see the media query below). */
 .site__nav-toggle {
   display: none;
 }
 
+/* Every group is always expanded: the sidebar has the height for it, and
+   it keeps the whole site one glance away instead of behind hover menus.
+   The nav scrolls on its own if it outgrows the viewport, so the brand
+   and the accessibility button stay put. */
 .site__nav {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   display: flex;
-  align-items: center;
-  /* row-gap smaller than column-gap: the column value is what keeps wide
-     dropdown panels clear of their neighbors (see .site__nav-dropdown-panel
-     below); at widths where items wrap onto their own lines that reasoning
-     no longer applies, so a tight row-gap keeps wrapped rows from reading
-     as unrelated, far-apart items. */
-  gap: 0.75rem 2rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .site__nav-item {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 0.85rem;
-  border: none;
-  border-radius: 4px;
-  background: none;
-  font: inherit;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
   text-decoration: none;
   color: inherit;
-  cursor: pointer;
-  list-style: none;
 }
 .site__nav-item:hover {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
-.site__nav-item--trigger {
-  position: relative;
-  z-index: 2;
-  cursor: default;
-  /* No border/background/width of its own; the panel behind it (same
-     position, lower z-index) is the only thing that ever draws a box, so
-     there's nothing for this trigger to visually clash or misalign with,
-     no matter how it's transformed. It's kept at its own natural content
-     width (see .site__nav-dropdown below) rather than stretched or padded
-     out to fit its menu, so the *visible* gap between it and its neighbors
-     is exactly the flex `gap`, same as a plain link. */
-  transition: transform 0.36s cubic-bezier(0.34, 1.9, 0.64, 1);
+.site__nav-group {
+  display: flex;
+  flex-direction: column;
 }
-/* Permanently kill the generic .site__nav-item hover tint on the trigger:
-   it used to paint its own highlight box, which was a second, differently
-   shaped/colored box on top of the dropdown panel's border below. */
-.site__nav-item--trigger:hover {
+/* A group's name is a label for the links under it, not a link itself. */
+.site__nav-group-label {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--heading);
+}
+.site__nav-group-label:hover {
   background: transparent;
 }
-.site__nav-dropdown:hover .site__nav-item--trigger,
-.site__nav-dropdown:focus-within .site__nav-item--trigger {
-  transform: scale(1.08);
-}
-
-.site__nav-dropdown {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* The trigger is the only child that ever takes up flex layout space;
-     it keeps its own natural width, so this lane is exactly as wide as a
-     plain nav link's and the flex `gap` alone gives every nav button
-     (plain links and dropdown triggers alike) the same visible whitespace,
-     regardless of how wide any one dropdown's menu is. The panel below is
-     sized to its own content independently (it's position:absolute, so it
-     never participates in this element's layout width) and simply floats
-     wider than the lane when its menu needs more room. */
-}
-
-/* Every property below (panel/menu) uses the asymmetric-transition trick:
-   the *closing* timing lives on each element's base rule, and the *opening*
-   timing is redeclared inside the :hover/:focus-within rule. CSS
-   transitions always run the timing that belongs to the state being
-   transitioned INTO, so this gives opening and closing genuinely different
-   sequencing instead of one mirroring the other backwards:
-     opening: pop + fade in + expand vertically, all at once, no lead-in delay
-     closing: shrink vertically -> fade out
-   Without this split, closing reused the opening's delays, which meant the
-   height snapped back immediately while the color was still waiting out its
-   (now-backwards) delay, which reads as an instant, unanimated collapse. */
-
-/* The one and only bordered/rounded box. It starts at the same top edge as
-   the trigger (a spacer below reserves the trigger's own footprint) and
-   sizes itself to fit its longest menu label (capped, so one very long
-   label can't blow out the header), centered under the trigger, same as
-   the trigger's own icon+label are centered in .site__nav-item, so the
-   trigger reads as sitting in the middle of the card it opens, not pinned
-   to its top-left corner. Absolutely positioned (not stretched, never
-   transformed, and never contributing to .site__nav-dropdown's own layout
-   width; see above) so it floats over the page and, if wider than its
-   lane, out over the `gap` on either side (generous enough, see .site__nav,
-   and that a capped-width panel never reaches a neighboring nav button)
-   instead of pushing content down or forcing every lane to pre-reserve its
-   menu's full width. Its own edges never move, so nothing (like the
-   trigger's hover pop) can ever throw it out of alignment with itself. */
-.site__nav-dropdown-panel {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: max-content;
-  max-width: var(--nav-dropdown-max, 10rem);
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background: transparent;
-  overflow: hidden;
-  pointer-events: none;
-  /* closing: fade out only after the menu list has already collapsed. */
-  transition:
-    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
-    background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.34s,
-    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.34s;
-}
-.site__nav-dropdown:hover .site__nav-dropdown-panel,
-.site__nav-dropdown:focus-within .site__nav-dropdown-panel {
-  border-color: var(--border);
-  background: var(--bg-alt);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
-  pointer-events: auto;
-  /* opening: fade in immediately, no head start. */
-  transition:
-    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.site__nav-dropdown-panel::before {
-  content: '';
-  flex: 0 0 auto;
-  height: 2.3rem;
-}
-
-.site__nav-dropdown-menu {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  margin: 0;
-  padding: 0.15rem 0.35rem 0.35rem;
+.site__nav-group-links {
+  margin: 0.1rem 0 0 1.05rem;
+  padding: 0 0 0 0.5rem;
   list-style: none;
-  max-height: 0;
-  overflow: hidden;
-  /* closing: shrink vertically first, immediately, no delay. */
-  transition: max-height 0.34s cubic-bezier(0.4, 0, 0.7, 1);
+  border-left: 1px solid var(--border);
 }
-.site__nav-dropdown:hover .site__nav-dropdown-menu,
-.site__nav-dropdown:focus-within .site__nav-dropdown-menu {
-  max-height: 20rem;
-  /* opening: expand vertically immediately alongside the fade-in above. */
-  transition: max-height 0.42s cubic-bezier(0.19, 1, 0.22, 1);
+.site__nav-group-links li + li {
+  margin-top: 0.1rem;
 }
-.site__nav-dropdown-menu li + li {
-  margin-top: 0.15rem;
-}
-/* Sublinks fade/slide in one at a time as the menu expands; on close they
-   just fade out together, quickly, no stagger. */
-.site__nav-dropdown-menu li {
-  opacity: 0;
-  transform: translateY(-4px);
-  transition:
-    opacity 0.12s ease,
-    transform 0.12s ease;
-}
-.site__nav-dropdown:hover .site__nav-dropdown-menu li,
-.site__nav-dropdown:focus-within .site__nav-dropdown-menu li {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 0.16s ease,
-    transform 0.16s ease;
-}
-.site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(1),
-.site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(1) {
-  transition-delay: 0.04s;
-}
-.site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(2),
-.site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(2) {
-  transition-delay: 0.09s;
-}
-.site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(3),
-.site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(3) {
-  transition-delay: 0.14s;
-}
-.site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(4),
-.site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(4) {
-  transition-delay: 0.19s;
-}
-.site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(5),
-.site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(5) {
-  transition-delay: 0.24s;
-}
-.site__nav-dropdown:hover .site__nav-dropdown-menu li:nth-child(6),
-.site__nav-dropdown:focus-within .site__nav-dropdown-menu li:nth-child(6) {
-  transition-delay: 0.29s;
-}
-.site__nav-dropdown-menu a {
+.site__nav-group-links a {
   display: block;
-  padding: 0.35rem 0.5rem;
+  padding: 0.3rem 0.6rem;
   border-radius: 4px;
   text-decoration: none;
   color: inherit;
-  text-align: left;
+  font-size: 0.95rem;
 }
-.site__nav-dropdown-menu a:hover {
+.site__nav-group-links a:hover {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.site__nav a[aria-current='page'] {
+  color: var(--accent);
+  font-weight: 500;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .site__a11y {
   position: relative;
-  margin-left: auto;
+  align-self: flex-start;
   flex: 0 0 auto;
 }
 
@@ -548,10 +416,12 @@ body {
   color: var(--accent);
 }
 
+/* Opens to the right of the button, bottom-aligned with it, since the
+   button sits at the foot of the sidebar. */
 .site__a11y-panel {
   position: absolute;
-  top: calc(100% + 0.6rem);
-  right: 0;
+  bottom: 0;
+  left: calc(100% + 0.6rem);
   z-index: 3;
   display: flex;
   flex-direction: column;
@@ -652,11 +522,24 @@ body {
 
 .site__main {
   flex: 1;
-  padding: calc(var(--header-height, 6rem) + 1.5rem) 1.5rem 1.5rem;
-  max-width: 78rem;
+  margin-left: var(--sidebar-width);
+  padding: 2.5rem 2rem 2rem;
+}
+/* The reading column, centred in the space right of the sidebar. From
+   75rem up that space also reserves a sidebar-wide rail on the right for
+   the page outline, so the column sits in the middle of the screen. */
+.site__main > * {
+  max-width: 50rem;
+  margin-inline: auto;
+}
+@media (min-width: 75.0625rem) {
+  .site__main {
+    margin-right: var(--sidebar-width);
+  }
 }
 
 .site__footer {
+  margin-left: var(--sidebar-width);
   padding: 1rem 1.5rem;
   border-top: 1px solid var(--border);
   color: var(--muted);
@@ -1674,21 +1557,15 @@ article p {
   text-align: justify;
 }
 
-.page-layout:has(> .toc) > article {
-  margin-left: calc(16rem + 2rem);
-}
-
 .toc {
   /* Fixed to the viewport, not sticky within the article; it stays in
      place for the whole scroll instead of unsticking near the bottom.
-     `top`/`max-height` key off --header-height (set by HeaderHeightSync)
-     since the fixed header's own height varies with nav wrapping; 6rem is
-     just the fallback used before that JS measurement lands. */
+     Sits in the right-hand rail .site__main reserves from 75rem up. */
   position: fixed;
-  top: calc(var(--header-height, 6rem) + 1.5rem);
-  left: 1.5rem;
-  width: 16rem;
-  max-height: calc(100vh - var(--header-height, 6rem) - 3rem);
+  top: 2.5rem;
+  right: 1.5rem;
+  width: calc(var(--sidebar-width) - 3rem);
+  max-height: calc(100vh - 5rem);
   overflow-y: auto;
   font-size: 0.9rem;
 }
@@ -1729,15 +1606,11 @@ article p {
   display: none;
 }
 
-/* Below this width the fixed sidebar would eat too much of the reading
-   column, so it's replaced by a floating toggle button (bottom-right) that
-   slides the outline in from the right edge as an overlay, via `open`
-   (set by TableOfContents), instead of pushing content. */
-@media (max-width: 48rem) {
-  .page-layout:has(> .toc) > article {
-    margin-left: 0;
-  }
-
+/* Below this width there's no room for a right-hand rail next to the nav
+   sidebar and the reading column, so the outline is replaced by a floating
+   toggle button (bottom-right) that slides it in from the right edge as an
+   overlay, via `open` (set by TableOfContents), instead of pushing content. */
+@media (max-width: 75rem) {
   /* Bottom-right thumb zone: page contents is reached for constantly while
      reading, so it sits at the very corner; back-to-top (used once per
      page, at most) stacks 3rem button + 0.5rem gap above it instead of
@@ -1805,24 +1678,39 @@ article p {
   }
 }
 
-/* Below this width there's no hover to drive the dropdown nav (nothing to
-   hover on touch), so it collapses into a toggle button that slides the
-   whole nav in as a right-side drawer, the same pattern as the page-outline
-   drawer above. Each group's links are always expanded (a flat, scrollable
-   list) rather than hidden behind a second hover interaction that doesn't
-   exist here. Desktop's hover/focus-within styles live entirely outside
-   this query and are untouched; the paired selectors below exist only to
-   out-specificity those same hover/focus-within rules so a lingering touch
-   hover can't re-collapse or re-style anything on mobile. */
+/* Below this width the sidebar would eat most of the screen, so the header
+   turns back into a slim top bar: nav toggle - brand - accessibility
+   toggle, left to right, regardless of their order in the DOM. The nav
+   itself slides in from the left as a drawer, the same pattern as the
+   page-outline drawer above. */
 @media (max-width: 48rem) {
-  /* Nav toggle - brand - accessibility toggle, left to right, regardless of
-     their order in the DOM: the brand stays the one element without a fixed
-     width (min-width: 0 lets it shrink instead of overflowing), so it takes
-     up whatever space is left between the two toggles and its own centered
-     content reads as a middle-anchored banner. */
-  .site__header {
-    gap: 0.75rem;
+  /* Fallback until HeaderHeightSync measures the real bar. */
+  :root {
+    --header-height: 5.5rem;
   }
+
+  .site__header {
+    right: 0;
+    bottom: auto;
+    width: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .site__main {
+    margin-left: 0;
+    padding: calc(var(--header-height) + 1.5rem) 1.5rem 1.5rem;
+  }
+  .site__footer {
+    margin-left: 0;
+  }
+
+  /* The brand stays the one element without a fixed width (min-width: 0
+     lets it shrink instead of overflowing), so it takes up whatever space
+     is left between the two toggles and reads as a centred banner. */
   .site__brand {
     order: 2;
     flex: 1;
@@ -1831,12 +1719,18 @@ article p {
   }
   .site__a11y {
     order: 3;
-    margin-left: 0;
+    align-self: auto;
   }
   .site__a11y-toggle {
     /* 44px minimum touch target (up from the desktop 36px). */
     width: 2.75rem;
     height: 2.75rem;
+  }
+  .site__a11y-panel {
+    top: calc(100% + 0.6rem);
+    right: 0;
+    bottom: auto;
+    left: auto;
   }
 
   .site__nav-toggle {
@@ -1860,78 +1754,22 @@ article p {
   }
 
   .site__nav {
-    /* Slides in from the left, under its toggle button (also reordered to
-       the header's left edge above), rather than the right. */
     position: fixed;
     z-index: 90;
     top: 0;
     left: 0;
     bottom: 0;
     width: min(18rem, 85vw);
-    padding: calc(var(--header-height, 6rem) + 1.5rem) 1.5rem 1.5rem;
-    margin: 0;
+    padding: calc(var(--header-height) + 1.5rem) 1.5rem 1.5rem;
     background: var(--bg);
     border-right: 1px solid var(--border);
     box-shadow: 4px 0 16px rgb(0 0 0 / 20%);
-    overflow-y: auto;
-    flex-wrap: nowrap;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.25rem;
     transform: translateX(-100%);
     transition: transform 0.25s ease;
   }
 
   .site__nav-wrap[data-open='true'] .site__nav {
     transform: translateX(0);
-  }
-
-  .site__nav-item {
-    width: 100%;
-  }
-
-  .site__nav-dropdown {
-    align-items: stretch;
-    width: 100%;
-  }
-  .site__nav-item--trigger,
-  .site__nav-dropdown:hover .site__nav-item--trigger,
-  .site__nav-dropdown:focus-within .site__nav-item--trigger {
-    cursor: default;
-    transform: none;
-  }
-  .site__nav-dropdown-panel,
-  .site__nav-dropdown:hover .site__nav-dropdown-panel,
-  .site__nav-dropdown:focus-within .site__nav-dropdown-panel {
-    position: static;
-    transform: none;
-    width: 100%;
-    max-width: none;
-    border: none;
-    background: transparent;
-    box-shadow: none;
-    pointer-events: auto;
-  }
-  .site__nav-dropdown-panel::before {
-    display: none;
-  }
-  .site__nav-dropdown-menu,
-  .site__nav-dropdown:hover .site__nav-dropdown-menu,
-  .site__nav-dropdown:focus-within .site__nav-dropdown-menu {
-    max-height: none;
-    overflow: visible;
-    padding: 0.15rem 0.35rem 0.35rem 1.25rem;
-    transition: none;
-  }
-  .site__nav-dropdown-menu li,
-  .site__nav-dropdown:hover .site__nav-dropdown-menu li,
-  .site__nav-dropdown:focus-within .site__nav-dropdown-menu li {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-  .site__nav-dropdown-menu a {
-    text-align: left;
   }
 }
 
@@ -1953,7 +1791,7 @@ article p {
   cursor: pointer;
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 75rem) {
   /* Stacked 3rem button height + 0.5rem gap above .toc's own bottom offset
      (see the media query above) so the two floating buttons never touch. */
   .back-to-top {

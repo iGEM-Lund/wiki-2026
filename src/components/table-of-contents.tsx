@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { List, X } from 'lucide-react';
 import type { HeadingNode } from '@/lib/headings';
+import { headerOffset } from '@/components/header-height-sync';
 
 function flattenIds(nodes: HeadingNode[]): string[] {
   return nodes.flatMap((node) => [node.id, ...flattenIds(node.children)]);
@@ -28,13 +29,13 @@ function OutlineList({ nodes, activeId }: { nodes: HeadingNode[]; activeId: stri
 export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   // Only used to size the intersection observer's top margin, so a heading
-  // isn't marked "active" while it's still hidden under the fixed header.
-  // The pane's own on-screen position comes from the --header-height custom
-  // property (set by HeaderHeightSync) via CSS, not this state.
+  // isn't marked "active" while it's still hidden under the mobile top bar
+  // (0 on the sidebar layout). The pane's own on-screen position comes from
+  // CSS, not this state.
   const [headerHeight, setHeaderHeight] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
-  // Mobile only (see the max-width media query in globals.css; desktop
-  // always renders the fixed sidebar and ignores this): the pane stays a
+  // Below 75rem only (see the max-width media query in globals.css; wider
+  // screens always render the fixed right-hand rail and ignore this): the pane stays a
   // floating toggle button until tapped, then slides in from the right as
   // an overlay instead of eating into the reading width.
   const [open, setOpen] = useState(false);
@@ -43,7 +44,7 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   useEffect(() => {
     const header = document.querySelector<HTMLElement>('.site__header');
     if (!header) return;
-    const update = () => setHeaderHeight(header.getBoundingClientRect().height);
+    const update = () => setHeaderHeight(headerOffset(header));
     update();
     const resizeObserver = new ResizeObserver(update);
     resizeObserver.observe(header);
