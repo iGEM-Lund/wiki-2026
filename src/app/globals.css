@@ -922,7 +922,7 @@ html:has(dialog.lightbox[open]) {
   --quote-accent: var(--color-crimson);
   position: relative;
   margin: 1.5rem 0;
-  padding: 1.75rem 3.25rem 1.5rem 1.75rem;
+  padding: 2.5rem 3.25rem 2.5rem 1.75rem;
   border-radius: 14px;
   background: var(--quote-surface);
 }
