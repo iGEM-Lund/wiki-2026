@@ -944,7 +944,6 @@ html:has(dialog.lightbox[open]) {
 .quote-block__mark--open {
   bottom: -0.3rem;
   left: 1.25rem;
-  transform: rotate(180deg);
 }
 .quote-block__text {
   margin: 0;

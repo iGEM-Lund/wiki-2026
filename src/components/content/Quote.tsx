@@ -10,9 +10,8 @@ type QuoteProps = {
 // Two curved swooshes standing in for a quotation mark, drawn the same way
 // as the AnTigone logo mark (src/components/antigone-logo.tsx); open
 // currentColor strokes with round caps/joins so there isn't a single sharp
-// corner in the glyph, unlike a typographic " character. The closing mark
-// sits top-right; the opening one is the same glyph rotated 180deg in CSS
-// and sits in the opposite (bottom-left) corner.
+// corner in the glyph, unlike a typographic " character. The same glyph,
+// in the same orientation, sits in the top-right and bottom-left corners.
 function QuoteMark({ position }: { position: 'open' | 'close' }) {
   return (
     <svg className={`quote-block__mark quote-block__mark--${position}`} viewBox="0 0 40 22" aria-hidden="true">
