@@ -99,7 +99,9 @@ export default config({
           // Keystatic's built-in inline image button uploads local files into the
           // repo, which iGEM's rules forbid (see FigureWithCaption in
           // content-components.tsx, which takes a hosted URL instead).
-          options: { image: false },
+          // h1 is the page title and h4 the deepest level the site styles
+          // (src/lib/headings.ts clamps any h5/h6 that slip through anyway).
+          options: { image: false, heading: [2, 3, 4] },
         }),
       },
     }),

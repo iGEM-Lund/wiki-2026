@@ -36,7 +36,7 @@ export function ExpandableClient({ defaultOpen, title, summary, children }: Expa
             </div>
           ) : null}
           <div className="expandable__heading">
-            <div className="expandable__title" role="heading" aria-level={3}>
+            <div className="expandable__title">
               {title.name}
             </div>
             {title.subtitle ? <p className="expandable__subtitle">{title.subtitle}</p> : null}

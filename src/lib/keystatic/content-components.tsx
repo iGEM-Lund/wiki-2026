@@ -91,7 +91,7 @@ export const contentComponents = {
   // The only blocks that need nested rich content, so the only ones using
   // wrapper() instead of block()/inline(). Three components rather than one:
   // ExpandableTitle and ExpandableSummary mark which of Expandable's children
-  // are the optional heading and the always-visible teaser (written as its
+  // are the optional title and the always-visible teaser (written as its
   // first children); this only relies on
   // wrapper()'s plain top-level `children`, not a named child-field region
   // nested inside another wrapper's schema, which Keystatic's docs don't
@@ -107,7 +107,7 @@ export const contentComponents = {
 
   ExpandableTitle: wrapper({
     label: 'Expandable Title',
-    description: 'Optional heading for an Expandable; insert as the first item inside it, above the Expandable Summary.',
+    description: 'Optional title for an Expandable; insert as the first item inside it, above the Expandable Summary. Plain text: it is styled as the card title, not as a heading.',
     schema: {
       image: fields.url({
         label: 'Portrait URL (optional)',

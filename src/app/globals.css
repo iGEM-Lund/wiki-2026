@@ -29,6 +29,9 @@
   /* Width of the nav sidebar, and of the matching right-hand rail the page
      outline sits in, so the reading column between them is centred. */
   --sidebar-width: 16rem;
+  /* Lifts the fixed panes (nav, outline rail) above the page title banner
+     scrolling underneath them. */
+  --pane-shadow: 0 0 1.25rem color-mix(in srgb, var(--color-noir) 14%, transparent);
   /* Only non-zero while the header is a top bar (mobile); see
      HeaderHeightSync. */
   --header-height: 0px;
@@ -54,8 +57,9 @@ body {
   --bg-alt: var(--color-shallows);
   --text: var(--color-truffle);
   --heading: var(--color-depths);
-  /* Logo, wordmark, h1, h5 and h6: Peacock, the brand's primary teal.
-     h2/h3 use --heading (Depths), h4 uses --heading-minor (Crimson). */
+  /* Logo, wordmark and h1: Peacock, the brand's primary teal. h2/h3 use
+     --heading (Depths), h4 uses --heading-minor (Crimson). There is no h5
+     or h6: see rehypeClampHeadings in src/lib/headings.ts. */
   --title: var(--color-peacock);
   --heading-minor: var(--color-crimson);
   --accent: var(--color-peacock);
@@ -138,9 +142,7 @@ body {
 .site h1,
 .site h2,
 .site h3,
-.site h4,
-.site h5,
-.site h6 {
+.site h4 {
   font-family: var(--font-heading);
   color: var(--title);
   line-height: 1.2;
@@ -172,10 +174,100 @@ body {
   font-size: 1.125rem;
   font-weight: 400;
 }
-.site h5,
-.site h6 {
-  font-size: 1rem;
-  font-weight: 400;
+
+/* Page title (h1): a banner spanning the whole content pane, from the nav
+   sidebar to the outline rail and flush with the top, whose bottom edge is
+   a wave that breaks up into thinner and thinner stripes of itself. Markup
+   and edge geometry in src/components/page-title.tsx. It runs on under the
+   fixed panes around the content pane (nav sidebar, outline rail, the
+   mobile top bar), so the wave seems to pass beneath them. The negative
+   margins undo .site__main's padding, the reading column's centering (cqi
+   is the content pane's width; 50% is the column's) and the panes' space;
+   the padding adds that space back so the title stays centered in what's
+   visible. */
+.site .page-title {
+  position: relative;
+  margin: calc(-1 * (var(--main-pad-top) + var(--pane-top)))
+    calc(50% - 50cqi - var(--main-pad-x) - var(--pane-right)) 3rem
+    calc(50% - 50cqi - var(--main-pad-x) - var(--pane-left));
+  /* Bottom padding clears the 3.5rem striped edge. */
+  padding: calc(3.5rem + var(--pane-top)) calc(1.5rem + var(--pane-right)) 5.5rem
+    calc(1.5rem + var(--pane-left));
+  background: linear-gradient(135deg, var(--color-peacock), var(--color-depths));
+  color: var(--color-pearl);
+  text-align: center;
+}
+.site .page-title__heading {
+  margin: 0;
+  /* Up from the shared 2.25rem h1 size, shrinking back toward it on
+     narrow screens so long titles still fit. */
+  font-size: clamp(2.25rem, 1.5rem + 2.5vw, 3rem);
+  color: inherit;
+  text-wrap: balance;
+}
+/* Paints the gaps between the stripes (and everything below them) in the
+   page color, so the stripes show the banner's own gradient. */
+.page-title__edge {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3.5rem;
+  fill: var(--bg);
+}
+
+/* h2: centered text flanked on each side by one continuous stroke that
+   tapers in, loops into the PMOS awareness ribbon and tapers out toward
+   the edge.
+   Markup in src/components/section-heading.tsx; the left flourish is the
+   right one mirrored. */
+.site .section-heading {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  /* More room than the shared heading margins: these open sections. */
+  margin: 3em 0 1em;
+  text-align: center;
+}
+/* Top-level h2s reach slightly past the reading column on both sides, as
+   far as .site__main's padding allows, so they never cause a sideways
+   scroll. Ones nested in cards or columns stay inside them. */
+.site article > .section-heading {
+  margin-inline: calc(-1 * var(--main-pad-x));
+}
+.section-heading__text {
+  flex: 0 1 auto;
+  max-width: 70%;
+  text-wrap: balance;
+}
+.section-heading__flourish {
+  flex: 1 1 0;
+  min-width: 5rem;
+  display: flex;
+  align-items: center;
+  color: var(--heading);
+}
+.section-heading__flourish--left {
+  transform: scaleX(-1);
+}
+.section-heading__flourish svg {
+  display: block;
+  height: 2rem;
+  overflow: visible;
+}
+.section-heading__flourish path {
+  fill: currentColor;
+}
+.section-heading__ribbon {
+  flex: none;
+  width: 5rem;
+}
+.section-heading__line {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* Tucks under the ribbon's end: abutting boxes at fractional positions
+     leave an anti-aliased hairline gap in the stroke. */
+  margin-left: -2px;
 }
 
 .site a {
@@ -209,6 +301,7 @@ body {
   padding: 1.5rem 1rem;
   background: var(--bg);
   border-right: 1px solid var(--border);
+  box-shadow: var(--pane-shadow);
 }
 
 .site__brand {
@@ -226,13 +319,13 @@ body {
 }
 /* Proportions taken from the brand kit's horizontal banner (Canva): the mark is
    ~2.44x the wordmark's cap height and the gap is ~11% of the mark's height.
-   Weight 500 matches h2/h3 so the wordmark doesn't read thinner than the
-   headings; the mark's strokeWidth (antigone-logo.tsx) was scaled up with it so
-   the line still roughly matches Fredoka's stem. Keep these in step if the
-   mark's height or the wordmark's weight changes. */
+   Weight 400 matches the mark's line: its strokeWidth (antigone-logo.tsx)
+   renders ~2.4px at this height, between Fredoka's ~1.9px (300) and ~3.0px
+   (400) stems at this size. Keep these in step if the mark's height or the
+   wordmark's size changes. */
 .site__brand-name {
   font-family: var(--font-heading);
-  font-weight: 500;
+  font-weight: 400;
   font-size: 2.1rem;
   line-height: 1;
   color: var(--title);
@@ -339,6 +432,17 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+/* Desktop sidebar: the nav sits vertically centered between the brand and
+   the accessibility menu. Auto margins rather than justify-content, which
+   would push the top of a nav taller than the pane out of scroll reach. */
+@media (min-width: 48.0625rem) {
+  .site__nav > :first-child {
+    margin-top: auto;
+  }
+  .site__nav > :last-child {
+    margin-bottom: auto;
+  }
 }
 
 .site__nav-item {
@@ -523,9 +627,19 @@ body {
 }
 
 .site__main {
+  /* Named so full-bleed pieces (the page title banner) can undo them: the
+     padding, and the space the fixed panes around this one take up. */
+  --main-pad-top: 2.5rem;
+  --main-pad-x: 2rem;
+  --pane-top: 0px;
+  --pane-left: var(--sidebar-width);
+  --pane-right: 0px;
   flex: 1;
-  margin-left: var(--sidebar-width);
-  padding: 2.5rem 2rem 2rem;
+  margin-left: var(--pane-left);
+  margin-right: var(--pane-right);
+  padding: var(--main-pad-top) var(--main-pad-x) 2rem;
+  /* Lets the page title banner size itself to this pane (cqi units). */
+  container-type: inline-size;
 }
 /* The reading column, centred in the space right of the sidebar. From
    75rem up that space also reserves a sidebar-wide rail on the right for
@@ -536,7 +650,25 @@ body {
 }
 @media (min-width: 75.0625rem) {
   .site__main {
-    margin-right: var(--sidebar-width);
+    --pane-right: var(--sidebar-width);
+  }
+  /* The outline's rail gets a surface of its own, like the nav sidebar, so
+     the page title banner can pass underneath it. */
+  .site::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    width: var(--sidebar-width);
+    background: var(--bg);
+    border-left: 1px solid var(--border);
+    box-shadow: var(--pane-shadow);
+  }
+  /* Above the rail's surface, which would otherwise cover it. */
+  .toc {
+    z-index: 95;
   }
 }
 
@@ -1650,6 +1782,14 @@ article .layout__column p {
   overflow-y: auto;
   font-size: 0.9rem;
 }
+/* Vertically centered in its rail, like the nav in the sidebar. Only
+   while it's a rail: below 75rem it turns into a corner button. */
+@media (min-width: 75.0625rem) {
+  .toc {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
 .toc__title {
   font-family: var(--font-heading);
   font-weight: 500;
@@ -1782,8 +1922,11 @@ article .layout__column p {
     border-bottom: 1px solid var(--border);
   }
   .site__main {
-    margin-left: 0;
-    padding: calc(var(--header-height) + 1.5rem) 1.5rem 1.5rem;
+    --main-pad-top: 1.5rem;
+    --main-pad-x: 1.5rem;
+    --pane-top: var(--header-height);
+    --pane-left: 0px;
+    padding: calc(var(--pane-top) + var(--main-pad-top)) var(--main-pad-x) 1.5rem;
   }
   .site__footer {
     margin-left: 0;
@@ -1870,6 +2013,13 @@ article .layout__column p {
   color: var(--bg);
   box-shadow: 0 2px 8px rgb(0 0 0 / 25%);
   cursor: pointer;
+}
+/* From 75rem up it sits in the bottom-right corner of the content pane,
+   clear of the outline rail. */
+@media (min-width: 75.0625rem) {
+  .back-to-top {
+    right: calc(var(--sidebar-width) + 1.5rem);
+  }
 }
 
 @media (max-width: 75rem) {

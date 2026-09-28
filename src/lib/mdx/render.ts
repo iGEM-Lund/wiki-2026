@@ -7,7 +7,8 @@ import { mdxComponents } from '@/components/content';
 import { Citation } from '@/components/content/Citation';
 import { Table } from '@/components/content/Table';
 import { WorldMap } from '@/components/content/WorldMap';
-import { rehypeCollectHeadings, type HeadingItem } from '@/lib/headings';
+import { SectionHeading } from '@/components/section-heading';
+import { rehypeClampHeadings, rehypeCollectHeadings, type HeadingItem } from '@/lib/headings';
 
 // fields.mdx() stores raw MDX source text; unlike the older fields.document,
 // there's no pre-parsed document tree to walk, so rendering requires actually
@@ -23,10 +24,11 @@ export async function renderMdx(
     // Keystatic's editor writes GFM (pipe tables, strikethrough); plain MDX
     // doesn't parse those, so without this tables render as literal pipes.
     remarkPlugins: [remarkGfm],
-    // rehype-slug gives every heading a stable `id` (so the outline's links
-    // and the References section's anchors both resolve); the collector
-    // runs after it to read those ids back out for the page outline.
-    rehypePlugins: [rehypeSlug, [rehypeCollectHeadings, headings]],
+    // h5/h6 become h4 first (the site stops at h4); rehype-slug then gives
+    // every heading a stable `id` (so the outline's links and the
+    // References section's anchors both resolve); the collector runs after
+    // it to read those ids back out for the page outline.
+    rehypePlugins: [rehypeClampHeadings, rehypeSlug, [rehypeCollectHeadings, headings]],
   });
 
   // Override Citation with the page's resolved reference lookup bound in;
@@ -35,6 +37,7 @@ export async function renderMdx(
   const components = {
     ...mdxComponents,
     table: Table,
+    h2: SectionHeading,
     Citation: (props: { reference?: string | null }) => Citation({ ...props, lookup: referenceLookup }),
     // Pin popup bodies are raw MDX that may embed <Citation>; forward the
     // same resolved lookup so those resolve too, not just top-level ones.

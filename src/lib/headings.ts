@@ -22,6 +22,17 @@ function isExpandableElement(node: unknown): boolean {
   );
 }
 
+// A unified/rehype plugin: the site has no h5 or h6 (Keystatic's editor only
+// offers h2-h4), so any that still reach the page, hand-typed or from an old
+// branch, become h4s. Runs first, so slugs and the outline see the h4.
+export function rehypeClampHeadings() {
+  return (tree: Root) => {
+    visitParents(tree, 'element', (node: Element) => {
+      if (node.tagName === 'h5' || node.tagName === 'h6') node.tagName = 'h4';
+    });
+  };
+}
+
 // A unified/rehype plugin: collects every heading's depth/text/id into the
 // `headings` array (passed by the caller, populated by reference) as it
 // walks the tree. Must run after rehype-slug in the pipeline so `id` is

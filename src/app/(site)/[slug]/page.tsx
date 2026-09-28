@@ -4,6 +4,8 @@ import { renderMdx } from '@/lib/mdx/render';
 import { resolveCitedReferences, toReferenceLookup } from '@/lib/references';
 import { buildHeadingTree } from '@/lib/headings';
 import { TableOfContents } from '@/components/table-of-contents';
+import { SectionHeading } from '@/components/section-heading';
+import { PageTitle } from '@/components/page-title';
 
 // Every page on the site, including the mandatory iGEM Standard URL Pages,
 // is a `pages` collection entry, so one route serves all of them.
@@ -30,11 +32,11 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
   return (
     <div className="page-layout">
       <article>
-        <h1>{entry.title}</h1>
+        <PageTitle>{entry.title}</PageTitle>
         <Content />
         {citedReferences.length > 0 ? (
           <section className="references">
-            <h2>References</h2>
+            <SectionHeading>References</SectionHeading>
             <ol>
               {citedReferences.map((ref) => (
                 <li key={ref.slug} id={`ref-${ref.slug}`}>
