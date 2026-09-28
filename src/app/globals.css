@@ -974,7 +974,10 @@ html:has(dialog.lightbox[open]) {
 .quote-block__figure {
   grid-row: 1 / span 2;
 }
-.quote-block__figure img {
+/* Scoped to the thumbnail itself: the Lightbox <dialog> is rendered inside
+   .quote-block__figure too, and a plain descendant selector would crop the
+   enlarged image to this 9rem thumbnail shape. */
+.quote-block__figure > .zoomable-image > img {
   width: 100%;
   height: auto;
   max-height: 9rem;
