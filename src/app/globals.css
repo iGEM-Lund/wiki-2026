@@ -960,6 +960,35 @@ html:has(dialog.lightbox[open]) {
 .quote-block__quotee::before {
   content: '- ';
 }
+/* Optional figure: a narrow fixed-width column on the left, with the quote
+   and the attribution line stacked to its right. The quote mark stays
+   absolutely positioned, so it isn't a grid item. */
+.quote-block--with-figure {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  column-gap: 1.25rem;
+  align-items: start;
+}
+.quote-block__figure {
+  grid-row: 1 / span 2;
+}
+.quote-block__figure img {
+  width: 100%;
+  height: auto;
+  max-height: 9rem;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.quote-block--with-figure .quote-block__text,
+.quote-block--with-figure .quote-block__quotee {
+  grid-column: 2;
+}
+@media (max-width: 30rem) {
+  .quote-block--with-figure {
+    grid-template-columns: 4rem minmax(0, 1fr);
+    column-gap: 1rem;
+  }
+}
 
 .expandable {
   margin: 1.5rem 0;

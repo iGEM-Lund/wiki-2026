@@ -1,6 +1,10 @@
+import { ZoomableImage } from './ZoomableImage';
+
 type QuoteProps = {
   quote?: string;
   quotee?: string;
+  figure?: string;
+  figureAlt?: string;
 };
 
 // Two curved swooshes standing in for a quotation mark, drawn the same way
@@ -30,11 +34,19 @@ function QuoteMark() {
   );
 }
 
-export function Quote({ quote, quotee }: QuoteProps) {
+// The optional figure sits in a narrow column left of the text (see
+// .quote-block--with-figure in globals.css) and still opens the Lightbox on
+// click, like a FigureWithCaption.
+export function Quote({ quote, quotee, figure, figureAlt = '' }: QuoteProps) {
   if (!quote) return null;
   return (
-    <figure className="quote-block">
+    <figure className={figure ? 'quote-block quote-block--with-figure' : 'quote-block'}>
       <QuoteMark />
+      {figure ? (
+        <div className="quote-block__figure">
+          <ZoomableImage src={figure} alt={figureAlt} caption={quotee} />
+        </div>
+      ) : null}
       <blockquote className="quote-block__text">{quote}</blockquote>
       {quotee ? <figcaption className="quote-block__quotee">{quotee}</figcaption> : null}
     </figure>

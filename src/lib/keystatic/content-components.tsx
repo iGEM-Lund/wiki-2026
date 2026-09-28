@@ -124,11 +124,22 @@ export const contentComponents = {
     schema: {
       quote: fields.text({ label: 'Quote', multiline: true }),
       quotee: fields.text({ label: 'Quotee (optional)' }),
+      figure: fields.url({
+        label: 'Figure URL (optional)',
+        description:
+          'A small image shown to the left of the quote, e.g. a portrait of the quotee. Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
+      }),
+      figureAlt: fields.text({ label: 'Figure alt text (optional)' }),
     },
     ContentView: (props) => (
-      <blockquote>
-        {props.value.quote ?? ''}
-        {props.value.quotee ? <div>- {props.value.quotee}</div> : null}
+      <blockquote style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+        {props.value.figure ? (
+          <img src={props.value.figure} alt={props.value.figureAlt ?? ''} style={{ width: 64, borderRadius: 8 }} />
+        ) : null}
+        <div>
+          {props.value.quote ?? ''}
+          {props.value.quotee ? <div>- {props.value.quotee}</div> : null}
+        </div>
       </blockquote>
     ),
   }),
