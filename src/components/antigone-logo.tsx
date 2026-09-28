@@ -62,7 +62,7 @@ export function AntigoneLogoMark({ className }: { className?: string }) {
           pathLength={1}
           fill="none"
           stroke="currentColor"
-          strokeWidth={3}
+          strokeWidth={5}
           strokeLinecap="round"
           strokeLinejoin="round"
           d={stroke.d}
@@ -75,7 +75,7 @@ export function AntigoneLogoMark({ className }: { className?: string }) {
           r={4.3583045}
           fill="none"
           stroke="currentColor"
-          strokeWidth={1.2}
+          strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
         />
