@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { List, X } from 'lucide-react';
 import type { HeadingNode } from '@/lib/headings';
-import { headerOffset } from '@/components/header-height-sync';
 
 function flattenIds(nodes: HeadingNode[]): string[] {
   return nodes.flatMap((node) => [node.id, ...flattenIds(node.children)]);
@@ -29,10 +28,12 @@ function OutlineList({ nodes, activeId }: { nodes: HeadingNode[]; activeId: stri
 export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   // Only used to size the intersection observer's top margin, so a heading
-  // isn't marked "active" while it's still hidden under the mobile top bar
-  // (0 on the sidebar layout). The pane's own on-screen position comes from
-  // CSS, not this state.
-  const [headerHeight, setHeaderHeight] = useState(0);
+  // isn't marked "active" while it's still hidden under whatever covers the
+  // top of the viewport: the mobile top bar, the collapsed page title. The
+  // root's scroll-padding-top already clears both (plus 1rem), so it's read
+  // from there. The pane's own on-screen position comes from CSS, not this
+  // state.
+  const [coveredTop, setCoveredTop] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
   // Below 75rem only (see the max-width media query in globals.css; wider
   // screens always render the fixed right-hand rail and ignore this): the pane stays a
@@ -44,7 +45,8 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   useEffect(() => {
     const header = document.querySelector<HTMLElement>('.site__header');
     if (!header) return;
-    const update = () => setHeaderHeight(headerOffset(header));
+    const update = () =>
+      setCoveredTop(parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0);
     update();
     const resizeObserver = new ResizeObserver(update);
     resizeObserver.observe(header);
@@ -68,7 +70,7 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
     // where the nav wraps to multiple rows), that 70% cutoff can land above
     // the header itself, inverting the band so nothing ever intersects it.
     // Clamping the bottom margin keeps the band at least 120px tall.
-    const top = headerHeight + 32;
+    const top = coveredTop + 16;
     const bottom = Math.max(0, viewportHeight - top - 120);
     const observer = new IntersectionObserver(
       (entries) => {
@@ -91,7 +93,7 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
     }
 
     return () => observer.disconnect();
-  }, [headings, headerHeight, viewportHeight]);
+  }, [headings, coveredTop, viewportHeight]);
 
   useEffect(() => {
     if (!open) return;

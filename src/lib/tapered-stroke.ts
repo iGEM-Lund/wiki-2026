@@ -58,3 +58,11 @@ export function taperedPath(
     });
   return `M${side(1).join(' L')} L${side(-1).reverse().join(' L')} Z`;
 }
+
+// The bare centerline of `curves`, for stroking along it (the ornaments'
+// draw-in masks).
+export function centerlinePath(curves: Cubic[]): string {
+  const [[x0, y0]] = curves[0];
+  const segments = curves.map(([, p1, p2, p3]) => `C${p1.join(' ')} ${p2.join(' ')} ${p3.join(' ')}`);
+  return `M${x0} ${y0} ${segments.join(' ')}`;
+}

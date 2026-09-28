@@ -35,6 +35,10 @@
   /* Only non-zero while the header is a top bar (mobile); see
      HeaderHeightSync. */
   --header-height: 0px;
+  /* The page title banner once collapsed into a bar: its whole height, and
+     the striped edge's share of it. */
+  --page-title-collapsed: 7rem;
+  --page-title-collapsed-edge: 2rem;
 
   --font-heading: 'Fredoka', system-ui, sans-serif;
   --font-body: 'Poppins', system-ui, sans-serif;
@@ -186,12 +190,15 @@ body {
    the padding adds that space back so the title stays centered in what's
    visible. */
 .site .page-title {
+  /* Bottom padding clears the 3.5rem striped edge. Named for the collapse
+     below, which has to know where the title sits. */
+  --title-pad-top: calc(3.5rem + var(--pane-top));
+  --title-pad-bottom: 5.5rem;
   position: relative;
   margin: calc(-1 * (var(--main-pad-top) + var(--pane-top)))
     calc(50% - 50cqi - var(--main-pad-x) - var(--pane-right)) 3rem
     calc(50% - 50cqi - var(--main-pad-x) - var(--pane-left));
-  /* Bottom padding clears the 3.5rem striped edge. */
-  padding: calc(3.5rem + var(--pane-top)) calc(1.5rem + var(--pane-right)) 5.5rem
+  padding: var(--title-pad-top) calc(1.5rem + var(--pane-right)) var(--title-pad-bottom)
     calc(1.5rem + var(--pane-left));
   background: linear-gradient(135deg, var(--color-peacock), var(--color-depths));
   color: var(--color-pearl);
@@ -201,7 +208,7 @@ body {
   margin: 0;
   /* Up from the shared 2.25rem h1 size, shrinking back toward it on
      narrow screens so long titles still fit. */
-  font-size: clamp(2.25rem, 1.5rem + 2.5vw, 3rem);
+  font-size: clamp(2.5rem, 1.5rem + 3.5vw, 3.75rem);
   color: inherit;
   text-wrap: balance;
 }
@@ -214,6 +221,66 @@ body {
   width: 100%;
   height: 3.5rem;
   fill: var(--bg);
+}
+
+/* Collapse: as the page scrolls, the banner scrolls away until only its
+   bottom --page-title-collapsed is left under the top of the viewport, and
+   pins there as a slim bar, its title shrinking into the solid part of it
+   and its striped edge squashing to --page-title-collapsed-edge. Pinning
+   is a sticky offset the size of the rest of the banner, so the banner
+   never changes height and the page below it never jumps; the title and
+   edge animate over that same stretch of scroll. --page-title-height (the
+   banner's height, which depends on how the title wraps) and the
+   data-collapsible gate come from PageTitleSync. Browsers without
+   scroll-driven animations keep the banner scrolling away as a whole, and
+   so does reduced motion (either way it's asked for): the global override
+   above would otherwise snap the title straight to its collapsed state. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not([data-motion='reduce']):has(.page-title[data-collapsible]) {
+      /* In-page jumps land below the bar too, not under it. */
+      scroll-padding-top: calc(var(--header-height) + var(--page-title-collapsed) + 1rem);
+    }
+    :root:not([data-motion='reduce']) .site .page-title[data-collapsible] {
+      --collapse-distance: calc(var(--page-title-height) - var(--page-title-collapsed));
+      position: sticky;
+      top: calc(var(--pane-top) - var(--collapse-distance));
+      /* Over the page content scrolling under the bar, under the floating
+         buttons (50) and the drawers (60, 90). */
+      z-index: 40;
+    }
+    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__heading,
+    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__edge {
+      animation: linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 var(--collapse-distance);
+    }
+    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__heading {
+      animation-name: page-title-heading-collapse;
+    }
+    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__edge {
+      animation-name: page-title-edge-collapse;
+    }
+  }
+}
+/* Moves the title's centre from where it sits in the full banner,
+   (height + pad top - pad bottom) / 2, to the middle of the bar's solid
+   part, which starts --collapse-distance down the banner. */
+@keyframes page-title-heading-collapse {
+  to {
+    translate: 0
+      calc(
+        var(--collapse-distance) +
+          (var(--page-title-collapsed) - var(--page-title-collapsed-edge)) / 2 -
+          (var(--page-title-height) + var(--title-pad-top) - var(--title-pad-bottom)) / 2
+      );
+    scale: 0.55;
+  }
+}
+@keyframes page-title-edge-collapse {
+  to {
+    height: var(--page-title-collapsed-edge);
+  }
 }
 
 /* h2: centered text flanked on each side by one continuous stroke that
@@ -268,6 +335,85 @@ body {
   /* Tucks under the ribbon's end: abutting boxes at fractional positions
      leave an anti-aliased hairline gap in the stroke. */
   margin-left: -2px;
+}
+/* As a heading scrolls up into view, its text fades in once it's 10% of
+   the way up the viewport (--fade), like the rest of the page content
+   (see below), and both flourishes draw themselves outward from the text
+   once it's 20% of the way up (--draw); scrolling back down below those
+   lines erases the flourishes and fades the text back out. Each plays out
+   in full on its own once triggered; ScrollReveal sets the triggers
+   (data-reveal), including for headings too close to the end of the page
+   to ever get that far. The progress values run on the h2, so the text
+   and both flourishes inherit them. The ribbon draws first, over the
+   first --split of it, then the line. Each piece is masked by strokes
+   along its centerline (markup and why in section-heading.tsx), each
+   pushed out by a dash offset to --head, how far along its piece the
+   drawing is, minus --taper for every step narrower it isn't; --taper is
+   the length of the thinning tip, as a share of the piece. Headings only
+   start out hidden with scripting on (something has to trigger them) and
+   without reduced motion; otherwise they're just shown. */
+@property --fade {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+@property --draw {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+.section-heading__text {
+  opacity: var(--fade);
+}
+.section-heading__flourish {
+  --split: 0.35;
+}
+.section-heading__ribbon {
+  --head: clamp(0, var(--draw) / var(--split), 1);
+  --taper: 0.3;
+}
+.section-heading__line {
+  --head: clamp(0, (var(--draw) - var(--split)) / (1 - var(--split)), 1);
+  --taper: 0.15;
+}
+/* In the path's own length of 1: one dash longer than the path whose far
+   end sits at the tip's position, so it has no cap anywhere else. */
+.section-heading__flourish .section-heading__head {
+  fill: none;
+  stroke: white;
+  stroke-linecap: round;
+  stroke-dasharray: 2 2;
+  stroke-dashoffset: calc(2 - (var(--head) * (1 + var(--taper)) - var(--taper) * (1 - var(--layer))));
+}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .section-heading {
+    --fade: 0;
+    --draw: 0;
+    transition:
+      --fade 0.6s ease-out,
+      --draw 1.6s ease-in-out;
+  }
+  :root:not([data-motion='reduce']) .section-heading[data-reveal] {
+    --fade: 1;
+  }
+  :root:not([data-motion='reduce']) .section-heading[data-reveal='drawn'] {
+    --draw: 1;
+  }
+}
+/* The rest of the page content fades in the same way as the h2s' text:
+   every block, and every paragraph inside one, once it's 10% of the way up
+   the viewport, and back out below that (ScrollReveal picks the targets and
+   sets data-reveal). Same conditions for starting out hidden as above. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) article > :not(.page-title, .section-heading),
+  :root:not([data-motion='reduce']) article p {
+    opacity: 0;
+    transition: opacity 0.6s ease-out;
+  }
+  :root:not([data-motion='reduce']) article > [data-reveal]:not(.page-title, .section-heading),
+  :root:not([data-motion='reduce']) article p[data-reveal] {
+    opacity: 1;
+  }
 }
 
 .site a {

@@ -6,6 +6,7 @@ import { buildHeadingTree } from '@/lib/headings';
 import { TableOfContents } from '@/components/table-of-contents';
 import { SectionHeading } from '@/components/section-heading';
 import { PageTitle } from '@/components/page-title';
+import { ScrollReveal } from '@/components/scroll-reveal';
 
 // Every page on the site, including the mandatory iGEM Standard URL Pages,
 // is a `pages` collection entry, so one route serves all of them.
@@ -48,6 +49,9 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
         ) : null}
       </article>
       <TableOfContents headings={buildHeadingTree(headings)} />
+      {/* Here rather than in the layout, which stays mounted across
+          client-side navigations: it has to pick up each page's content. */}
+      <ScrollReveal />
     </div>
   );
 }

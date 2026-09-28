@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { PageTitleSync } from '@/components/page-title-sync';
 
 // The banner's bottom edge: one gentle wave across the full width, in a
 // 100 x 56 viewBox that stretches sideways only (1 vertical unit = 1/16 rem).
@@ -38,7 +39,8 @@ function edgeCutout(): string {
 const EDGE_PATH = edgeCutout();
 
 // The page's h1: a banner spanning the whole content pane whose bottom edge
-// is a wave that breaks up into thinner and thinner stripes of itself.
+// is a wave that breaks up into thinner and thinner stripes of itself. As
+// the page scrolls it collapses into a slim bar pinned to the top.
 export function PageTitle({ children }: { children: ReactNode }) {
   return (
     <div className="page-title">
@@ -51,6 +53,7 @@ export function PageTitle({ children }: { children: ReactNode }) {
       >
         <path d={EDGE_PATH} />
       </svg>
+      <PageTitleSync />
     </div>
   );
 }

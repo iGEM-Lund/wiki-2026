@@ -1,5 +1,5 @@
-import type { ComponentPropsWithoutRef } from 'react';
-import { easeOut, taperedPath, type Cubic } from '@/lib/tapered-stroke';
+import { useId, type ComponentPropsWithoutRef, type CSSProperties } from 'react';
+import { centerlinePath, easeOut, taperedPath, type Cubic } from '@/lib/tapered-stroke';
 
 // Full stroke weight in viewBox units. Both SVGs are 2rem tall over 32 units
 // (1 unit = 1/16 rem), so 3.4 is ~0.12em of the 1.75rem h2: Fredoka's
@@ -32,6 +32,37 @@ const RIBBON_PATH = taperedPath(RIBBON, (u) => {
 });
 const LINE_PATH = taperedPath(LINE, (_, [x]) => WEIGHT * easeOut(1 - x / 100), { vertical: true });
 
+// Draw-in (see .section-heading__head in globals.css): each piece is masked
+// by strokes along its centerline that grow outward with scroll. They're
+// stacked from wide to narrow, each narrower one reaching a little further,
+// so where the drawing has got to the stroke thins out to nothing rather
+// than stopping flat. The widest is a bit over full weight, so once drawn
+// the mask covers the whole piece.
+const HEAD_LAYERS = 6;
+const HEAD_WEIGHT = WEIGHT + 1;
+const RIBBON_CENTERLINE = centerlinePath(RIBBON);
+const LINE_CENTERLINE = centerlinePath(LINE);
+
+function Piece({ path, centerline, mask }: { path: string; centerline: string; mask: string }) {
+  return (
+    <>
+      <mask id={mask}>
+        {Array.from({ length: HEAD_LAYERS }, (_, layer) => (
+          <path
+            key={layer}
+            className="section-heading__head"
+            d={centerline}
+            pathLength={1}
+            strokeWidth={(HEAD_WEIGHT * (HEAD_LAYERS - layer)) / HEAD_LAYERS}
+            style={{ '--layer': layer / (HEAD_LAYERS - 1) } as CSSProperties}
+          />
+        ))}
+      </mask>
+      <path d={path} mask={`url(#${mask})`} />
+    </>
+  );
+}
+
 // One side's ornament, drawn as the right-hand side: a single continuous
 // stroke that starts at zero width near the heading text, thickens to full
 // heading weight as it loops into the PMOS awareness ribbon, then thins back
@@ -42,13 +73,14 @@ const LINE_PATH = taperedPath(LINE, (_, [x]) => WEIGHT * easeOut(1 - x / 100), {
 // Both viewBoxes start at y=8, so the inner end (y=26) sits just below the
 // row's vertical center, where it reads level with the heading text.
 function Flourish({ side }: { side: 'left' | 'right' }) {
+  const id = useId();
   return (
     <span className={`section-heading__flourish section-heading__flourish--${side}`} aria-hidden="true">
       <svg className="section-heading__ribbon" viewBox="0 8 80 32">
-        <path d={RIBBON_PATH} />
+        <Piece path={RIBBON_PATH} centerline={RIBBON_CENTERLINE} mask={`${id}-ribbon`} />
       </svg>
       <svg className="section-heading__line" viewBox="0 8 100 32" preserveAspectRatio="none">
-        <path d={LINE_PATH} />
+        <Piece path={LINE_PATH} centerline={LINE_CENTERLINE} mask={`${id}-line`} />
       </svg>
     </span>
   );
