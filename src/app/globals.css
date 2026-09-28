@@ -225,12 +225,14 @@ body {
   color: var(--title);
 }
 /* Proportions taken from the brand kit's horizontal banner (Canva): the mark is
-   ~2.44x the wordmark's cap height, Fredoka Light's stem roughly matches the
-   mark's line width, and the gap is ~11% of the mark's height. Keep these in
-   step if the mark's height changes. */
+   ~2.44x the wordmark's cap height and the gap is ~11% of the mark's height.
+   Weight 500 matches h2/h3 so the wordmark doesn't read thinner than the
+   headings; the mark's strokeWidth (antigone-logo.tsx) was scaled up with it so
+   the line still roughly matches Fredoka's stem. Keep these in step if the
+   mark's height or the wordmark's weight changes. */
 .site__brand-name {
   font-family: var(--font-heading);
-  font-weight: 300;
+  font-weight: 500;
   font-size: 2.1rem;
   line-height: 1;
   color: var(--title);
