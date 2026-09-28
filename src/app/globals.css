@@ -932,12 +932,19 @@ html:has(dialog.lightbox[open]) {
 }
 .quote-block__mark {
   position: absolute;
-  top: -0.55rem;
-  right: 1.25rem;
   width: 2.75rem;
   height: auto;
   color: var(--quote-accent);
   opacity: 0.6;
+}
+.quote-block__mark--close {
+  top: -0.3rem;
+  right: 1.25rem;
+}
+.quote-block__mark--open {
+  bottom: -0.3rem;
+  left: 1.25rem;
+  transform: rotate(180deg);
 }
 .quote-block__text {
   margin: 0;
@@ -963,8 +970,8 @@ html:has(dialog.lightbox[open]) {
   content: '- ';
 }
 /* Optional figure: a narrow fixed-width column on the left, with the quote
-   and the attribution line stacked to its right. The quote mark stays
-   absolutely positioned, so it isn't a grid item. */
+   and the attribution line stacked to its right. The quote marks stay
+   absolutely positioned, so they aren't grid items. */
 .quote-block--with-figure {
   display: grid;
   grid-template-columns: 6rem minmax(0, 1fr);

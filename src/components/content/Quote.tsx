@@ -10,10 +10,12 @@ type QuoteProps = {
 // Two curved swooshes standing in for a quotation mark, drawn the same way
 // as the AnTigone logo mark (src/components/antigone-logo.tsx); open
 // currentColor strokes with round caps/joins so there isn't a single sharp
-// corner in the glyph, unlike a typographic " character.
-function QuoteMark() {
+// corner in the glyph, unlike a typographic " character. The closing mark
+// sits top-right; the opening one is the same glyph rotated 180deg in CSS
+// and sits in the opposite (bottom-left) corner.
+function QuoteMark({ position }: { position: 'open' | 'close' }) {
   return (
-    <svg className="quote-block__mark" viewBox="0 0 40 22" aria-hidden="true">
+    <svg className={`quote-block__mark quote-block__mark--${position}`} viewBox="0 0 40 22" aria-hidden="true">
       <path
         d="M 7 2 C 17 2 17 13 9 17.5"
         fill="none"
@@ -41,7 +43,8 @@ export function Quote({ quote, quotee, figure, figureAlt = '' }: QuoteProps) {
   if (!quote) return null;
   return (
     <figure className={figure ? 'quote-block quote-block--with-figure' : 'quote-block'}>
-      <QuoteMark />
+      <QuoteMark position="close" />
+      <QuoteMark position="open" />
       {figure ? (
         <div className="quote-block__figure">
           <ZoomableImage src={figure} alt={figureAlt} caption={quotee} />
