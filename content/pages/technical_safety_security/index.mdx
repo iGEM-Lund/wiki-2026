@@ -34,8 +34,8 @@ As our engineered probiotic is a living biotherapeutic product, meant to be admi
 *A paragraph about HGT and the effects of HGT*
 
 For each strategy, we researched multiple possible approaches, compared them against our project's specific constraints, and selected the combination that best balances safety, feasibility, and relevance to AnTigone as a testosterone-lowering gut therapeutic.\
-**\
-Gut Gate**
+\
+**Gut Gate**
 
 Our effector should only be active when our engineered probiotic is in the gut. The distinct physicochemical signals in the gut vary from both the outside environment and between different compartments within the gut itself, and these signals can be used to build a location-based switch. We compared three strategies from the literature and chose hypoxia sensing for our proof-of-concept.
 
@@ -47,9 +47,9 @@ Chien et al. (2022) built three separate biosensor-driven circuits in *E. coli* 
 | pH sensing                  | A promoter responds to the gut's pH gradient (small intestine \~pH 6.3, colon \~pH 7).                                                                               | —                                                                                      |
 | Lactate / bile acid sensing | A promoter responds to gut-specific metabolites like lactate or bile acids, present at much higher concentration in the gut than elsewhere.                          | —                                                                                      |
 
-Hypoxia sensing was chosen as our gate. In principle, the oxygen gap between the gut and outside conditions is wide and more consistent than the gut's pH gradient or bile-acid fluctuations, which vary with time of day and diet. Hypoxia promoters are also well established in *E. coli*, since they rely on the bacterium's native FNR-based anaerobic response rather than an engineered bile-acid receptor or pH sensor. Our choice was discussed with Dr. Tsz Yan Clement Chan, who confirmed hypoxia sensing as a valid biosafety layer, while noting it is one layer rather than a complete containment solution on its own.**\
+Hypoxia sensing was chosen as our gate. In principle, the oxygen gap between the gut and outside conditions is wide and more consistent than the gut's pH gradient or bile-acid fluctuations, which vary with time of day and diet. Hypoxia promoters are also well established in *E. coli*, since they rely on the bacterium's native FNR-based anaerobic response rather than an engineered bile-acid receptor or pH sensor. Our choice was discussed with Dr. Tsz Yan Clement Chan, who confirmed hypoxia sensing as a valid biosafety layer, while noting it is one layer rather than a complete containment solution on its own.\
 \
-Feedback-Responsive Expression**
+**Feedback-Responsive Expression**
 
 Our effector should be expressed only when testosterone levels exceed a threshold. To ensure the enzyme is produced only to lower elevated testosterone, we propose combining our gut gate with a testosterone-responsive transcription factor to form an AND gate . \
 -– Insert the Flowchart --–&#x20;
@@ -65,13 +65,11 @@ Our effector should be expressed only when testosterone levels exceed a threshol
 
 **Colonization Control**
 
-\
-
+\\
 
 **Resident Gut Communities**
 
-\
-
+\\
 
 **Auxotrophy**
 
@@ -117,16 +115,16 @@ As our final product is a probiotic, it is important that it will not pose a ris
 * The system can become unstable over time: long-term amber suppression creates selective pressure, and in one study *E. coli* adapted over roughly 500 generations by inactivating parts of the orthogonal translation system and promoting plasmid loss.
 * Gut evidence is limited: amber suppression has been demonstrated in engineered *E. coli* inside the mouse gastrointestinal tract, but for bacterial tracking rather than biocontainment . We did not find direct validation of an amber-suppression firewall as a containment system in the human gut.
 
-**Overall assessment.** Amber suppression is a useful additional genetic safety layer, since it reduces the function of transferred genes without requiring a toxin, but it does not directly control *E. coli* survival, can interfere with normal UAG translation, may lose stability over long-term growth, and has not been validated as a standalone containment system in the human gut. We treat it as a supporting genetic safeguard alongside an organism-level containment system, rather than a containment system on its own.**\
+**Overall assessment.** Amber suppression is a useful additional genetic safety layer, since it reduces the function of transferred genes without requiring a toxin, but it does not directly control *E. coli* survival, can interfere with normal UAG translation, may lose stability over long-term growth, and has not been validated as a standalone containment system in the human gut. We treat it as a supporting genetic safeguard alongside an organism-level containment system, rather than a containment system on its own.\
 \
-\&#xA;**
+**\&#xA;**
 
 ---
 
 ### GMO regulations
 
-As AnTigone is a genetically engineered live bacterial therapeutic, we considered regulations covering its development from laboratory use and potential human administration through to environmental exposure. In the EU, genetically modified live biotherapeutics are covered by both pharmaceutical and GMO regulatory frameworks.**\
-Europe**
+As AnTigone is a genetically engineered live bacterial therapeutic, we considered regulations covering its development from laboratory use and potential human administration through to environmental exposure. In the EU, genetically modified live biotherapeutics are covered by both pharmaceutical and GMO regulatory frameworks.\
+**Europe**
 
 | **Framework**                                           | **Regulates**                                                                                                                                       | **Relevance to AnTigone**                                                                                                                         |
 | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -137,10 +135,7 @@ Europe**
 | EMA Guideline: Environmental Risk Assessment            | Environmental risk assessment for GMO-containing medicinal products                                                                                 | Patient shedding could expose the environment to the engineered bacteria, requiring assessment before marketing authorisation                     |
 | Cartagena Protocol: International Movement              | Safe transfer, handling, and transport of living modified organisms across borders                                                                  | Would apply if the engineered bacteria were transported internationally                                                                           |
 
-**\
 \
-USA**
+**USA**
 
 In the US, AnTigone would mainly follow the existing FDA drug/biologic pathway: an Investigational New Drug (IND) application before clinical trials, followed by the appropriate pathway to market approval. As a recombinant bacterial product, we would also need to determine whether an Environmental Assessment is required or whether AnTigone qualifies for a categorical exclusion. The FDA IND/BLA framework sets this pathway: an IND is required before clinical trials, and a Biologics License Application (BLA) is submitted for marketing approval, which would apply to AnTigone if regulated as a biological product.
-
-\
