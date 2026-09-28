@@ -2,10 +2,18 @@
 
 import { useId, useState, type ReactNode } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { ZoomableImage } from './ZoomableImage';
+
+export type ExpandableHeader = {
+  name: ReactNode;
+  image?: string;
+  imageAlt?: string;
+  subtitle?: string;
+};
 
 type ExpandableClientProps = {
   defaultOpen: boolean;
-  title: ReactNode;
+  title: ExpandableHeader | null;
   summary: ReactNode;
   children: ReactNode;
 };
@@ -21,9 +29,19 @@ export function ExpandableClient({ defaultOpen, title, summary, children }: Expa
   return (
     <section className="expandable" data-open={open}>
       {title ? (
-        <div className="expandable__title" role="heading" aria-level={3}>
-          {title}
-        </div>
+        <header className="expandable__header">
+          {title.image ? (
+            <div className="expandable__figure">
+              <ZoomableImage src={title.image} alt={title.imageAlt} />
+            </div>
+          ) : null}
+          <div className="expandable__heading">
+            <div className="expandable__title" role="heading" aria-level={3}>
+              {title.name}
+            </div>
+            {title.subtitle ? <p className="expandable__subtitle">{title.subtitle}</p> : null}
+          </div>
+        </header>
       ) : null}
       {summary ? <div className="expandable__summary">{summary}</div> : null}
       <div className="expandable__body" id={bodyId} inert={!open}>

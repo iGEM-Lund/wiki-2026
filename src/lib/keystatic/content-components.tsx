@@ -108,8 +108,30 @@ export const contentComponents = {
   ExpandableTitle: wrapper({
     label: 'Expandable Title',
     description: 'Optional heading for an Expandable; insert as the first item inside it, above the Expandable Summary.',
-    schema: {},
-    ContentView: ({ children }) => <strong style={{ fontSize: '1.2em' }}>{children}</strong>,
+    schema: {
+      image: fields.url({
+        label: 'Portrait URL (optional)',
+        description:
+          'A small round photo shown next to the title, e.g. of an interviewee. Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
+      }),
+      imageAlt: fields.text({ label: 'Portrait alt text (optional)' }),
+      subtitle: fields.text({
+        label: 'Subtitle (optional)',
+        description: 'Shown under the title, e.g. role and affiliation. Each line is kept as its own line.',
+        multiline: true,
+      }),
+    },
+    ContentView: ({ children, value }) => (
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        {value.image ? (
+          <img src={value.image} alt={value.imageAlt ?? ''} style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover' }} />
+        ) : null}
+        <div>
+          <strong style={{ fontSize: '1.2em' }}>{children}</strong>
+          {value.subtitle ? <div style={{ whiteSpace: 'pre-line', opacity: 0.7 }}>{value.subtitle}</div> : null}
+        </div>
+      </div>
+    ),
   }),
 
   ExpandableSummary: wrapper({

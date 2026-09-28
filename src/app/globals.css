@@ -1005,24 +1005,60 @@ html:has(dialog.lightbox[open]) {
   margin: 1.5rem 0;
   padding: 1.5rem 1.75rem 0.5rem;
   border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
-  border-left: 4px solid var(--accent);
   border-radius: 14px;
   background: var(--bg-alt);
-  /* Clips the title band to the card's rounded corners; `clip` rather than
+  /* Clips the header band to the card's rounded corners; `clip` rather than
      `hidden` so the card doesn't become a scroll container. */
   overflow: clip;
 }
 /* A filled header band: negative margins pull it out over the card's
-   padding so it spans edge to edge, flush with the left accent stripe. */
-.site .expandable__title {
+   padding so it spans edge to edge. With a portrait it takes the same shape
+   as .quote-block--with-figure: a narrow figure column on the left, title
+   and subtitle stacked to its right, vertically centered on each other. */
+.expandable__header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
   margin: -1.5rem -1.75rem 1.25rem;
-  padding: 1rem 1.75rem;
+  padding: 1.25rem 1.75rem;
   background: linear-gradient(135deg, var(--color-peacock), var(--color-depths));
+  color: var(--color-pearl);
+}
+.expandable__figure {
+  flex: 0 0 6rem;
+}
+/* Scoped to the thumbnail itself: the Lightbox <dialog> is rendered inside
+   .expandable__figure too, and a plain descendant selector would crop the
+   enlarged image to this thumbnail shape. */
+.expandable__figure > .zoomable-image > img {
+  width: 100%;
+  height: auto;
+  max-height: 9rem;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.expandable__heading {
+  min-width: 0;
+}
+.site .expandable__title {
   font-family: var(--font-heading);
   font-size: 1.375rem;
   font-weight: 500;
   line-height: 1.2;
   color: var(--color-pearl);
+}
+.site .expandable__subtitle {
+  margin: 0.15rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  text-align: left;
+  white-space: pre-line;
+  color: color-mix(in srgb, var(--color-pearl) 80%, transparent);
+}
+@media (max-width: 30rem) {
+  .expandable__figure {
+    flex-basis: 4rem;
+  }
 }
 .expandable__title > :first-child,
 .expandable__summary > :first-child,
@@ -1595,6 +1631,11 @@ html:has(dialog.lightbox[open]) {
 
 article p {
   text-align: justify;
+}
+/* Justify only reads well on full-width text; in narrow columns it opens
+   wide gaps between words. */
+article .layout__column p {
+  text-align: left;
 }
 
 .toc {
