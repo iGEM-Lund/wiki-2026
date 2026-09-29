@@ -19,9 +19,117 @@ Paragraph about different stakeholders.
 
 Small paragraphs of what decisions we have made to change the project and to implement the feedback from experts. Something similar to a condensed version of all integrations from interviews. Can be ordered in categories possibly.
 
+<Expandable defaultOpen={false}>
+  <ExpandableTitle>
+
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+    Short text
+  </ExpandableSummary>
+
+  Long text
+</Expandable>
+
 ## Academia
 
 Different Academia Consultations
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle
+    image="https://static.igem.wiki/teams/6160/wiki/human-practices/anna-benrick.avif"
+    subtitle="Professor in endocrinology at University of Gothenburg
+Department of Physiology, University of Gothenburg"
+  >
+    Anna Benrick
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+    Anna Benrick’s research focuses on hyperandrogenism and its link on reproductive diseases in females. She was contacted to help us with understanding more about PMOS, hyperandrogenism and the feasibility of our approach. Dr. Benrick confirmed 5β-reductase-targeted androgen reduction is a valid therapeutic approach, and advised us against androgen inducible expression strategy, favoring stable overexpression instead.
+  </ExpandableSummary>
+
+  Summary of interview:
+
+  We consulted Dr. Anna Benrick, whose research focuses on the molecular link between androgen excess and the development of reproductive disorders, obesity, and type-2 diabetes in women. The interview was centered on the feasibility of the AnTigone project, whether locally reducing testosterone in the gut could meaningfully affect systemic testosterone levels and reduce hyperandrogenism symptoms. Despite promising preclinical findings, Dr. Benrick emphasized that the gut microbiota-PMOS field is still young, and it remains unclear whether microbiota changes drive PMOS or result from it.
+
+  She pointed out a recent paper on artemisin, an antimalarial compound shown to lower testosterone production by inhibiting a testosterone synthesis enzyme, suggesting an alternative approach to reducing systemic testosterone levels. A recurring topic in the interview was the uncertainty about gut-to-serum steroid circulation: how much testosterone actually passes through the gut relative to what is produced by ovaries and adrenal glands. This uncertainty was raised to answer one of our main questions, whether our approach could achieve a biologically relevant effect. We had discussed the possibility of incorporating a testosterone-sensing mechanism to induce enzyme expression and deactivate it if reduction became too high. She advised not to pursue this, but to prioritize stable, strong enzyme expression, since insufficient effect was deemed more likely to happen than excessive androgen lowering. Furthermore, she did not anticipate a compensatory increase in androgen production in response to our treatment.
+
+  The conversation also touched on validation strategy, including in vitro options such as testosterone-producing theca cells, and candidate biomarkers such as testosterone, androstenedione and hydroxyandrogens, alongside clinical symptoms such as menstruation frequency or body hair. Dr. Benrick raised the possibility that a gut-localized, low-risk approach could be relevant for PMOS treatment during pregnancy, a period in which most hormonal therapies are avoided due to their possibility of affecting fetal development.
+
+  Integration:
+
+  Expression system design - adopting a hypoxia-responsive promoter as a fixed gut on/off switch
+
+  Project framing - framing the project as an early-stage hypothesis rather than a validated therapeutic mechanism
+</Expandable>
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle
+    image="https://static.igem.wiki/teams/6160/wiki/human-practices/helena-berglund.avif"
+    subtitle="Assistant Head of Teacher Education at Lund University
+Joint Faculties of Humanities and Theology, Lund University"
+  >
+    Helena Berglund
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+    Helena Berglund is Assistant Head of Teacher Education at Lund University's Joint Faculties of Humanities and Theology, with a research focus on how teacher professionalism can be strengthened through the right conditions in schools and teacher education. Given her expertise, she has insight into how the Swedish school system works and what makes outreach material well-suited for students but also for teachers to implement. We contacted her early on for feedback and support on our high school outreach package, to understand which approaches could realistically create the highest impact. She confirmed our target age (15–18, pre-specialization), pushed us toward hands-on/practical formats over plain lectures, made us consider school segregation, and confirmed language wouldn't be a barrier, given students' English proficiency.
+  </ExpandableSummary>
+
+  Summary of interview:
+
+  Given her research background in teacher professional development, Helena Berglund was contacted to get early feedback on our high school outreach concept and to identify the approaches with the highest impact.
+
+  The main topics discussed were: ideal target age, format, the structure of the Swedish school system, the relevance of school segregation, and language requirements. Helena confirmed 15/16 to 18 (pre-specialization and post-specialization =  from 9th year onward) as the ideal target age. 
+
+  She recommended hands-on labs and workshops over lectures alone, as these have a high learning and retention effect on students. She also noted that teachers are generally looking for activities that are easy to fit into an already busy curriculum. She explained the segregation between municipal schools and non-municipal, often profit-driven schools (friskolor) as a reason for unequal access to practical activities, pointing us to Skolinspektionen for insight into school quality data and suggesting we could prioritize socioeconomically weaker areas as high-impact targets. She confirmed English-language material is fine given students' strong proficiency. She also highlighted linking science to its societal relevance as the most engaging angle for student interest.
+
+  Integration:
+
+  Format: She strengthened our decision to develop a lecture + workshop package rather than a lecture alone. We also kept this in mind across almost all educational talks/lectures, integrating at least some interactive component into each one. As one example, following her advice to prioritize practical activities, we replaced a planned lecture with a lab exercise for the Rays for Excellence event (LINK), even though a lecture had originally been suggested.
+
+  Material accessibility: Based on her point about school segregation and unequal access to resources, we kept material low-cost and accessible. For example, using pasta rings to illustrate plasmid parts (promoter, etc.) in the BioCamp lecture + workshop (LINK).
+
+  Language: Her reassurance that English is widely understood by Swedish students let us proceed with the high school package in English, which was necessary at the time since we had no Swedish-speaking team member yet.
+
+  Content framing: Her advice to link science to its societal relevance reinforced the approach we started with, using iGEM to show the range of experts involved in synthetic biology (ethics, policymakers, researchers, etc.).
+</Expandable>
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle
+    image="https://static.igem.wiki/teams/6160/wiki/human-practices/clement-chan.avif"
+    subtitle="Associate Professor
+Department of Biomedical Engineering, University of Northern Texas
+"
+  >
+    Clement Chan (not finished)
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+    **Dr. Clement Chan is an expert in genetic circuits which can be used for biocontainment. He was contacted to get insight into the possible biocontainment strategies for our product. Based on his feedback, we decided to focus our experimental work on *in vitro* proof-of-concept only, but discuss the biocontainment theory thoroughly, postponing its practical implementation to future work. We also had to consider our choice of future probiotic chassis based on where testosterone is actually reabsorbed in the gut.**
+  </ExpandableSummary>
+
+  **We contacted Dr. Chan because of his expertise in genetic circuits and biocontainment systems. We wanted his perspective on what biosafety measures we should implement.**  
+
+  \
+
+
+  **Dr. Chan outlined two main approaches for biocontainment strategies: non-canonical amino acid incorporation and kill-switches, and pros and cons of each. Dr. Chan informed us that modern biocontainment is multi-layered, and uses 3-4 different mechanisms simultaneously, since no single mechanism is sufficient. We also discussed his novel kill-switch design, a CRISPR-based genetic circuit, that instead of killing bacteria, uses CRISPR to destroy only the engineered genes \[should we insert citation to that paper?]. This method could be preferable to traditional kill-switches, since he said that toxin-based killing is difficult to maintain efficiently in gastrointestinal systems.**
+
+  **He also shared his experience as an iGEM judge, and gave advice on the feasibility of our gut-based approach, and the appropriate experimental scope for iGEM.  He also advised that chassis selection depends critically on where testosterone is reabsorbed (small intestine favors *Lactobacillus*; colon favors *E. coli Nissle*).**
+
+  **Most importantly, Dr. Chan recommended focusing exclusively on demonstrating the metabolic pathway works *in vitro*, as biocontainment alone could be an entire iGEM project. While the hypoxia gate that we implemented could be considered a biosafety layer, since it limits environmental spread, is not sufficient alone. Thus proper biosafety implementation for our product is something that future iGEM teams can build on.**
+
+
+
+  **Integration**
+
+  **Chassis validation - we had to determine primary testosterone reabsorption site (small intestine vs. colon) before finalizing end chassis choice (*E. coli Nissle* 1917 or *Lactobacillus*)*.***
+
+  **Biocontainment - we removed biocontainment from planned experimental work and repositioned it as "future implementation" discussion only.**  
+
+  **Biosafety discussion - for future directions, we incorporated Dr. Clement’s advice on non-canonical amino acid dependency and CRISPR-based gene removal**
+</Expandable>
 
 <Expandable defaultOpen={false}>
   <ExpandableTitle
@@ -82,66 +190,6 @@ Department of Systems Pharmacology & Translational Therapeutics, University of P
   Substrate specificity: decided to pursue multiple point mutations across the binding pocket
 
   Expression system design: choosing a gut-relevant inducible bacterial promotor
-</Expandable>
-
-<Expandable defaultOpen={false}>
-  <ExpandableTitle
-    image="https://static.igem.wiki/teams/6160/wiki/human-practices/helena-berglund.avif"
-    subtitle="Assistant Head of Teacher Education at Lund University
-Joint Faculties of Humanities and Theology, Lund University"
-  >
-    Helena Berglund
-  </ExpandableTitle>
-
-  <ExpandableSummary>
-    Helena Berglund is Assistant Head of Teacher Education at Lund University's Joint Faculties of Humanities and Theology, with a research focus on how teacher professionalism can be strengthened through the right conditions in schools and teacher education. Given her expertise, she has insight into how the Swedish school system works and what makes outreach material well-suited for students but also for teachers to implement. We contacted her early on for feedback and support on our high school outreach package, to understand which approaches could realistically create the highest impact. She confirmed our target age (15–18, pre-specialization), pushed us toward hands-on/practical formats over plain lectures, made us consider school segregation, and confirmed language wouldn't be a barrier, given students' English proficiency.
-  </ExpandableSummary>
-
-  Summary of interview:
-
-  Given her research background in teacher professional development, Helena Berglund was contacted to get early feedback on our high school outreach concept and to identify the approaches with the highest impact.
-
-  The main topics discussed were: ideal target age, format, the structure of the Swedish school system, the relevance of school segregation, and language requirements. Helena confirmed 15/16 to 18 (pre-specialization and post-specialization =  from 9th year onward) as the ideal target age. 
-
-  She recommended hands-on labs and workshops over lectures alone, as these have a high learning and retention effect on students. She also noted that teachers are generally looking for activities that are easy to fit into an already busy curriculum. She explained the segregation between municipal schools and non-municipal, often profit-driven schools (friskolor) as a reason for unequal access to practical activities, pointing us to Skolinspektionen for insight into school quality data and suggesting we could prioritize socioeconomically weaker areas as high-impact targets. She confirmed English-language material is fine given students' strong proficiency. She also highlighted linking science to its societal relevance as the most engaging angle for student interest.
-
-  Integration:
-
-  Format: She strengthened our decision to develop a lecture + workshop package rather than a lecture alone. We also kept this in mind across almost all educational talks/lectures, integrating at least some interactive component into each one. As one example, following her advice to prioritize practical activities, we replaced a planned lecture with a lab exercise for the Rays for Excellence event (LINK), even though a lecture had originally been suggested.
-
-  Material accessibility: Based on her point about school segregation and unequal access to resources, we kept material low-cost and accessible. For example, using pasta rings to illustrate plasmid parts (promoter, etc.) in the BioCamp lecture + workshop (LINK).
-
-  Language: Her reassurance that English is widely understood by Swedish students let us proceed with the high school package in English, which was necessary at the time since we had no Swedish-speaking team member yet.
-
-  Content framing: Her advice to link science to its societal relevance reinforced the approach we started with, using iGEM to show the range of experts involved in synthetic biology (ethics, policymakers, researchers, etc.).
-</Expandable>
-
-<Expandable defaultOpen={false}>
-  <ExpandableTitle
-    image="https://static.igem.wiki/teams/6160/wiki/human-practices/anna-benrick.avif"
-    subtitle="Professor in endocrinology at University of Gothenburg
-Department of Physiology, University of Gothenburg"
-  >
-    Anna Benrick
-  </ExpandableTitle>
-
-  <ExpandableSummary>
-    Anna Benrick’s research focuses on hyperandrogenism and its link on reproductive diseases in females. She was contacted to help us with understanding more about PMOS, hyperandrogenism and the feasibility of our approach. Dr. Benrick confirmed 5β-reductase-targeted androgen reduction is a valid therapeutic approach, and advised us against androgen inducible expression strategy, favoring stable overexpression instead.
-  </ExpandableSummary>
-
-  Summary of interview:
-
-  We consulted Dr. Anna Benrick, whose research focuses on the molecular link between androgen excess and the development of reproductive disorders, obesity, and type-2 diabetes in women. The interview was centered on the feasibility of the AnTigone project, whether locally reducing testosterone in the gut could meaningfully affect systemic testosterone levels and reduce hyperandrogenism symptoms. Despite promising preclinical findings, Dr. Benrick emphasized that the gut microbiota-PMOS field is still young, and it remains unclear whether microbiota changes drive PMOS or result from it.
-
-  She pointed out a recent paper on artemisin, an antimalarial compound shown to lower testosterone production by inhibiting a testosterone synthesis enzyme, suggesting an alternative approach to reducing systemic testosterone levels. A recurring topic in the interview was the uncertainty about gut-to-serum steroid circulation: how much testosterone actually passes through the gut relative to what is produced by ovaries and adrenal glands. This uncertainty was raised to answer one of our main questions, whether our approach could achieve a biologically relevant effect. We had discussed the possibility of incorporating a testosterone-sensing mechanism to induce enzyme expression and deactivate it if reduction became too high. She advised not to pursue this, but to prioritize stable, strong enzyme expression, since insufficient effect was deemed more likely to happen than excessive androgen lowering. Furthermore, she did not anticipate a compensatory increase in androgen production in response to our treatment.
-
-  The conversation also touched on validation strategy, including in vitro options such as testosterone-producing theca cells, and candidate biomarkers such as testosterone, androstenedione and hydroxyandrogens, alongside clinical symptoms such as menstruation frequency or body hair. Dr. Benrick raised the possibility that a gut-localized, low-risk approach could be relevant for PMOS treatment during pregnancy, a period in which most hormonal therapies are avoided due to their possibility of affecting fetal development.
-
-  Integration:
-
-  Expression system design - adopting a hypoxia-responsive promoter as a fixed gut on/off switch
-
-  Project framing - framing the project as an early-stage hypothesis rather than a validated therapeutic mechanism
 </Expandable>
 
 ## Clinicians
