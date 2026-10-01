@@ -102,7 +102,7 @@ async function renderMolecule(
   style: MoleculeViewerStyle,
 ): Promise<() => void> {
   const $3Dmol = await import('3dmol');
-  const viewer = $3Dmol.createViewer(container, { backgroundColor: 'white' });
+  const viewer = $3Dmol.createViewer(container, { backgroundColor: 'white', backgroundAlpha: 0 });
   viewer.addModel(data, format === 'glb' ? 'pdb' : format);
   viewer.setStyle({}, { [style]: {} });
   viewer.zoomTo();
@@ -123,7 +123,6 @@ async function renderGlb(container: HTMLElement, buffer: ArrayBuffer): Promise<(
   const gltf = await new GLTFLoader().parseAsync(buffer, '');
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color('white');
   scene.add(gltf.scene);
   scene.add(new THREE.HemisphereLight(0xffffff, 0x888888, 2));
 
@@ -135,7 +134,7 @@ async function renderGlb(container: HTMLElement, buffer: ArrayBuffer): Promise<(
   camera.add(headlight);
   scene.add(camera);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   container.appendChild(renderer.domElement);
 

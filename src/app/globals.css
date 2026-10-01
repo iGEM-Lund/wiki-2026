@@ -1451,8 +1451,6 @@ html:has(dialog.lightbox[open]) {
   position: relative;
   width: 100%;
   height: 420px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
 }
 .molecule-viewer__error {
   padding: 0.75rem;
