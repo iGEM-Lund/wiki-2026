@@ -24,13 +24,15 @@ items:
         - label: Contributions
           target: technical_contribution
         - label: 'Engineering '
-          target: technical_Engineering
+          target: technical_DBTL
         - label: Modelling
           target: technical_modelling
         - label: Notebooks and Protocols
           target: technical_notebooks-and-protocols
         - label: Safety and Security
           target: technical_safety_security
+        - label: Parts
+          target: parts
   - name: Engagement
     icon:
       discriminant: library
@@ -50,10 +52,12 @@ items:
           target: collaborations
         - label: PMOS
           target: pmos
+        - label: Contributions
+          target: contributions
   - name: People
     icon:
       discriminant: library
-      value: users
+      value: person-standing
     linkMode:
       discriminant: dropdown
       value:
@@ -63,10 +67,3 @@ items:
           target: Attributions
         - label: Sponsors
           target: people_sponsors-and-collaborators
-  - name: Contributions
-    icon:
-      discriminant: library
-      value: clock
-    linkMode:
-      discriminant: link
-      value: contributions
