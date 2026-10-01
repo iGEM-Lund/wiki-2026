@@ -14,6 +14,8 @@ items:
           target: project_results
         - label: Proof of Concept
           target: project_proof-of-concept
+        - label: Contribution
+          target: contribution
   - name: Technical
     icon:
       discriminant: library
@@ -21,8 +23,6 @@ items:
     linkMode:
       discriminant: dropdown
       value:
-        - label: Contributions
-          target: technical_contribution
         - label: 'Engineering '
           target: technical_DBTL
         - label: Modelling
