@@ -24,7 +24,7 @@ items:
       discriminant: dropdown
       value:
         - label: 'Engineering '
-          target: technical_DBTL
+          target: engineering
         - label: Modelling
           target: technical_modelling
         - label: Notebooks and Protocols
