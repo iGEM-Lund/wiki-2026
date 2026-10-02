@@ -12,10 +12,14 @@ items:
           target: project_solution-and-project-design
         - label: Results
           target: project_results
+        - label: Future Outlook
+          target: future_outlook
+        - label: Safety
+          target: safety
+        - label: Economic Assessment
+          target: economical-assessment
         - label: Proof of Concept
           target: project_proof-of-concept
-        - label: Contribution
-          target: contribution
   - name: Technical
     icon:
       discriminant: library
@@ -29,8 +33,6 @@ items:
           target: technical_modelling
         - label: Notebooks and Protocols
           target: technical_notebooks-and-protocols
-        - label: Safety and Security
-          target: technical_safety_security
         - label: Parts
           target: parts
   - name: Engagement
@@ -50,8 +52,6 @@ items:
           target: education
         - label: Collaborations
           target: collaborations
-        - label: PMOS
-          target: pmos
         - label: Contributions
           target: contributions
   - name: People
