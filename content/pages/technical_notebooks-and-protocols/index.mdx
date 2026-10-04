@@ -9,7 +9,7 @@ Short introduction paragraph, explaining how we structured this part (notebook s
 
 <Expandable defaultOpen={false}>
   <ExpandableTitle>
-    Week 28
+    Week 25
   </ExpandableTitle>
 
   <ExpandableSummary>
@@ -48,8 +48,83 @@ Short introduction paragraph, explaining how we structured this part (notebook s
 
   Lab notebook for this week can be found on the link below:
 
-  * insert PDF Link for this week
+  * [Lab Notebook Week 25](https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/week28notebook.pdf)
 </Expandable>
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle>
+    Week 26
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+    **Weekly summary:**
+
+    The second week of the lab was dedicated to repeating and troubleshooting restriction digestion of pET-11a with BamHI and NdeI. Different protocols were tested, with different incubations times. Additionally, another plasmid miniprep kit was tested, which resulted in purer samples. Digestion of ci2350-His was done, followed by ligation and successful transformation into *E. coli* TG1. Competent *E. coli* BL21 cells were prepared.
+  </ExpandableSummary>
+
+  **Main results of the week:**
+
+  E.Z.N.A. plasmid miniprep kit was used as an alternative to Jena Bioscience kit, resulting in less concentration with higher purity. After consulting with our PI Johan, we concluded that samples prepared with Jena Bioscience Kit were contaminated with RNA, due to absorbance ratio 260/280 being \~2.0, and the concentration of nucleic acids being a lot higher than our PI usually gets. For future experiments, E.Z.N.A. plasmid miniprep kit was used.
+
+  | **Sample**               | **Concentration (ng/µL)** | **Abs 260/280** | **Abs  260/230** |
+  | ------------------------ | ------------------------- | --------------- | ---------------- |
+  | S1                       | 73.1                      | 1.838           | 2.410            |
+  | S2                       | 92.4                      | 1.824           | 1.979            |
+  | S3                       | 75.5                      | 1.831           | 1.810            |
+  | S4 (column equilibrated) | 93.9                      | 1.853           | 2.305            |
+  | S5 (column equilibrated) | 95.9                      | 1.804           | 2.474            |
+  | S6 (column equilibrated) | 112                       | 1.852           | 2.306            |
+
+  Restriction digestion with BamHI and NdeI of plasmid extracted with E.Z.N.A. plasmid miniprep kit showed noticeably stronger bands on agarose gel electrophoresis. This supports our assumption that earlier plasmid samples were significantly RNA contaminated. When we thought we were quantifying plasmid concentration, it was mostly RNA, leaving only a small fraction of DNA for digestion. This would explain both the faint bands in earlier digestions and the low plasmid yields after gel extraction.
+
+  <FigureWithCaption />
+
+  Quantification of digested plasmid after gel extraction showed better results than previously. We continued using E.Z.N.A. gel extraction kit, as it showed better results.
+
+  | **Sample**                               | **Concentration (ng/µL)** | **Abs 260/280** | **Abs 260/230** |
+  | ---------------------------------------- | ------------------------- | --------------- | --------------- |
+  | S1 (positive control-undigested plasmid) | 8.449                     | 1.889           | 0.195           |
+  | S2 **clear FD buffer, no phosphatase**   | 19.9                      | 1.905           | 0.506           |
+  | S3 **clear FD buffer, no phosphatase**   | 13.9                      | 2.000           | 0.538           |
+  | S4 **clear FD buffer, no phosphatase**   | 15.9                      | 2.133           | 0.232           |
+  | S5 **clear FD buffer, with phosphatase** | 16.4                      | 2.082           | 0.083           |
+  | S6 **clear FD buffer, with phosphatase** | 11.9                      | 2.000           | 0.304           |
+  | S7 **clear FD buffer, with phosphatase** | 19.4                      | 2.053           | 0.402           |
+  | S8 **green FD buffer, with phosphatase** | 19.4                      | 2.053           | 0.722           |
+  | S9 **green FD buffer, with phosphatase** | 13.9                      | 2.000           | 0.483           |
+  | S10 **green FD buffer, no phosphatase**  | 15.9                      | 1.882           | 0.542           |
+  | S11 **green FD buffer, no phosphatase**  | 17.4                      | 2.059           | 0.347           |
+
+  A test transformation of competent *E. coli* TG1 with empty pET-11a was done, which resulted in many colonies, indicating that our competent cells are viable for transformations.
+
+  Transformation of *E. coli* TG1 with pET-11a containing ci2350-His resulted in colonies, which will be tested next week with colony PCR, to confirm the presence of ci2350-His insert, followed by sending for sequencing. Sample 2 with higher amount of ligation mixture resulted in more colonies than Sample 1 with less ligation mixture. If future transformations give too few colonies, increasing ligation mixture volume is a good variable to try to gain more transformed colonies. 
+
+  |                                                                                                                                      |                                                                                                                                       |
+  | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+  | *&#x20;E. coli* TG1, Transformation of ci2350-His cloned in pET-11a. **Negative control. Likely swapped with positive when plating** | *&#x20;E. coli* TG1, Transformation of ci2350-His cloned in pET-11a. **Positive control. Likely swapped with negative when plating.** |
+
+  \
+
+
+  \
+
+</Expandable>
+
+
+
+.
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle>
+
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+
+  </ExpandableSummary>
+</Expandable>
+
+.
 
 <Expandable defaultOpen={false}>
   <ExpandableTitle>
