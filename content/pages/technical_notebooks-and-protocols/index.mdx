@@ -146,8 +146,58 @@ Short introduction paragraph, explaining how we structured this part (notebook s
   </ExpandableTitle>
 
   <ExpandableSummary>
+    **Weekly summary:**
 
+    Week 28 focused on troubleshooting restriction digestion of pET-11a with NdeI and BamHI enzymes, and on redoing transformations of *E. coli* TG1 with our inserts. To reduce loss of digested plasmid during gel electrophoresis and extraction, we tested a PCR cleanup kit. Based on our lab supervisor Camille, we developed a new digestion protocol aimed at shortening the reaction time. Sequencing of positive transformations was carried out to check insert integrity, but unfortunately it revealed mutations. We received a safety introduction for handling testosterone, as it is a CMR reagent requiring special safety precautions.
   </ExpandableSummary>
+
+  **Main results of the week:**
+
+  After visualising restriction digestion of pET-11a on Monday, we found that the NdeI control was invalid, due to adding BamHI by mistake. The gel was discarded, since we were unsure whether to proceed, due to compromised control. Digestion was redone the next day, where the controls were set up correctly.
+
+  <FigureWithCaption />
+
+  Restriction digestion of pET-11a was also carried out on Tuesday, followed by gel extraction and NanoDrop readings. The absorbance ratios were interesting to say the least. Nucleic acid concentrations were really low, and A260/280 were unusually high. The samples were discarded, and the digestion was repeated in the following days, using a PCR cleanup kit instead of gel extraction. Camille suggested this, as the yields are usually higher than gel extraction.
+
+  | **Sample**                   | **Concentration (ng/µL)** | **Abs 260/280** | **Abs  260/230** |
+  | ---------------------------- | ------------------------- | --------------- | ---------------- |
+  | Alkaline Phosphatase Control | 0.994                     | -               | 0.133            |
+  | Undigested plasmid           | 2.485 / 1.491             | 2.5 / 3.0       | 0.161 / 0.111    |
+  | pET 2A                       | 2.485                     | 5.000           | 0.076            |
+  | pET 2B                       | 1.988                     | 4.000           | 0.049            |
+  | pET 2C                       | 6.461                     | 1.857           | 0.333            |
+  | pET 4A                       | 4.970                     | 2.500           | 0.213            |
+  | pET 4B                       | 5.964                     | 2.400           | 0.194            |
+  | pET 4C                       | 7.952                     | 1.778           | 0.112            |
+  | pET 4D                       | 0 / 0.994                 | 0 / 1.000       | 0 / 0.154        |
+  | pET 4E                       | 6.958                     | 2.000           | 0.389            |
+  | pET 4F                       | 10.4                      | 2.333           | 0.420            |
+
+  Colony PCR was performed on transformations from last week, retesting the colonies from July 1st, and adding AKR1D1-Trx and ci2350-Trx colonies from July 3rd transformation. The gel showed different results from last week, as new colonies were positive for the inserts, while the colony positive last week was now negative. Sequencing the positive colonies revealed mutations in all samples, rendering them unsuitable for further use.
+
+  <FigureWithCaption />
+
+  *E. coli* TG1 and BL21 were successfully transformed with ci2350-MBP (colony PCR results shown on gel below). The insert was ordered in a plasmid from Twist Bioscience, as the insert was too large to be synthesized as a gBlock. Additionally, *E. coli* BL21 was transformed with empty pET-11a, which will serve as a comparison on SDS-PAGE during protein expression, making it easier to identify our overexpressed protein.
+
+
+
+  <FigureWithCaption />
+
+  Digestion reactions of pET-11a were set up in larger volumes (100 µL) to avoid wasting tubes and reduce the amount of pipetting needed. Digested pET-11a was cleaned up using a PCR cleanup kit, instead of gel extraction. Gel electrophoresis was still performed to confirm digestion, but using a smaller aliquot of the reaction (20 µL).
+
+  | **Digested pET-11a** | **Concentration (ng/µL)** | **Abs 260/280** | **Abs  260/230** |
+  | -------------------- | ------------------------- | --------------- | ---------------- |
+  | 1                    | 17.4                      | 1.842           | 0.077            |
+  | 2                    | 14.9                      | 1.765           | 0.400            |
+  | 3                    | 14.4                      | 1.813           | 0.592            |
+  | 4                    | 12.4                      | 2.083           | 0.134            |
+  | 5                    | 12.9                      | 1.857           | 0.325            |
+  | 6                    | 13.9                      | 1.867           | 0.384            |
+  | **Pooled Plasmid**   | **16.9**                  | **1.789**       | **0.206**        |
+
+  Lab notebook for this week can be found on the link below:
+
+  * [Lab Notebook Week 28](https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/week28notebook.pdf)
 </Expandable>
 
 .
