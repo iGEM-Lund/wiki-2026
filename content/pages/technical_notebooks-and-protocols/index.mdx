@@ -260,12 +260,54 @@ Short introduction paragraph, explaining how we structured this part (notebook s
 
 <Expandable defaultOpen={false}>
   <ExpandableTitle>
-
+    Week 30 (pdf missing)
   </ExpandableTitle>
 
   <ExpandableSummary>
+    **Weekly summary:**
 
+    During Week 30, we continued attempting to transform *E. coli* TG1 with our remaining gene constructs, successfully transforming AKR1D1-His into *E. coli* TG1. Protein expression of ci2350-His and ci2350-MBP was carried out at 17ºC to maximise the yield, followed by protein purification using an IMAC column. Glycerol stocks of *E. coli* TG1 and BL21(DE3) carrying ci2350-His and ci2350-MBP were made for storage. We also began digesting pET-BLANK containing ci2350-MBP, to obtain the empty vector, since it is more reliable than digesting pET-11a.
   </ExpandableSummary>
+
+  **Main results of the week:**
+
+  SDS-PAGE analysis of ci2350-His and ci2350-MBP after protein purification was performed. The gels had been left in the fridge in water over the weekend, as we did not have time to stain them on Friday. After staining and visualizing the gels, we noticed they had a few bands, with most having diffused out of the gel. Due to this storage error, no bands were present in samples for ci2350-His, and only a few visible for ci2350-MBP, with visible band swelling and abnormal migration. Purification was repeated using aliquots of samples stored in the -80ºC freezer.
+
+  <Layout>
+    <LayoutColumn>
+      <FigureWithCaption />
+    </LayoutColumn>
+
+    <LayoutColumn>
+      <FigureWithCaption />
+    </LayoutColumn>
+
+    <LayoutColumn>
+
+    </LayoutColumn>
+  </Layout>
+
+  Due to the unusually high numbers of colonies on all plates, including the negative ligation control, indicating religated vectors, we decided to test only 4 different plates, containing the AKR1D1-His and AKR1D1-SUMO inserts. Agarose gel electrophoresis of colony PCR products from the transformed colonies showed that the colonies had not been transformed with our inserts, but with religated pET-11a. 
+
+  <FigureWithCaption />
+
+  To avoid restarting the whole transformation experiment from start (including plasmid miniprep and related steps), we decided to redo the digestion of already digested pET-11a, by incubating it again with NdeI, followed by another ligation reaction using only AKR1D1-His insert, to avoid wasting other inserts. Another round of transformation into *E. coli* TG1 was performed using this construct. Colony PCR showed that some colonies were positive, and sequencing identified a correct AKR1D1-His sequence.
+
+  <FigureWithCaption />
+
+  Following our supervisor Camille's suggestion, we decided to digest pET-11a with NdeI only, allowing us to distinguish between single-digested and non-digested plasmid and extract it from the gel more easily. BamHI digestion, which is more reliable, would then follow separately. After visualizing the NdeI digestion products, the gel appeared very grainy, probably due to the agarose not fully dissolving in the microwave.
+
+  <FigureWithCaption />
+
+  To follow up on last week’s idea, we decided to digest pET-BLANK containing ci2350-MBP with NdeI and BamHI, to distinguish between single and double-digested plasmid, and extract only the double digested band from the gel, preventing religation of single-cut plasmid and false-positive transformations. Agarose gel electrophoresis of the pET-BLANK digestion gave some positive results, with a few bands being good candidates for gel extraction. However, the gel also showed a trend in which digestion strength decreased steadily across the well, from heavily digested plasmid to undigested plasmid. The most likely explanation is that restriction digestion mastermix was not properly mixed before aliquoting, where the first aliquots taken contained the most enzyme, while later ones contained progressively less, until some aliquots had essentially no enzyme at all, explaining the undigested wells. Going forward, we will ensure the mastermix is fully mixed before aliquoting, to prevent this from happening again.
+
+  <FigureWithCaption />
+
+
+
+  To confirm that we had expressed ci2350-MBP, we analysed the SDS-PAGE gel to determine the molecular weight of the overexpressed protein. The results showed a molecular weight of \~113 kDa, close to the expected \~111 kDa of ci2350-MBP, confirming we had successfully expressed our desired protein.
+
+  <FigureWithCaption />
 </Expandable>
 
 &#x20; .
