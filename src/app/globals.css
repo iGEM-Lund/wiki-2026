@@ -179,6 +179,19 @@ body {
   font-weight: 400;
 }
 
+/* Bold text in Poppins. The browser default, `bolder`, only takes the 300
+   body weight to 400, and with no 400 face loaded that renders as plain
+   300: bold text looked exactly like the text around it. 600 is the weight
+   loaded for it (src/app/(site)/layout.tsx). Headings are Fredoka at
+   400-600 already, so they keep relative bolder. */
+.site strong,
+.site b {
+  font-weight: 600;
+}
+.site :is(h1, h2, h3, h4) :is(strong, b) {
+  font-weight: bolder;
+}
+
 /* Page title (h1): a banner spanning the whole content pane, from the nav
    sidebar to the outline rail and flush with the top, whose bottom edge is
    a wave that breaks up into thinner and thinner stripes of itself. Markup

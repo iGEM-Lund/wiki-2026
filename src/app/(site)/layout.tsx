@@ -8,6 +8,8 @@ import '@fontsource/poppins/200.css';
 import '@fontsource/poppins/200-italic.css';
 import '@fontsource/poppins/300.css';
 import '@fontsource/poppins/300-italic.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/600-italic.css';
 import '@fontsource/opendyslexic/400.css';
 import '@fontsource/opendyslexic/700.css';
 import { getNav } from '@/lib/nav';
