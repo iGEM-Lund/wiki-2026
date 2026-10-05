@@ -1,54 +1,37 @@
-import { Children, isValidElement, type ReactNode } from 'react';
-import { ExpandableSummary } from './ExpandableSummary';
-import { ExpandableTitle, type ExpandableTitleProps } from './ExpandableTitle';
-import { ExpandableClient } from './ExpandableClient';
-import { SectionHeading } from '@/components/section-heading';
+'use client';
 
-const HEADING_TAGS = new Set(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
-
-// A card title is its own thing, not a heading: writers sometimes type a
-// Markdown heading inside ExpandableTitle, which would otherwise render as a
-// full h2 (ribbons and all) or h3 inside the header. Keep only its text.
-function unwrapHeadings(node: ReactNode): ReactNode {
-  return Children.map(node, (child) =>
-    isValidElement<{ children?: ReactNode }>(child) &&
-    (child.type === SectionHeading || (typeof child.type === 'string' && HEADING_TAGS.has(child.type)))
-      ? child.props.children
-      : child,
-  );
-}
+import { useId, useState, type ReactNode } from 'react';
+import { ChevronDown } from 'lucide-react';
 
 type ExpandableProps = {
   defaultOpen?: boolean;
   children?: ReactNode;
 };
 
-// The optional title and the always-visible teaser are authored as
-// <ExpandableTitle> / <ExpandableSummary> children rather than flat props, so
-// they can hold rich inline MDX (emphasis, a <Citation>, ...) instead of being
-// limited to plain text. Everything else is the collapsible body.
+// Content hidden behind a "Read more" button, usually placed at the end of a
+// Card. The body opens by animating grid-template-rows from 0fr to 1fr (see
+// .expandable__body in globals.css), which transitions to the content's real
+// height without measuring it in JS. `inert` keeps the collapsed body out of
+// the tab order and the accessibility tree while it's visually hidden.
 export function Expandable({ defaultOpen = false, children }: ExpandableProps) {
-  const items = Children.toArray(children);
-  const isMarker = (child: ReactNode, type: unknown) => isValidElement(child) && child.type === type;
-  const titleElement = items.find((child) => isMarker(child, ExpandableTitle));
-  const title = isValidElement<ExpandableTitleProps>(titleElement)
-    ? {
-        name: unwrapHeadings(titleElement.props.children),
-        image: titleElement.props.image,
-        imageAlt: titleElement.props.imageAlt,
-        subtitle: titleElement.props.subtitle,
-      }
-    : null;
-  const summary = items.find((child) => isMarker(child, ExpandableSummary)) ?? null;
-  const body = items.filter((child) => !isMarker(child, ExpandableTitle) && !isMarker(child, ExpandableSummary));
+  const [open, setOpen] = useState(defaultOpen);
+  const bodyId = useId();
 
   return (
-    <ExpandableClient
-      defaultOpen={defaultOpen}
-      title={title}
-      summary={summary}
-    >
-      {body}
-    </ExpandableClient>
+    <div className="expandable" data-open={open}>
+      <div className="expandable__body" id={bodyId} inert={!open}>
+        <div className="expandable__body-inner">{children}</div>
+      </div>
+      <button
+        type="button"
+        className="expandable__toggle"
+        aria-expanded={open}
+        aria-controls={bodyId}
+        onClick={() => setOpen((value) => !value)}
+      >
+        <span>{open ? 'Show less' : 'Read more'}</span>
+        <ChevronDown className="expandable__icon" aria-hidden size={18} />
+      </button>
+    </div>
   );
 }

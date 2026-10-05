@@ -3,7 +3,7 @@ import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import type { Root } from 'hast';
 import { reader } from '@/lib/keystatic/reader';
-import { rehypeClampHeadings } from '@/lib/headings';
+import { NON_OUTLINE_COMPONENTS, rehypeClampHeadings } from '@/lib/headings';
 
 // One stretch of a page between two outline headings. `id` is the heading's
 // anchor (null for the text before a page's first heading), so a result can
@@ -52,14 +52,15 @@ function plainText(node: AnyNode): string {
 
 // Splits a page's hast tree into sections at its outline headings. Matches
 // the outline's rule (see rehypeCollectHeadings in src/lib/headings.ts):
-// headings inside an <Expandable> may be hidden in a collapsed body, so
-// they don't start a section; their text stays in the enclosing one.
+// headings inside an <Expandable> may be hidden in a collapsed body, and
+// ones inside a <CardTitle> aren't rendered as headings, so neither starts
+// a section; their text stays in the enclosing one.
 function splitSections(tree: Root): SearchSection[] {
   const sections: SearchSection[] = [];
   let current: SearchSection = { id: null, heading: null, text: '' };
 
-  function walk(node: AnyNode, insideExpandable: boolean) {
-    if (!insideExpandable && node.tagName !== undefined && HEADING_TAGS.has(node.tagName)) {
+  function walk(node: AnyNode) {
+    if (node.tagName !== undefined && HEADING_TAGS.has(node.tagName)) {
       const id = node.properties?.id;
       if (typeof id === 'string') {
         sections.push(current);
@@ -67,19 +68,20 @@ function splitSections(tree: Root): SearchSection[] {
         return;
       }
     }
-    const isExpandable =
-      (node.type === 'mdxJsxFlowElement' || node.type === 'mdxJsxTextElement') && node.name === 'Expandable';
-    if (isExpandable || !node.children) {
+    const isNonOutline =
+      (node.type === 'mdxJsxFlowElement' || node.type === 'mdxJsxTextElement') &&
+      NON_OUTLINE_COMPONENTS.has(node.name ?? '');
+    if (isNonOutline || !node.children) {
       current.text += ` ${plainText(node)} `;
       return;
     }
     // A component's own text props (a <Quote>'s quote, a figure's caption)
     // come before its children, as they do on the page.
     current.text += ` ${propText(node).join(' ')} `;
-    for (const child of node.children) walk(child, insideExpandable);
+    for (const child of node.children) walk(child);
   }
 
-  walk(tree as AnyNode, false);
+  walk(tree as AnyNode);
   sections.push(current);
   return sections
     .map((section) => ({ ...section, text: collapse(section.text) }))

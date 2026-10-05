@@ -1432,9 +1432,9 @@ html:has(dialog.lightbox[open]) {
   }
 }
 
-.expandable {
+.card {
   margin: 1.5rem 0;
-  padding: 1.5rem 1.75rem 0.5rem;
+  padding: 1.5rem 1.75rem;
   border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
   border-radius: 14px;
   background: var(--bg-alt);
@@ -1446,7 +1446,7 @@ html:has(dialog.lightbox[open]) {
    padding so it spans edge to edge. With a portrait it takes the same shape
    as .quote-block--with-figure: a narrow figure column on the left, title
    and subtitle stacked to its right, vertically centered on each other. */
-.expandable__header {
+.card__header {
   display: flex;
   align-items: center;
   gap: 1.25rem;
@@ -1455,30 +1455,30 @@ html:has(dialog.lightbox[open]) {
   background: linear-gradient(135deg, var(--color-peacock), var(--color-depths));
   color: var(--color-pearl);
 }
-.expandable__figure {
+.card__figure {
   flex: 0 0 6rem;
 }
 /* Scoped to the thumbnail itself: the Lightbox <dialog> is rendered inside
-   .expandable__figure too, and a plain descendant selector would crop the
+   .card__figure too, and a plain descendant selector would crop the
    enlarged image to this thumbnail shape. */
-.expandable__figure > .zoomable-image > img {
+.card__figure > .zoomable-image > img {
   width: 100%;
   height: auto;
   max-height: 9rem;
   object-fit: cover;
   border-radius: 10px;
 }
-.expandable__heading {
+.card__heading {
   min-width: 0;
 }
-.site .expandable__title {
+.site .card__title {
   font-family: var(--font-heading);
   font-size: 1.375rem;
   font-weight: 500;
   line-height: 1.2;
   color: var(--color-pearl);
 }
-.site .expandable__subtitle {
+.site .card__subtitle {
   margin: 0.15rem 0 0;
   font-size: 0.875rem;
   line-height: 1.45;
@@ -1487,19 +1487,28 @@ html:has(dialog.lightbox[open]) {
   color: color-mix(in srgb, var(--color-pearl) 80%, transparent);
 }
 @media (max-width: 30rem) {
-  .expandable__figure {
+  .card__figure {
     flex-basis: 4rem;
   }
 }
-.expandable__title > :first-child,
-.expandable__summary > :first-child,
+.card > :first-child:not(.card__header),
+.card__header + *,
+.card__title > :first-child,
 .expandable__body-inner > :first-child {
   margin-top: 0;
 }
-.expandable__title > :last-child,
-.expandable__summary > :last-child,
+.card > :last-child:not(.card__header),
+.card__title > :last-child,
 .expandable__body-inner > :last-child {
   margin-bottom: 0;
+}
+/* A title-only card: the header band fills the card to its bottom edge. */
+.card__header:last-child {
+  margin-bottom: -1.5rem;
+}
+/* A trailing Expandable's toggle brings its own bottom spacing. */
+.card:has(> .expandable:last-child) {
+  padding-bottom: 0.5rem;
 }
 /* Collapsing grid-template-rows to 0fr and back to 1fr animates the body to
    its real content height with no JS measuring; the inner wrapper's

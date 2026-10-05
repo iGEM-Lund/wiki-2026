@@ -2,9 +2,9 @@ import { FigureWithCaption } from './FigureWithCaption';
 import { FigureCarousel } from './FigureCarousel';
 import { PdfEmbed } from './PdfEmbed';
 import { ShortVideoFeed } from './ShortVideoFeed';
+import { Card } from './Card';
+import { CardTitle } from './CardTitle';
 import { Expandable } from './Expandable';
-import { ExpandableSummary } from './ExpandableSummary';
-import { ExpandableTitle } from './ExpandableTitle';
 import { Citation } from './Citation';
 import { Quote } from './Quote';
 import { Formula } from './Formula';
@@ -29,9 +29,9 @@ export const embeddableComponents = {
   FigureCarousel,
   PdfEmbed,
   ShortVideoFeed,
+  Card,
+  CardTitle,
   Expandable,
-  ExpandableSummary,
-  ExpandableTitle,
   Citation,
   Quote,
   Formula,

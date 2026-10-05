@@ -90,24 +90,23 @@ export const contentComponents = {
 
   // The only blocks that need nested rich content, so the only ones using
   // wrapper() instead of block()/inline(). Three components rather than one:
-  // ExpandableTitle and ExpandableSummary mark which of Expandable's children
-  // are the optional title and the always-visible teaser (written as its
-  // first children); this only relies on
+  // CardTitle marks which of Card's children is the optional header, and
+  // Expandable wraps whatever part of a Card stays hidden until the reader
+  // clicks "Read more"; this only relies on
   // wrapper()'s plain top-level `children`, not a named child-field region
   // nested inside another wrapper's schema, which Keystatic's docs don't
   // show as a supported combination and this repo has no running
   // GitHub-authenticated admin instance to verify against.
-  Expandable: wrapper({
-    label: 'Expandable',
-    schema: {
-      defaultOpen: fields.checkbox({ label: 'Expanded by default', defaultValue: false }),
-    },
+  Card: wrapper({
+    label: 'Card',
+    description: 'A boxed card whose content is always visible. Add a Card Title as its first item for a header, and an Expandable for content that should stay hidden behind a "Read more" button.',
+    schema: {},
     ContentView: ({ children }) => <div>{children}</div>,
   }),
 
-  ExpandableTitle: wrapper({
-    label: 'Expandable Title',
-    description: 'Optional title for an Expandable; insert as the first item inside it, above the Expandable Summary. Plain text: it is styled as the card title, not as a heading.',
+  CardTitle: wrapper({
+    label: 'Card Title',
+    description: 'Optional header for a Card; insert as the first item inside it. Plain text: it is styled as the card title, not as a heading.',
     schema: {
       image: fields.url({
         label: 'Portrait URL (optional)',
@@ -134,11 +133,13 @@ export const contentComponents = {
     ),
   }),
 
-  ExpandableSummary: wrapper({
-    label: 'Expandable Summary',
-    description: 'The always-visible teaser; insert as the first item inside an Expandable.',
-    schema: {},
-    ContentView: ({ children }) => <strong>{children}</strong>,
+  Expandable: wrapper({
+    label: 'Expandable',
+    description: 'Content hidden behind a "Read more" button; usually the last item inside a Card.',
+    schema: {
+      defaultOpen: fields.checkbox({ label: 'Expanded by default', defaultValue: false }),
+    },
+    ContentView: ({ children }) => <div>{children}</div>,
   }),
 
   Quote: block({
