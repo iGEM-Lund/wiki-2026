@@ -1,8 +1,4 @@
-import { evaluate } from '@mdx-js/mdx';
-import * as runtime from 'react/jsx-runtime';
-import type { ComponentType } from 'react';
-import { embeddableComponents } from './embeddable-components';
-import { Citation } from './Citation';
+import { compileMdxSnippet } from './compile-mdx-snippet';
 import { WorldMapClient, type WorldMapClientPin } from './WorldMapClient';
 import { WORLD_MAP_VIEWBOX, projectLatLng, worldLandPath } from '@/lib/world-map';
 
@@ -18,34 +14,6 @@ type WorldMapProps = {
   referenceLookup?: Record<string, { shortForm: string }>;
 };
 
-// Pin bodies are raw MDX source text (fields.text, not fields.mdx; see the
-// comment on the WorldMap schema in src/lib/keystatic/content-components.tsx
-// for why), compiled here with the same @mdx-js/mdx primitive
-// src/lib/mdx/render.ts uses for page content, so a pin popup can embed the
-// same content components (Citation, FigureWithCaption, Formula, ...) a page
-// can. A bad pin never breaks the whole page: a compile error renders as an
-// inline message in that pin's popup instead of throwing, the same
-// never-break-the-build rule src/lib/chemistry.ts follows for bad SMILES.
-async function compilePinBody(
-  body: string,
-  referenceLookup: Record<string, { shortForm: string }>,
-): Promise<ComponentType> {
-  try {
-    const { default: MDXContent } = await evaluate(body, {
-      ...runtime,
-      baseUrl: import.meta.url,
-    });
-    const components = {
-      ...embeddableComponents,
-      Citation: (props: { reference?: string | null }) => Citation({ ...props, lookup: referenceLookup }),
-    };
-    return () => MDXContent({ components });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    return () => <p className="world-map__popup-error">Couldn&apos;t render this pin: {message}</p>;
-  }
-}
-
 export async function WorldMap({ pins = [], referenceLookup = {} }: WorldMapProps) {
   const projected: WorldMapClientPin[] = [];
   for (const [index, pin] of pins.entries()) {
@@ -58,7 +26,7 @@ export async function WorldMap({ pins = [], referenceLookup = {} }: WorldMapProp
     if (Number.isNaN(lat) || Number.isNaN(lng)) continue;
     const point = projectLatLng(lat, lng);
     if (!point) continue;
-    const Body = await compilePinBody(pin.body, referenceLookup);
+    const Body = await compileMdxSnippet(pin.body, referenceLookup, 'world-map__popup-error', 'pin');
     projected.push({
       id: `pin-${index}`,
       title: pin.title,

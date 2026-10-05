@@ -368,6 +368,35 @@ export const contentComponents = {
     ContentView: (props) => <div>[World Map: {(props.value.pins ?? []).length} pin(s)]</div>,
   }),
 
+  // A pie of clickable slices, each opening a popup. Same schema shape as
+  // WorldMap's pins above, for the same reasons: `body` is raw MDX in a
+  // fields.text, since a fields.mdx can't be nested inside fields.array.
+  SliceWheel: block({
+    label: 'Slice Wheel',
+    description: 'A circle divided into slices, each with a title. Clicking a slice opens a popup with its text.',
+    schema: {
+      slices: fields.array(
+        fields.object({
+          title: fields.text({
+            label: 'Title',
+            description: 'Shown on the slice and as the popup heading. Keep it to a few words.',
+            validation: { isRequired: true },
+          }),
+          body: fields.text({
+            label: 'Popup body (MDX)',
+            multiline: true,
+            description:
+              'Raw MDX: plain formatting, or hand-embed other components, e.g. <Citation reference="slug" />.',
+          }),
+        }),
+        { label: 'Slices', itemLabel: (props) => props.fields.title.value || 'Slice' },
+      ),
+    },
+    ContentView: (props) => (
+      <div>[Slice Wheel: {(props.value.slices ?? []).map((slice) => slice.title).join(' / ') || 'no slices'}]</div>
+    ),
+  }),
+
   // Generalized responsive layout system: Layout/LayoutSidebar are the two
   // container shapes, LayoutColumn is the shared column marker. The count of
   // LayoutColumn children IS the column count (enforced by each container's

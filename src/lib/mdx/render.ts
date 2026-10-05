@@ -7,6 +7,7 @@ import { mdxComponents } from '@/components/content';
 import { Citation } from '@/components/content/Citation';
 import { Table } from '@/components/content/Table';
 import { WorldMap } from '@/components/content/WorldMap';
+import { SliceWheel } from '@/components/content/SliceWheel';
 import { SectionHeading } from '@/components/section-heading';
 import { rehypeClampHeadings, rehypeCollectHeadings, type HeadingItem } from '@/lib/headings';
 
@@ -42,6 +43,7 @@ export async function renderMdx(
     // Pin popup bodies are raw MDX that may embed <Citation>; forward the
     // same resolved lookup so those resolve too, not just top-level ones.
     WorldMap: (props: Parameters<typeof WorldMap>[0]) => WorldMap({ ...props, referenceLookup }),
+    SliceWheel: (props: Parameters<typeof SliceWheel>[0]) => SliceWheel({ ...props, referenceLookup }),
   };
 
   return {
