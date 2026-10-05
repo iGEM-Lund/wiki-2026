@@ -32,12 +32,29 @@ function round(value: number): number {
   return Math.round(value * 100) / 100;
 }
 
+// The gap between slices is cut out of the shape itself rather than drawn
+// over it in the background colour, so a slice has no outline of its own.
+// Each straight side is pulled in parallel by half of SLICE_GAP, which moves
+// the tip out along the bisector to where those two sides meet.
 function slicePath(start: number, end: number): string {
-  const [x0, y0] = point(start, SOLID_RADIUS);
-  const [x1, y1] = point(end, SOLID_RADIUS);
-  const largeArc = end - start > Math.PI ? 1 : 0;
+  const half = SLICE_GAP / 2;
+  const trim = Math.asin(half / SOLID_RADIUS);
+  const [x0, y0] = point(start + trim, SOLID_RADIUS);
+  const [x1, y1] = point(end - trim, SOLID_RADIUS);
+  const [tipX, tipY] = point((start + end) / 2, half / Math.sin((end - start) / 2));
+  const largeArc = end - start - 2 * trim > Math.PI ? 1 : 0;
   const r = round(SOLID_RADIUS);
-  return `M 0 0 L ${round(x0)} ${round(y0)} A ${r} ${r} 0 ${largeArc} 1 ${round(x1)} ${round(y1)} Z`;
+  return `M ${round(tipX)} ${round(tipY)} L ${round(x0)} ${round(y0)} A ${r} ${r} 0 ${largeArc} 1 ${round(x1)} ${round(y1)} Z`;
+}
+
+// A plain sector from the hub out to the edge of the viewBox, with no gap
+// cut out: see .slice-wheel__hit.
+function hitPath(start: number, end: number): string {
+  const radius = RADIUS + 10;
+  const [x0, y0] = point(start, radius);
+  const [x1, y1] = point(end, radius);
+  const largeArc = end - start > Math.PI ? 1 : 0;
+  return `M 0 0 L ${round(x0)} ${round(y0)} A ${radius} ${radius} 0 ${largeArc} 1 ${round(x1)} ${round(y1)} Z`;
 }
 
 // SVG text doesn't wrap, so titles are broken into lines here, greedily by
@@ -83,8 +100,7 @@ function arcPath(start: number, end: number, radius: number, bottom: boolean): s
 const STRIPE_WIDTHS = [5, 3, 1.6];
 const STRIPE_GAP = 2.4;
 const SOLID_RADIUS = RADIUS - STRIPE_WIDTHS.reduce((sum, width) => sum + width + STRIPE_GAP, 0);
-// Matches the background-coloured outline between slices (see
-// .slice-wheel__shape in globals.css), so stripes leave the same gap.
+// Background left between neighbouring slices, and between their stripes.
 const SLICE_GAP = 2;
 
 function stripes(start: number, end: number, whole: boolean): SliceWheelClientSlice['stripes'] {
@@ -176,6 +192,7 @@ export async function SliceWheel({ slices = [], referenceLookup = {} }: SliceWhe
       id: `slice-${index}`,
       title: slice.title,
       path: count === 1 ? null : slicePath(start, start + step),
+      hitPath: count === 1 ? null : hitPath(start, start + step),
       color: PALETTE[colorIndex],
       stripes: stripes(start, start + step, count === 1),
       label: { x: round(labelX), y: round(labelY), lines, arcs, fontSize },

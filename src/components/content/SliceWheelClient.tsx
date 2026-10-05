@@ -8,6 +8,10 @@ export type SliceWheelClientSlice = {
   title: string;
   // null for a lone slice, which is drawn as a whole circle instead.
   path: string | null;
+  // The slice's whole sector out past its fanned-out stripes, gaps
+  // included: the fixed area that counts as hovering it. null for a lone
+  // slice, which uses a circle.
+  hitPath: string | null;
   color: { fill: string; ink: string };
   // `arcs` holds one path per line for curved labels; null for straight
   // ones, which are centred on (x, y) instead.
@@ -56,53 +60,65 @@ export function SliceWheelClient({ radius, solidRadius, slices }: SliceWheelClie
               }
             }}
           >
-            {slice.path ? (
-              <path className="slice-wheel__shape" d={slice.path} fill={slice.color.fill} />
+            {/* Hover is tracked on this invisible sector, which never moves.
+                The visible parts below slide out on hover; were they the
+                hover target, a pointer over a stripe or near the rim would
+                see them slide out from under it, end the hover, snap back
+                and start it again, over and over. */}
+            {slice.hitPath ? (
+              <path className="slice-wheel__hit" d={slice.hitPath} />
             ) : (
-              <circle className="slice-wheel__shape" r={solidRadius} fill={slice.color.fill} />
+              <circle className="slice-wheel__hit" r={radius + 10} />
             )}
-            {slice.stripes.map((stripe) => (
-              <path
-                key={stripe.k}
-                className="slice-wheel__stripe"
-                d={stripe.d}
-                stroke={slice.color.fill}
-                strokeWidth={stripe.width}
-                style={{ '--stripe-k': stripe.k } as CSSProperties}
-              />
-            ))}
-            {slice.label.arcs ? (
-              slice.label.arcs.map((arc, index) => (
-                <g key={index} aria-hidden="true">
-                  <path id={`${wheelId}-${slice.id}-${index}`} d={arc} fill="none" />
-                  <text className="slice-wheel__label" fill={slice.color.ink} fontSize={slice.label.fontSize}>
-                    <textPath href={`#${wheelId}-${slice.id}-${index}`} startOffset="50%">
-                      {slice.label.lines[index]}
-                    </textPath>
-                  </text>
-                </g>
-              ))
-            ) : (
-              <text
-                className="slice-wheel__label"
-                x={slice.label.x}
-                y={slice.label.y}
-                fill={slice.color.ink}
-                fontSize={slice.label.fontSize}
-                aria-hidden="true"
-              >
-                {slice.label.lines.map((line, index) => (
-                  <tspan
-                    key={index}
-                    x={slice.label.x}
-                    // Centre the whole block of lines on the label point.
-                    dy={index === 0 ? `${-(slice.label.lines.length - 1) * 0.6}em` : "1.2em"}
-                  >
-                    {line}
-                  </tspan>
-                ))}
-              </text>
-            )}
+            <g className="slice-wheel__visual">
+              {slice.path ? (
+                <path className="slice-wheel__shape" d={slice.path} fill={slice.color.fill} />
+              ) : (
+                <circle className="slice-wheel__shape" r={solidRadius} fill={slice.color.fill} />
+              )}
+              {slice.stripes.map((stripe) => (
+                <path
+                  key={stripe.k}
+                  className="slice-wheel__stripe"
+                  d={stripe.d}
+                  stroke={slice.color.fill}
+                  strokeWidth={stripe.width}
+                  style={{ '--stripe-k': stripe.k } as CSSProperties}
+                />
+              ))}
+              {slice.label.arcs ? (
+                slice.label.arcs.map((arc, index) => (
+                  <g key={index} aria-hidden="true">
+                    <path id={`${wheelId}-${slice.id}-${index}`} d={arc} fill="none" />
+                    <text className="slice-wheel__label" fill={slice.color.ink} fontSize={slice.label.fontSize}>
+                      <textPath href={`#${wheelId}-${slice.id}-${index}`} startOffset="50%">
+                        {slice.label.lines[index]}
+                      </textPath>
+                    </text>
+                  </g>
+                ))
+              ) : (
+                <text
+                  className="slice-wheel__label"
+                  x={slice.label.x}
+                  y={slice.label.y}
+                  fill={slice.color.ink}
+                  fontSize={slice.label.fontSize}
+                  aria-hidden="true"
+                >
+                  {slice.label.lines.map((line, index) => (
+                    <tspan
+                      key={index}
+                      x={slice.label.x}
+                      // Centre the whole block of lines on the label point.
+                      dy={index === 0 ? `${-(slice.label.lines.length - 1) * 0.6}em` : "1.2em"}
+                    >
+                      {line}
+                    </tspan>
+                  ))}
+                </text>
+              )}
+            </g>
           </g>
         ))}
         {slices.length > 1 ? <circle className="slice-wheel__hub" r={radius * 0.09} /> : null}

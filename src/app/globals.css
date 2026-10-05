@@ -2077,31 +2077,31 @@ html:has(dialog.lightbox[open]) {
   height: auto;
   overflow: visible;
 }
-/* SVG elements transform around the viewBox origin, which the wheel puts at
-   its hub, so scale() grows a slice straight outward; the translate slides
-   it a little further out along its own bisector. */
 .slice-wheel__slice {
   cursor: pointer;
   outline: none;
+  transition: opacity 0.25s ease;
+}
+/* The only part of a slice that takes the pointer; see SliceWheelClient. */
+.slice-wheel__hit {
+  fill: transparent;
+}
+.slice-wheel__visual {
+  pointer-events: none;
   transition:
     transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-    opacity 0.25s ease,
     filter 0.25s ease;
 }
-.slice-wheel__slice:hover,
-.slice-wheel__slice:focus-visible {
+/* SVG elements transform around the viewBox origin, which the wheel puts at
+   its hub, so scale() grows a slice straight outward; the translate slides
+   it a little further out along its own bisector. */
+.slice-wheel__slice:hover .slice-wheel__visual,
+.slice-wheel__slice:focus-visible .slice-wheel__visual {
   transform: translate(var(--slice-dx), var(--slice-dy)) scale(1.05);
   filter: drop-shadow(0 3px 6px color-mix(in srgb, var(--color-noir) 25%, transparent));
 }
 .slice-wheel__disc:has(.slice-wheel__slice:hover) .slice-wheel__slice:not(:hover) {
   opacity: 0.7;
-}
-/* The gaps between slices are each slice's own outline, drawn in the page
-   background colour. */
-.slice-wheel__shape {
-  stroke: var(--bg);
-  stroke-width: 2;
-  stroke-linejoin: round;
 }
 /* The stripes ride along with their slice, and on hover each also slides a
    little further out than the one inside it, so the edge fans open. */
@@ -2117,9 +2117,12 @@ html:has(dialog.lightbox[open]) {
     calc(var(--slice-dy) * var(--stripe-k) * 0.4)
   );
 }
+/* Slices have no outline (their gaps are cut into the shapes); a keyboard
+   focus ring is the one exception. */
 .slice-wheel__slice:focus-visible .slice-wheel__shape {
   stroke: var(--heading);
   stroke-width: 2.5;
+  stroke-linejoin: round;
 }
 .slice-wheel__label {
   font-family: var(--font-heading);
