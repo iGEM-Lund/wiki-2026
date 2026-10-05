@@ -12,6 +12,12 @@ items:
           target: project_solution-and-project-design
         - label: Results
           target: project_results
+        - label: Future Outlook
+          target: future_outlook
+        - label: Safety
+          target: safety
+        - label: Economic Assessment
+          target: economical-assessment
         - label: Proof of Concept
           target: project_proof-of-concept
   - name: Technical
@@ -21,16 +27,14 @@ items:
     linkMode:
       discriminant: dropdown
       value:
-        - label: Contributions
-          target: technical_contribution
         - label: 'Engineering '
-          target: technical_Engineering
+          target: engineering
         - label: Modelling
           target: technical_modelling
         - label: Notebooks and Protocols
           target: technical_notebooks-and-protocols
-        - label: Safety and Security
-          target: technical_safety_security
+        - label: Parts
+          target: parts
   - name: Engagement
     icon:
       discriminant: library
@@ -40,20 +44,18 @@ items:
       value:
         - label: Human Practices
           target: human-practices
-        - label: Economical Assessment
-          target: economical-assessment
         - label: Sustainability
           target: sustainability
         - label: Education
           target: education
         - label: Collaborations
           target: collaborations
-        - label: PMOS
-          target: pmos
+        - label: Contribution
+          target: contribution
   - name: People
     icon:
       discriminant: library
-      value: users
+      value: person-standing
     linkMode:
       discriminant: dropdown
       value:
@@ -63,10 +65,3 @@ items:
           target: Attributions
         - label: Sponsors
           target: people_sponsors-and-collaborators
-  - name: Contributions
-    icon:
-      discriminant: library
-      value: clock
-    linkMode:
-      discriminant: link
-      value: contributions

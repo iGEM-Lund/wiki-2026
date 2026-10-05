@@ -1,10 +1,463 @@
 ---
 title: Notebooks and Protocols
 ---
-## **Notebooks**
+## **Introduction**
 
-...
+Short introduction paragraph, explaining how we structured this part (notebook section, where each week has been described separately, followed by the main results of the week, and finally PDF of the notebook for the week). After the weekly section there is a protocol section, where you can find our protocols divided in multiple sections.
+
+### Weekly Summaries
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle>
+    Week 25
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+    **Weekly Summary:**
+
+    During the first week of the lab we received a lab equipment introduction  from Johan, where we learned how to operate equipment properly and safely. Many consumables were made, including agar petri dishes, sterilized tips, Eppendorf tubes and MilliQ-H2O. Plasmid miniprep was done on *E. coli* TG1 cells containing pET-11a, followed by restriction digestion using BamHI and NdeI enzymes. Additionally, we prepared competent *E. coli* TG1 cells for future transformations.
+  </ExpandableSummary>
+
+  ---
+
+  **Main results of the week:**
+
+  Plasmid Miniprep of *E. coli* TG1 cells containing pET-11a. Jenna Bioscience Plasmid Miniprep Kit instructions state how the cells could be resuspended in Lysis buffer by pipetting or vortexing, and we decided to test if there was a difference. By looking at the results, non-vortexed samples had higher DNA concentration, and resuspension by pipetting was done in future experiments. Samples were pooled, allowing for more convenient downstream applications. A260/280 were slightly higher than expected, but we still decided to use these samples for restriction digestion.
+
+  | Sample                                 | **Concentration (ng/µL)** | **Abs 260/280** | Abs 260/230 |
+  | -------------------------------------- | ------------------------- | --------------- | ----------- |
+  | Non-vortexed sample 1                  | 340                       | 2.079           | 2.243       |
+  | Non-vortexed sample 2                  | 487                       | 2.081           | 1.972       |
+  | Non-vortexed sample 2 (second reading) | 471                       | 2.097           | 2.257       |
+  | Vortexed sample 3                      | 309                       | 2.073           | 2.383       |
+  | Vortexed sample 4                      | 251                       | 2.053           | 1.996       |
+  | Pooled sample                          | 347                       | 2.068           | 2.164       |
+
+  Agarose gel visualisation of restriction digestion was done, without the holder for the gel. The ladder taken from last year's iGEM Team (New England Biolabs 1kb Plus Ladder DNA Ladder) was overloaded, and bands of digested pET-11a are slightly faint. In the future experiments, newly bought Ampliqon High Range DNA ladder can be used, along with keeping the gel in the holder.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/06-18-gel-named.avif" caption="Figure: Restriction digestion of pET-11a with NdeI and BamHI, analysed by agarose gel electrophoresis. Lanes: (1) undigested pET-11a, (2) NdeI control, (3) BamHI control, (4) NEB 1kb Plus DNA Ladder, (5-8) double digested pET-11a." />
+
+  Gel extracted plasmid concentrations were too low to be measured using NanoDrop, thus microcuvettes were used. Since the sample volume was 30 μL, they were diluted to 70 μL using MQ water. Their concentration was too low to be used for transformations, so restriction digestion will be repeated next week, with prolonged incubation time.
+
+  | **Sample**                | **Concentration (ng/µL)** | **Abs 260/280** | **Abs 260/230** |
+  | ------------------------- | ------------------------- | --------------- | --------------- |
+  | 1                         | 0.30                      | 3.0             | 0.035           |
+  | 2                         | 0.15                      | 3.0             | 0.023           |
+  | 3                         | 0.65                      | 3.250           | 0.046           |
+  | pET-11a (5 times diluted) | 67.45                     | 2.063           | 2.279           |
+
+  Competent E. coli TG1 cells were prepared, with a total of 125 tubes. They will be tested next week, to make sure they are competent for transformations.
+
+  Lab notebook for this week can be found on the link below:
+
+  * [Lab Notebook Week 25](https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/week25notebook.pdf)
+</Expandable>
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle>
+    Week 26 (pdf link missing)
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+    **Weekly summary:**
+
+    The second week of the lab was dedicated to repeating and troubleshooting restriction digestion of pET-11a with BamHI and NdeI. Different protocols were tested, with different incubations times. Additionally, another plasmid miniprep kit was tested, which resulted in purer samples. Digestion of ci2350-His was done, followed by ligation and successful transformation into *E. coli* TG1. Competent *E. coli* BL21 cells were prepared.
+  </ExpandableSummary>
+
+  **Main results of the week:**
+
+  E.Z.N.A. plasmid miniprep kit was used as an alternative to Jena Bioscience kit, resulting in less concentration with higher purity. After consulting with our PI Johan, we concluded that samples prepared with Jena Bioscience Kit were contaminated with RNA, due to absorbance ratio 260/280 being \~2.0, and the concentration of nucleic acids being a lot higher than our PI usually gets. For future experiments, E.Z.N.A. plasmid miniprep kit was used.
+
+  | **Sample**               | **Concentration (ng/µL)** | **Abs 260/280** | **Abs  260/230** |
+  | ------------------------ | ------------------------- | --------------- | ---------------- |
+  | S1                       | 73.1                      | 1.838           | 2.410            |
+  | S2                       | 92.4                      | 1.824           | 1.979            |
+  | S3                       | 75.5                      | 1.831           | 1.810            |
+  | S4 (column equilibrated) | 93.9                      | 1.853           | 2.305            |
+  | S5 (column equilibrated) | 95.9                      | 1.804           | 2.474            |
+  | S6 (column equilibrated) | 112                       | 1.852           | 2.306            |
+
+  Restriction digestion with BamHI and NdeI of plasmid extracted with E.Z.N.A. plasmid miniprep kit showed noticeably stronger bands on agarose gel electrophoresis. This supports our assumption that earlier plasmid samples were significantly RNA contaminated. When we thought we were quantifying plasmid concentration, it was mostly RNA, leaving only a small fraction of DNA for digestion. This would explain both the faint bands in earlier digestions and the low plasmid yields after gel extraction.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/06-26-gel-named.avif" caption="Figure: Restriction digestion of pET-11a with NdeI and BamHI, analysed by agarose gel electrophoresis. Lanes: (1) NdeI control, (2) BamHI control, (3) undigested pET-11a, (4,11) Ampliqon High Range DNA Ladder, (5-10, 12-15) double digested pET-11a." />
+
+  Quantification of digested plasmid after gel extraction showed better results than previously. We continued using E.Z.N.A. gel extraction kit, as it showed better results.
+
+  | **Sample**                               | **Concentration (ng/µL)** | **Abs 260/280** | **Abs 260/230** |
+  | ---------------------------------------- | ------------------------- | --------------- | --------------- |
+  | S1 (positive control-undigested plasmid) | 8.449                     | 1.889           | 0.195           |
+  | S2 **clear FD buffer, no phosphatase**   | 19.9                      | 1.905           | 0.506           |
+  | S3 **clear FD buffer, no phosphatase**   | 13.9                      | 2.000           | 0.538           |
+  | S4 **clear FD buffer, no phosphatase**   | 15.9                      | 2.133           | 0.232           |
+  | S5 **clear FD buffer, with phosphatase** | 16.4                      | 2.082           | 0.083           |
+  | S6 **clear FD buffer, with phosphatase** | 11.9                      | 2.000           | 0.304           |
+  | S7 **clear FD buffer, with phosphatase** | 19.4                      | 2.053           | 0.402           |
+  | S8 **green FD buffer, with phosphatase** | 19.4                      | 2.053           | 0.722           |
+  | S9 **green FD buffer, with phosphatase** | 13.9                      | 2.000           | 0.483           |
+  | S10 **green FD buffer, no phosphatase**  | 15.9                      | 1.882           | 0.542           |
+  | S11 **green FD buffer, no phosphatase**  | 17.4                      | 2.059           | 0.347           |
+
+  A test transformation of competent *E. coli* TG1 with empty pET-11a was done, which resulted in many colonies, indicating that our competent cells are viable for transformations.
+
+  Transformation of *E. coli* TG1 with pET-11a containing ci2350-His resulted in colonies, which will be tested next week with colony PCR, to confirm the presence of ci2350-His insert, followed by sending for sequencing. Sample 2 with higher amount of ligation mixture resulted in more colonies than Sample 1 with less ligation mixture. If future transformations give too few colonies, increasing ligation mixture volume is a good variable to try to gain more transformed colonies. 
+
+  Lab notebook for this week can be found on the link below:
+
+  * Lab Notebook Week 26
+</Expandable>
+
+.
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle>
+    Week 27 (pdf link missing)
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+    **Weekly summary:**
+
+    During Week 27, we focused mainly on transforming *E. coli* TG1 with our remaining gene constructs. Multiple rounds of transformations were required, as some attempts were unsuccessful, along with colony PCRs to confirm the presence of our inserts. Positive ci2350-His colonies were sequenced, and one colony with correct sequence was identified and stored for subsequent transformation into *E. coli* BL21.
+  </ExpandableSummary>
+
+  ---
+
+  **Main results of the week:**
+
+  Agarose gel electrophoresis of colony PCR products showed positive results in wells 2-9, corresponding to the expected size of the amplified ci2350-His insert region, confirming successful transformation of *E. coli* TG1 with ci2350-His. Multiple controls were tested, including colonies transformed with empty pET-11a, and colonies from a ligation control (ligation without insert). All controls proved negative, indicating the ligation and transformation were correct. Following our PI Johan’s recommendation, in the future transformations we will screen only 1-2 colonies from control plates and prioritize testing more transformant, to increase the chance of identifying a correctly transformed colony. Four ci2350-His positive colonies were sent for sequencing, where one was identified as having a correct construct.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/06-29-gel-named.avif" caption="Figure: Colony PCR screening of ci2350-His ligation and transformation into E. coli TG1. Lanes: (1,10,14,15) Ampliqon High Range DNA Ladder, (2-5) colonies from plate 1, (6-9) colonies from plate 2, (11-13) colonies from empty pET-11a transformation, (16-18) colonies from ligation negative control, (19) PCR control." />
+
+  By visualizing restriction digestion products of our ordered inserts and comparing the resulting fragment sizes, we confirmed the inserts were correct. Insert AKR1D1-MBP showed some additional bands, possibly due to too long digestion incubation causing non-specific cutting.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/06-30-gel-named.avif" caption="Figure: Restriction digestion of inserts with NdeI and BamHI, analysed using agarose gel electrophoresis. Lanes: (1,5) Ampliqon High Range DNA Ladder, (2) AKR1D1-His, (3) AKR1D1-TrxA, (4) AKR1D1-SUMO, (6) AKR1D1-MBP, (7) ci2350-TrxA, (8) ci2350-SUMO." />
+
+  Transformation results were poorer than expected. All plates had very few colonies (\<7), suggesting that something went wrong, possibly during digestion or ligation. Plates containing AKR1D1-Trx and ci2350-Trx had no colonies. Agarose gel electrophoresis of colony PCR products showed only one positive colony (well 9, containing the ci2350-SUMO insert), with all other colonies tested negative. However, the amplified band in well 9 was smeary, which may have resulted from accidentally piercing the well while loading the sample. Since all other colonies were negative, we decided to repeat the transformations using new ligations prepared with the leftover digested plasmid from Week 26.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-02-gel-named.avif" caption="Figure: Colony PCR screening of insert transformation into E. coli TG1. Lanes: (1,8,15,16,23) Ampliqon High Range DNA Ladder, (2) ci2350 PCR control, (3) AKR1D1 PCR control, (4,5) colonies from negative ligation control, (6,7) colonies from empty pET-11a transformation, (9-11) ci2350-SUMO colonies, (12-14) AKR1D1-His colonies, (17-19) AKR1D1-SUMO colonies, (20-22) AKR1D1-MBP colonies." />
+
+  Because plates with AKR1D1-Trx and ci2350-Trx inserts had no colonies, they were transformed using leftover ligation mix, and resulted in a few colonies, which were tested by colony PCR next week.
+
+  Lab notebook for this week can be found on the link below:
+
+  * Lab Notebook Week 27
+</Expandable>
+
+.
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle>
+    Week 28 (pdf notebook missing)
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+    **Weekly summary:**
+
+    Week 28 focused on troubleshooting restriction digestion of pET-11a with NdeI and BamHI enzymes, and on redoing transformations of *E. coli* TG1 with our inserts. To reduce loss of digested plasmid during gel electrophoresis and extraction, we tested a PCR cleanup kit. Based on our lab supervisor Camille, we developed a new digestion protocol aimed at shortening the reaction time. Sequencing of positive transformations was carried out to check insert integrity, but unfortunately it revealed mutations. We received a safety introduction for handling testosterone, as it is a CMR reagent requiring special safety precautions.
+  </ExpandableSummary>
+
+  ---
+
+  **Main results of the week:**
+
+  After visualising restriction digestion of pET-11a on Monday, we found that the NdeI control was invalid, due to adding BamHI by mistake. The gel was discarded, since we were unsure whether to proceed, due to compromised control. Digestion was redone the next day, where the controls were set up correctly.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-06-gel-named.avif" caption="Figure: Restriction digestion of pET-11a with NdeI and BamHI, analysed by agarose gel electrophoresis. Lanes: (1) undigested pET-11a, (2) BamHI control, (3) intended NdeI control (BamHI added in error), (4-6,8-12) double digested pET-11a, (7) Ampliqon High Range DNA Ladder." />
+
+  Restriction digestion of pET-11a was also carried out on Tuesday, followed by gel extraction and NanoDrop readings. The absorbance ratios were interesting to say the least. Nucleic acid concentrations were really low, and A260/280 were unusually high. The samples were discarded, and the digestion was repeated in the following days, using a PCR cleanup kit instead of gel extraction. Camille suggested this, as the yields are usually higher than gel extraction.
+
+  | **Sample**                   | **Concentration (ng/µL)** | **Abs 260/280** | **Abs  260/230** |
+  | ---------------------------- | ------------------------- | --------------- | ---------------- |
+  | Alkaline Phosphatase Control | 0.994                     | -               | 0.133            |
+  | Undigested plasmid           | 2.485 / 1.491             | 2.5 / 3.0       | 0.161 / 0.111    |
+  | pET 2A                       | 2.485                     | 5.000           | 0.076            |
+  | pET 2B                       | 1.988                     | 4.000           | 0.049            |
+  | pET 2C                       | 6.461                     | 1.857           | 0.333            |
+  | pET 4A                       | 4.970                     | 2.500           | 0.213            |
+  | pET 4B                       | 5.964                     | 2.400           | 0.194            |
+  | pET 4C                       | 7.952                     | 1.778           | 0.112            |
+  | pET 4D                       | 0 / 0.994                 | 0 / 1.000       | 0 / 0.154        |
+  | pET 4E                       | 6.958                     | 2.000           | 0.389            |
+  | pET 4F                       | 10.4                      | 2.333           | 0.420            |
+
+  Colony PCR was performed on transformations from last week, retesting the colonies from July 1st, and adding AKR1D1-Trx and ci2350-Trx colonies from July 3rd transformation. The gel showed different results from last week, as new colonies were positive for the inserts, while the colony positive last week was now negative. Sequencing the positive colonies revealed mutations in all samples, rendering them unsuitable for further use.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-06-gel2-named.avif" caption="Figure: Colony PCR screening of insert transformation into E. coli TG1. Lanes: (1,7,13,14,20,26) Ampliqon High Range DNA Ladder, (2) ci2350 PCR control, (3) AKR1D1 PCR control, (4,5) colonies from negative ligation control, (6,8) colonies from empty pET-11a transformation, (9-11) ci2350-SUMO colonies, (12,15,16) AKR1D1-His colonies, (17-19) AKR1D1-SUMO colonies, (21-23) AKR1D1-MBP colonies, (24) ci2350-TrxA colony, (25) AKR1D1-TrxA colony." />
+
+  *E. coli* TG1 and BL21 were successfully transformed with ci2350-MBP (colony PCR results shown on gel below). The insert was ordered in a plasmid from Twist Bioscience, as the insert was too large to be synthesized as a gBlock. Additionally, *E. coli* BL21 was transformed with empty pET-11a, which will serve as a comparison on SDS-PAGE during protein expression, making it easier to identify our overexpressed protein.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-09-gel-named.avif" caption="Figure: Colony PCR screening of insert transformation into E. coli TG1 and E. coli BL21(DE3), combined with restriction digestion of pET-11a with NdeI and BamHI. Lanes: (1,8,16) Ampliqon High Range DNA Ladder, (2-4) E. coli BL21(DE3) with empty pET-11a, (5-7) E. coli BL21(DE3) with ci2350-His, (9-11) E. coli BL21(DE3) with ci2350-MBP, (12-14) E. coli TG1 with ci2350-His, (15) PRC control, (17) BamHI control, (18) NdeI control, (19) undigested pET-11a, (20-24) double digested pET-11a" />
+
+  Digestion reactions of pET-11a were set up in larger volumes (100 µL) to avoid wasting tubes and reduce the amount of pipetting needed. Digested pET-11a was cleaned up using a PCR cleanup kit, instead of gel extraction. Gel electrophoresis was still performed to confirm digestion, but using a smaller aliquot of the reaction (20 µL).
+
+  | **Digested pET-11a** | **Concentration (ng/µL)** | **Abs 260/280** | **Abs  260/230** |
+  | -------------------- | ------------------------- | --------------- | ---------------- |
+  | 1                    | 17.4                      | 1.842           | 0.077            |
+  | 2                    | 14.9                      | 1.765           | 0.400            |
+  | 3                    | 14.4                      | 1.813           | 0.592            |
+  | 4                    | 12.4                      | 2.083           | 0.134            |
+  | 5                    | 12.9                      | 1.857           | 0.325            |
+  | 6                    | 13.9                      | 1.867           | 0.384            |
+  | **Pooled Plasmid**   | **16.9**                  | **1.789**       | **0.206**        |
+
+  Lab notebook for this week can be found on the link below:
+
+  * [Lab Notebook Week 28](https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/week28notebook.pdf)
+</Expandable>
+
+.
+
+&#x20;
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle>
+    Week 29 (PDF missing and one gel figure)
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+    **Weekly summary:**
+
+    Week 29 was dedicated to running colony PCRs to check multiple rounds of transformations, along with troubleshooting restriction digestion with NdeI and BamHI. We began protein expression of ci2350-His and ci2350-MBP, followed by cell lysis and SDS-PAGE analysis. We amplified our inserts with PCR to avoid running out of them.
+  </ExpandableSummary>
+
+  ---
+
+  **Main results of the week:**
+
+  Agarose gel electrophoresis of colony PCR products of the July 10th transformants showed that all colonies, covering every construct transformed on Friday, were negative for inserts. Considering this was not the first time colony PCR had failed, it raised concerns about the integrity of our restriction digestion. It’s possible the colonies were transformed with a religated pET-11a vector. 
+
+  <FigureWithCaption />
+
+  Agarose gel electrophoresis of restriction digestion performed on the same day confirmed our concerns. The NdeI control was almost identical to the undigested plasmid control. The double digested samples look identical to single digested ones, since the excised fragment is very small (\~40bp), making it impossible to distinguish single and double digested pET-11a on the gel. This is likely why most of our transformations have been unsuccessful. We decided to test the NdeI and BamHI aliquots we had in the freezer, in order to identify which ones would digest correctly.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-13-gel-named.avif" caption="Figure: Restriction digestion of pET-11a with NdeI and BamHI, analysed by agarose gel electrophoresis. Ladder used was Ampliqon High Range DNA Ladder. Lanes are described on the figure." />
+
+  Testing enzyme integrity gave different results than the previous gel. Both NdeI aliquots cut the plasmid, though the digestion was still incomplete. BamHI doesn't seem to be a problem, as it fully digested the plasmid. To avoid any further mistakes, we have decided to place an order for a new NdeI enzyme, and use it for further digestion.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-14-gel-named.avif" caption="Figure: Restriction digestion of pET-11a with NdeI and BamHI aliquotes to test enzyme integrity, analysed by agarose gel electrophoresis. Lanes: (1) NdeI aliquote 1, (2) NdeI aliquote 2, (3) undigested pET-11a, (4) BamHI aliquote 1, (5) BamHI aliquote 2." />
+
+  Because the pET-11a cutout was very small after digestion, we decided to approach restriction digestion from a different angle. We have previously ordered ci2350-MBP synthesized in the pET-BLANK plasmid, which has NdeI and BamHI sites flanking the insert. Since the pET-BLANK cutout corresponds to the full ci2350-MBP insert (\~3000 bp), significantly larger than the pET-11a cutout, double digesting this plasmid would let us distinguish single from double-digested plasmid much more easily, allowing gel extraction of only the double-digested plasmid. Although this approach would not yield digested pET-11a, it would allow cloning directly into the pET-BLANK vector, which we had ordered with a T7 promoter. We adopted this method for further cloning, as it proved more reliable than digesting pET-11a directly.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-16-gel-named.avif" caption="Figure: Restriction digestion of pET-BLANK containing ci2350-MBP with NdeI and BamHI. Lanes: (1) Ampliqon High Range DNA Ladder, (2) NdeI control, (3) BamHI control, (4) undigested pET-BLANK containing ci2350-MBP, (5-6) double digested samples." />
+
+  After visualising the SDS-PAGE of soluble fractions from ci2350-His and ci2350-MBP expression cultures, we found no visible overexpression of ci2350-His at 70kDa mark, while ci2350-MBP expression was visible at 102 kDa mark. Ci2350-His might have not been expressed due to 37ºC cultivation temperature, as ci2350 was cultivated at 25ºC in our reference paper, Arp et al (2025). For further cultivation, we decided to test lowering the expression temperature to 17ºC, to minimize inclusion body formation and allow for proper folding.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-15-gel-named-table.avif" caption="Figure: Whole-cell lysate analysis of ci2350-His and ci2350-MBP expression under different induction conditions by SDS-PAGE. Samples were normalised to equivalent OD600 units. Ladder used was Amersham ECL Rainbow Molecular Weight Marker, Full Range, in wells 3 and 14." />
+
+  Agarose gel visualisation of PCR amplification products of our gBlocks showed the amplification was unsuccessful, as there were no bands present on the gel except the ladder. After consulting with our supervisor Camille, we realized that the reaction mix was incorrect, as too little primer had been added to the reaction. 
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-17-gel-named.avif" caption="Figure: PCR amplification of synthetic gBlock fragments analysed by agarose gel electrophoresis. Lanes: (1,9) Ampliqon High Range DNA Ladder, (2) AKR1D1 PCR control, (3) AKR1D1-His, (4) AKR1D1-TrxA, (5) AKR1D1-SUMO, (6) ci2350 PCR control, (7) ci2350-TrxA, (8) ci2350-SUMO, (10) AKR1D1-MBP" />
+
+  We decided to repeat the gBlock amplification, adding more primer to the reaction mixture to bring the final concentration to 0.5 µM. This time the PCR worked, and we successfully amplified our insert gBlocks, as shown in the agarose gel picture below.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-20-gel-named.avif" caption="Figure: PCR amplification of synthetic gBlock fragments analysed by agarose gel electrophoresis. Lanes: (4,11) Ampliqon High Range DNA Ladder, (1) AKR1D1 PCR control, (2) ci2350 PCR control, (3) Empty lane, (5,6) AKR1D1-His, (7,8) AKR1D1-MBP, (9,10) AKR1D1-TrxA, (12,13) AKR1D1-SUMO, (14,15) ci2350-SUMO, (16,17) ci2350-TrxA." />
+
+  Lab notebook for this week can be found on the link below:
+
+  * Lab Notebook Week 29
+</Expandable>
+
+&#x20;.
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle>
+    Week 30 (pdf missing and figure namings)
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+    **Weekly summary:**
+
+    During Week 30, we continued attempting to transform *E. coli* TG1 with our remaining gene constructs, successfully transforming AKR1D1-His into *E. coli* TG1. Protein expression of ci2350-His and ci2350-MBP was carried out at 17ºC to maximise the yield, followed by protein purification using an IMAC column. Glycerol stocks of *E. coli* TG1 and BL21(DE3) carrying ci2350-His and ci2350-MBP were made for storage. We also began digesting pET-BLANK containing ci2350-MBP, to obtain the empty vector, since it is more reliable than digesting pET-11a.
+  </ExpandableSummary>
+
+  ---
+
+  **Main results of the week:**
+
+  SDS-PAGE analysis of ci2350-His and ci2350-MBP after protein purification was performed. The gels had been left in the fridge in water over the weekend, as we did not have time to stain them on Friday. After staining and visualizing the gels, we noticed they had a few bands, with most having diffused out of the gel. Due to this storage error, no bands were present in samples for ci2350-His, and only a few visible for ci2350-MBP, with visible band swelling and abnormal migration. Purification was repeated using aliquots of samples stored in the -80ºC freezer.
+
+  <Layout>
+    <LayoutColumn>
+      <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-20-gel2-named.avif" caption="Figure: SDS-PAGE analysis of purified ci2350-MBP and ci2350-His following IMAC purification. The gel was stored at 4°C in the fridge prior to imaging, during which the bands diffused out of the gel, with only Amersham ECL Rainbow Molecular Weight Marker, Full Range ladder visible (lane 9). Sample loading order is recorded in the laboratory notebook." />
+    </LayoutColumn>
+
+    <LayoutColumn>
+      <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-20-gel3-named.avif" caption="Figure: SDS-PAGE analysis of purified ci2350-His following IMAC purification. The gel was stored at 4°C in the fridge prior to imaging, during which the bands diffused out of the gel, with only Amersham ECL Rainbow Molecular Weight Marker, Full Range ladder visible (lane 13). Sample loading order is recorded in the laboratory notebook." />
+    </LayoutColumn>
+
+    <LayoutColumn>
+
+    </LayoutColumn>
+  </Layout>
+
+  Due to the unusually high numbers of colonies on all plates, including the negative ligation control, indicating religated vectors, we decided to test only 4 different plates, containing the AKR1D1-His and AKR1D1-SUMO inserts. Agarose gel electrophoresis of colony PCR products from the transformed colonies showed that the colonies had not been transformed with our inserts, but with religated pET-11a. 
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-22-gel-named.avif" caption="Figure: Colony PCR screening of AKR1D1-His and AKR1D1-SUMO colonies, with ligations at different vector:insert molar ratios. Lanes: (1,12) Ampliqon High Range DNA Ladder, (2-6) colonies from AKR1D1-His ligation at 1:1 vector:insert, (7-11) colonies from AKR1D1-His ligation at 1:3 vector:insert, (13-17) colonies from AKR1D1-SUMO ligation at 1:1 vector:insert, (18-22) colonies from AKR1D1-SUMO at 1:3 vector:insert, (23) negative PCR control." />
+
+  To avoid restarting the whole transformation experiment from start (including plasmid miniprep and related steps), we decided to redo the digestion of already digested pET-11a, by incubating it again with NdeI, followed by another ligation reaction using only AKR1D1-His insert, to avoid wasting other inserts. Another round of transformation into *E. coli* TG1 was performed using this construct. Colony PCR showed that some colonies were positive, and sequencing identified a correct AKR1D1-His sequence.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-23-gel-named.avif" caption="Figure: Colony PCR of AKR1D1-His..." />
+
+  Following our supervisor Camille's suggestion, we decided to digest pET-11a with NdeI only, allowing us to distinguish between single-digested and non-digested plasmid and extract it from the gel more easily. BamHI digestion, which is more reliable, would then follow separately. After visualizing the NdeI digestion products, the gel appeared very grainy, probably due to the agarose not fully dissolving in the microwave.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-23-gel2-named.avif" caption="Figure: Restriction digestion of pET-BLANK containing ci2350-MBP, but the gel was made wrongly" />
+
+  To follow up on last week’s idea, we decided to digest pET-BLANK containing ci2350-MBP with NdeI and BamHI, to distinguish between single and double-digested plasmid, and extract only the double digested band from the gel, preventing religation of single-cut plasmid and false-positive transformations. Agarose gel electrophoresis of the pET-BLANK digestion gave some positive results, with a few bands being good candidates for gel extraction. However, the gel also showed a trend in which digestion strength decreased steadily across the well, from heavily digested plasmid to undigested plasmid. The most likely explanation is that restriction digestion mastermix was not properly mixed before aliquoting, where the first aliquots taken contained the most enzyme, while later ones contained progressively less, until some aliquots had essentially no enzyme at all, explaining the undigested wells. Going forward, we will ensure the mastermix is fully mixed before aliquoting, to prevent this from happening again.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-24-gel-named.avif" caption="Figure: Restriction digestion of pET-BLANK containing ci2350-MBP, but the mastermix wasn't mixed fully" />
+
+  To confirm that we had expressed ci2350-MBP, we analysed the SDS-PAGE gel to determine the molecular weight of the overexpressed protein. The results showed a molecular weight of \~113 kDa, close to the expected \~111 kDa of ci2350-MBP, confirming we had successfully expressed our desired protein.
+
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-23-excel.avif" caption="Figure: Bradford calculations to determine molecular weight of the overexpressed protein." />
+</Expandable>
+
+&#x20; .
+
+&#x20;
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle>
+    Week 31 (pdf missing and figures)
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+    **Weekly summary:**
+
+    During Week 31, we tested different expression conditions of ci2350-MBP, comparing 37ºC and 25ºC, and testing 3h production and overnight production. We also compared ci2350-His and ci2350-MBP production by SDS-PAGE analysis, and purified ci2350-MBP, again analysed by SDS-PAGE. Transformations using the pET-BLANK vector backbone yielded colonies positive for inserts. We also transformed AKR1D1-His into *E. coli* BL21(DE3), and performed mutagenesis of ci2350-MBP, to introduce the V236I and R215A mutations.
+  </ExpandableSummary>
+
+  ---
+
+  **Main results of the week:**
+
+  SDS-PAGE analysis of IMAC purification was performed on samples from last Friday’s expression, ci2350-MBP cultivated overnight at either 37ºC or 17ºC, and ci2350-His with 3 hour induction time. The ci2350-MBP gel showed successful purification, with our protein visible in the eluted fraction, though additional proteins were also present, possibly due to unspecific binding to the column. The gel also showed an additional band at \~60 kDa, suggesting expression of a truncated ci2350-MBP protein. Our supervisor Camille noted that the corresponding position in the nucleotide sequence contains a repeat of several adenine nucleotides, raising the possibility that the ribosome slipped during translation. This would produce a truncated protein that could still be purified, since the His-tag is located at the N-terminus. 
+
+  <FigureWithCaption />
+
+  The other gel, visualising ci2350-His fractions of protein purification showed no visible band in the eluted fraction, but the overexpressed protein is visible in the flowthrough.
+
+  <FigureWithCaption />
+
+  SDS-PAGE was performed on total protein fractions of ci2350-MBP, comparing expression at 37ºC for 3 hours, and overnight at 25ºC, with induction using 0.4 mM IPTG. Our ci2350-MBP protein was visible at \~110 kDa in both conditions, with 37ºC and 3 hours incubation time showing stronger expression than the overnight expression.
+
+  <FigureWithCaption />
+
+  These samples (37ºC for 3 hour expression, and 25ºC overnight expression) were purified, and their fractions have been analysed by SDS-PAGE. The expressed protein was confirmed present in the eluted fraction of the IMAC column, along with truncated ci2350-MBP.
+
+  <FigureWithCaption />
+
+  Digestion of pET-BLANK with NdeI and BamHI was repeated. A band corresponding to single digested plasmid was present on the gel, indicating the digestion was not fully complete. We decided to extend the incubation time to achieve full digestion.
+
+  <FigureWithCaption />
+
+  We tested the transformation efficiency of pET-BLANK containing our inserts. Very few colonies appeared across all plates. Colony PCR showed no positive colonies, so no samples were sent for sequencing. 
+
+  <FigureWithCaption />
+
+  Following the failed transformation, we repeated it using an overnight ligation incubation time, instead of standard 2-hour incubation. Colony PCR showed positive colonies, from which one AKR1D1-SUMO colony and two AKR1D1-Trx colonies were sent for sequencing.
+
+  <FigureWithCaption />
+
+  Visualising the products of mutagenic PCR on pET-BLANK containing ci2350-MBP showed that only the V263I mutagenesis worked, as indicated by a high-molecular weight band on the gel, corresponding to the size of our vector. These mutated plasmids were transformed into *E. coli* TG1, and the other mutation will be repeated.
+
+  <FigureWithCaption />
+
+  Mutagenic PCR was repeated with almost doubled elongation time. In this case, 17 minutes were chosen for the elongation time. Since the amplified plasmid containing ci2350-MBP is close to the 10 kb limit, better results were expected by following the 2 min/kb rule typically used for bigger constructs. All amplified sequences were used for transformation into *E. coli* TG1.
+
+  <FigureWithCaption />
+
+  \
+  \
+  \\
+</Expandable>
+
+&#x20;
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle>
+
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+
+  </ExpandableSummary>
+</Expandable>
+
+.
+
+&#x20;
+
+<Expandable defaultOpen={false}>
+  <ExpandableTitle>
+
+  </ExpandableTitle>
+
+  <ExpandableSummary>
+
+  </ExpandableSummary>
+</Expandable>
 
 ## **Protocols**
 
-...
+short introduction paragraph, explaining different sections of the protocols, and maybe why there is more than one protocol for certain activities (related to troubleshooting and developing the protocol).
+
+### Category 1:
+
+<Layout>
+  <LayoutColumn>
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/protocol-placeholder.avif" />
+
+    Protocol Name
+  </LayoutColumn>
+
+  <LayoutColumn>
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/protocol-placeholder.avif" />
+
+    Protocol Name
+  </LayoutColumn>
+
+  <LayoutColumn>
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/protocol-placeholder.avif" />
+
+    Protocol Name
+  </LayoutColumn>
+</Layout>
+
+.
+
+&#x20;
+
+<Layout>
+  <LayoutColumn>
+    <Layout>
+      <LayoutColumn>
+        <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/protocol-placeholder.avif" />
+
+        Protocol Name
+      </LayoutColumn>
+
+      <LayoutColumn>
+        <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/protocol-placeholder.avif" />
+
+        Protocol Name
+      </LayoutColumn>
+    </Layout>
+  </LayoutColumn>
+
+  <LayoutColumn>
+    <Layout>
+      <LayoutColumn>
+        <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/protocol-placeholder.avif" />
+
+        Protocol Name
+      </LayoutColumn>
+
+      <LayoutColumn>
+        <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/protocol-placeholder.avif" />
+
+        Protocol Name
+      </LayoutColumn>
+    </Layout>
+  </LayoutColumn>
+</Layout>
+
+&#x20;&#x20;
