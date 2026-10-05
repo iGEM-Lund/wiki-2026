@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { ImageOff } from 'lucide-react';
 import { Lightbox } from './Lightbox';
 
 type ZoomableImageProps = {
@@ -12,8 +13,32 @@ type ZoomableImageProps = {
 // An image that zooms in slightly on hover and opens in the Lightbox when
 // clicked. A real <button> so keyboard and screen reader users can open it
 // too; its accessible name comes from the image's alt text.
+//
+// An image that fails to load (most often a static.igem.wiki URL whose file
+// was never uploaded there, or was since removed) would otherwise collapse
+// to nothing and leave writers no clue anything is wrong; it shows a
+// labelled placeholder instead.
 export function ZoomableImage({ src, alt = '', caption }: ZoomableImageProps) {
   const [open, setOpen] = useState(false);
+  const [broken, setBroken] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // The prerendered <img> can fail before hydration attaches onError, so
+  // also check where it already stands once mounted.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img?.complete && img.naturalWidth === 0) setBroken(true);
+  }, [src]);
+
+  if (broken) {
+    return (
+      <span className="zoomable-image zoomable-image--broken" role="img" aria-label={alt || 'Image not found'}>
+        <ImageOff aria-hidden size={22} />
+        <span>Image not found</span>
+      </span>
+    );
+  }
+
   return (
     <>
       <button
@@ -22,7 +47,7 @@ export function ZoomableImage({ src, alt = '', caption }: ZoomableImageProps) {
         aria-label={alt ? undefined : 'Enlarge figure'}
         onClick={() => setOpen(true)}
       >
-        <img src={src} alt={alt} />
+        <img ref={imgRef} src={src} alt={alt} onError={() => setBroken(true)} />
       </button>
       {open ? <Lightbox src={src} alt={alt} caption={caption} onClose={() => setOpen(false)} /> : null}
     </>

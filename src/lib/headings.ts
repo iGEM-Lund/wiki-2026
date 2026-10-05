@@ -7,6 +7,12 @@ export type HeadingNode = HeadingItem & { children: HeadingNode[] };
 
 const HEADING_TAGS = new Set(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
 
+// The page outline lists h2s and h3s only. h4s are small labels within a
+// section (e.g. a "What they sponsored?" under every sponsor) and would
+// crowd the side pane; they still get anchor ids, so direct links and
+// search results reach them.
+const OUTLINE_MAX_DEPTH = 3;
+
 // @mdx-js/mdx passes mdxJsxFlowElement/mdxJsxTextElement nodes through
 // remark-rehype untouched, so an <Expandable> or <CardTitle> in MDX source
 // survives into this hast tree as one of those node types rather than being
@@ -52,9 +58,11 @@ export function rehypeCollectHeadings(headings: HeadingItem[]) {
       // hidden inside a collapsed Expandable body is not reachable. One
       // inside a <CardTitle> isn't rendered as a heading at all.
       if (ancestors.some(isNonOutlineElement)) return;
+      const depth = Number(node.tagName[1]);
+      if (depth > OUTLINE_MAX_DEPTH) return;
       const id = node.properties?.id;
       if (typeof id !== 'string') return;
-      headings.push({ depth: Number(node.tagName[1]), text: toString(node), id });
+      headings.push({ depth, text: toString(node), id });
     });
   };
 }

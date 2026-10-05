@@ -11,6 +11,8 @@ type FigureWithCaptionProps = {
 // Optimization is off anyway for the static export build (see next.config.ts).
 // ZoomableImage adds the hover zoom and click-to-enlarge lightbox.
 export function FigureWithCaption({ src, alt = '', caption }: FigureWithCaptionProps) {
+  // A Figure block inserted but never filled in: nothing to show.
+  if (!src && !caption) return null;
   return (
     <figure className="figure-with-caption">
       {src ? <ZoomableImage src={src} alt={alt} caption={caption} /> : null}
