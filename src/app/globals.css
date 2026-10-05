@@ -2103,6 +2103,20 @@ html:has(dialog.lightbox[open]) {
   stroke-width: 2;
   stroke-linejoin: round;
 }
+/* The stripes ride along with their slice, and on hover each also slides a
+   little further out than the one inside it, so the edge fans open. */
+.slice-wheel__stripe {
+  fill: none;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-delay: calc(var(--stripe-k) * 30ms);
+}
+.slice-wheel__slice:hover .slice-wheel__stripe,
+.slice-wheel__slice:focus-visible .slice-wheel__stripe {
+  transform: translate(
+    calc(var(--slice-dx) * var(--stripe-k) * 0.4),
+    calc(var(--slice-dy) * var(--stripe-k) * 0.4)
+  );
+}
 .slice-wheel__slice:focus-visible .slice-wheel__shape {
   stroke: var(--heading);
   stroke-width: 2.5;
@@ -2111,6 +2125,8 @@ html:has(dialog.lightbox[open]) {
   font-family: var(--font-heading);
   font-weight: 500;
   text-anchor: middle;
+  /* Curved labels sit centred on their arc, not on top of it. */
+  dominant-baseline: central;
   pointer-events: none;
   user-select: none;
 }
