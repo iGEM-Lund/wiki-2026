@@ -1,7 +1,7 @@
 import { fold, type SearchTarget } from '@/lib/search';
 
 // Finds a search result's exact match on the rendered page, opens any
-// collapsed <Expandable> around it, scrolls it into view and highlights it.
+// collapsed <Expandable> or long table around it, scrolls it into view and highlights it.
 // The match is the first one of `term` in the target's section, the same
 // one the result's snippet is cut around (see src/lib/search.ts).
 
@@ -69,15 +69,18 @@ function findHit(article: Element, target: SearchTarget): Range | null {
   return range;
 }
 
-// Opens every collapsed Expandable around `node`, outermost first, through
-// its own toggle button so its state stays in React. Returns whether any
-// had to open.
+// Opens every collapsed Expandable or long table around `node`, outermost
+// first, through its own toggle button so its state stays in React.
+// Returns whether any had to open.
+const COLLAPSIBLE = '.expandable, .table-collapse';
 function openExpandables(node: Node): boolean {
   const closed: Element[] = [];
-  for (let el = node.parentElement?.closest('.expandable'); el; el = el.parentElement?.closest('.expandable')) {
+  for (let el = node.parentElement?.closest(COLLAPSIBLE); el; el = el.parentElement?.closest(COLLAPSIBLE)) {
     if (el.getAttribute('data-open') === 'false') closed.unshift(el);
   }
-  for (const el of closed) el.querySelector<HTMLButtonElement>(':scope > .expandable__toggle')?.click();
+  for (const el of closed) {
+    el.querySelector<HTMLButtonElement>(':scope > .expandable__toggle, :scope > .table-collapse__toggle')?.click();
+  }
   return closed.length > 0;
 }
 
