@@ -338,10 +338,10 @@ body {
 }
 /* As a heading scrolls up into view, its text fades in once it's 10% of
    the way up the viewport (--fade), like the rest of the page content
-   (see below), and both flourishes draw themselves outward from the text
-   once it's 20% of the way up (--draw); scrolling back down below those
-   lines erases the flourishes and fades the text back out. Each plays out
-   in full on its own once triggered; ScrollReveal sets the triggers
+   (see below), and at the same moment both flourishes start drawing
+   themselves outward from the text (--draw); scrolling back down below
+   that line erases the flourishes and fades the text back out. Each plays
+   out in full on its own once triggered; ScrollReveal sets the trigger
    (data-reveal), including for headings too close to the end of the page
    to ever get that far. The progress values run on the h2, so the text
    and both flourishes inherit them. The ribbon draws first, over the
@@ -395,8 +395,6 @@ body {
   }
   :root:not([data-motion='reduce']) .section-heading[data-reveal] {
     --fade: 1;
-  }
-  :root:not([data-motion='reduce']) .section-heading[data-reveal='drawn'] {
     --draw: 1;
   }
 }
