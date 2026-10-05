@@ -2564,6 +2564,20 @@ article .layout__column p {
   background: color-mix(in srgb, var(--bg-alt) 45%, var(--bg));
 }
 
+.table-with-caption {
+  margin: 1.5rem 0;
+}
+.table-with-caption figcaption {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 200;
+  white-space: pre-line;
+}
+.table-with-caption .table-scroll {
+  margin: 0;
+}
+
 /* The exact match a search result jumps to (src/lib/reveal-search-hit.ts),
    painted with the CSS Custom Highlight API so the page's DOM is left
    untouched. */

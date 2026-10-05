@@ -47,6 +47,22 @@ export const contentComponents = {
     ContentView: (props) => <div>[Figure Carousel: {(props.value.images ?? []).length} figure(s)]</div>,
   }),
 
+  // A wrapper so the table itself stays an ordinary Markdown table, edited
+  // with the editor's own table tools, rather than a grid of form fields.
+  TableWithCaption: wrapper({
+    label: 'Table with caption',
+    description: 'Insert this, then put a table inside it. The caption is shown above the table.',
+    schema: {
+      caption: fields.text({ label: 'Caption', multiline: true }),
+    },
+    ContentView: ({ children, value }) => (
+      <div>
+        {value.caption ? <div style={{ fontSize: '0.85em', opacity: 0.7 }}>{value.caption}</div> : null}
+        {children}
+      </div>
+    ),
+  }),
+
   PdfEmbed: block({
     label: 'PDF Document',
     schema: {
