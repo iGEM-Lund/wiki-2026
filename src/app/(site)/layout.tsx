@@ -16,6 +16,7 @@ import { NavIcon } from '@/components/nav-icon';
 import { NavLink } from '@/components/nav-link';
 import { MobileNav } from '@/components/mobile-nav';
 import { AccessibilityMenu } from '@/components/accessibility-menu';
+import { SiteSearch } from '@/components/site-search';
 import { HeaderHeightSync } from '@/components/header-height-sync';
 import { BackToTop } from '@/components/back-to-top';
 
@@ -34,6 +35,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
           <AntigoneLogoMark className="site__brand-mark" />
           <span className="site__brand-name">AnTigone</span>
         </Link>
+        <SiteSearch />
         <MobileNav>
           <nav className="site__nav" id="site-nav">
             {nav.map((item) =>

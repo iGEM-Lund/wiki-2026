@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
 const isProductionExport = process.env.BUILD_TARGET === 'production';
+const basePath = isProductionExport ? '/lund' : '';
 
 const nextConfig: NextConfig = {
   output: isProductionExport ? 'export' : undefined,
@@ -8,8 +9,11 @@ const nextConfig: NextConfig = {
   // at that domain's root; without this, every generated asset URL and
   // internal link is root-relative and 404s once live. Must stay unset for
   // staging, which serves from wiki.igemlund.org's root.
-  basePath: isProductionExport ? '/lund' : undefined,
-  assetPrefix: isProductionExport ? '/lund' : undefined,
+  basePath: basePath || undefined,
+  assetPrefix: basePath || undefined,
+  // next/link applies basePath on its own, but a plain fetch() doesn't;
+  // site search reads this to find its index file (site-search.tsx).
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
   // Content images are always external static.igem.wiki URLs rendered via
   // plain <img> in content components; Image Optimization is a server-only
   // runtime feature that provides no value here and must be off for export.

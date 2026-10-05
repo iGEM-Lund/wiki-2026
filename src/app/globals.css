@@ -772,6 +772,161 @@ body {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
+/* Site search: a search-field-looking button in the sidebar (just the
+   magnifier below 48rem, beside the accessibility button) that opens the
+   search dialog. See src/components/site-search.tsx. */
+.site__search-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+}
+.site__search-trigger:hover {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.site__search-label {
+  flex: 1;
+  text-align: left;
+}
+.site__search-kbd {
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.75rem;
+}
+
+/* Rendered in the top layer by showModal(), but still a DOM child of
+   .site, so it inherits the theme and font variables from there. */
+.site-search {
+  width: min(40rem, calc(100vw - 2rem));
+  max-height: min(36rem, calc(100dvh - 4rem));
+  margin: 10vh auto auto;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 25%);
+}
+.site-search[open] {
+  display: flex;
+  flex-direction: column;
+}
+.site-search::backdrop {
+  background: rgb(18 18 18 / 45%);
+}
+
+.site-search__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 0.75rem 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+}
+.site-search__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.3rem 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 1.05rem;
+}
+.site-search__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.site-search__close:hover {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+}
+
+.site-search__status {
+  margin: 0;
+  padding: 1rem;
+  color: var(--muted);
+}
+
+.site-search__results {
+  margin: 0;
+  padding: 0.4rem;
+  list-style: none;
+  overflow-y: auto;
+}
+.site-search__results:empty {
+  display: none;
+}
+.site-search__result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+.site-search__result[aria-selected='true'] {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.site-search__result-path {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--heading);
+}
+.site-search__result-sep {
+  color: var(--muted);
+}
+.site-search__result-snippet {
+  font-size: 0.875rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.site-search mark {
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
+  color: inherit;
+  border-radius: 2px;
+}
+
+@media (max-width: 48rem) {
+  .site__search-trigger {
+    order: 3;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    color: var(--heading);
+  }
+  .site__search-label,
+  .site__search-kbd {
+    display: none;
+  }
+  .site-search {
+    margin-top: 1rem;
+  }
+}
+
 .site__main {
   /* Named so full-bleed pieces (the page title banner) can undo them: the
      padding, and the space the fixed panes around this one take up. */
@@ -2204,4 +2359,11 @@ article .layout__column p {
 }
 .table-scroll tbody tr:nth-child(even) {
   background: color-mix(in srgb, var(--bg-alt) 45%, var(--bg));
+}
+
+/* The exact match a search result jumps to (src/lib/reveal-search-hit.ts),
+   painted with the CSS Custom Highlight API so the page's DOM is left
+   untouched. */
+::highlight(search-hit) {
+  background-color: color-mix(in srgb, var(--color-peacock) 35%, transparent);
 }
