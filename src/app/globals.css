@@ -1039,6 +1039,14 @@ body {
      this clips that whole zone. */
   overflow: hidden;
 }
+/* A top-level carousel spans the whole content pane, from the nav sidebar
+   to the outline rail (the screen edges on mobile), like the page title
+   banner: since it clips its cards at its own edges, they seem to slide in
+   from under one pane and out under the other. Ones nested in cards or
+   columns stay inside them. */
+.site article > .figure-carousel {
+  margin-inline: calc(50% - 50cqi - var(--main-pad-x));
+}
 /* The string itself: a true parabola. A quadratic Bezier whose control
    point sits directly above the curve's own horizontal midpoint has an
    x-component that is exactly linear in the curve parameter, which makes
