@@ -260,7 +260,7 @@ Short introduction paragraph, explaining how we structured this part (notebook s
 
 <Expandable defaultOpen={false}>
   <ExpandableTitle>
-    Week 30 (pdf missing and figure namings)
+    Week 30 (pdf missing and excel data figure needs naming)
   </ExpandableTitle>
 
   <ExpandableSummary>
@@ -295,19 +295,19 @@ Short introduction paragraph, explaining how we structured this part (notebook s
 
   To avoid restarting the whole transformation experiment from start (including plasmid miniprep and related steps), we decided to redo the digestion of already digested pET-11a, by incubating it again with NdeI, followed by another ligation reaction using only AKR1D1-His insert, to avoid wasting other inserts. Another round of transformation into *E. coli* TG1 was performed using this construct. Colony PCR showed that some colonies were positive, and sequencing identified a correct AKR1D1-His sequence.
 
-  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-23-gel-named.avif" caption="Figure: Colony PCR of AKR1D1-His..." />
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-23-gel-named.avif" caption="Figure: Colony PCR screening of AKR1D1-His colonies, with ligations at different vector:insert molar ratios. Lanes: (1,8,14) Ampliqon High Range DNA Ladder, (2-7, 9-13, 15,19) AKR1D1-His colonies, (20) negative PCR control." />
 
   Following our supervisor Camille's suggestion, we decided to digest pET-11a with NdeI only, allowing us to distinguish between single-digested and non-digested plasmid and extract it from the gel more easily. BamHI digestion, which is more reliable, would then follow separately. After visualizing the NdeI digestion products, the gel appeared very grainy, probably due to the agarose not fully dissolving in the microwave.
 
-  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-23-gel2-named.avif" caption="Figure: Restriction digestion of pET-BLANK containing ci2350-MBP, but the gel was made wrongly" />
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-23-gel2-named.avif" caption="Figure: Restriction digestion of pET-BLANK containing ci2350-MBP with NdeI and BamHI. Lanes: (1,15) Ampliqon High Range DNA Ladder, (2) NdeI control, (3) BamHI control, (4-14, 16-20) double digested samples." />
 
   To follow up on last week’s idea, we decided to digest pET-BLANK containing ci2350-MBP with NdeI and BamHI, to distinguish between single and double-digested plasmid, and extract only the double digested band from the gel, preventing religation of single-cut plasmid and false-positive transformations. Agarose gel electrophoresis of the pET-BLANK digestion gave some positive results, with a few bands being good candidates for gel extraction. However, the gel also showed a trend in which digestion strength decreased steadily across the well, from heavily digested plasmid to undigested plasmid. The most likely explanation is that restriction digestion mastermix was not properly mixed before aliquoting, where the first aliquots taken contained the most enzyme, while later ones contained progressively less, until some aliquots had essentially no enzyme at all, explaining the undigested wells. Going forward, we will ensure the mastermix is fully mixed before aliquoting, to prevent this from happening again.
 
-  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-24-gel-named.avif" caption="Figure: Restriction digestion of pET-BLANK containing ci2350-MBP, but the mastermix wasn't mixed fully" />
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-24-gel-named.avif" caption="Figure: Restriction digestion of pET-BLANK containing ci2350-MBP with NdeI and BamHI. Lanes: (1,14) Ampliqon High Range DNA Ladder, (2) BamHI control, (3) NdeI control, (4) undigested sample, (5-13, 15-24) double digested sample." />
 
-  To confirm that we had expressed ci2350-MBP, we analysed the SDS-PAGE gel to determine the molecular weight of the overexpressed protein. The results showed a molecular weight of \~113 kDa, close to the expected \~111 kDa of ci2350-MBP, confirming we had successfully expressed our desired protein.
+  To confirm that we had expressed ci2350-MBP, we analysed the SDS-PAGE gel to determine the molecular weight (Mr) of the overexpressed protein. Migration distances of Amersham ECL Rainbow marker bands were measured and used to contruct a standard curve of log^10(Mr) against relative mobility, from which the molecular weight of the overexpressed band was obtained. The results showed a molecular weight of \~113 kDa, close to the expected \~111 kDa of ci2350-MBP, confirming we had successfully expressed our desired protein.
 
-  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-23-excel.avif" caption="Figure: Bradford calculations to determine molecular weight of the overexpressed protein." />
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-23-excel.avif" caption="Figure: Data analysis and molecular weight determination of the overexpressed band observed in ci2350-MBP cultures (SDS-PAGE gel, July 15th, Figure X, Lanes 9-14)." />
 </Expandable>
 
 &#x20; .
@@ -331,11 +331,11 @@ Short introduction paragraph, explaining how we structured this part (notebook s
 
   SDS-PAGE analysis of IMAC purification was performed on samples from last Friday’s expression, ci2350-MBP cultivated overnight at either 37ºC or 17ºC, and ci2350-His with 3 hour induction time. The ci2350-MBP gel showed successful purification, with our protein visible in the eluted fraction, though additional proteins were also present, possibly due to unspecific binding to the column. The gel also showed an additional band at \~60 kDa, suggesting expression of a truncated ci2350-MBP protein. Our supervisor Camille noted that the corresponding position in the nucleotide sequence contains a repeat of several adenine nucleotides, raising the possibility that the ribosome slipped during translation. This would produce a truncated protein that could still be purified, since the His-tag is located at the N-terminus. 
 
-  <FigureWithCaption />
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-24-gel-named.avif" />
 
   The other gel, visualising ci2350-His fractions of protein purification showed no visible band in the eluted fraction, but the overexpressed protein is visible in the flowthrough.
 
-  <FigureWithCaption />
+  <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-27-gel2-named-table.avif" />
 
   SDS-PAGE was performed on total protein fractions of ci2350-MBP, comparing expression at 37ºC for 3 hours, and overnight at 25ºC, with induction using 0.4 mM IPTG. Our ci2350-MBP protein was visible at \~110 kDa in both conditions, with 37ºC and 3 hours incubation time showing stronger expression than the overnight expression.
 
