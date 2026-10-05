@@ -8,17 +8,22 @@ export type HeadingNode = HeadingItem & { children: HeadingNode[] };
 const HEADING_TAGS = new Set(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
 
 // @mdx-js/mdx passes mdxJsxFlowElement/mdxJsxTextElement nodes through
-// remark-rehype untouched, so an <Expandable> in MDX source survives into
-// this hast tree as one of those node types rather than being flattened;
-// hast's own Element type doesn't cover them, hence the structural check.
-function isExpandableElement(node: unknown): boolean {
+// remark-rehype untouched, so an <Expandable> or <CardTitle> in MDX source
+// survives into this hast tree as one of those node types rather than being
+// flattened; hast's own Element type doesn't cover them, hence the
+// structural check. Headings inside either never show on the page as
+// headings: an Expandable body may be collapsed, and a CardTitle keeps only
+// its heading's text (see Card.tsx).
+export const NON_OUTLINE_COMPONENTS = new Set(['Expandable', 'CardTitle']);
+
+function isNonOutlineElement(node: unknown): boolean {
   return (
     typeof node === 'object' &&
     node !== null &&
     'type' in node &&
     ((node as { type: string }).type === 'mdxJsxFlowElement' ||
       (node as { type: string }).type === 'mdxJsxTextElement') &&
-    (node as { name?: string }).name === 'Expandable'
+    NON_OUTLINE_COMPONENTS.has((node as { name?: string }).name ?? '')
   );
 }
 
@@ -44,8 +49,9 @@ export function rehypeCollectHeadings(headings: HeadingItem[]) {
       // A heading inside an <Expandable> body still gets an anchor id (for
       // direct links) but shouldn't appear in the page outline; the
       // outline assumes every target is visible on scroll, and a heading
-      // hidden inside a collapsed Expandable body is not reachable.
-      if (ancestors.some(isExpandableElement)) return;
+      // hidden inside a collapsed Expandable body is not reachable. One
+      // inside a <CardTitle> isn't rendered as a heading at all.
+      if (ancestors.some(isNonOutlineElement)) return;
       const id = node.properties?.id;
       if (typeof id !== 'string') return;
       headings.push({ depth: Number(node.tagName[1]), text: toString(node), id });
