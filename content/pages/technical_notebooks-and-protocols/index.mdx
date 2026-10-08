@@ -376,18 +376,84 @@ Short introduction paragraph, explaining how we structured this part (notebook s
 
 <Card>
   <CardTitle>
-
+    Week 36
   </CardTitle>
+
+  **Weekly summary:**
+
+  Week 36 was dedicated to evaluating efficiency of solubility tags for AKR1D1 constructs cultivated at 37ºC with 3h induction. Expression cultures of AKR1D1-His, AKR1D1-SUMO and AKR1D1-TrxA from previous week were sonicated and analysed by SDS-PAGE. Additionally, ci2350-MBP and its double mutants (V263I and R215A) were purified, together with a control sample containing empty pET-11a, for use as a negative control in testosterone reduction assays.
+
+  <Expandable defaultOpen={false}>
+    ---
+
+    **Main results of the week:**
+
+    On the SDS-PAGE gels, the bands across the gel formed a ‘frowning’ pattern, the middle lanes migrated less than outer lanes. The current during the run was also very low (\~7mA). After troubleshooting with our PI Johan, we linked this to an incorrectly prepared SDS running buffer. The stock was assumed to be 50X and was diluted 1:50 prior to running the gel. It was in fact a 10X stock, so the working buffer was too dilute. The resulting low ion concentration gave the buffer low conductivity, explaining the low current and the poor run. When the buffer was was instead diluted 1:10, the gel ran better and the current was higher (\~50 mA). Aside from this, the bands of our overexpressed proteins were clearly visible, mostly in the whole-cell lysate fractions, and less in the soluble fractions.
+
+    <FigureWithCaption />
+
+    <FigureWithCaption />
+
+    <FigureWithCaption />
+
+    Protein concentrations of each sample were measured by Bradford assay and multiplied by the target band’s fraction of the total lane intensity on SDS-PAGE, allowing us to estimate the mass concentration of the expressed recombinant protein in the whole-cell and soluble fraction for each AK1D1 construct.
+
+    The Bradford assay results showed that protein concentration in the soluble fraction was almost equal to, or slightly higher than, that of the whole-cell fraction. This is not physically possible, as since the soluble fraction is a portion of the whole-cell fraction, an error must have occurred somewhere in the experiment. The most likely cause is incomplete resuspension of the insoluble material in the whole-cell samples before the Bradford assay, which would have led to underestimating the concentration of whole-cell protein. If the experiment were to be repeated, we would ensure complete solubilization of the insoluble fraction prior to quantification, for example boiling the sample in a buffer compatible with the Bradford assay, to obtain consistent and reproducible results.
+
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/gel-quantification-for-akr1d1-tags.avif" caption="Figure: Screenshot of AKR1D1 construct SDS-PAGE calculations" />
+
+    Comparing the proportion of target protein in the soluble fraction (based on SDS-PAGE band intensities), AKR1D1-SUMO had the lowest soluble fraction ratio and AKR1D1-TrxA the highest. Surprisingly, since SUMO tag is commonly used to enhance solubility, AKR1D1-SUMO appears to have lower solubility compared with AKR1D1-HIs. The uninduced culture showed  little to no target protein, as expected. The last column of the table (insert which table), ‘Concentration of recombinant protein’ is unreliable because of the issues with the Bradford assay described above.
+
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/akr1d1-tag-solubility-assessment.avif" caption="Figure: Calculations for determining AKR1D1 construct solubilities." />
+
+    The uninduced cultured showed unexpectedly high protein concentrations measured by Bradford assay, even though all samples had been normalized to OD 20 before the assay. Because of the high total protein content in these samples, SDS-PAGE lanes may also have been overloaded, increasing background and affecting baseline determination and band quantification (volume ratios and raw volumes). In future runs, we would ensure complete solubilization before quantification and loading an equal amount of total protein per lane.
+
+    The solubility percentages of the uninduced cultures were implausible, due to the quantification problems described above, and were therefore excluded from the analysis. The induced cultures gave more plausible values, although solubility was low overall. AKR1D1-SUMO had the lowest solubility (\~10%), and AKR1D1-TrxA the highest (\~26%). Given the issues with the Bradford assay and band quantification, these values should be considered estimations.
+
+    AKR1D1-TrxA is the most promising candidate for continued work amongst AKR1D1 constructs. However, solubility alone does not establish the best construct, since soluble yield and enzymatic activity also matter, and the quantification problems this week make the values approximate. Further experiments are needed to confirm these results, to compare soluble yield and activity across different constructs along with testing expression and activity under hypoxic conditions, as this experiment was performed aerobically.\
+    \
+
+
+
+  </Expandable>
+
+
 </Card>
 
 .
 
-&#x20;
+.&#x20;
 
 <Card>
   <CardTitle>
-
+    Week 37
   </CardTitle>
+
+  Normal text
+
+  <Expandable defaultOpen={false}>
+    Expandable text
+
+
+  </Expandable>
+</Card>
+
+.
+
+<Card>
+  <CardTitle>
+    Week 38
+  </CardTitle>
+
+  Normal text
+
+  <Expandable defaultOpen={false}>
+    Expandable text
+
+
+  </Expandable>
+
+
 </Card>
 
 ## **Protocols**
