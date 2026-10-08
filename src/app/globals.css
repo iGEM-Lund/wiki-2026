@@ -2564,6 +2564,101 @@ article .layout__column p {
   background: color-mix(in srgb, var(--bg-alt) 45%, var(--bg));
 }
 
+/* A long table collapsed to its first rows (CollapsibleTable.tsx). The
+   hidden rows stay in the table, their cells emptied to zero height: the
+   cell content carries hidden="until-found" once hydrated, and before that
+   the :not([hidden]) rule hides it instead. Screen only, so a printed page
+   shows every row. */
+.table-collapse {
+  margin: 1.5rem 0;
+}
+.table-collapse .table-scroll {
+  margin: 0;
+}
+.table-collapse__body {
+  position: relative;
+}
+@media screen {
+  .table-collapse[data-open='false'] .table-row--extra > * {
+    padding: 0;
+    border: 0;
+  }
+  .table-collapse[data-open='false'] .table-cell__extra:not([hidden]) {
+    display: none;
+  }
+  .table-collapse[data-open='false'] .table-collapse__body::after {
+    content: '';
+    position: absolute;
+    inset: auto 1px 1px;
+    height: 3.5rem;
+    border-radius: 0 0 7px 7px;
+    background: linear-gradient(transparent, var(--bg));
+    pointer-events: none;
+  }
+}
+@media print {
+  .table-cell__extra[hidden] {
+    display: block;
+    content-visibility: visible;
+  }
+  .table-collapse__toggle {
+    display: none;
+  }
+}
+.table-collapse__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0.6rem 0 0.25rem;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.table-collapse__toggle:hover {
+  color: var(--heading);
+}
+.table-collapse__toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.table-collapse__icon {
+  flex: 0 0 auto;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.table-collapse__toggle:hover .table-collapse__icon {
+  transform: translateY(2px);
+}
+.table-collapse[data-open='true'] .table-collapse__icon {
+  transform: rotate(180deg);
+}
+.table-collapse[data-open='true'] .table-collapse__toggle:hover .table-collapse__icon {
+  transform: rotate(180deg) translateY(2px);
+}
+
+.table-with-caption {
+  margin: 1.5rem 0;
+}
+.table-with-caption figcaption {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 200;
+  white-space: pre-line;
+}
+.table-with-caption .table-scroll,
+.table-with-caption .table-collapse {
+  margin: 0;
+}
+
 /* The exact match a search result jumps to (src/lib/reveal-search-hit.ts),
    painted with the CSS Custom Highlight API so the page's DOM is left
    untouched. */
