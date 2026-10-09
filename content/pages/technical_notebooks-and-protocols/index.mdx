@@ -316,8 +316,6 @@ Short introduction paragraph, explaining how we structured this part (notebook s
 
 .
 
-
-
 <Card>
   <CardTitle>
     Week 31 (pdf missing and figures)
@@ -429,10 +427,28 @@ Short introduction paragraph, explaining how we structured this part (notebook s
     Week 37
   </CardTitle>
 
-  Normal text
+  **Weekly summary:**
+
+  During Week 37, only one day was spent in the lab because of other university responsibilities. A Bradford Assay was performed on purified ci2350-MBP and its double mutant (V263I and R215A), along with the empty pET-11a controls samples, all cultivated the previous week.
 
   <Expandable defaultOpen={false}>
-    Expandable text
+    ---
+
+    **Main results of the week:**
+
+    The purified samples had different protein concentrations. Some protein was expected in the empty pET-11a control cultures, due to non-specific binding of native *E. coli* proteins to the IMAC column. The concentrations were unexpectedly high: 0.266 mg/mL for uninduced pET-11a, and 0.926 mg/mL for induced pET-11a, which is higher than the induced ci2350-MBP double mutant (0.695 mg/mL). The IMAC column is the most likely cause, as it was clogging during purification, despite filtering the samples through 0.2 µm filters. We have also purified the ci2350-MBP samples before the empty pET-11a controls, which could have also contaminated pET-11a samples by carrying the protein on the column. If repeating the experiment, we will purify the empty pET-11a controls first, use a clean column, and reduce clogging risk by more thorough lysis. SDS-PAGE analysis of these purified samples will be done, to compare control and sample bands, and assess cross-contamination.
+
+    <TableWithCaption>
+      | Samples              | Absorbance - S1 | Absorbance - S2 | Absorbance - S3 | Mean  | St.dev | Concentration (mg/mL) |
+      | -------------------- | --------------- | --------------- | --------------- | ----- | ------ | --------------------- |
+      | ci2350-MBP           | 0.496           | 0.512           | 0.568           | 0.525 | 0.037  | 1.247                 |
+      | ci-2350 doublemutant | 0.3             | 0.304           | 0.344           | 0.316 | 0.024  | 0.695                 |
+      | pET-11a (uninduced)  | 0.144           | 0.132           | 0.185           | 0.154 | 0.028  | 0.266                 |
+      | pET-11a (induced)    | 0.363           | 0.42            | 0.428           | 0.404 | 0.035  | 0.926                 |
+    </TableWithCaption>
+
+    \
+
   </Expandable>
 </Card>
 
