@@ -48,7 +48,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
                 </NavLink>
               ) : (
                 <div key={item.name} className="site__nav-group">
-                  <span className="site__nav-item site__nav-group-label">
+                  <span className="site__nav-item site__nav-group-label" tabIndex={0}>
                     <NavIcon icon={item.icon} size={18} />
                     {item.name}
                   </span>

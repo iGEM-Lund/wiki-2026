@@ -26,19 +26,16 @@
   --color-rose: #d4a0b0;
   --color-crimson: #7e0c28;
 
-  /* Width of the nav sidebar, and of the matching right-hand rail the page
-     outline sits in, so the reading column between them is centred. */
-  --sidebar-width: 16rem;
-  /* Lifts the fixed panes (nav, outline rail) above the page title banner
-     scrolling underneath them. */
+  /* Lifts the fixed top bar above the page title banner scrolling
+     underneath it. */
   --pane-shadow: 0 0 1.25rem color-mix(in srgb, var(--color-noir) 14%, transparent);
-  /* Only non-zero while the header is a top bar (mobile); see
-     HeaderHeightSync. */
-  --header-height: 0px;
+  /* The top bar's height; HeaderHeightSync replaces this fallback with the
+     measured value (the brand can wrap on narrow screens). */
+  --header-height: 4.25rem;
   /* The page title banner once collapsed into a bar: its whole height, and
      the striped edge's share of it. */
-  --page-title-collapsed: 7rem;
-  --page-title-collapsed-edge: 2rem;
+  --page-title-collapsed: 4.5rem;
+  --page-title-collapsed-edge: 1.25rem;
 
   --font-heading: 'Fredoka', system-ui, sans-serif;
   --font-body: 'Poppins', system-ui, sans-serif;
@@ -205,8 +202,8 @@ body {
 .site .page-title {
   /* Bottom padding clears the 3.5rem striped edge. Named for the collapse
      below, which has to know where the title sits. */
-  --title-pad-top: calc(3.5rem + var(--pane-top));
-  --title-pad-bottom: 5.5rem;
+  --title-pad-top: calc(1.75rem + var(--pane-top));
+  --title-pad-bottom: clamp(4rem, 9vh, 5.5rem);
   position: relative;
   margin: calc(-1 * (var(--main-pad-top) + var(--pane-top)))
     calc(50% - 50cqi - var(--main-pad-x) - var(--pane-right)) 3rem
@@ -221,7 +218,7 @@ body {
   margin: 0;
   /* Up from the shared 2.25rem h1 size, shrinking back toward it on
      narrow screens so long titles still fit. */
-  font-size: clamp(2.5rem, 1.5rem + 3.5vw, 3.75rem);
+  font-size: clamp(2rem, 1.2rem + 2.5vw, 3.25rem);
   color: inherit;
   text-wrap: balance;
 }
@@ -455,15 +452,14 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
+  right: 0;
   z-index: 100;
   display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-  width: var(--sidebar-width);
-  padding: 1.5rem 1rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1.5rem;
   background: var(--bg);
-  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   box-shadow: var(--pane-shadow);
 }
 
@@ -475,7 +471,7 @@ body {
   color: inherit;
 }
 .site__brand-mark {
-  height: 3.5rem;
+  height: 2.75rem;
   width: auto;
   flex-shrink: 0;
   color: var(--title);
@@ -489,7 +485,7 @@ body {
 .site__brand-name {
   font-family: var(--font-heading);
   font-weight: 400;
-  font-size: 2.1rem;
+  font-size: 1.7rem;
   line-height: 1;
   color: var(--title);
 }
@@ -584,28 +580,20 @@ body {
   display: none;
 }
 
-/* Every group is always expanded: the sidebar has the height for it, and
-   it keeps the whole site one glance away instead of behind hover menus.
-   The nav scrolls on its own if it outgrows the viewport, so the brand
-   and the accessibility button stay put. */
+/* Top bar: each group is a label with a dropdown of its links, opened by
+   hover or by focus (the label is focusable, so keyboard and touch work
+   without JS; MobileNav adds Escape to dismiss). Below 48rem the same
+   markup becomes a left-side drawer with every group expanded (see the
+   mobile media query). No overflow on the nav: it would clip the
+   dropdowns. */
 .site__nav {
   flex: 1;
-  min-height: 0;
-  overflow-y: auto;
+  min-width: 0;
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-/* Desktop sidebar: the nav sits vertically centered between the brand and
-   the accessibility menu. Auto margins rather than justify-content, which
-   would push the top of a nav taller than the pane out of scroll reach. */
-@media (min-width: 48.0625rem) {
-  .site__nav > :first-child {
-    margin-top: auto;
-  }
-  .site__nav > :last-child {
-    margin-bottom: auto;
-  }
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
 }
 
 .site__nav-item {
@@ -622,6 +610,7 @@ body {
 }
 
 .site__nav-group {
+  position: relative;
   display: flex;
   flex-direction: column;
 }
@@ -631,14 +620,36 @@ body {
   font-weight: 500;
   color: var(--heading);
 }
-.site__nav-group-label:hover {
-  background: transparent;
+.site__nav-group-label {
+  cursor: default;
 }
+.site__nav-group:hover > .site__nav-group-label,
+.site__nav-group:focus-within > .site__nav-group-label {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+/* Flush against the label (the padding provides the visual gap), so the
+   pointer never crosses a dead zone that would close it. */
 .site__nav-group-links {
-  margin: 0.1rem 0 0 1.05rem;
-  padding: 0 0 0 0.5rem;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 3;
+  min-width: 14rem;
+  margin: 0;
+  padding: 0.4rem;
   list-style: none;
-  border-left: 1px solid var(--border);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-alt);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.site__nav-group:hover > .site__nav-group-links,
+.site__nav-group:focus-within > .site__nav-group-links {
+  visibility: visible;
+  opacity: 1;
 }
 .site__nav-group-links li + li {
   margin-top: 0.1rem;
@@ -662,7 +673,7 @@ body {
 
 .site__a11y {
   position: relative;
-  align-self: flex-start;
+  order: 3;
   flex: 0 0 auto;
 }
 
@@ -685,12 +696,12 @@ body {
   color: var(--accent);
 }
 
-/* Opens to the right of the button, bottom-aligned with it, since the
-   button sits at the foot of the sidebar. */
+/* Opens below the button, right-aligned with it, since the button sits at
+   the end of the top bar. */
 .site__a11y-panel {
   position: absolute;
-  bottom: 0;
-  left: calc(100% + 0.6rem);
+  top: calc(100% + 0.6rem);
+  right: 0;
   z-index: 3;
   display: flex;
   flex-direction: column;
@@ -789,15 +800,15 @@ body {
   background: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
-/* Site search: a search-field-looking button in the sidebar (just the
-   magnifier below 48rem, beside the accessibility button) that opens the
+/* Site search: a search-field-looking button in the top bar (just the
+   magnifier below 64rem, beside the accessibility button) that opens the
    search dialog. See src/components/site-search.tsx. */
 .site__search-trigger {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   flex: 0 0 auto;
-  width: 100%;
+  width: 11rem;
   padding: 0.45rem 0.6rem;
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -926,7 +937,7 @@ body {
   border-radius: 2px;
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 64rem) {
   .site__search-trigger {
     order: 3;
     justify-content: center;
@@ -949,49 +960,23 @@ body {
      padding, and the space the fixed panes around this one take up. */
   --main-pad-top: 2.5rem;
   --main-pad-x: 2rem;
-  --pane-top: 0px;
-  --pane-left: var(--sidebar-width);
+  --pane-top: var(--header-height);
+  --pane-left: 0px;
   --pane-right: 0px;
   flex: 1;
   margin-left: var(--pane-left);
   margin-right: var(--pane-right);
-  padding: var(--main-pad-top) var(--main-pad-x) 2rem;
+  padding: calc(var(--pane-top) + var(--main-pad-top)) var(--main-pad-x) 2rem;
   /* Lets the page title banner size itself to this pane (cqi units). */
   container-type: inline-size;
 }
-/* The reading column, centred in the space right of the sidebar. From
-   75rem up that space also reserves a sidebar-wide rail on the right for
-   the page outline, so the column sits in the middle of the screen. */
+/* The reading column, centred on the screen. From 75rem up the page
+   outline floats in the empty gutter to its right (see .toc). */
 .site__main > * {
   max-width: 50rem;
   margin-inline: auto;
 }
-@media (min-width: 75.0625rem) {
-  .site__main {
-    --pane-right: var(--sidebar-width);
-  }
-  /* The outline's rail gets a surface of its own, like the nav sidebar, so
-     the page title banner can pass underneath it. */
-  .site::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 90;
-    width: var(--sidebar-width);
-    background: var(--bg);
-    border-left: 1px solid var(--border);
-    box-shadow: var(--pane-shadow);
-  }
-  /* Above the rail's surface, which would otherwise cover it. */
-  .toc {
-    z-index: 95;
-  }
-}
-
 .site__footer {
-  margin-left: var(--sidebar-width);
   padding: 1rem 1.5rem;
   border-top: 1px solid var(--border);
   color: var(--muted);
@@ -2422,21 +2407,24 @@ article .layout__column p {
 .toc {
   /* Fixed to the viewport, not sticky within the article; it stays in
      place for the whole scroll instead of unsticking near the bottom.
-     Sits in the right-hand rail .site__main reserves from 75rem up. */
+     From 75rem up it floats, with no surface of its own, in the empty
+     gutter right of the centred reading column (the width is whatever the
+     gutter has, up to 13rem), starting below the collapsed title bar so
+     the banner passes over it while the page is scrolled to the top;
+     below 75rem it turns into a corner button. */
   position: fixed;
-  top: 2.5rem;
-  right: 1.5rem;
-  width: calc(var(--sidebar-width) - 3rem);
-  max-height: calc(100vh - 5rem);
+  top: calc(var(--header-height) + var(--page-title-collapsed) + 1.5rem);
+  right: 1rem;
+  width: min(13rem, calc((100vw - 50rem) / 2 - 2rem));
+  max-height: calc(100vh - var(--header-height) - var(--page-title-collapsed) - 3rem);
   overflow-y: auto;
   font-size: 0.9rem;
 }
-/* Vertically centered in its rail, like the nav in the sidebar. Only
-   while it's a rail: below 75rem it turns into a corner button. */
+/* Compact outline: only the top-level headings, with the sub-headings
+   of the section being read unfolded under it. */
 @media (min-width: 75.0625rem) {
-  .toc {
-    top: 50%;
-    transform: translateY(-50%);
+  .toc ol ol:not([data-open='true']) {
+    display: none;
   }
 }
 .toc__title {
@@ -2554,31 +2542,18 @@ article .layout__column p {
    itself slides in from the left as a drawer, the same pattern as the
    page-outline drawer above. */
 @media (max-width: 48rem) {
-  /* Fallback until HeaderHeightSync measures the real bar. */
   :root {
-    --header-height: 5.5rem;
+    --page-title-collapsed: 6rem;
+    --page-title-collapsed-edge: 1.75rem;
   }
 
   .site__header {
-    right: 0;
-    bottom: auto;
-    width: auto;
-    flex-direction: row;
-    align-items: center;
     gap: 0.75rem;
-    padding: 1rem 1.5rem;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.25rem;
   }
   .site__main {
     --main-pad-top: 1.5rem;
     --main-pad-x: 1.5rem;
-    --pane-top: var(--header-height);
-    --pane-left: 0px;
-    padding: calc(var(--pane-top) + var(--main-pad-top)) var(--main-pad-x) 1.5rem;
-  }
-  .site__footer {
-    margin-left: 0;
   }
 
   /* The brand stays the one element without a fixed width (min-width: 0
@@ -2590,22 +2565,11 @@ article .layout__column p {
     justify-content: center;
     min-width: 0;
   }
-  .site__a11y {
-    order: 3;
-    align-self: auto;
-  }
   .site__a11y-toggle {
     /* 44px minimum touch target (up from the desktop 36px). */
     width: 2.75rem;
     height: 2.75rem;
   }
-  .site__a11y-panel {
-    top: calc(100% + 0.6rem);
-    right: 0;
-    bottom: auto;
-    left: auto;
-  }
-
   .site__nav-toggle {
     display: inline-flex;
     align-items: center;
@@ -2627,6 +2591,12 @@ article .layout__column p {
   }
 
   .site__nav {
+    flex: none;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    overflow-y: auto;
     position: fixed;
     z-index: 90;
     top: 0;
@@ -2643,6 +2613,25 @@ article .layout__column p {
 
   .site__nav-wrap[data-open='true'] .site__nav {
     transform: translateX(0);
+  }
+
+  /* The drawer shows every group expanded, not as dropdowns. */
+  .site__nav-group-label {
+    background: transparent !important;
+  }
+  .site__nav-group-links {
+    position: static;
+    min-width: 0;
+    margin: 0.1rem 0 0 1.05rem;
+    padding: 0 0 0 0.5rem;
+    border: none;
+    border-left: 1px solid var(--border);
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    visibility: visible;
+    opacity: 1;
+    transition: none;
   }
 }
 
@@ -2663,14 +2652,6 @@ article .layout__column p {
   box-shadow: 0 2px 8px rgb(0 0 0 / 25%);
   cursor: pointer;
 }
-/* From 75rem up it sits in the bottom-right corner of the content pane,
-   clear of the outline rail. */
-@media (min-width: 75.0625rem) {
-  .back-to-top {
-    right: calc(var(--sidebar-width) + 1.5rem);
-  }
-}
-
 @media (max-width: 75rem) {
   /* Stacked 3rem button height + 0.5rem gap above .toc's own bottom offset
      (see the media query above) so the two floating buttons never touch. */

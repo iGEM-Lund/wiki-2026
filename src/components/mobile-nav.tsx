@@ -5,10 +5,11 @@ import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 
-// Below 48rem (see globals.css) the nav sidebar would eat most of the
-// screen, so the header becomes a top bar and this toggle slides the nav in
-// as a left-side drawer, same pattern as the page-outline drawer. Wider
-// screens ignore `open` entirely and keep the always-visible sidebar.
+// Below 48rem (see globals.css) the top bar has no room for the nav, so this
+// toggle slides it in as a left-side drawer, same pattern as the
+// page-outline drawer. Wider screens ignore `open` entirely and show the nav
+// in the bar, its dropdowns opened by hover/focus; Escape dismisses one by
+// dropping focus out of it.
 export function MobileNav({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -17,6 +18,21 @@ export function MobileNav({ children }: { children: ReactNode }) {
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    function onEscape(event: KeyboardEvent) {
+      const active = document.activeElement;
+      if (
+        event.key === 'Escape' &&
+        active instanceof HTMLElement &&
+        wrapRef.current?.contains(active)
+      ) {
+        active.blur();
+      }
+    }
+    document.addEventListener('keydown', onEscape);
+    return () => document.removeEventListener('keydown', onEscape);
+  }, []);
 
   useEffect(() => {
     if (!open) return;

@@ -17,7 +17,7 @@ export function PageTitleSync() {
     };
     update();
     banner.dataset.collapsible = '';
-    // Border box: the top padding grows with the mobile top bar without
+    // Border box: the top padding grows with the top bar without
     // changing the content box.
     const resizeObserver = new ResizeObserver(update);
     resizeObserver.observe(banner, { box: 'border-box' });

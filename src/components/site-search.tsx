@@ -30,7 +30,7 @@ function normalize(path: string) {
   return path.length > 1 ? path.replace(/\/$/, '') : path;
 }
 
-// Whole-site search in a modal dialog, opened from the sidebar button,
+// Whole-site search in a modal dialog, opened from the top bar button,
 // Ctrl/Cmd+K or "/". The index is fetched on first open rather than with
 // the page, so visitors who never search never download it. Picking a
 // result lands on the matched word itself, not just its section.

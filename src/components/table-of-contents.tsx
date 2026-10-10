@@ -8,16 +8,31 @@ function flattenIds(nodes: HeadingNode[]): string[] {
   return nodes.flatMap((node) => [node.id, ...flattenIds(node.children)]);
 }
 
-function OutlineList({ nodes, activeId }: { nodes: HeadingNode[]; activeId: string | null }) {
+function containsId(node: HeadingNode, id: string | null): boolean {
+  return id !== null && (node.id === id || node.children.some((child) => containsId(child, id)));
+}
+
+function OutlineList({
+  nodes,
+  activeId,
+  nested = false,
+}: {
+  nodes: HeadingNode[];
+  activeId: string | null;
+  nested?: boolean;
+}) {
+  // `data-open` marks the sub-lists in the branch being read: the floating
+  // outline (wide screens) unfolds only those; the drawer shows them all.
+  const open = nested && nodes.some((node) => containsId(node, activeId));
   return (
-    <ol>
+    <ol data-open={nested ? open : undefined}>
       {nodes.map((node) => (
         <li key={node.id}>
           <a href={`#${node.id}`} aria-current={node.id === activeId ? 'location' : undefined}>
             {node.text}
           </a>
           {node.children.length > 0 ? (
-            <OutlineList nodes={node.children} activeId={activeId} />
+            <OutlineList nodes={node.children} activeId={activeId} nested />
           ) : null}
         </li>
       ))}
@@ -29,16 +44,17 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   // Only used to size the intersection observer's top margin, so a heading
   // isn't marked "active" while it's still hidden under whatever covers the
-  // top of the viewport: the mobile top bar, the collapsed page title. The
+  // top of the viewport: the top bar, the collapsed page title. The
   // root's scroll-padding-top already clears both (plus 1rem), so it's read
   // from there. The pane's own on-screen position comes from CSS, not this
   // state.
   const [coveredTop, setCoveredTop] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
   // Below 75rem only (see the max-width media query in globals.css; wider
-  // screens always render the fixed right-hand rail and ignore this): the pane stays a
-  // floating toggle button until tapped, then slides in from the right as
-  // an overlay instead of eating into the reading width.
+  // screens always render the floating outline in the right gutter and
+  // ignore this): the pane stays a floating toggle button until tapped,
+  // then slides in from the right as an overlay instead of eating into the
+  // reading width.
   const [open, setOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
 

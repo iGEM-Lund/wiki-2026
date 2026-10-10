@@ -10,8 +10,8 @@ function normalize(path: string) {
   return path.length > 1 ? path.replace(/\/$/, '') : path;
 }
 
-// A sidebar nav link that marks itself as the current page, which the
-// sidebar highlights.
+// A nav link that marks itself as the current page, which the
+// nav highlights.
 export function NavLink({
   href,
   className,
