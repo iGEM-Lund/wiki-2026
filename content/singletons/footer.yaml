@@ -1,0 +1,38 @@
+sponsors:
+  - name: Placeholder Sponsor 1
+    logoUrl: https://static.igem.wiki/teams/6160/placeholder-sponsor-1.svg
+    websiteUrl: https://example.org/sponsor-1
+  - name: Placeholder Sponsor 2
+    logoUrl: https://static.igem.wiki/teams/6160/placeholder-sponsor-2.svg
+    websiteUrl: https://example.org/sponsor-2
+  - name: Placeholder Sponsor 3
+    logoUrl: https://static.igem.wiki/teams/6160/placeholder-sponsor-3.svg
+    websiteUrl: https://example.org/sponsor-3
+socials:
+  - label: Instagram (placeholder)
+    icon:
+      discriminant: library
+      value: at-sign
+    url: https://example.org/instagram
+  - label: Website (placeholder)
+    icon:
+      discriminant: library
+      value: globe
+    url: https://example.org
+  - label: Email (placeholder)
+    icon:
+      discriminant: library
+      value: mail
+    url: mailto:contact@example.org
+contact:
+  email: contact@example.org
+  address: |-
+    iGEM Lund
+    Placeholder Street 1
+    223 62 Lund, Sweden
+  note: Placeholder contact details, to be replaced.
+legal:
+  showNotice: true
+  year: '2026'
+  licenseUrl: https://creativecommons.org/licenses/by/4.0/
+  repositoryUrl: https://gitlab.igem.org/2026/lund
