@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import { showAdminUI } from '@keystatic-config';
 import KeystaticApp from './keystatic';
-import LockToDefaultBranch from './lock-to-default-branch';
 
 // Defense-in-depth only: the production export build never has this file
 // present at all (see scripts/keystatic-routes.mjs), so this check only
@@ -14,10 +13,5 @@ export default function KeystaticLayout() {
   if (!showAdminUI) {
     notFound();
   }
-  return (
-    <>
-      <LockToDefaultBranch />
-      <KeystaticApp />
-    </>
-  );
+  return <KeystaticApp />;
 }

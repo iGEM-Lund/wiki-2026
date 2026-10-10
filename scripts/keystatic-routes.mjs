@@ -19,7 +19,6 @@ const SOURCE_DIR = join(rootDir, 'keystatic-admin');
 const TARGETS = [
   { from: 'keystatic.tsx', to: 'src/app/keystatic/keystatic.tsx' },
   { from: 'layout.tsx', to: 'src/app/keystatic/layout.tsx' },
-  { from: 'lock-to-default-branch.tsx', to: 'src/app/keystatic/lock-to-default-branch.tsx' },
   { from: 'page.tsx', to: 'src/app/keystatic/[[...params]]/page.tsx' },
   { from: 'route.ts', to: 'src/app/api/keystatic/[...params]/route.ts' },
 ];
