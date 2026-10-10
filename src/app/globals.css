@@ -1650,10 +1650,52 @@ html:has(dialog.lightbox[open]) {
 .molecule-viewer {
   margin: 1rem 0;
 }
+.molecule-viewer__stage {
+  position: relative;
+  height: 420px;
+}
+.molecule-viewer__frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 .molecule-viewer__canvas {
   position: relative;
   width: 100%;
-  height: 420px;
+  height: 100%;
+}
+.molecule-viewer__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.6);
+}
+.molecule-viewer__frame--popped {
+  position: fixed;
+  z-index: 1001;
+  top: 50%;
+  left: 50%;
+  width: min(92vw, 1100px);
+  height: min(88vh, 800px);
+  transform: translate(-50%, -50%);
+  background: var(--bg, #fff);
+  border-radius: 8px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+.molecule-viewer__close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg, #fff);
+  color: var(--text);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
 }
 .molecule-viewer__error {
   padding: 0.75rem;

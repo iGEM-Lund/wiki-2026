@@ -1,9 +1,22 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type MoleculeViewerFormat = 'pdb' | 'cif' | 'sdf' | 'mol2' | 'xyz' | 'glb';
 type MoleculeViewerStyle = 'cartoon' | 'stick' | 'sphere' | 'line';
+
+// Zooming in past this fraction of the initial camera distance pops the
+// viewer out into a dimmed, full-size dialog.
+const POP_OUT_ZOOM_RATIO = 0.5;
+
+// What a renderer hands back: teardown, a way to restore the initial framing,
+// and a way to re-measure after the container's size changed. Zoom is
+// reported through the `onZoom` callback as current / initial camera
+// distance (1 = as framed, smaller = zoomed in).
+type ViewerHandle = {
+  dispose: () => void;
+  resetView: () => void;
+};
 
 type MoleculeViewerProps = {
   modelUrl?: string;
@@ -39,7 +52,27 @@ export function MoleculeViewer({
   caption,
 }: MoleculeViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const handleRef = useRef<ViewerHandle | null>(null);
+  const poppedRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
+  const [popped, setPopped] = useState(false);
+
+  const closePopOut = useCallback(() => {
+    poppedRef.current = false;
+    setPopped(false);
+    // Back to the framed view, otherwise the next zoom event would pop the
+    // viewer straight out again.
+    handleRef.current?.resetView();
+  }, []);
+
+  const onZoom = useCallback((ratio: number) => {
+    if (!poppedRef.current && ratio < POP_OUT_ZOOM_RATIO) {
+      poppedRef.current = true;
+      setPopped(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (!modelUrl || !containerRef.current) return;
@@ -55,11 +88,20 @@ export function MoleculeViewer({
         const buffer = await response.arrayBuffer();
         if (cancelled || !containerRef.current) return;
 
-        const cleanup = isGlb(buffer)
-          ? await renderGlb(containerRef.current, buffer)
-          : await renderMolecule(containerRef.current, new TextDecoder().decode(buffer), format, style);
-        if (cancelled) cleanup();
-        else dispose = cleanup;
+        const handle = isGlb(buffer)
+          ? await renderGlb(containerRef.current, buffer, onZoom)
+          : await renderMolecule(
+              containerRef.current,
+              new TextDecoder().decode(buffer),
+              format,
+              style,
+              onZoom,
+            );
+        if (cancelled) handle.dispose();
+        else {
+          handleRef.current = handle;
+          dispose = handle.dispose;
+        }
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : 'Could not load 3D model');
@@ -69,9 +111,29 @@ export function MoleculeViewer({
 
     return () => {
       cancelled = true;
+      handleRef.current = null;
       dispose?.();
     };
-  }, [modelUrl, format, style]);
+  }, [modelUrl, format, style, onZoom]);
+
+  // While popped out: Escape closes, the page behind doesn't scroll, and
+  // focus moves to the close button then returns to where it was.
+  useEffect(() => {
+    if (!popped) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closePopOut();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previouslyFocused?.focus?.();
+    };
+  }, [popped, closePopOut]);
 
   return (
     <figure className="molecule-viewer">
@@ -80,7 +142,35 @@ export function MoleculeViewer({
       ) : error ? (
         <div className="molecule-viewer__error">{error}</div>
       ) : (
-        <div className="molecule-viewer__canvas" ref={containerRef} />
+        // The stage keeps the inline slot's height while the frame inside
+        // is lifted out of flow as a dialog, so the page doesn't jump.
+        <div className="molecule-viewer__stage">
+          {popped ? (
+            <div className="molecule-viewer__backdrop" onClick={closePopOut} aria-hidden="true" />
+          ) : null}
+          <div
+            ref={frameRef}
+            className={
+              popped ? 'molecule-viewer__frame molecule-viewer__frame--popped' : 'molecule-viewer__frame'
+            }
+            {...(popped
+              ? { role: 'dialog', 'aria-modal': true, 'aria-label': caption || '3D molecule viewer' }
+              : {})}
+          >
+            <div className="molecule-viewer__canvas" ref={containerRef} />
+            {popped ? (
+              <button
+                type="button"
+                ref={closeButtonRef}
+                className="molecule-viewer__close"
+                onClick={closePopOut}
+                aria-label="Close enlarged viewer"
+              >
+                ×
+              </button>
+            ) : null}
+          </div>
+        </div>
       )}
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
@@ -100,20 +190,49 @@ async function renderMolecule(
   data: string,
   format: MoleculeViewerFormat,
   style: MoleculeViewerStyle,
-): Promise<() => void> {
+  onZoom: (ratio: number) => void,
+): Promise<ViewerHandle> {
   const $3Dmol = await import('3dmol');
   const viewer = $3Dmol.createViewer(container, { backgroundColor: 'white', backgroundAlpha: 0 });
   viewer.addModel(data, format === 'glb' ? 'pdb' : format);
   viewer.setStyle({}, { [style]: {} });
   viewer.zoomTo();
   viewer.render();
-  return () => viewer.clear();
+
+  const initialDistance = viewer.getPerceivedDistance();
+  const initialView = viewer.getView();
+  viewer.setViewChangeCallback(() => {
+    if (initialDistance > 0) onZoom(viewer.getPerceivedDistance() / initialDistance);
+  });
+
+  // The container changes size when the viewer pops in and out of the dialog.
+  const observer = new ResizeObserver(() => {
+    viewer.resize();
+    viewer.render();
+  });
+  observer.observe(container);
+
+  return {
+    dispose: () => {
+      observer.disconnect();
+      viewer.setViewChangeCallback(null);
+      viewer.clear();
+    },
+    resetView: () => {
+      viewer.setView(initialView);
+      viewer.render();
+    },
+  };
 }
 
 // A GLB carries its own colors and geometry (ChimeraX bakes the ribbons,
 // atoms and any labels into meshes), so `style` doesn't apply here. Renders
 // on demand (camera moves, resizes) rather than in a constant loop.
-async function renderGlb(container: HTMLElement, buffer: ArrayBuffer): Promise<() => void> {
+async function renderGlb(
+  container: HTMLElement,
+  buffer: ArrayBuffer,
+  onZoom: (ratio: number) => void,
+): Promise<ViewerHandle> {
   const [THREE, { GLTFLoader }, { OrbitControls }] = await Promise.all([
     import('three'),
     import('three/examples/jsm/loaders/GLTFLoader.js'),
@@ -140,7 +259,10 @@ async function renderGlb(container: HTMLElement, buffer: ArrayBuffer): Promise<(
 
   const controls = new OrbitControls(camera, renderer.domElement);
   const render = () => renderer.render(scene, camera);
-  controls.addEventListener('change', render);
+  controls.addEventListener('change', () => {
+    render();
+    onZoom(camera.position.distanceTo(controls.target) / distance);
+  });
 
   // Frame the whole model: center the orbit on it and back the camera off
   // until its bounding box fills the view, whichever of width or height is
@@ -157,6 +279,7 @@ async function renderGlb(container: HTMLElement, buffer: ArrayBuffer): Promise<(
   camera.near = distance / 100;
   camera.far = distance * 10;
   controls.update();
+  controls.saveState();
 
   const resize = () => {
     const { clientWidth, clientHeight } = container;
@@ -170,7 +293,7 @@ async function renderGlb(container: HTMLElement, buffer: ArrayBuffer): Promise<(
   observer.observe(container);
   resize();
 
-  return () => {
+  const dispose = () => {
     observer.disconnect();
     controls.dispose();
     gltf.scene.traverse((object) => {
@@ -188,4 +311,6 @@ async function renderGlb(container: HTMLElement, buffer: ArrayBuffer): Promise<(
     renderer.dispose();
     renderer.domElement.remove();
   };
+
+  return { dispose, resetView: () => controls.reset() };
 }
