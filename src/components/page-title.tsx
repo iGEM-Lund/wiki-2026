@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { PageTitleSync } from '@/components/page-title-sync';
 import type { HeadingNode } from '@/lib/headings';
 
@@ -68,7 +68,18 @@ export function PageTitle({
   outline?: HeadingNode[];
 }) {
   return (
-    <div className={outline.length > 0 ? 'page-title page-title--outline' : 'page-title'}>
+    <div
+      className={outline.length > 0 ? 'page-title page-title--outline' : 'page-title'}
+      // Room for the list before PageTitleSync has measured it: the title
+      // plus a line (with spacing) per section.
+      style={
+        outline.length > 0
+          ? ({
+              '--page-title-outline-h': `${(2 + outline.length * 1.8).toFixed(1)}rem`,
+            } as CSSProperties)
+          : undefined
+      }
+    >
       <svg
         className="page-title__edge-top"
         viewBox={`0 0 100 ${EDGE_HEIGHT}`}

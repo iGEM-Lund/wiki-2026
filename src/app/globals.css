@@ -250,19 +250,20 @@ body {
 }
 @media (min-width: 48.0625rem) {
   .site .page-title.page-title--outline {
-    --page-title-outline-h: 6rem;
+    --page-title-outline-h: 8rem;
     --title-pad-bottom: calc(clamp(4rem, 9vh, 5.5rem) + var(--page-title-outline-h) + 0.75rem);
   }
   /* Styled like the floating outline (.toc): the same title and plain
-     link list, in the banner's light-on-teal colors. Laid out in columns
-     so a long list doesn't make the banner tall. */
+     link list, in one column, in the banner's light-on-teal colors; the
+     banner grows to hold it (see --page-title-outline-h). */
   .page-title__outline {
     display: block;
     position: absolute;
     left: 0;
     right: 0;
     bottom: 3.75rem;
-    width: min(100% - 3rem, 38rem);
+    width: max-content;
+    max-width: min(100% - 3rem, 38rem);
     margin-inline: auto;
     text-align: left;
     font-size: 0.9rem;
@@ -275,8 +276,6 @@ body {
     list-style: none;
     margin: 0;
     padding: 0;
-    column-width: 11rem;
-    column-gap: 1.5rem;
   }
   .page-title__outline li {
     margin: 0.2rem 0;
