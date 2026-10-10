@@ -530,12 +530,12 @@ body {
    the viewport, and back out below that (ScrollReveal picks the targets and
    sets data-reveal). Same conditions for starting out hidden as above. */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  :root:not([data-motion='reduce']) article > :not(.page-title, .section-heading),
+  :root:not([data-motion='reduce']) article > :not(.page-title, .page-title-top, .section-heading),
   :root:not([data-motion='reduce']) article p {
     opacity: 0;
     transition: opacity 0.6s ease-out;
   }
-  :root:not([data-motion='reduce']) article > [data-reveal]:not(.page-title, .section-heading),
+  :root:not([data-motion='reduce']) article > [data-reveal]:not(.page-title, .page-title-top, .section-heading),
   :root:not([data-motion='reduce']) article p[data-reveal] {
     opacity: 1;
   }
