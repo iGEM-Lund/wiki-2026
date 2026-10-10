@@ -2700,8 +2700,14 @@ article .layout__column p {
 }
 .pillars__link:hover,
 .pillars__link:focus-visible {
-  --pillar-line: var(--color-crimson);
   transform: translateY(-3px);
+}
+/* Beats the site-wide `.site a:hover` accent colour, so a hovered pillar's
+   text stays the same colour as an unhovered one. */
+.site .pillars__link,
+.site .pillars__link:hover,
+.site .pillars__link:focus-visible {
+  color: var(--heading);
 }
 .pillars__link:focus-visible {
   outline: 2px solid var(--pillar-line);
@@ -2826,6 +2832,9 @@ article .layout__column p {
 }
 .pillars__item--active .pillars__shaft {
   background: color-mix(in srgb, var(--color-blush) 70%, transparent);
+}
+.site .pillars__item--active .pillars__title {
+  color: var(--color-crimson);
 }
 @media (prefers-reduced-motion: reduce) {
   .pillars__link {
