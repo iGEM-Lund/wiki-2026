@@ -2857,6 +2857,26 @@ article .layout__column p {
 .site .pillars-section .pillars__list:has(.pillars__item:not(.pillars__item--active):is(:hover, :focus-within)) .pillars__item--active .pillars__title {
   color: var(--heading);
 }
+/* The rise: once the row has scrolled in (ScrollReveal sets data-reveal on
+   .pillars-section, the same trigger and the same reduced-motion conditions
+   as the page's fade-in), the active pillar comes up out of the ground
+   first, then the pillars either side of it, then the next ones out. Each
+   is revealed from its base upward by a clip-path while it slides up; the
+   `translate` property is used because `transform` already holds the sizing.
+   The clip rests slightly outside the box so the strokes aren't trimmed. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .pillars-section .pillars__item {
+    translate: 0 3rem;
+    clip-path: inset(100% -8px -8px -8px);
+    transition:
+      translate 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--pillar-distance, 0) * 0.4s),
+      clip-path 0.9s ease-out calc(var(--pillar-distance, 0) * 0.4s);
+  }
+  :root:not([data-motion='reduce']) .pillars-section[data-reveal] .pillars__item {
+    translate: 0 0;
+    clip-path: inset(-8px);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .pillars__link {
     transition: none;

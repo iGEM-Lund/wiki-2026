@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import GithubSlugger from 'github-slugger';
 
 // Each pillar is drawn as an Ionic column, outlined and filled: a rounded top slab, a
@@ -71,7 +71,16 @@ export function PillarRow({ pillars, activeIndex }: { pillars: Pillar[]; activeI
             </>
           );
           return (
-            <li key={index} className={itemClass}>
+            <li
+              key={index}
+              className={itemClass}
+              // How far from the active pillar, so CSS can stagger the rise.
+              style={
+                activeIndex === undefined
+                  ? undefined
+                  : ({ '--pillar-distance': Math.abs(index - activeIndex) } as CSSProperties)
+              }
+            >
               {active ? (
                 <span className="pillars__link" aria-current="true">
                   {body}
