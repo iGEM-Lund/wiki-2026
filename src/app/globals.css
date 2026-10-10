@@ -1632,6 +1632,25 @@ html:has(dialog.lightbox[open]) {
   color: var(--error);
 }
 
+/* InlineIcon content component: a small icon in the flow of text. */
+.inline-icon {
+  display: inline-flex;
+  vertical-align: -0.2em;
+  margin-inline: 0.15em;
+  color: inherit;
+}
+.inline-icon svg,
+.inline-icon img {
+  display: block;
+}
+a.inline-icon--link {
+  text-decoration: none;
+}
+a.inline-icon--link:hover,
+a.inline-icon--link:focus-visible {
+  color: var(--accent, currentColor);
+}
+
 /* Tooltip content component: a term with a hover/focus explanation. The
    bubble is pure CSS; the term is focusable so touch and keyboard readers
    get it too. */

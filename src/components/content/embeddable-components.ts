@@ -8,6 +8,7 @@ import { CardTitle } from './CardTitle';
 import { Expandable } from './Expandable';
 import { Citation } from './Citation';
 import { Tooltip } from './Tooltip';
+import { InlineIcon } from './InlineIcon';
 import { Quote } from './Quote';
 import { Formula } from './Formula';
 import { FormulaBlock } from './FormulaBlock';
@@ -40,6 +41,7 @@ export const embeddableComponents = {
   Expandable,
   Citation,
   Tooltip,
+  InlineIcon,
   Quote,
   Pillars,
   Formula,

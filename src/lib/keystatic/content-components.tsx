@@ -1,6 +1,7 @@
 import { fields } from '@keystatic/core';
 import { block, inline, mark, wrapper, repeating } from '@keystatic/core/content-components';
 import { helpCircleIcon } from '@keystar/ui/icon/icons/helpCircleIcon';
+import { ICON_NAMES } from '@/lib/icon-names';
 import { renderLatexToHtml } from '@/lib/katex';
 import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/chemistry';
 
@@ -238,6 +239,51 @@ export const contentComponents = {
         multiline: true,
         validation: { isRequired: true },
       }),
+    },
+  }),
+
+  // Flat fields (type select + one field per source) rather than a
+  // fields.conditional, matching the other component schemas here, which
+  // avoid nested shapes that round-trip through MDX attributes less
+  // predictably. Rendered by src/components/content/InlineIcon.tsx.
+  InlineIcon: inline({
+    label: 'Icon',
+    description: 'A small icon within text, optionally a link; e.g. social links on a team member card.',
+    schema: {
+      iconType: fields.select({
+        label: 'Icon source',
+        options: [
+          { label: 'Library icon', value: 'library' },
+          { label: 'Custom icon (image URL)', value: 'custom' },
+        ],
+        defaultValue: 'library',
+      }),
+      libraryIcon: fields.select({
+        label: 'Library icon',
+        description: 'Used when the icon source is "Library icon".',
+        options: ICON_NAMES.map((name) => ({ label: name, value: name })),
+        defaultValue: 'circle',
+      }),
+      customUrl: fields.url({
+        label: 'Custom icon URL',
+        description:
+          'Used when the icon source is "Custom icon". Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
+      }),
+      label: fields.text({
+        label: 'Label',
+        description: 'Accessible name, e.g. "GitHub". Screen readers announce it and sighted readers see it on hover.',
+      }),
+      href: fields.url({
+        label: 'Link (optional)',
+        description: 'Makes the icon a link, e.g. a profile URL.',
+      }),
+    },
+    ContentView: (props) => {
+      const { iconType, libraryIcon, customUrl, label } = props.value;
+      if (iconType === 'custom' && customUrl) {
+        return <img src={customUrl} alt={label ?? ''} style={{ width: '1.1em', height: '1.1em', verticalAlign: '-0.15em' }} />;
+      }
+      return <span style={{ opacity: 0.7 }}>[icon: {libraryIcon || 'circle'}]</span>;
     },
   }),
 
