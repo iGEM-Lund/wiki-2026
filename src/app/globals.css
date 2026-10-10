@@ -2666,14 +2666,17 @@ article .layout__column p {
   background-color: color-mix(in srgb, var(--color-peacock) 35%, transparent);
 }
 
-/* Pillars: a row of anchor links to headings further down the page. */
+/* Pillars: Greek columns in line art, each an anchor link to a heading
+   further down the page. The capital and base are SVGs (see Pillars.tsx);
+   the shaft is the text block between them, outlined by its side borders,
+   which sit at the 16% / 84% marks where the SVG paths meet them. */
 .pillars {
-  margin: 1.5rem 0;
+  margin: 2rem 0;
 }
 .pillars__list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-  gap: 1rem;
+  gap: 1.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -2686,30 +2689,69 @@ article .layout__column p {
   content: none;
 }
 .pillars__link {
+  --pillar-line: var(--color-peacock);
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
   height: 100%;
-  padding: 1.25rem 1.25rem 1.5rem;
-  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
-  border-top: 0.35rem solid var(--color-peacock);
-  border-radius: 14px;
-  background: var(--bg-alt);
   color: inherit;
   text-decoration: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-top-color 0.15s ease;
+  transition: transform 0.15s ease;
 }
 .pillars__link:hover,
 .pillars__link:focus-visible {
+  --pillar-line: var(--color-crimson);
   transform: translateY(-3px);
-  border-top-color: var(--color-rose);
-  box-shadow: 0 6px 16px color-mix(in srgb, var(--color-noir) 14%, transparent);
 }
-.pillars__number {
-  font-family: var(--font-heading);
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-peacock);
+.pillars__link:focus-visible {
+  outline: 2px solid var(--pillar-line);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.pillars__capital,
+.pillars__base {
+  display: block;
+  width: 100%;
+  height: auto;
+  fill: none;
+  stroke: var(--pillar-line);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  overflow: visible;
+  transition: stroke 0.15s ease;
+}
+.pillars__capital *,
+.pillars__base * {
+  vector-effect: non-scaling-stroke;
+}
+.pillars__shaft {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0 16%;
+  padding: 1.25rem 1.25rem 1.5rem;
+  border-inline: 2px solid var(--pillar-line);
+  text-align: center;
+  transition: border-color 0.15s ease;
+}
+/* Flutes: faint lines just inside each edge, kept clear of the text by the
+   shaft's padding. */
+.pillars__shaft::before,
+.pillars__shaft::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--pillar-line);
+  opacity: 0.35;
+}
+.pillars__shaft::before {
+  left: 0.45rem;
+}
+.pillars__shaft::after {
+  right: 0.45rem;
 }
 .site .pillars__title {
   font-family: var(--font-heading);
@@ -2720,7 +2762,7 @@ article .layout__column p {
 .site .pillars__description {
   font-size: 0.9rem;
   line-height: 1.45;
-  text-align: left;
+  text-align: center;
   opacity: 0.8;
 }
 @media (prefers-reduced-motion: reduce) {
