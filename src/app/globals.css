@@ -1378,6 +1378,47 @@ body {
   max-width: 100%;
   border-radius: 10px;
 }
+/* A figure with a link is one anchor around image and caption
+   (FigureWithCaption.tsx). The icon in the image's lower left corner is only
+   a hint, not a control: no box, no hover state, no pointer events. */
+.figure-with-caption__anchor {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.figure-with-caption__media {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+}
+.figure-with-caption__link-icon {
+  position: absolute;
+  left: 0.6rem;
+  bottom: 0.6rem;
+  color: #fff;
+  filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.7));
+  pointer-events: none;
+  transform-origin: left bottom;
+  transition: scale 0.2s ease, color 0.2s ease;
+}
+.figure-with-caption__anchor:hover .figure-with-caption__link-icon,
+.figure-with-caption__anchor:focus-visible .figure-with-caption__link-icon {
+  scale: 1.5;
+  color: var(--accent);
+}
+.figure-with-caption__anchor:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.figure-with-caption__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 /* Clickable image that opens the Lightbox (ZoomableImage.tsx): a reset
    <button> so it looks like the bare image, zooming in slightly on hover
    or keyboard focus. */
@@ -1406,6 +1447,14 @@ body {
 .zoomable-image:focus-visible img {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+.zoomable-image.zoomable-image--static {
+  cursor: pointer;
+}
+/* The link's own hover feedback is the icon; the image itself stays put. */
+.zoomable-image--static:hover img {
+  scale: none;
+  box-shadow: none;
 }
 .zoomable-image--broken {
   display: flex;

@@ -21,6 +21,10 @@ export const contentComponents = {
       }),
       alt: fields.text({ label: 'Alt text' }),
       caption: fields.text({ label: 'Caption', multiline: true }),
+      link: fields.url({
+        label: 'Link (optional)',
+        description: 'Makes the whole figure a link that opens in a new tab, hinted by a small icon in the lower left corner. The image no longer enlarges on click.',
+      }),
       scale: fields.number({
         label: 'Size (%)',
         description: 'How much of the page width the figure may take up, from 10 to 100.',

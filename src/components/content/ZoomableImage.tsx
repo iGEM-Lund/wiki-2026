@@ -8,6 +8,9 @@ type ZoomableImageProps = {
   src: string;
   alt?: string;
   caption?: string;
+  // false renders the bare image without the button and lightbox, for when an
+  // ancestor link makes the whole figure the click target.
+  enlargeable?: boolean;
 };
 
 // An image that zooms in slightly on hover and opens in the Lightbox when
@@ -18,7 +21,7 @@ type ZoomableImageProps = {
 // was never uploaded there, or was since removed) would otherwise collapse
 // to nothing and leave writers no clue anything is wrong; it shows a
 // labelled placeholder instead.
-export function ZoomableImage({ src, alt = '', caption }: ZoomableImageProps) {
+export function ZoomableImage({ src, alt = '', caption, enlargeable = true }: ZoomableImageProps) {
   const [open, setOpen] = useState(false);
   const [broken, setBroken] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -35,6 +38,14 @@ export function ZoomableImage({ src, alt = '', caption }: ZoomableImageProps) {
       <span className="zoomable-image zoomable-image--broken" role="img" aria-label={alt || 'Image not found'}>
         <ImageOff aria-hidden size={22} />
         <span>Image not found</span>
+      </span>
+    );
+  }
+
+  if (!enlargeable) {
+    return (
+      <span className="zoomable-image zoomable-image--static">
+        <img ref={imgRef} src={src} alt={alt} onError={() => setBroken(true)} />
       </span>
     );
   }
