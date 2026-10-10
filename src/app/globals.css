@@ -235,9 +235,12 @@ body {
 .page-title__edge-top {
   position: absolute;
   left: 0;
-  top: 0;
+  /* Overlaps the header by a pixel each way: at fractional header heights
+     the banner's gradient would otherwise show through as a hairline
+     between the two. */
+  top: -2px;
   width: 100%;
-  height: 3.5rem;
+  height: calc(3.5rem + 2px);
   fill: var(--bg);
   transform: scaleY(-1);
 }
