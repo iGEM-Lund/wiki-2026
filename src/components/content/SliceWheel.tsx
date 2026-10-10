@@ -117,6 +117,9 @@ function stripes(start: number, end: number, whole: boolean): SliceWheelClientSl
 }
 
 const LINE_HEIGHT = 1.2;
+// On hover a slice's title scales down toward the hub by this much, to leave
+// the rest of the slice to the text (see .slice-wheel__title).
+const TITLE_SCALE = 0.7;
 const MAX_LINES = 3;
 const MIN_FONT_SIZE = 4;
 
@@ -125,6 +128,22 @@ export async function SliceWheel({ slices = [], referenceLookup = {} }: SliceWhe
   if (count === 0) return null;
 
   const step = (2 * Math.PI) / count;
+  // How far past the rim a hovered slice extends: more slices, narrower
+  // wedges, so a deeper extension to keep the same room for text.
+  const extension = count <= 5 ? 70 : count <= 8 ? 82 : 96;
+  const extensionPath = (start: number, end: number, whole: boolean): string => {
+    const outer = RADIUS + extension;
+    // Starts inside the solid shape so the stripes' gaps fill in with it.
+    const inner = SOLID_RADIUS - 1;
+    if (whole) return `M ${outer} 0 A ${outer} ${outer} 0 1 1 ${-outer} 0 A ${outer} ${outer} 0 1 1 ${outer} 0 Z`;
+    const half = SLICE_GAP / 2;
+    const [ix0, iy0] = point(start + Math.asin(half / inner), inner);
+    const [ix1, iy1] = point(end - Math.asin(half / inner), inner);
+    const [ox0, oy0] = point(start + Math.asin(half / outer), outer);
+    const [ox1, oy1] = point(end - Math.asin(half / outer), outer);
+    const largeArc = (a: number, r: number) => (end - start - 2 * Math.asin(half / r) > Math.PI ? 1 : 0);
+    return `M ${round(ix0)} ${round(iy0)} L ${round(ox0)} ${round(oy0)} A ${round(outer)} ${round(outer)} 0 ${largeArc(0, outer)} 1 ${round(ox1)} ${round(oy1)} L ${round(ix1)} ${round(iy1)} A ${round(inner)} ${round(inner)} 0 ${largeArc(0, inner)} 0 ${round(ix0)} ${round(iy0)} Z`;
+  };
   // With one or two slices an arc would be a half circle or more and the
   // text would run sideways, so those keep straight, centred labels.
   const curved = count >= 3;
@@ -186,6 +205,22 @@ export async function SliceWheel({ slices = [], referenceLookup = {} }: SliceWhe
           return arcPath(start, start + step, outerLineRadius(fontSize) - depth * lineGap, bottom);
         })
       : null;
+    // Hovering extends the slice outward past the rim; its text sits in
+    // that extension. The text box is an upright rectangle centred in the
+    // extension, sized to fit inside the wedge wherever it points.
+    // The title shrinks toward the hub on hover (TITLE_SCALE), and the text
+    // takes everything from just outside it to the end of the extension.
+    // The box is an upright rectangle, sized by how the slice's depth and
+    // breadth map onto the screen axes where it points.
+    const textInner = (curved ? SOLID_RADIUS - 4 : straightRadius + (lines.length * lineGap) / 2) * TITLE_SCALE + 6;
+    const textOuter = RADIUS + extension - 5;
+    const textRadius = (textInner + textOuter) / 2;
+    const [textX, textY] = point(middle, textRadius);
+    const room = textOuter - textInner;
+    const acrossRadius = textInner + room * 0.35;
+    const across = 2 * acrossRadius * Math.sin(Math.min(step / 2, 1.2)) * 0.9;
+    const textWidth = (room * Math.abs(Math.cos(middle)) + across * Math.abs(Math.sin(middle))) * 0.85;
+    const textHeight = (room * Math.abs(Math.sin(middle)) + across * Math.abs(Math.cos(middle))) * 0.85;
     const [labelX, labelY] = point(middle, straightRadius);
     const Body = await compileMdxSnippet(slice.body ?? '', referenceLookup, 'slice-wheel__error', 'slice');
     rendered.push({
@@ -197,6 +232,15 @@ export async function SliceWheel({ slices = [], referenceLookup = {} }: SliceWhe
       stripes: stripes(start, start + step, count === 1),
       label: { x: round(labelX), y: round(labelY), lines, arcs, fontSize },
       nudge: { x: round(nudgeX), y: round(nudgeY) },
+      extension: {
+        d: extensionPath(start, start + step, count === 1),
+        text: {
+          x: round(textX - textWidth / 2),
+          y: round(textY - textHeight / 2),
+          width: round(textWidth),
+          height: round(textHeight),
+        },
+      },
       body: <Body />,
     });
   }

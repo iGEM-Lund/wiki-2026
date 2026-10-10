@@ -2552,6 +2552,9 @@ a.inline-icon--link:focus-visible {
    (server: geometry, colours, compiles slice bodies) and
    SliceWheelClient.tsx ('use client': the popup). */
 .slice-wheel {
+  /* Hovered slices extend outside the wheel, over whatever sits next to it. */
+  position: relative;
+  z-index: 3;
   margin: 2rem auto;
   width: min(100%, 30rem);
 }
@@ -2562,7 +2565,7 @@ a.inline-icon--link:focus-visible {
   overflow: visible;
 }
 .slice-wheel__slice {
-  cursor: pointer;
+  cursor: default;
   outline: none;
   transition: opacity 0.25s ease;
 }
@@ -2622,85 +2625,89 @@ a.inline-icon--link:focus-visible {
   pointer-events: none;
 }
 
-/* The popup: a Card, opened. Its header band takes the clicked slice's own
-   colours (--slice-fill/--slice-ink, set per slice by SliceWheelClient). */
-html:has(dialog.slice-wheel__dialog[open]) {
+/* Hovering or focusing a slice extends it outward past the rim: a wedge of
+   its own colour grows out of it (scaling from the hub, so it stays radial)
+   and its text fades in inside. It is inside the slice's group, so hover
+   holds while the pointer is over it. */
+.slice-wheel__extension {
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.8);
+  opacity: 0;
+  /* Hold on briefly after the pointer leaves. */
+  transition:
+    transform 0.2s ease-in,
+    opacity 0.15s ease,
+    visibility 0s 0.2s;
+}
+.slice-wheel__slice:hover .slice-wheel__extension,
+.slice-wheel__slice:focus-within .slice-wheel__extension {
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
+  opacity: 1;
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.3, 0.64, 1),
+    opacity 0.1s ease,
+    visibility 0s;
+}
+.slice-wheel__extension-text {
   overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
 }
-.slice-wheel__dialog {
-  width: min(36rem, calc(100vw - 2rem));
-  max-height: min(40rem, calc(100dvh - 2rem));
-  padding: 0;
-  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
-  border-radius: 14px;
-  background: var(--bg-alt);
-  color: var(--text);
-  box-shadow: 0 1.5rem 3rem color-mix(in srgb, var(--color-noir) 30%, transparent);
+/* The title draws in toward the hub, scaling about it so curved lines stay
+   concentric, which frees the rest of the slice for the text. */
+.slice-wheel__title {
+  transform-origin: 0 0;
+  transition: transform 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
 }
-.slice-wheel__dialog[open] {
+.slice-wheel__slice:hover .slice-wheel__title,
+.slice-wheel__slice:focus-within .slice-wheel__title {
+  transform: scale(0.7);
+}
+.slice-wheel__slice:hover .slice-wheel__extension-text,
+.slice-wheel__slice:focus-within .slice-wheel__extension-text {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.2s ease 0.22s;
+}
+/* Sized in the wheel's own units (it's inside the SVG), so it scales with
+   the wheel. */
+.slice-wheel__extension-content {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  animation: slice-wheel-dialog-in 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
-}
-.slice-wheel__dialog::backdrop {
-  background: color-mix(in srgb, var(--color-noir) 55%, transparent);
-  backdrop-filter: blur(3px);
-}
-.slice-wheel__dialog-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.25rem 1.25rem 1.25rem 1.75rem;
-  background: var(--slice-fill);
-  color: var(--slice-ink);
-}
-.slice-wheel__dialog-title {
-  flex: 1;
-  min-width: 0;
-  font-family: var(--font-heading);
-  font-size: 1.375rem;
-  font-weight: 500;
-  line-height: 1.2;
-}
-.slice-wheel__dialog-close {
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  padding: 0;
-  border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
-  border-radius: 50%;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-}
-.slice-wheel__dialog-close:hover {
-  background: color-mix(in srgb, currentColor 15%, transparent);
-}
-.slice-wheel__dialog-close:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-}
-.slice-wheel__dialog-body {
+  justify-content: safe center;
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
-  padding: 1.5rem 1.75rem;
+  font-size: 6px;
+  line-height: 1.35;
+  text-align: center;
+  scrollbar-width: none;
 }
-.slice-wheel__dialog-body > :first-child {
+.slice-wheel__extension-content > :first-child {
   margin-top: 0;
 }
-.slice-wheel__dialog-body > :last-child {
+.slice-wheel__extension-content > :last-child {
   margin-bottom: 0;
+}
+.slice-wheel__extension-content p,
+.slice-wheel__extension-content ul,
+.slice-wheel__extension-content ol {
+  margin: 0.4em 0 0;
+  padding: 0;
+  text-align: center;
+  list-style-position: inside;
+}
+.slice-wheel__extension-content a,
+.page-layout article .slice-wheel__extension-content :is(p, li) :is(strong, b) {
+  color: inherit;
 }
 .slice-wheel__error {
   color: var(--error);
-}
-@keyframes slice-wheel-dialog-in {
-  from {
-    opacity: 0;
-    scale: 0.94;
-  }
 }
 
 .references {
