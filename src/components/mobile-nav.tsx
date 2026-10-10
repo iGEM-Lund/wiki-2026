@@ -12,6 +12,7 @@ import { Menu, X } from 'lucide-react';
 // dropping focus out of it.
 export function MobileNav({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
@@ -56,16 +57,27 @@ export function MobileNav({ children }: { children: ReactNode }) {
     <div
       className="site__nav-wrap"
       data-open={open}
+      data-dismissed={dismissed}
       ref={wrapRef}
       onClick={(event) => {
         // Close on any link click, including links to the current page (no
-        // pathname change) and desktop dropdowns, which stay open while they
-        // hold focus.
+        // pathname change). Desktop dropdowns would otherwise stay open
+        // while hovered or focused, so they are suppressed until the
+        // pointer leaves or focus comes back.
         const link = (event.target as HTMLElement).closest('a');
         if (!link) return;
         setOpen(false);
+        setDismissed(true);
         link.blur();
       }}
+      onPointerOut={(event) => {
+        // Leaving a group (or the nav) re-arms the dropdowns.
+        const group = (event.target as HTMLElement).closest('.site__nav-group');
+        if (!group?.contains(event.relatedTarget as Node | null)) {
+          setDismissed(false);
+        }
+      }}
+      onFocus={() => setDismissed(false)}
     >
       <button
         type="button"

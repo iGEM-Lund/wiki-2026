@@ -779,6 +779,18 @@ body {
   visibility: visible;
   opacity: 1;
 }
+/* After a link is clicked the dropdown closes even though the pointer is
+   still over it; MobileNav clears the flag once the pointer leaves. */
+@media (min-width: 48rem) {
+  .site__nav-wrap[data-dismissed='true'] .site__nav-group > .site__nav-group-links {
+    visibility: hidden;
+    opacity: 0;
+    transition: none;
+  }
+  .site__nav-wrap[data-dismissed='true'] .site__nav-group > .site__nav-group-label {
+    background: transparent;
+  }
+}
 .site__nav-group-links li + li {
   margin-top: 0.1rem;
 }
