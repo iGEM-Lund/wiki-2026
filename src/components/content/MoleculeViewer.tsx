@@ -7,7 +7,7 @@ type MoleculeViewerStyle = 'cartoon' | 'stick' | 'sphere' | 'line';
 
 // Zooming in past this fraction of the initial camera distance pops the
 // viewer out into a dimmed, full-size dialog.
-const POP_OUT_ZOOM_RATIO = 0.5;
+const POP_OUT_ZOOM_RATIO = 0.7;
 // The dialog fills the viewport, so the zoom that triggered the pop-out
 // would look far too close there. It opens at this gentler zoom instead...
 const POPPED_START_ZOOM_RATIO = 0.8;
