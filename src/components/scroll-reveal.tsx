@@ -11,6 +11,24 @@ const TARGETS = 'article > :not(.page-title, .page-title-top, .section-heading),
 // Where the entrance triggers, as a share of the viewport from the bottom.
 const TRIGGER_SHARE = 0.1;
 
+// The page title banner plays an arrival before the content may appear: the
+// stroke, the title, then the section list one line at a time (timings in
+// globals.css, "Arrival"). Content entrances are held until it's done, in
+// seconds: the title is done at 1.05, the list starts at 1.2 with 0.1 per
+// section and fades for 0.3.
+function introSeconds(): number {
+  if (window.scrollY > 0) return 0;
+  const root = document.documentElement;
+  if (root.dataset.motion === 'reduce') return 0;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 0;
+  if (!document.querySelector('.page-title')) return 0;
+  const sections = document.querySelectorAll('.page-title__outline li').length;
+  if (sections === 0 || getComputedStyle(document.querySelector('.page-title__outline')!).display === 'none') {
+    return 1.05;
+  }
+  return 1.2 + (sections - 1) * 0.1 + 0.3;
+}
+
 // Triggers the page content's entrance (see [data-reveal] in globals.css)
 // as each element scrolls up past the trigger line, and reverses it as it
 // scrolls back down below it. Each entrance plays out in full on its own
@@ -22,8 +40,9 @@ export function ScrollReveal() {
     const past = new Set<HTMLElement>();
     const atEnd = new Set<HTMLElement>();
     const targets = [...document.querySelectorAll<HTMLElement>(TARGETS)];
+    let held = introSeconds() > 0;
     const apply = (el: HTMLElement) => {
-      if (past.has(el) || atEnd.has(el)) el.dataset.reveal = '';
+      if (!held && (past.has(el) || atEnd.has(el))) el.dataset.reveal = '';
       else delete el.dataset.reveal;
     };
 
@@ -59,7 +78,15 @@ export function ScrollReveal() {
       observers.push(endObserver);
     }
 
+    const release = held
+      ? window.setTimeout(() => {
+          held = false;
+          targets.forEach(apply);
+        }, introSeconds() * 1000)
+      : undefined;
+
     return () => {
+      window.clearTimeout(release);
       for (const observer of observers) observer.disconnect();
     };
   }, []);

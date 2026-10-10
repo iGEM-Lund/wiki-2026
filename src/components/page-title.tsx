@@ -99,8 +99,8 @@ export function PageTitle({
           <nav className="page-title__outline" aria-label="Page sections">
             <p className="toc__title">On this page</p>
             <ol>
-              {outline.map((node) => (
-                <li key={node.id}>
+              {outline.map((node, i) => (
+                <li key={node.id} style={{ '--i': i } as CSSProperties}>
                   <a href={`#${node.id}`}>{node.text}</a>
                 </li>
               ))}
