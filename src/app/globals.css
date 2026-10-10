@@ -2770,7 +2770,8 @@ article .layout__column p {
   line-height: 1.2;
 }
 /* In a section heading's place: the same row, the section's pillar larger
-   and accented in crimson with a blush shaft, not a link. */
+   and accented in crimson with a blush shaft, not a link, and the rest
+   smaller. */
 .pillars-section {
   margin: 2.5rem 0 1.5rem;
 }
@@ -2788,10 +2789,16 @@ article .layout__column p {
   white-space: nowrap;
   border: 0;
 }
-.pillars__item--active {
+/* The other pillars shrink to make room, and every pillar scales from its
+   base so they all keep standing on the same line. */
+.pillars-section .pillars__item {
+  transform: scale(0.82);
+  transform-origin: bottom center;
+}
+.pillars-section .pillars__item--active {
   position: relative;
   z-index: 1;
-  transform: scale(1.14);
+  transform: scale(1.12);
 }
 .pillars__item--active .pillars__link {
   --pillar-line: var(--color-crimson);
