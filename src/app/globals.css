@@ -3109,6 +3109,15 @@ article .layout__column p {
   outline-offset: 4px;
   border-radius: 4px;
 }
+/* The hovered or focused pillar lights up in crimson with a blush fill, in
+   the plain row of equal pillars as well as in a section heading's row. */
+.pillars__link[href]:is(:hover, :focus-visible) {
+  --pillar-line: var(--color-crimson);
+  --pillar-fill: var(--color-blush);
+}
+.site .pillars__link[href]:is(:hover, :focus-visible) .pillars__title {
+  color: var(--color-crimson);
+}
 .pillars__capital,
 .pillars__base {
   display: block;
