@@ -37,7 +37,6 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
           <AntigoneLogoMark className="site__brand-mark" />
           <span className="site__brand-name">AnTigone</span>
         </Link>
-        <SiteSearch />
         <MobileNav>
           <nav className="site__nav" id="site-nav">
             {nav.map((item) =>
@@ -64,7 +63,10 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
             )}
           </nav>
         </MobileNav>
-        <AccessibilityMenu />
+        <div className="site__tools">
+          <SiteSearch />
+          <AccessibilityMenu />
+        </div>
       </header>
       <main className="site__main">{children}</main>
       <footer className="site__footer">AnTigone &middot; iGEM Lund 2026</footer>

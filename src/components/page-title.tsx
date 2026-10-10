@@ -1,9 +1,15 @@
 import type { ReactNode } from 'react';
 import { PageTitleSync } from '@/components/page-title-sync';
+import type { HeadingNode } from '@/lib/headings';
 
 // The banner's bottom edge: one gentle wave across the full width, in a
 // 100 x 56 viewBox that stretches sideways only (1 vertical unit = 1/16 rem).
-const EDGE: [number, number][] = [[0, 6], [30, 40], [70, -8], [100, 20]];
+const EDGE: [number, number][] = [
+  [0, 6],
+  [30, 40],
+  [70, -8],
+  [100, 20],
+];
 const EDGE_HEIGHT = 56;
 
 // Below the edge the banner breaks into stripes of the same wave, each
@@ -38,13 +44,39 @@ function edgeCutout(): string {
 
 const EDGE_PATH = edgeCutout();
 
-// The page's h1: a banner spanning the whole content pane whose bottom edge
-// is a wave that breaks up into thinner and thinner stripes of itself. As
-// the page scrolls it collapses into a slim bar pinned to the top.
-export function PageTitle({ children }: { children: ReactNode }) {
+// The page's h1: a banner spanning the whole content pane whose top and
+// bottom edges are waves that break up into thinner and thinner stripes of
+// themselves. While the page is scrolled to the top it also lists the
+// page's sections under the title; as the page scrolls it collapses into a
+// slim bar pinned under the header and that list pops out into the floating
+// outline (TableOfContents) instead.
+export function PageTitle({
+  children,
+  outline = [],
+}: {
+  children: ReactNode;
+  outline?: HeadingNode[];
+}) {
   return (
-    <div className="page-title">
+    <div className={outline.length > 0 ? 'page-title page-title--outline' : 'page-title'}>
+      <svg
+        className="page-title__edge-top"
+        viewBox={`0 0 100 ${EDGE_HEIGHT}`}
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path d={EDGE_PATH} />
+      </svg>
       <h1 className="page-title__heading">{children}</h1>
+      {outline.length > 0 ? (
+        <nav className="page-title__outline" aria-label="Page sections">
+          {outline.map((node) => (
+            <a key={node.id} href={`#${node.id}`}>
+              {node.text}
+            </a>
+          ))}
+        </nav>
+      ) : null}
       <svg
         className="page-title__edge"
         viewBox={`0 0 100 ${EDGE_HEIGHT}`}

@@ -202,10 +202,11 @@ body {
 .site .page-title {
   /* Bottom padding clears the 3.5rem striped edge. Named for the collapse
      below, which has to know where the title sits. */
-  --title-pad-top: calc(1.75rem + var(--pane-top));
+  --title-pad-top: 5.5rem;
   --title-pad-bottom: clamp(4rem, 9vh, 5.5rem);
   position: relative;
-  margin: calc(-1 * (var(--main-pad-top) + var(--pane-top)))
+  z-index: 1;
+  margin: calc(-1 * var(--main-pad-top))
     calc(50% - 50cqi - var(--main-pad-x) - var(--pane-right)) 3rem
     calc(50% - 50cqi - var(--main-pad-x) - var(--pane-left));
   padding: var(--title-pad-top) calc(1.5rem + var(--pane-right)) var(--title-pad-bottom)
@@ -231,6 +232,53 @@ body {
   width: 100%;
   height: 3.5rem;
   fill: var(--bg);
+}
+/* The same wave and stripes mirrored along the top, so the banner reads as
+   hanging from the header's page-colored bar rather than butting into it. */
+.page-title__edge-top {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 3.5rem;
+  fill: var(--bg);
+  transform: scaleY(-1);
+}
+/* The page's sections, listed under the title while the banner is at full
+   height (from 48rem up; narrower screens have the corner button only).
+   Sits just above the bottom edge, inside the padding that makes room for
+   it (--page-title-outline-h is measured by PageTitleSync). */
+.page-title__outline {
+  display: none;
+}
+@media (min-width: 48.0625rem) {
+  .site .page-title.page-title--outline {
+    --page-title-outline-h: 3rem;
+    --title-pad-bottom: calc(clamp(4rem, 9vh, 5.5rem) + var(--page-title-outline-h) + 0.75rem);
+  }
+  .page-title__outline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 3.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem 0.5rem;
+    padding: 0 1.5rem;
+  }
+  .site .page-title__outline a {
+    padding: 0.25rem 0.8rem;
+    border: 1px solid color-mix(in srgb, var(--color-pearl) 55%, transparent);
+    border-radius: 999px;
+    color: var(--color-pearl);
+    font-size: 0.875rem;
+    text-decoration: none;
+  }
+  .site .page-title__outline a:hover,
+  .site .page-title__outline a:focus-visible {
+    background: color-mix(in srgb, var(--color-pearl) 18%, transparent);
+  }
 }
 
 /* Collapse: as the page scrolls, the banner scrolls away until only its
@@ -271,6 +319,13 @@ body {
     :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__edge {
       animation-name: page-title-edge-collapse;
     }
+    /* The in-banner section list fades out over the first half of the
+       collapse, handing over to the floating outline (see .toc). */
+    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__outline {
+      animation: page-title-outline-out linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 calc(var(--collapse-distance) * 0.5);
+    }
   }
 }
 /* Moves the title's centre from where it sits in the full banner,
@@ -285,6 +340,25 @@ body {
           (var(--page-title-height) + var(--title-pad-top) - var(--title-pad-bottom)) / 2
       );
     scale: 0.55;
+  }
+}
+@keyframes page-title-outline-out {
+  to {
+    opacity: 0;
+    translate: 0 0.5rem;
+    visibility: hidden;
+  }
+}
+@keyframes toc-pop-in {
+  from {
+    opacity: 0;
+    translate: 1rem 0;
+    visibility: hidden;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    visibility: visible;
   }
 }
 @keyframes page-title-edge-collapse {
@@ -465,6 +539,8 @@ body {
 
 .site__brand {
   display: flex;
+  flex: 1 1 0;
+  min-width: max-content;
   align-items: center;
   gap: 0.4rem;
   text-decoration: none;
@@ -567,6 +643,17 @@ body {
   }
 }
 
+/* Search + accessibility button, flush right. Brand and tools share the
+   space either side of the nav equally (flex: 1 1 0), which centres the nav
+   in the bar rather than in whatever is left over. */
+.site__tools {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
 /* Wraps the toggle button + <nav> as siblings without adding a box of its
    own; `display: contents` keeps the nav a direct flex child of the header
    in both layouts, while still letting `[data-open]` below target the
@@ -587,7 +674,7 @@ body {
    mobile media query). No overflow on the nav: it would clip the
    dropdowns. */
 .site__nav {
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
   display: flex;
   flex-direction: row;
@@ -2415,7 +2502,7 @@ article .layout__column p {
   position: fixed;
   top: calc(var(--header-height) + var(--page-title-collapsed) + 1.5rem);
   right: 1rem;
-  width: min(13rem, calc((100vw - 50rem) / 2 - 2rem));
+  width: min(13rem, calc((100vw - 50rem) / 2 - 3rem));
   max-height: calc(100vh - var(--header-height) - var(--page-title-collapsed) - 3rem);
   overflow-y: auto;
   font-size: 0.9rem;
@@ -2425,6 +2512,18 @@ article .layout__column p {
 @media (min-width: 75.0625rem) {
   .toc ol ol:not([data-open='true']) {
     display: none;
+  }
+}
+/* While the banner is at full height it carries the section list itself;
+   the floating outline slides in from the right as that fades out. */
+@supports (animation-timeline: scroll()) {
+  @media (min-width: 75.0625rem) and (prefers-reduced-motion: no-preference) {
+    :root:not([data-motion='reduce']):has(.page-title[data-collapsible]) .toc {
+      animation: toc-pop-in linear both;
+      animation-timeline: scroll(root);
+      animation-range: calc((var(--page-title-height) - var(--page-title-collapsed)) * 0.4)
+        calc(var(--page-title-height) - var(--page-title-collapsed));
+    }
   }
 }
 .toc__title {
@@ -2564,6 +2663,10 @@ article .layout__column p {
     flex: 1;
     justify-content: center;
     min-width: 0;
+  }
+  .site__tools {
+    order: 3;
+    flex: none;
   }
   .site__a11y-toggle {
     /* 44px minimum touch target (up from the desktop 36px). */

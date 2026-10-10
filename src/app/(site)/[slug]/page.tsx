@@ -29,11 +29,12 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
   const source = await entry.content();
   const citedReferences = await resolveCitedReferences(source);
   const { Content, headings } = await renderMdx(source, toReferenceLookup(citedReferences));
+  const outline = buildHeadingTree(headings);
 
   return (
     <div className="page-layout">
       <article>
-        <PageTitle>{entry.title}</PageTitle>
+        <PageTitle outline={outline}>{entry.title}</PageTitle>
         <Content />
         {citedReferences.length > 0 ? (
           <section className="references">
@@ -48,7 +49,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
           </section>
         ) : null}
       </article>
-      <TableOfContents headings={buildHeadingTree(headings)} />
+      <TableOfContents headings={outline} />
       {/* Here rather than in the layout, which stays mounted across
           client-side navigations: it has to pick up each page's content. */}
       <ScrollReveal />
