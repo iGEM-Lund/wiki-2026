@@ -2859,27 +2859,33 @@ article .layout__column p {
 }
 /* The rise: once the row has scrolled in (ScrollReveal sets data-reveal on
    .pillars-section, the same trigger and the same reduced-motion conditions
-   as the page's fade-in) each pillar slides up into place while a wipe
-   reveals it from its base upward. The whole pillar is one element, so its
-   outline, background and title are always the same animation: the slide
-   settles first and the wipe carries on a little longer, both starting
-   together. The active pillar goes first, then the ones either side, then
-   the next ones out, each a step (--pillar-distance, set per item) after
-   the one before. `translate` is used for the slide because `transform`
-   already holds the sizing, and the clip rests slightly outside the box so
-   the strokes aren't trimmed. */
+   as the page's fade-in) the pillars come up out of the ground. Each item
+   keeps a fixed clip that ends at its own base, which is the ground line;
+   the link inside starts a full pillar's height below it, buried, and slides
+   up through it, so the top clears the ground first and nothing is ever
+   faded or gradually unmasked. The active pillar rises first, then the ones
+   either side, then the next ones out, each a step (--pillar-distance, set
+   per item) after the one before. `translate` is used for the slide because
+   `transform` already holds the hover lift. The clip is open on the other
+   three sides, and a few px below the base for its stroke. */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  :root:not([data-motion='reduce']) .pillars-section .pillars__item {
-    --pillar-delay: calc(var(--pillar-distance, 0) * 0.4s);
-    translate: 0 3rem;
-    clip-path: inset(100% -8px -8px -8px);
-    transition:
-      translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) var(--pillar-delay),
-      clip-path 1.1s ease-out var(--pillar-delay);
+  /* The page's block fade-in would fade the row in under the rise. */
+  :root:not([data-motion='reduce']) article > .pillars-section {
+    opacity: 1;
+    transition: none;
   }
-  :root:not([data-motion='reduce']) .pillars-section[data-reveal] .pillars__item {
+  :root:not([data-motion='reduce']) .pillars-section .pillars__item {
+    --pillar-delay: calc(var(--pillar-distance, 0) * 0.45s);
+    clip-path: inset(-100vh -8px -3px -8px);
+  }
+  :root:not([data-motion='reduce']) .pillars-section .pillars__link {
+    translate: 0 calc(100% + 1rem);
+    transition:
+      translate 1s cubic-bezier(0.2, 0.7, 0.2, 1) var(--pillar-delay),
+      transform 0.15s ease;
+  }
+  :root:not([data-motion='reduce']) .pillars-section[data-reveal] .pillars__link {
     translate: 0 0;
-    clip-path: inset(-8px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
