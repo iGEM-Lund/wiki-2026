@@ -936,6 +936,54 @@ body {
   font-size: 0.75rem;
 }
 
+/* A larger top bar from 64rem up: bigger brand, nav labels and tools.
+   Below that the bar keeps its compact sizing, which is what fits. */
+@media (min-width: 64.0625rem) {
+  :root {
+    --header-height: 5.25rem;
+  }
+  .site__header {
+    gap: 1.5rem;
+    padding: 0.75rem 2rem;
+  }
+  .site__brand-mark {
+    height: 3.5rem;
+  }
+  .site__brand-name {
+    font-size: 2.1rem;
+  }
+  .site__nav {
+    gap: 0.5rem;
+  }
+  .site__nav-item {
+    gap: 0.6rem;
+    padding: 0.55rem 0.8rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+  }
+  .site__nav-item svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+  .site__nav-group-links {
+    min-width: 16rem;
+    padding: 0.5rem;
+  }
+  .site__nav-group-links a {
+    padding: 0.5rem 0.8rem;
+    font-size: 1.05rem;
+  }
+  .site__search-trigger {
+    width: 13rem;
+    padding: 0.6rem 0.9rem;
+    font-size: 1.05rem;
+  }
+  .site__a11y-toggle {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+
 /* Rendered in the top layer by showModal(), but still a DOM child of
    .site, so it inherits the theme and font variables from there. */
 .site-search {
