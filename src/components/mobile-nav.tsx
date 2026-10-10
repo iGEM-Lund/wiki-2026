@@ -53,7 +53,20 @@ export function MobileNav({ children }: { children: ReactNode }) {
   }, [open]);
 
   return (
-    <div className="site__nav-wrap" data-open={open} ref={wrapRef}>
+    <div
+      className="site__nav-wrap"
+      data-open={open}
+      ref={wrapRef}
+      onClick={(event) => {
+        // Close on any link click, including links to the current page (no
+        // pathname change) and desktop dropdowns, which stay open while they
+        // hold focus.
+        const link = (event.target as HTMLElement).closest('a');
+        if (!link) return;
+        setOpen(false);
+        link.blur();
+      }}
+    >
       <button
         type="button"
         className="site__nav-toggle"
