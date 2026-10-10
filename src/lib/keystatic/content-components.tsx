@@ -20,6 +20,12 @@ export const contentComponents = {
       }),
       alt: fields.text({ label: 'Alt text' }),
       caption: fields.text({ label: 'Caption', multiline: true }),
+      scale: fields.number({
+        label: 'Size (%)',
+        description: 'How much of the page width the figure may take up, from 10 to 100.',
+        defaultValue: 100,
+        validation: { min: 10, max: 100 },
+      }),
     },
     ContentView: (props) => <div>[Figure: {props.value.caption ?? ''}]</div>,
   }),

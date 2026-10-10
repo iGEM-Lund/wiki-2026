@@ -1236,6 +1236,7 @@ body {
 }
 .figure-with-caption img {
   max-width: 100%;
+  border-radius: 10px;
 }
 /* Clickable image that opens the Lightbox (ZoomableImage.tsx): a reset
    <button> so it looks like the bare image, zooming in slightly on hover
