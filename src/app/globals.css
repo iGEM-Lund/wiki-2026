@@ -2675,8 +2675,9 @@ article .layout__column p {
 }
 .pillars__list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 14rem));
+  justify-content: center;
+  gap: 1rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -2714,8 +2715,9 @@ article .layout__column p {
   height: auto;
   fill: none;
   stroke: var(--pillar-line);
-  stroke-width: 4;
-  stroke-linejoin: miter;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   overflow: visible;
   transition: stroke 0.15s ease;
 }
@@ -2728,24 +2730,44 @@ article .layout__column p {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 0.4rem;
-  margin: 0 12%;
-  padding: 1.25rem 1rem 1.5rem;
-  border-inline: 4px solid var(--pillar-line);
+  justify-content: center;
+  min-height: 10rem;
+  /* The border is drawn inside the box, so pull the box out by half its
+     width to centre the line on the 12% mark where the SVG lines end. */
+  margin: 0 calc(12% - 2.5px);
+  padding: 1rem 0.8rem;
+  border-inline: 5px solid var(--pillar-line);
   text-align: center;
+  overflow-wrap: anywhere;
   transition: border-color 0.15s ease;
+}
+/* Flutes: a dashed line just inside each edge, kept clear of the text by the
+   shaft's padding. */
+.pillars__shaft::before,
+.pillars__shaft::after {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 3px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--pillar-line) 0 1.25rem,
+    transparent 1.25rem 1.75rem
+  );
+}
+.pillars__shaft::before {
+  left: 0.2rem;
+}
+.pillars__shaft::after {
+  right: 0.2rem;
 }
 .site .pillars__title {
   font-family: var(--font-heading);
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 500;
   line-height: 1.2;
-}
-.site .pillars__description {
-  font-size: 0.9rem;
-  line-height: 1.45;
-  text-align: center;
-  opacity: 0.8;
 }
 @media (prefers-reduced-motion: reduce) {
   .pillars__link {
