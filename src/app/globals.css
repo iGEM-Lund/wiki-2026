@@ -2796,14 +2796,29 @@ article .layout__column p {
 }
 /* The other pillars shrink to make room, and every pillar scales from its
    base so they all keep standing on the same line. */
+.pillars-section {
+  --pillar-small: 0.82;
+  --pillar-big: 1.12;
+  /* Shrinking pulls the small pillars away from each other by (1 - small)
+     of a width, but away from the big one by only half of that less half its
+     growth, so the gap beside the big one would look tighter. Moving every
+     small pillar this far away from the big one evens the gaps out. */
+  --pillar-shift: calc((var(--pillar-big) - var(--pillar-small)) / 2 * 100%);
+}
 .pillars-section .pillars__item {
-  transform: scale(0.82);
+  transform: scale(var(--pillar-small));
   transform-origin: bottom center;
+}
+.pillars-section .pillars__item--before {
+  transform: translateX(calc(var(--pillar-shift) * -1)) scale(var(--pillar-small));
+}
+.pillars-section .pillars__item--after {
+  transform: translateX(var(--pillar-shift)) scale(var(--pillar-small));
 }
 .pillars-section .pillars__item--active {
   position: relative;
   z-index: 1;
-  transform: scale(1.12);
+  transform: scale(var(--pillar-big));
 }
 .pillars__item--active .pillars__link {
   --pillar-line: var(--color-crimson);

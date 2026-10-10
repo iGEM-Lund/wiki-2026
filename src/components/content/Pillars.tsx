@@ -54,6 +54,15 @@ export function PillarRow({ pillars, activeIndex }: { pillars: Pillar[]; activeI
       <ul className="pillars__list">
         {pillars.map((pillar, index) => {
           const active = index === activeIndex;
+          // Which side of the active pillar this one is on, so CSS can move
+          // it away from the active one (see .pillars-section in globals.css).
+          const itemClass = active
+            ? 'pillars__item pillars__item--active'
+            : activeIndex === undefined
+              ? 'pillars__item'
+              : index < activeIndex
+                ? 'pillars__item pillars__item--before'
+                : 'pillars__item pillars__item--after';
           const body = (
             <>
               <Capital />
@@ -64,7 +73,7 @@ export function PillarRow({ pillars, activeIndex }: { pillars: Pillar[]; activeI
             </>
           );
           return (
-            <li key={index} className={active ? 'pillars__item pillars__item--active' : 'pillars__item'}>
+            <li key={index} className={itemClass}>
               {active ? (
                 <span className="pillars__link" aria-current="true">
                   {body}
