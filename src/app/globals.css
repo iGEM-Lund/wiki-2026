@@ -26,9 +26,10 @@
   --color-rose: #d4a0b0;
   --color-crimson: #7e0c28;
 
-  /* The top bar's height; HeaderHeightSync replaces this fallback with the
-     measured value (the brand can wrap on narrow screens). */
-  --header-height: 4.25rem;
+  /* The bar's real height at each width (HeaderHeightSync re-measures it,
+     but until then this is what the page's top offset uses, so a wrong
+     value here makes everything below shift once the page hydrates). */
+  --header-height: 3.75rem;
   /* The page title banner once collapsed into a bar: its whole height, and
      the striped edge's share of it. */
   --page-title-collapsed: 6.5rem;
@@ -374,13 +375,31 @@ body {
   }
 }
 /* Arrival: the banner is drawn on from the left like a brush stroke, a
-   solid fill with a rough, bristly leading edge (the mask is a path whose
-   right edge is jagged; it is 2.5x the banner's width, so only its edge
-   travels across). Then the title and the section list appear.
-   The mask lives only inside the keyframes, so once the stroke is done the
-   banner is exactly as it always was. */
+   solid fill with a rough, bristly leading edge. Then the title and the
+   section list appear. The stroke is a page-colored cover sitting over the
+   banner whose jagged left edge slides off to the right; it only moves with
+   a transform, so it runs on the compositor and doesn't stutter while the
+   page hydrates. At rest the cover is parked past the banner's right edge
+   (clipped), so there's nothing left over once it's done. */
+.site .page-title {
+  overflow: clip;
+}
+.site .page-title::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: -1px;
+  bottom: -1px;
+  left: -8%;
+  width: 108%;
+  background: var(--bg);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M100 0 L7.0 0.0 L7.0 2.5 L7.0 5.0 L7.0 7.5 L7.0 10.0 L3.0 12.5 L2.0 15.0 L7.0 17.5 L7.0 20.0 L2.0 22.5 L1.0 25.0 L7.0 27.5 L4.0 30.0 L2.0 32.5 L1.0 35.0 L7.0 37.5 L0.0 40.0 L6.0 42.5 L7.0 45.0 L2.0 47.5 L0.0 50.0 L7.0 52.5 L1.0 55.0 L0.0 57.5 L0.0 60.0 L3.0 62.5 L3.0 65.0 L0.0 67.5 L7.0 70.0 L5.0 72.5 L7.0 75.0 L3.0 77.5 L7.0 80.0 L3.0 82.5 L4.0 85.0 L7.0 87.5 L0.0 90.0 L1.0 92.5 L7.0 95.0 L4.0 97.5 L6.0 100.0 L100 100 Z'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+  transform: translateX(110%);
+  pointer-events: none;
+}
 @media (prefers-reduced-motion: no-preference) {
-  :root:not([data-motion='reduce']) .site .page-title {
+  :root:not([data-motion='reduce']) .site .page-title::before {
     animation: page-title-brush 1.1s cubic-bezier(0.45, 0, 0.25, 1) backwards;
   }
   :root:not([data-motion='reduce']) .site .page-title__heading {
@@ -392,16 +411,7 @@ body {
 }
 @keyframes page-title-brush {
   from {
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0 L59.0 0.0 L60.0 2.5 L59.0 5.0 L59.0 7.5 L60.0 10.0 L60.0 12.5 L55.0 15.0 L54.0 17.5 L60.0 20.0 L59.0 22.5 L60.0 25.0 L54.0 27.5 L53.0 30.0 L59.0 32.5 L56.0 35.0 L54.0 37.5 L53.0 40.0 L60.0 42.5 L52.0 45.0 L60.0 47.5 L58.0 50.0 L59.0 52.5 L60.0 55.0 L54.0 57.5 L60.0 60.0 L52.0 62.5 L60.0 65.0 L53.0 67.5 L52.0 70.0 L52.0 72.5 L55.0 75.0 L55.0 77.5 L60.0 80.0 L52.0 82.5 L59.0 85.0 L57.0 87.5 L59.0 90.0 L60.0 92.5 L55.0 95.0 L60.0 97.5 L55.0 100.0 L0 100 Z'/%3E%3C/svg%3E");
-    mask-size: 250% 100%;
-    mask-repeat: no-repeat;
-    mask-position: 100% 0;
-  }
-  to {
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0 L59.0 0.0 L60.0 2.5 L59.0 5.0 L59.0 7.5 L60.0 10.0 L60.0 12.5 L55.0 15.0 L54.0 17.5 L60.0 20.0 L59.0 22.5 L60.0 25.0 L54.0 27.5 L53.0 30.0 L59.0 32.5 L56.0 35.0 L54.0 37.5 L53.0 40.0 L60.0 42.5 L52.0 45.0 L60.0 47.5 L58.0 50.0 L59.0 52.5 L60.0 55.0 L54.0 57.5 L60.0 60.0 L52.0 62.5 L60.0 65.0 L53.0 67.5 L52.0 70.0 L52.0 72.5 L55.0 75.0 L55.0 77.5 L60.0 80.0 L52.0 82.5 L59.0 85.0 L57.0 87.5 L59.0 90.0 L60.0 92.5 L55.0 95.0 L60.0 97.5 L55.0 100.0 L0 100 Z'/%3E%3C/svg%3E");
-    mask-size: 250% 100%;
-    mask-repeat: no-repeat;
-    mask-position: 0 0;
+    transform: translateX(0);
   }
 }
 @keyframes page-title-text-in {
@@ -1021,7 +1031,7 @@ body {
    Below that the bar keeps its compact sizing, which is what fits. */
 @media (min-width: 64.0625rem) {
   :root {
-    --header-height: 5.25rem;
+    --header-height: 5rem;
   }
   .site__header {
     gap: 1.5rem;
@@ -2786,6 +2796,7 @@ article .layout__column p {
    page-outline drawer above. */
 @media (max-width: 48rem) {
   :root {
+    --header-height: 4.25rem;
     --page-title-collapsed: 6rem;
     --page-title-collapsed-edge: 1.75rem;
     --page-title-top-scale: 0.35;
