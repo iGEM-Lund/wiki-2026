@@ -190,6 +190,14 @@ body {
   font-weight: bolder;
 }
 
+/* Bold running text in a page's body is crimson (--heading-minor: Rose in
+   dark mode, where crimson fails contrast). Only paragraphs and list items
+   of the page article; bold in tables, nav, cards and headings keeps the
+   surrounding colour. */
+.page-layout article :is(p, li):not(:where(table *)) :is(strong, b) {
+  color: var(--heading-minor);
+}
+
 /* Page title (h1): a banner spanning the whole content pane, from the nav
    sidebar to the outline rail and flush with the top, whose bottom edge is
    a wave that breaks up into thinner and thinner stripes of itself. Markup
