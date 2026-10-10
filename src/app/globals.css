@@ -1662,7 +1662,53 @@ html:has(dialog.lightbox[open]) {
 .molecule-viewer__canvas {
   position: relative;
   width: 100%;
+  /* Leaves a strip below for the controls legend, so it never overlaps the
+     model; the popped dialog overlays it on the dimmed page instead. */
+  height: calc(100% - 1.75rem);
+}
+.molecule-viewer__frame--popped .molecule-viewer__canvas {
   height: 100%;
+}
+.molecule-viewer__legend {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.5rem;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 0.75rem;
+  pointer-events: none;
+}
+.molecule-viewer__legend-key {
+  display: inline-block;
+  padding: 0 0.375rem;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+.molecule-viewer__legend-touch {
+  display: none;
+}
+@media (hover: none) {
+  .molecule-viewer__legend-pointer {
+    display: none;
+  }
+  .molecule-viewer__legend-touch {
+    display: inline-block;
+  }
+}
+.molecule-viewer__frame--popped .molecule-viewer__legend {
+  color: #fff;
+  bottom: 1rem;
+  font-size: 0.8125rem;
 }
 .molecule-viewer__tooltip {
   position: absolute;

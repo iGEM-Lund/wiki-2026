@@ -180,6 +180,34 @@ export function MoleculeViewer({
               : {})}
           >
             <div className="molecule-viewer__canvas" ref={containerRef} />
+            <ul className="molecule-viewer__legend" aria-label="Viewer controls">
+              <li>
+                <span className="molecule-viewer__legend-key">Drag</span> rotate
+              </li>
+              <li>
+                <span className="molecule-viewer__legend-key molecule-viewer__legend-pointer">
+                  Scroll
+                </span>
+                <span className="molecule-viewer__legend-key molecule-viewer__legend-touch">
+                  Pinch
+                </span>{' '}
+                zoom
+              </li>
+              <li>
+                <span className="molecule-viewer__legend-key molecule-viewer__legend-pointer">
+                  Right-drag
+                </span>
+                <span className="molecule-viewer__legend-key molecule-viewer__legend-touch">
+                  Two fingers
+                </span>{' '}
+                pan
+              </li>
+              {popped ? (
+                <li className="molecule-viewer__legend-pointer">
+                  <span className="molecule-viewer__legend-key">Esc</span> close
+                </li>
+              ) : null}
+            </ul>
             {popped ? (
               <button
                 type="button"
