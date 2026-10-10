@@ -149,5 +149,71 @@ export default config({
         }),
       },
     }),
+    // Site footer; see src/lib/footer.ts (resolves this) and
+    // src/components/site-footer.tsx (renders it). The layout is fixed in
+    // code, only the concrete content below is editable. Logos are URL
+    // references (uploaded via the iGEM uploads tool like every other
+    // image), never committed binaries.
+    footer: singleton({
+      label: 'Footer',
+      path: 'content/singletons/footer',
+      format: { data: 'yaml' },
+      schema: {
+        sponsors: fields.array(
+          fields.object({
+            name: fields.text({ label: 'Name', validation: { isRequired: true } }),
+            logoUrl: fields.url({
+              label: 'Logo URL',
+              description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
+              validation: { isRequired: true },
+            }),
+            websiteUrl: fields.url({
+              label: 'Website',
+              description: 'Where the logo leads when clicked.',
+              validation: { isRequired: true },
+            }),
+          }),
+          {
+            label: 'Sponsors',
+            description: 'Logos rotate in the footer in this order. Each one links to the sponsor website.',
+            itemLabel: (props) => props.fields.name.value || 'Sponsor',
+          },
+        ),
+        socials: fields.array(
+          fields.object({
+            label: fields.text({ label: 'Label', description: 'e.g. "Instagram"; used as the accessible name.', validation: { isRequired: true } }),
+            icon: iconField,
+            url: fields.url({ label: 'URL', validation: { isRequired: true } }),
+          }),
+          {
+            label: 'Social Links',
+            itemLabel: (props) => props.fields.label.value || 'Link',
+          },
+        ),
+        contact: fields.object(
+          {
+            email: fields.text({ label: 'Email' }),
+            address: fields.text({ label: 'Address', multiline: true }),
+            note: fields.text({ label: 'Note', multiline: true, description: 'Optional extra line, e.g. who to contact for what.' }),
+          },
+          { label: 'Contact' },
+        ),
+        legal: fields.object(
+          {
+            showNotice: fields.checkbox({ label: 'Show copyright and license notice', defaultValue: true }),
+            year: fields.text({ label: 'Copyright Year', defaultValue: '2026' }),
+            licenseUrl: fields.url({
+              label: 'License URL',
+              defaultValue: 'https://creativecommons.org/licenses/by/4.0/',
+            }),
+            repositoryUrl: fields.url({
+              label: 'Repository URL',
+              defaultValue: 'https://gitlab.igem.org/2026/lund',
+            }),
+          },
+          { label: 'Copyright and License Notice' },
+        ),
+      },
+    }),
   },
 });

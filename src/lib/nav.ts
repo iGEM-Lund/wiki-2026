@@ -9,9 +9,9 @@ export type NavItem = { name: string; icon: NavIconValue } & (
   | { kind: 'dropdown'; items: { label: string; target: NavTarget }[] }
 );
 
-type RawIcon = { discriminant: 'library'; value: string } | { discriminant: 'custom'; value: string };
+export type RawIcon = { discriminant: 'library'; value: string } | { discriminant: 'custom'; value: string };
 
-function resolveIcon(icon: RawIcon): NavIconValue {
+export function resolveIcon(icon: RawIcon): NavIconValue {
   return icon.discriminant === 'library' ? { type: 'library', name: icon.value } : { type: 'custom', url: icon.value };
 }
 
