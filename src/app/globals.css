@@ -2047,6 +2047,12 @@ a.inline-icon--link:focus-visible {
   white-space: pre-line;
   color: color-mix(in srgb, var(--color-pearl) 80%, transparent);
 }
+/* Bold in a card's body is Depths (--heading: Shallows in dark mode, where
+   Depths would vanish on the dark surface). Not the header, which is already
+   a Depths band with Pearl text. */
+.site .card > :not(.card__header) :is(strong, b) {
+  color: var(--heading);
+}
 @media (max-width: 30rem) {
   .card__figure {
     flex-basis: 4rem;
