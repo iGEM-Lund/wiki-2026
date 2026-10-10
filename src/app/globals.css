@@ -1671,28 +1671,25 @@ html:has(dialog.lightbox[open]) {
   background: rgba(0, 0, 0, 0.6);
 }
 .molecule-viewer__frame--popped {
+  /* No panel: the molecule floats over the dimmed page and uses the whole
+     viewport (the canvas background is already transparent). */
   position: fixed;
   z-index: 1001;
-  top: 50%;
-  left: 50%;
-  width: min(92vw, 1100px);
-  height: min(88vh, 800px);
-  transform: translate(-50%, -50%);
-  background: var(--bg, #fff);
-  border-radius: 8px;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
+  inset: 0;
+  width: auto;
+  height: auto;
 }
 .molecule-viewer__close {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 2.25rem;
-  height: 2.25rem;
-  border: 1px solid var(--border);
+  top: 1rem;
+  /* Clear of the Next dev indicator, which sits in the top-right corner. */
+  right: 4.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 50%;
-  background: var(--bg, #fff);
-  color: var(--text);
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
   font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
