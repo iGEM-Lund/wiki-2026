@@ -83,11 +83,13 @@ export function PageTitle({
       <div
         className={outline.length > 0 ? 'page-title page-title--outline' : 'page-title'}
         // Room for the list before PageTitleSync has measured it: the title
-        // plus a line (with spacing) per section.
+        // plus a line (with spacing) per section. Kept close to the real
+        // height (one line per section) so the banner doesn't visibly
+        // resize when the measurement lands.
         style={
           outline.length > 0
             ? ({
-                '--page-title-outline-h': `${(2 + outline.length * 1.8).toFixed(1)}rem`,
+                '--page-title-outline-h': `${(1.5 + outline.length * 1.575).toFixed(2)}rem`,
               } as CSSProperties)
             : undefined
         }
