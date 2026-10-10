@@ -5,29 +5,31 @@ Welcome to the iGEM Lund 2026 team wiki. This page is an example `pages`
 collection entry. Edit or replace it via the Keystatic admin UI at
 `/keystatic` once GitHub App credentials are configured <Citation reference="barker-et-al-2020" />.
 
-Inline math example: <Formula latex="E = mc^2" /> sits within a sentence.
+Inline math example: <Formula latex="E = mc^2" /> sits within a sentence. bla
 
-<Layout>
+<Layout2>
   <LayoutColumn>
     <FormulaBlock latex="\int_0^\infty e^{-x^2}\,dx = \frac{\sqrt{\pi}}{2}" />
   </LayoutColumn>
 
   <LayoutColumn>
     <ChemStructure smiles="C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@@H]2O)CCC4=CC(=O)CC[C@]34C" caption="Testosterone" />
-
-
   </LayoutColumn>
-</Layout>
+</Layout2>
 
 &#x20;
+
+
+
+
 
 <ChemReaction smiles="CCO.CC(=O)O>>CCOC(=O)C.O" caption="Esterification: ethanol + acetic acid -> ethyl acetate + water" />
 
 <Card>
-  This is the summary which is always visible.
+  [This is the summary which is always visible.](google.com)
 
   <Expandable defaultOpen={false}>
-  Here are the details which are visible when the block is expanded.
+    [Here are the details which are visible when the block is expanded.](google.com)
   </Expandable>
 </Card>
 
@@ -38,6 +40,3 @@ Inline math example: <Formula latex="E = mc^2" /> sits within a sentence.
 <SliceWheel slices={[{"title":"Biosafety","body":"How we keep our engineered strains contained, from **lab practice** to kill switches."},{"title":"Stakeholder Interviews","body":"Conversations with clinicians, patients and regulators that shaped the design."},{"title":"Education","body":"Workshops and school visits.\n\n- Lund high schools\n- Science festival booth"},{"title":"Sustainability","body":"Our footprint, measured. See <Citation reference=\"barker-et-al-2020\" />."},{"title":"Entrepreneurship","body":"A path from the bench to a product."}]} />
 
 <FigureCarousel images={[{"src":"https://static.igem.wiki/teams/6160/wiki/education/pillarscycle.avif","alt":"Pillars 1"},{"src":"https://static.igem.wiki/teams/6160/wiki/education/pillarscycle.avif","alt":"Pillars 2"},{"src":"https://static.igem.wiki/teams/6160/wiki/education/pillarscycle.avif","alt":"Pillars 3"}]} speedSeconds={25} />
-
-
-
