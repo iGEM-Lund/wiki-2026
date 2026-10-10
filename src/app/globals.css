@@ -26,9 +26,6 @@
   --color-rose: #d4a0b0;
   --color-crimson: #7e0c28;
 
-  /* Lifts the fixed top bar above the page title banner scrolling
-     underneath it. */
-  --pane-shadow: 0 0 1.25rem color-mix(in srgb, var(--color-noir) 14%, transparent);
   /* The top bar's height; HeaderHeightSync replaces this fallback with the
      measured value (the brand can wrap on narrow screens). */
   --header-height: 4.25rem;
@@ -253,31 +250,49 @@ body {
 }
 @media (min-width: 48.0625rem) {
   .site .page-title.page-title--outline {
-    --page-title-outline-h: 3rem;
+    --page-title-outline-h: 6rem;
     --title-pad-bottom: calc(clamp(4rem, 9vh, 5.5rem) + var(--page-title-outline-h) + 0.75rem);
   }
+  /* Styled like the floating outline (.toc): the same title and plain
+     link list, in the banner's light-on-teal colors. Laid out in columns
+     so a long list doesn't make the banner tall. */
   .page-title__outline {
+    display: block;
     position: absolute;
     left: 0;
     right: 0;
     bottom: 3.75rem;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.4rem 0.5rem;
-    padding: 0 1.5rem;
+    width: min(100% - 3rem, 38rem);
+    margin-inline: auto;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+  .page-title__outline .toc__title {
+    margin: 0 0 0.35rem;
+    padding-left: 0.6rem;
+  }
+  .page-title__outline ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    column-width: 11rem;
+    column-gap: 1.5rem;
+  }
+  .page-title__outline li {
+    margin: 0.2rem 0;
+    break-inside: avoid;
   }
   .site .page-title__outline a {
-    padding: 0.25rem 0.8rem;
-    border: 1px solid color-mix(in srgb, var(--color-pearl) 55%, transparent);
-    border-radius: 999px;
-    color: var(--color-pearl);
-    font-size: 0.875rem;
+    display: block;
+    padding-left: 0.6rem;
+    border-left: 2px solid transparent;
+    color: inherit;
     text-decoration: none;
   }
   .site .page-title__outline a:hover,
   .site .page-title__outline a:focus-visible {
-    background: color-mix(in srgb, var(--color-pearl) 18%, transparent);
+    color: inherit;
+    text-decoration: underline;
   }
 }
 
@@ -533,8 +548,6 @@ body {
   gap: 1rem;
   padding: 0.5rem 1.5rem;
   background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--pane-shadow);
 }
 
 .site__brand {

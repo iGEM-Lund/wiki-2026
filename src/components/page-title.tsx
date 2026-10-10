@@ -4,11 +4,20 @@ import type { HeadingNode } from '@/lib/headings';
 
 // The banner's bottom edge: one gentle wave across the full width, in a
 // 100 x 56 viewBox that stretches sideways only (1 vertical unit = 1/16 rem).
-const EDGE: [number, number][] = [
+type Wave = [number, number][];
+const EDGE: Wave = [
   [0, 6],
   [30, 40],
   [70, -8],
   [100, 20],
+];
+// The top edge is a different wave (it crests where the bottom one dips), so
+// the two don't read as a mirrored copy of each other.
+const TOP_EDGE: Wave = [
+  [0, 26],
+  [32, -10],
+  [68, 42],
+  [100, 2],
 ];
 const EDGE_HEIGHT = 56;
 
@@ -22,8 +31,8 @@ const STRIPES: [number, number][] = [
 ];
 
 // The wave shifted down by `dy`, traced left to right (or back).
-function wave(dy: number, reverse = false): string {
-  const [p0, p1, p2, p3] = EDGE.map(([x, y]) => `${x} ${y + dy}`);
+function wave(edge: Wave, dy: number, reverse = false): string {
+  const [p0, p1, p2, p3] = edge.map(([x, y]) => `${x} ${y + dy}`);
   return reverse ? `L${p3} C${p2} ${p1} ${p0}` : `M${p0} C${p1} ${p2} ${p3}`;
 }
 
@@ -31,18 +40,19 @@ function wave(dy: number, reverse = false): string {
 // banner: every gap between stripes, and everything below the last one.
 // Painting these in the page color over the banner (rather than masking the
 // banner) keeps its gradient continuous across the stripes.
-function edgeCutout(): string {
+function edgeCutout(edge: Wave): string {
   const bands: string[] = [];
   let offset = 0;
   for (const [gap, stripe] of STRIPES) {
-    bands.push(`${wave(offset)} ${wave(offset + gap, true)} Z`);
+    bands.push(`${wave(edge, offset)} ${wave(edge, offset + gap, true)} Z`);
     offset += gap + stripe;
   }
-  bands.push(`${wave(offset)} L100 ${EDGE_HEIGHT} L0 ${EDGE_HEIGHT} Z`);
+  bands.push(`${wave(edge, offset)} L100 ${EDGE_HEIGHT} L0 ${EDGE_HEIGHT} Z`);
   return bands.join(' ');
 }
 
-const EDGE_PATH = edgeCutout();
+const EDGE_PATH = edgeCutout(EDGE);
+const TOP_EDGE_PATH = edgeCutout(TOP_EDGE);
 
 // The page's h1: a banner spanning the whole content pane whose top and
 // bottom edges are waves that break up into thinner and thinner stripes of
@@ -65,16 +75,19 @@ export function PageTitle({
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path d={EDGE_PATH} />
+        <path d={TOP_EDGE_PATH} />
       </svg>
       <h1 className="page-title__heading">{children}</h1>
       {outline.length > 0 ? (
         <nav className="page-title__outline" aria-label="Page sections">
-          {outline.map((node) => (
-            <a key={node.id} href={`#${node.id}`}>
-              {node.text}
-            </a>
-          ))}
+          <p className="toc__title">On this page</p>
+          <ol>
+            {outline.map((node) => (
+              <li key={node.id}>
+                <a href={`#${node.id}`}>{node.text}</a>
+              </li>
+            ))}
+          </ol>
         </nav>
       ) : null}
       <svg
