@@ -13,20 +13,20 @@ const TRIGGER_SHARE = 0.1;
 
 // The page title banner plays an arrival before the content may appear: the
 // stroke, the title, then the section list one line at a time (timings in
-// globals.css, "Arrival"). Content entrances are held until it's done, in
-// seconds: the title is done at 1.05, the list starts at 1.2 with 0.1 per
-// section and fades for 0.3.
+// globals.css, "Arrival"). Content entrances are held until the list is
+// nearly done, in seconds: the title is done at 0.8, the list starts at 0.9
+// with 0.07 per section, and the content comes in while its last line is
+// still fading.
 function introSeconds(): number {
   if (window.scrollY > 0) return 0;
   const root = document.documentElement;
   if (root.dataset.motion === 'reduce') return 0;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 0;
+  const outline = document.querySelector('.page-title__outline');
   if (!document.querySelector('.page-title')) return 0;
   const sections = document.querySelectorAll('.page-title__outline li').length;
-  if (sections === 0 || getComputedStyle(document.querySelector('.page-title__outline')!).display === 'none') {
-    return 1.05;
-  }
-  return 1.2 + (sections - 1) * 0.1 + 0.3;
+  if (!outline || sections === 0 || getComputedStyle(outline).display === 'none') return 0.8;
+  return 0.9 + (sections - 1) * 0.07 + 0.15;
 }
 
 // Triggers the page content's entrance (see [data-reveal] in globals.css)

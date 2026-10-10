@@ -345,8 +345,8 @@ body {
        timing), which has to stay in the list or the collapsible flag would cut it short. */
     :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__heading {
       animation-name: page-title-text-in, page-title-heading-collapse;
-      animation-duration: 0.5s, auto;
-      animation-delay: 0.55s, 0s;
+      animation-duration: 0.4s, auto;
+      animation-delay: 0.4s, 0s;
       animation-timing-function: ease-out, linear;
       animation-fill-mode: backwards, both;
       animation-timeline: auto, scroll(root);
@@ -400,20 +400,20 @@ body {
 }
 @media (prefers-reduced-motion: no-preference) {
   :root:not([data-motion='reduce']) .site .page-title::before {
-    animation: page-title-brush 0.8s cubic-bezier(0.45, 0, 0.25, 1) backwards;
+    animation: page-title-brush 0.7s cubic-bezier(0.45, 0, 0.25, 1) backwards;
   }
   /* Then, in order: the title fades in, the section list fades in top
      down, and only then does the page content below it (ScrollReveal
-     holds its entrances until the list is done; keep its INTRO timing in
+     holds its entrances until the list is nearly done; keep its INTRO timing in
      step with the numbers here). */
   :root:not([data-motion='reduce']) .site .page-title__heading {
-    animation: page-title-text-in 0.5s ease-out 0.55s backwards;
+    animation: page-title-text-in 0.4s ease-out 0.4s backwards;
   }
   :root:not([data-motion='reduce']) .page-title__outline .toc__title {
-    animation: page-title-text-in 0.3s ease-out 1.05s backwards;
+    animation: page-title-text-in 0.25s ease-out 0.75s backwards;
   }
   :root:not([data-motion='reduce']) .page-title__outline li {
-    animation: page-title-text-in 0.3s ease-out calc(1.2s + var(--i, 0) * 0.1s) backwards;
+    animation: page-title-text-in 0.25s ease-out calc(0.9s + var(--i, 0) * 0.07s) backwards;
   }
 }
 @keyframes page-title-brush {
