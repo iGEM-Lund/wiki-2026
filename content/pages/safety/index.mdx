@@ -11,7 +11,7 @@ title: 'Safety '
 
 ### Product and patient safety&#x20;
 
-...
+### ...
 
 ### Genetic and ecological safety
 
@@ -28,7 +28,7 @@ As our engineered probiotic is a living biotherapeutic product, meant to be admi
 
 For each strategy, we researched multiple possible approaches, compared them against our project's specific constraints, and selected the combination that best balances safety, feasibility, and relevance to AnTigone as a testosterone-lowering gut therapeutic.
 
-#### **Gut Gate**
+### **Gut Gate**
 
 Our effector should only be active when our engineered probiotic is in the gut. The distinct physicochemical signals in the gut vary from both the outside environment and between different compartments within the gut itself, and these signals can be used to build a location-based switch. We compared three strategies from the literature and chose hypoxia sensing for our proof-of-concept.
 
@@ -42,7 +42,7 @@ Chien et al. (2022) built three separate biosensor-driven circuits in *E. coli* 
 
 Hypoxia sensing was chosen as our gate. In principle, the oxygen gap between the gut and outside conditions is wide and more consistent than the gut's pH gradient or bile-acid fluctuations, which vary with time of day and diet. Hypoxia promoters are also well established in *E. coli*, since they rely on the bacterium's native FNR-based anaerobic response rather than an engineered bile-acid receptor or pH sensor. Our choice was discussed with Dr. Tsz Yan Clement Chan, who confirmed hypoxia sensing as a valid biosafety layer, while noting it is one layer rather than a complete containment solution on its own.
 
-#### **Feedback-Responsive Expression**
+### **Feedback-Responsive Expression**
 
 Our effector should be expressed only when testosterone levels exceed a threshold. To ensure the enzyme is produced only to lower elevated testosterone, we propose combining our gut gate with a testosterone-responsive transcription factor to form an AND gate. &#x20;
 
@@ -97,7 +97,7 @@ We compared six auxotrophy options before selecting this one:
 
 As our final product is a probiotic, it is important that it will not pose a risk to the environment or users if it is accidentally released. We looked at two families of kill-switch strategy CRISPR-based and quorum-sensing-based  and expect combining strategies to be more effective than any single one alone.
 
-#### **CRISPR-based approaches**&#x20;
+### **CRISPR-based approaches**&#x20;
 
 CRISPR is a gene-editing strategy naturally present in bacteria as phage defense, adaptable to recognize, remove, or express genes as needed. The system has two parts: a Cas enzyme that cuts DNA, and a guide RNA (crRNA + tracrRNA) that tells it where to cut, next to a short PAM motif near the target sequence. The resulting double-strand break is typically repaired by non-homologous end joining, which disrupts the target sequence and its function. We looked at four strategies for applying this to biocontainment:
 
@@ -113,7 +113,7 @@ CRISPR is a gene-editing strategy naturally present in bacteria as phage defense
 * This Cas9 enzyme is coupled with the FNR-repressed promotor, such as the *Pndh*. In this approach, the FNR remains active in the gut, a low-oxygen environment and represses the *Pndh*-*cas9* cassette. This ensures that Cas9 is not produced. 
 * However, when the microorganism is in the presence of oxygen, the FNR becomes inactive. This results in the production of Cas9, alongside its guide RNAs and in turn cleaves the target sites based on the guide RNAs designed, working as an effective kill switch that ensures that the microorganism does not survive outside the gut, as shown by Rottinghaus et al.
 
-#### **Quorum sensing**
+### **Quorum sensing**
 
 Quorum sensing (QS) is a bacterial communication system using signaling molecules to sense population density and regulate gene expression. In the LuxI/LuxR system, bacteria produce AHL, which accumulates with population size; once a threshold is reached, AHL binds LuxR and activates downstream genes. We looked at QS as a population-dependent safety layer based on precedent from other iGEM teams: Utrecht 2025 used high AHL to activate MazF and inhibit growth at high density; GEMS-Taiwan 2023 used low AHL to trigger toxin-mediated death of isolated bacteria, preventing escape; and KU Leuven 2024 combined QS with temperature sensing for more specific containment. For AnTigone, we could adapt the Utrecht strategy to limit excessive EcN accumulation  relevant since EcN is known to preferentially colonize colorectal neoplastic tissue (Gurbatri et al., 2024)  or combine QS with our hypoxia-based gate, so survival requires both low oxygen and an appropriate population density.
 
