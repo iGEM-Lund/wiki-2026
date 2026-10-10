@@ -2039,11 +2039,6 @@ a.inline-icon--link:focus-visible {
   line-height: 1.2;
   color: var(--color-pearl);
 }
-/* Writers often bold card titles by habit; the title is already styled as
-   one, so bold inside it just reads as heavier than intended. */
-.site .card__title :is(strong, b) {
-  font-weight: inherit;
-}
 .site .card__subtitle {
   margin: 0.15rem 0 0;
   font-size: 0.875rem;
