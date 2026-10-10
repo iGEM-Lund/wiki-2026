@@ -467,14 +467,14 @@ export const contentComponents = {
     ),
   }),
 
-  // Generalized responsive layout system: Layout/LayoutSidebar are the two
+  // Generalized responsive layout system: Layout2/Layout3/LayoutSidebar are the
   // container shapes, LayoutColumn is the shared column marker. The count of
   // LayoutColumn children IS the column count (enforced by each container's
   // validation.children), rather than a separate `columns` field that could
   // disagree with what was actually authored; Keystatic has no cross-field
   // dynamic validation to keep such a field in sync. forSpecificLocations on
   // LayoutColumn keeps it out of the general insert menu; it only makes
-  // sense as a child of Layout/LayoutSidebar. ContentViews use inline
+  // sense as a child of Layout2/Layout3/LayoutSidebar. ContentViews use inline
   // styles, not class names, since the admin editor doesn't load the site's
   // globals.css.
   LayoutColumn: wrapper({
@@ -489,12 +489,23 @@ export const contentComponents = {
     ),
   }),
 
-  Layout: repeating({
-    label: 'Layout (equal columns)',
-    description: 'Side-by-side columns of equal width (2-4). Stacks to one column on mobile.',
+  Layout2: repeating({
+    label: 'Layout (2 columns)',
+    description: 'Two side-by-side columns of equal width. Stacks to one column on mobile.',
     schema: {},
     children: 'LayoutColumn',
-    validation: { children: { min: 2, max: 4 } },
+    validation: { children: { min: 2, max: 2 } },
+    ContentView: ({ children }) => (
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>{children}</div>
+    ),
+  }),
+
+  Layout3: repeating({
+    label: 'Layout (3 columns)',
+    description: 'Three side-by-side columns of equal width. Stacks to one column on mobile.',
+    schema: {},
+    children: 'LayoutColumn',
+    validation: { children: { min: 3, max: 3 } },
     ContentView: ({ children }) => (
       <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>{children}</div>
     ),

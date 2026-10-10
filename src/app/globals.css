@@ -1581,10 +1581,15 @@ html:has(dialog.lightbox[open]) {
 }
 .layout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
   gap: 1.5rem;
   margin: 1.5rem 0;
   align-items: start;
+}
+.layout--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.layout--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 .layout-sidebar {
   display: grid;
@@ -1603,7 +1608,8 @@ html:has(dialog.lightbox[open]) {
   margin-bottom: 0;
 }
 @media (max-width: 48rem) {
-  .layout,
+  .layout--2,
+  .layout--3,
   .layout-sidebar {
     grid-template-columns: 1fr;
   }
