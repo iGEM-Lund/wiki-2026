@@ -33,6 +33,9 @@
      the striped edge's share of it. */
   --page-title-collapsed: 4.5rem;
   --page-title-collapsed-edge: 1.25rem;
+  /* The top wave's squashed height over its full one (5rem): the collapsed
+     edge height divided by 5rem. */
+  --page-title-top-scale: 0.25;
 
   --font-heading: 'Fredoka', system-ui, sans-serif;
   --font-body: 'Poppins', system-ui, sans-serif;
@@ -199,12 +202,11 @@ body {
 .site .page-title {
   /* Bottom padding clears the 3.5rem striped edge. Named for the collapse
      below, which has to know where the title sits. */
-  --title-pad-top: 5.5rem;
+  --title-pad-top: 6.5rem;
   --title-pad-bottom: clamp(4rem, 9vh, 5.5rem);
   position: relative;
   z-index: 1;
-  margin: calc(-1 * var(--main-pad-top))
-    calc(50% - 50cqi - var(--main-pad-x) - var(--pane-right)) 3rem
+  margin: 0 calc(50% - 50cqi - var(--main-pad-x) - var(--pane-right)) 3rem
     calc(50% - 50cqi - var(--main-pad-x) - var(--pane-left));
   padding: var(--title-pad-top) calc(1.5rem + var(--pane-right)) var(--title-pad-bottom)
     calc(1.5rem + var(--pane-left));
@@ -230,17 +232,26 @@ body {
   height: 3.5rem;
   fill: var(--bg);
 }
-/* The same wave and stripes mirrored along the top, so the banner reads as
-   hanging from the header's page-colored bar rather than butting into it. */
-.page-title__edge-top {
-  position: absolute;
-  left: 0;
-  /* Overlaps the header by a pixel each way: at fractional header heights
-     the banner's gradient would otherwise show through as a hairline
-     between the two. */
-  top: -2px;
+/* The top wave: a separate element before the banner that overlaps its
+   top, in the same full-bleed box. Pinned under the header (sticky, below)
+   it stays put while the banner scrolls up beneath it, so the wave is never
+   cut off by the header, and it squashes with a scale (compositor-only, so
+   no jitter against the sticky banner). A pixel taller than its box
+   at the top, so no hairline of banner shows between it and the header. */
+.page-title-top {
+  position: relative;
+  z-index: 2;
+  height: calc(5rem + 2px);
+  margin: calc(-1 * var(--main-pad-top) - 2px)
+    calc(50% - 50cqi - var(--main-pad-x) - var(--pane-right)) calc(-5rem - 2px)
+    calc(50% - 50cqi - var(--main-pad-x) - var(--pane-left));
+  transform-origin: top;
+  pointer-events: none;
+}
+.page-title-top svg {
+  display: block;
   width: 100%;
-  height: calc(3.5rem + 2px);
+  height: 100%;
   fill: var(--bg);
   transform: scaleY(-1);
 }
@@ -336,6 +347,16 @@ body {
     :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__edge {
       animation-name: page-title-edge-collapse;
     }
+    /* The top wave pins under the header and squashes to the bottom
+       edge's height as the banner collapses. */
+    :root:not([data-motion='reduce']) .page-title-top:has(+ .page-title[data-collapsible]) {
+      position: sticky;
+      top: calc(var(--pane-top) - 2px);
+      z-index: 41;
+      animation: page-title-top-collapse linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 calc(var(--page-title-height) - var(--page-title-collapsed));
+    }
     /* The in-banner section list fades out over the first half of the
        collapse, handing over to the floating outline (see .toc). */
     :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__outline {
@@ -347,13 +368,13 @@ body {
 }
 /* Moves the title's centre from where it sits in the full banner,
    (height + pad top - pad bottom) / 2, to the middle of the bar's solid
-   part, which starts --collapse-distance down the banner. */
+   part, which runs between the two squashed edges of the bar, the top one
+   having ridden down to --collapse-distance. */
 @keyframes page-title-heading-collapse {
   to {
     translate: 0
       calc(
-        var(--collapse-distance) +
-          (var(--page-title-collapsed) - var(--page-title-collapsed-edge)) / 2 -
+        var(--collapse-distance) + var(--page-title-collapsed) / 2 -
           (var(--page-title-height) + var(--title-pad-top) - var(--title-pad-bottom)) / 2
       );
     scale: 0.55;
@@ -376,6 +397,11 @@ body {
     opacity: 1;
     translate: 0 0;
     visibility: visible;
+  }
+}
+@keyframes page-title-top-collapse {
+  to {
+    scale: 1 var(--page-title-top-scale);
   }
 }
 @keyframes page-title-edge-collapse {
@@ -2707,6 +2733,7 @@ article .layout__column p {
   :root {
     --page-title-collapsed: 6rem;
     --page-title-collapsed-edge: 1.75rem;
+    --page-title-top-scale: 0.35;
   }
 
   .site__header {

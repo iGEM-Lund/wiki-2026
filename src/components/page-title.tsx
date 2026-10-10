@@ -20,6 +20,9 @@ const TOP_EDGE: Wave = [
   [100, 2],
 ];
 const EDGE_HEIGHT = 56;
+// The top edge gets more room (5rem) so its outermost stripes are drawn in full
+// rather than running off the end of the graphic against the header.
+const TOP_EDGE_HEIGHT = 80;
 
 // Below the edge the banner breaks into stripes of the same wave, each
 // thinner and further from the last, so it dissolves into the page rather
@@ -40,19 +43,19 @@ function wave(edge: Wave, dy: number, reverse = false): string {
 // banner: every gap between stripes, and everything below the last one.
 // Painting these in the page color over the banner (rather than masking the
 // banner) keeps its gradient continuous across the stripes.
-function edgeCutout(edge: Wave): string {
+function edgeCutout(edge: Wave, height: number): string {
   const bands: string[] = [];
   let offset = 0;
   for (const [gap, stripe] of STRIPES) {
     bands.push(`${wave(edge, offset)} ${wave(edge, offset + gap, true)} Z`);
     offset += gap + stripe;
   }
-  bands.push(`${wave(edge, offset)} L100 ${EDGE_HEIGHT} L0 ${EDGE_HEIGHT} Z`);
+  bands.push(`${wave(edge, offset)} L100 ${height} L0 ${height} Z`);
   return bands.join(' ');
 }
 
-const EDGE_PATH = edgeCutout(EDGE);
-const TOP_EDGE_PATH = edgeCutout(TOP_EDGE);
+const EDGE_PATH = edgeCutout(EDGE, EDGE_HEIGHT);
+const TOP_EDGE_PATH = edgeCutout(TOP_EDGE, TOP_EDGE_HEIGHT);
 
 // The page's h1: a banner spanning the whole content pane whose top and
 // bottom edges are waves that break up into thinner and thinner stripes of
@@ -68,48 +71,50 @@ export function PageTitle({
   outline?: HeadingNode[];
 }) {
   return (
-    <div
-      className={outline.length > 0 ? 'page-title page-title--outline' : 'page-title'}
-      // Room for the list before PageTitleSync has measured it: the title
-      // plus a line (with spacing) per section.
-      style={
-        outline.length > 0
-          ? ({
-              '--page-title-outline-h': `${(2 + outline.length * 1.8).toFixed(1)}rem`,
-            } as CSSProperties)
-          : undefined
-      }
-    >
-      <svg
-        className="page-title__edge-top"
-        viewBox={`0 0 100 ${EDGE_HEIGHT}`}
-        preserveAspectRatio="none"
-        aria-hidden="true"
+    <>
+      {/* Its own element, before the banner and overlapping it, so it can
+          pin under the header on its own while the banner scrolls beneath
+          it (see .page-title-top in globals.css). */}
+      <div className="page-title-top" aria-hidden="true">
+        <svg viewBox={`0 0 100 ${TOP_EDGE_HEIGHT}`} preserveAspectRatio="none">
+          <path d={TOP_EDGE_PATH} />
+        </svg>
+      </div>
+      <div
+        className={outline.length > 0 ? 'page-title page-title--outline' : 'page-title'}
+        // Room for the list before PageTitleSync has measured it: the title
+        // plus a line (with spacing) per section.
+        style={
+          outline.length > 0
+            ? ({
+                '--page-title-outline-h': `${(2 + outline.length * 1.8).toFixed(1)}rem`,
+              } as CSSProperties)
+            : undefined
+        }
       >
-        <path d={TOP_EDGE_PATH} />
-      </svg>
-      <h1 className="page-title__heading">{children}</h1>
-      {outline.length > 0 ? (
-        <nav className="page-title__outline" aria-label="Page sections">
-          <p className="toc__title">On this page</p>
-          <ol>
-            {outline.map((node) => (
-              <li key={node.id}>
-                <a href={`#${node.id}`}>{node.text}</a>
-              </li>
-            ))}
-          </ol>
-        </nav>
-      ) : null}
-      <svg
-        className="page-title__edge"
-        viewBox={`0 0 100 ${EDGE_HEIGHT}`}
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path d={EDGE_PATH} />
-      </svg>
-      <PageTitleSync />
-    </div>
+        <h1 className="page-title__heading">{children}</h1>
+        {outline.length > 0 ? (
+          <nav className="page-title__outline" aria-label="Page sections">
+            <p className="toc__title">On this page</p>
+            <ol>
+              {outline.map((node) => (
+                <li key={node.id}>
+                  <a href={`#${node.id}`}>{node.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        ) : null}
+        <svg
+          className="page-title__edge"
+          viewBox={`0 0 100 ${EDGE_HEIGHT}`}
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d={EDGE_PATH} />
+        </svg>
+        <PageTitleSync />
+      </div>
+    </>
   );
 }
