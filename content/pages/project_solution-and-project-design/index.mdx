@@ -1,13 +1,29 @@
 ---
 title: Solution and Project design
 ---
-## Solution
+## Our Solution
 
-Several possible effector strategies were considered for microbiome-based androgen modulation. One approach would be to inhibit 5α-microbial reductase, avoiding the conversion of testosterone in the highly androgenic metabolite dihydrotestosterone, or microbial β-glucuronidase or sulfatase activity, thereby reducing deconjugation of androgen metabolites and limiting the regeneration of free testosterone. However, these enzymes are intracellular and inhibiting their function is more complicated. For these reasons, a 5β-reductase-based strategy represents an attractive alternative for proof-of-concept development. 
+### AnTigone: engineering controlled steroid transformation
 
-The aim of this project is to develop and characterize a gut-gated synthetic biology system for the controlled expression of a steroid-modulating effector under gut-like conditions. By targeting androgen metabolism at the intestinal level, the proposed platform aims to provide a spatially localized approach to androgen attenuation. While substantial work would be required before any translational application, including optimization of enzyme choice, chassis selection, biocontainment, and in vivo validation, this project establishes an initial framework for investigating whether engineered gut-localized steroid metabolism could represent a complementary strategy for PMOS-associated hyperandrogenism.
+AnTigone explores whether engineered bacteria could be used to modify androgenic steroids within the intestine. Building on the biological rationale presented in the [Background](https://wiki.igemlund.org/project_background), we propose a system that combines two functions: an enzyme capable of transforming steroid molecules and an expression system responsive to low-oxygen conditions.
 
----
+Our central hypothesis is that **controlled expression of a steroid 5β-modulating enzymes could support the conversion of excess androgen into products with lower to none androgenic activity and/or lowering potent androgen bioavailability**.
+
+### **Why steroid 5β-reduction?**
+
+The biological activity of a steroid depends partly on its molecular structure. Steroid 5β-reductases modify the double bond between carbon atoms 4 and 5, changing the geometry of the steroid molecule. Human AKR1D1 provides an established example of this chemistry and can act on testosterone and other steroid substrates. Our decision to investigate 5β-reduction was informed by discussions with researchers in microbiome biology and steroid metabolism. Liisa Veerus considered direct androgen biotransformation an experimentally tractable starting point because it provides measurable outputs in vitro. Trevor M. Penning supported the biochemical rationale for investigating AKR1D1-mediated testosterone conversion, while emphasizing the difficulty of achieving specificity for a single steroid. Together, these discussions strengthened our decision to begin with a defined enzymatic reaction and assess both its activity and its limitations.
+
+Elisabet Stener-Victorin further encouraged us to distinguish a useful proof-of-concept enzyme from a definitive therapeutic target. We therefore approach AKR1D1 as a tool for investigating the proposed mechanism, without assuming that it would be the most suitable effector for a future clinical application. The full consultation summaries are available on our [Human Practices page](https://wiki.igemlund.org/human-practices).
+
+\
+For AnTigone, this reaction offers a defined starting point for engineering. We can investigate enzyme production, substrate conversion and the biological activity of the resulting mixture as separate experimental questions.&#x20;
+
+### **Connecting activity to environmental conditions**&#x20;
+
+The second component of AnTigone is hypoxia-responsive expression. Our intended design uses low oxygen availability as an environmental input to regulate production of the steroid-transforming enzyme. Low oxygen is only one feature of the intended intestinal environment: a response to hypoxia would demonstrate environmental regulation, but would not by itself establish exclusive expression in the gut, relevant clinical situation or sufficient biological containment.
+
+\
+
 
 ## Project Design
 
