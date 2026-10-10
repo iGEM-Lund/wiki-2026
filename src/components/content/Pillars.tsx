@@ -63,24 +63,11 @@ export function PillarRow({ pillars, activeIndex }: { pillars: Pillar[]; activeI
                 : 'pillars__item pillars__item--after';
           const body = (
             <>
-              {activeIndex === undefined ? null : (
-                // An outline-only copy of the column, shown only while the
-                // pillar rises (see .pillars__ghost in globals.css): the
-                // outline slides up first, then the filled column above it
-                // is revealed from the bottom.
-                <span className="pillars__ghost" aria-hidden="true">
-                  <Capital />
-                  <span className="pillars__shaft" />
-                  <Base />
-                </span>
-              )}
-              <span className="pillars__body">
-                <Capital />
-                <span className="pillars__shaft">
-                  <span className="pillars__title">{pillar.title}</span>
-                </span>
-                <Base />
+              <Capital />
+              <span className="pillars__shaft">
+                <span className="pillars__title">{pillar.title}</span>
               </span>
+              <Base />
             </>
           );
           return (
