@@ -1681,7 +1681,7 @@ html:has(dialog.lightbox[open]) {
 }
 .molecule-viewer__frame--popped .molecule-viewer__canvas {
   /* The dimmed backdrop makes the model look muddy; lift it. */
-  filter: brightness(1.5) saturate(1.1);
+  filter: brightness(1.25) saturate(1.05);
 }
 .molecule-viewer__close {
   position: absolute;
