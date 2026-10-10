@@ -16,8 +16,22 @@ export async function SiteFooter() {
         <div className="site-footer__columns">
           {sponsors.length > 0 && (
             <section className="site-footer__section site-footer__sponsors" aria-label="Sponsors">
-              <h2 className="site-footer__heading">Our sponsors</h2>
+              <h2 className="site-footer__heading">Sponsors</h2>
               <SponsorRotator sponsors={sponsors} />
+            </section>
+          )}
+          {socials.length > 0 && (
+            <section className="site-footer__section" aria-label="Links">
+              <h2 className="site-footer__heading">Links</h2>
+              <ul className="site-footer__socials">
+                {socials.map((social) => (
+                  <li key={social.url}>
+                    <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.label} title={social.label}>
+                      <NavIcon icon={social.icon} size={32} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </section>
           )}
           {hasContact && (
@@ -30,20 +44,6 @@ export async function SiteFooter() {
               )}
               {contact.address && <p className="site-footer__address">{contact.address}</p>}
               {contact.note && <p className="site-footer__address">{contact.note}</p>}
-            </section>
-          )}
-          {socials.length > 0 && (
-            <section className="site-footer__section" aria-label="Social media">
-              <h2 className="site-footer__heading">Follow us</h2>
-              <ul className="site-footer__socials">
-                {socials.map((social) => (
-                  <li key={social.url}>
-                    <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.label} title={social.label}>
-                      <NavIcon icon={social.icon} size={22} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
             </section>
           )}
         </div>

@@ -1,68 +1,49 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-
 type Sponsor = { name: string; logoUrl: string; websiteUrl: string };
 
-const INTERVAL_MS = 4000;
+// Logos that fit side by side in the footer column; fewer sponsors than
+// this sit in a static row, more scroll past in a single endless line.
+const MAX_STATIC = 5;
+const SECONDS_PER_LOGO = 3;
 
-// One logo at a time, cross-fading through the list; pauses while hovered
-// or focused. With reduced motion (OS setting or the site's own toggle) it
-// stops rotating and lays every logo out in a row instead. Without JS the
-// first sponsor is shown.
-export function SponsorRotator({ sponsors }: { sponsors: Sponsor[] }) {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const root = document.documentElement;
-    const sync = () => setReduced(query.matches || root.dataset.motion === 'reduce');
-    sync();
-    query.addEventListener('change', sync);
-    const observer = new MutationObserver(sync);
-    observer.observe(root, { attributes: true, attributeFilter: ['data-motion'] });
-    return () => {
-      query.removeEventListener('change', sync);
-      observer.disconnect();
-    };
-  }, []);
-
-  const rotating = sponsors.length > 1 && !reduced;
-
-  useEffect(() => {
-    if (!rotating || paused) return;
-    const id = window.setInterval(() => setIndex((i) => (i + 1) % sponsors.length), INTERVAL_MS);
-    return () => window.clearInterval(id);
-  }, [rotating, paused, sponsors.length]);
-
+function Logos({ sponsors, hidden }: { sponsors: Sponsor[]; hidden?: boolean }) {
   return (
-    <ul
-      className={`sponsor-rotator${rotating ? ' sponsor-rotator--rotating' : ''}`}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
-    >
-      {sponsors.map((sponsor, i) => {
-        const active = !rotating || i === index;
-        return (
-          <li key={sponsor.websiteUrl + sponsor.logoUrl} className="sponsor-rotator__slide" data-active={active}>
-            <a
-              href={sponsor.websiteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              tabIndex={active ? undefined : -1}
-              aria-hidden={active ? undefined : true}
-              aria-label={sponsor.name}
-              title={sponsor.name}
-            >
-              <img src={sponsor.logoUrl} alt={sponsor.name} loading="lazy" />
-            </a>
-          </li>
-        );
-      })}
+    <ul className="sponsor-rotator__list" aria-hidden={hidden || undefined}>
+      {sponsors.map((sponsor) => (
+        <li key={sponsor.websiteUrl + sponsor.logoUrl} className="sponsor-rotator__slide">
+          <a
+            href={sponsor.websiteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            tabIndex={hidden ? -1 : undefined}
+            aria-label={sponsor.name}
+            title={sponsor.name}
+          >
+            <img src={sponsor.logoUrl} alt={hidden ? '' : sponsor.name} loading="lazy" />
+          </a>
+        </li>
+      ))}
     </ul>
+  );
+}
+
+// One line of logos. Pure CSS (no client JS): with many sponsors the line
+// scrolls endlessly, pausing on hover or focus; under reduced motion (OS
+// setting or the site's own toggle) the scrolling stops and the line
+// becomes horizontally scrollable instead (see globals.css).
+export function SponsorRotator({ sponsors }: { sponsors: Sponsor[] }) {
+  if (sponsors.length <= MAX_STATIC) {
+    return (
+      <div className="sponsor-rotator">
+        <Logos sponsors={sponsors} />
+      </div>
+    );
+  }
+  return (
+    <div className="sponsor-rotator sponsor-rotator--scrolling">
+      <div className="sponsor-rotator__track" style={{ animationDuration: `${sponsors.length * SECONDS_PER_LOGO}s` }}>
+        <Logos sponsors={sponsors} />
+        <Logos sponsors={sponsors} hidden />
+      </div>
+    </div>
   );
 }
