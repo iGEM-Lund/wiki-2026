@@ -31,11 +31,11 @@
   --header-height: 4.25rem;
   /* The page title banner once collapsed into a bar: its whole height, and
      the striped edge's share of it. */
-  --page-title-collapsed: 4.5rem;
-  --page-title-collapsed-edge: 1.25rem;
+  --page-title-collapsed: 6.5rem;
+  --page-title-collapsed-edge: 1.75rem;
   /* The top wave's squashed height over its full one (5rem): the collapsed
      edge height divided by 5rem. */
-  --page-title-top-scale: 0.25;
+  --page-title-top-scale: 0.35;
 
   --font-heading: 'Fredoka', system-ui, sans-serif;
   --font-body: 'Poppins', system-ui, sans-serif;
