@@ -1607,6 +1607,14 @@ html:has(dialog.lightbox[open]) {
 .layout__column > :last-child {
   margin-bottom: 0;
 }
+/* Three columns are too tight inside the 50rem reading column, so from
+   75rem up (where the outline floats in the gutter and there is room) they
+   reach 7rem past it on each side, to 64rem. Prose keeps its measure. */
+@media (min-width: 75rem) {
+  .layout--3 {
+    margin-inline: -7rem;
+  }
+}
 @media (max-width: 48rem) {
   .layout--2,
   .layout--3,
