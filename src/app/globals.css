@@ -591,12 +591,12 @@ body {
    sets data-reveal). Same conditions for starting out hidden as above. */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   :root:not([data-motion='reduce']) article > :not(.page-title, .page-title-top, .section-heading),
-  :root:not([data-motion='reduce']) article p {
+  :root:not([data-motion='reduce']) article p:not(.page-title *) {
     opacity: 0;
     transition: opacity 0.6s ease-out;
   }
   :root:not([data-motion='reduce']) article > [data-reveal]:not(.page-title, .page-title-top, .section-heading),
-  :root:not([data-motion='reduce']) article p[data-reveal] {
+  :root:not([data-motion='reduce']) article p[data-reveal]:not(.page-title *) {
     opacity: 1;
   }
   /* Popups (WorldMap pins, SliceWheel slices) mount their paragraphs after

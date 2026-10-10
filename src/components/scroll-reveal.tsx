@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 // ones inside those blocks, so a long card fills in as it scrolls up. The
 // title banner has its own collapse; h2s fade their text and draw their
 // flourishes instead, so they're targeted separately.
-const TARGETS = 'article > :not(.page-title, .page-title-top, .section-heading), article p, .section-heading';
+const TARGETS = 'article > :not(.page-title, .page-title-top, .section-heading), article p:not(.page-title *), .section-heading';
 
 // Where the entrance triggers, as a share of the viewport from the bottom.
 const TRIGGER_SHARE = 0.1;
