@@ -1725,10 +1725,13 @@ html:has(dialog.lightbox[open]) {
   display: grid;
   grid-template-columns: 6rem minmax(0, 1fr);
   column-gap: 1.25rem;
+  /* Empty flexible rows above and below the text/attribution pair keep
+     the pair vertically centred against the figure. */
+  grid-template-rows: minmax(0, 1fr) auto auto minmax(0, 1fr);
   align-items: start;
 }
 .quote-block__figure {
-  grid-row: 1 / span 2;
+  grid-row: 1 / -1;
 }
 /* Scoped to the thumbnail itself: the Lightbox <dialog> is rendered inside
    .quote-block__figure too, and a plain descendant selector would crop the
@@ -1743,6 +1746,12 @@ html:has(dialog.lightbox[open]) {
 .quote-block--with-figure .quote-block__text,
 .quote-block--with-figure .quote-block__quotee {
   grid-column: 2;
+}
+.quote-block--with-figure .quote-block__text {
+  grid-row: 2;
+}
+.quote-block--with-figure .quote-block__quotee {
+  grid-row: 3;
 }
 @media (max-width: 30rem) {
   .quote-block--with-figure {
