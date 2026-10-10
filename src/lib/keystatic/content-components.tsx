@@ -1,5 +1,6 @@
 import { fields } from '@keystatic/core';
-import { block, inline, wrapper, repeating } from '@keystatic/core/content-components';
+import { block, inline, mark, wrapper, repeating } from '@keystatic/core/content-components';
+import { helpCircleIcon } from '@keystar/ui/icon/icons/helpCircleIcon';
 import { renderLatexToHtml } from '@/lib/katex';
 import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/chemistry';
 
@@ -211,6 +212,26 @@ export const contentComponents = {
         return <span className="citation citation--missing">[missing reference]</span>;
       }
       return <span className="citation">{slug.replace(/-/g, ' ')}</span>;
+    },
+  }),
+
+  // A mark rather than an inline component, so the hoverable text stays
+  // ordinary editable text in the document: select a term, pick "Tooltip"
+  // from the toolbar's component menu, type the explanation. Serialized as
+  // <Tooltip text="...">term</Tooltip>. Dotted underline matches the site's
+  // `.term-tip` so the editor preview signals "hoverable" the same way.
+  Tooltip: mark({
+    label: 'Tooltip',
+    icon: helpCircleIcon,
+    tag: 'span',
+    style: { textDecoration: 'underline dotted', textUnderlineOffset: '0.2em' },
+    schema: {
+      text: fields.text({
+        label: 'Explanation',
+        description: 'Shown when a reader hovers, taps or focuses the selected text. Keep it to a sentence or two; plain text only.',
+        multiline: true,
+        validation: { isRequired: true },
+      }),
     },
   }),
 

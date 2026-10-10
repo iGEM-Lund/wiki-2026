@@ -1384,6 +1384,51 @@ html:has(dialog.lightbox[open]) {
   color: var(--error);
 }
 
+/* Tooltip content component: a term with a hover/focus explanation. The
+   bubble is pure CSS; the term is focusable so touch and keyboard readers
+   get it too. */
+.term-tip {
+  position: relative;
+  cursor: help;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 0.2em;
+}
+.term-tip__bubble {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 0.4rem);
+  z-index: 5;
+  width: max-content;
+  max-width: min(18rem, 80vw);
+  padding: 0.4rem 0.7rem;
+  border-radius: 8px;
+  background: var(--heading);
+  color: var(--bg);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: left;
+  text-decoration: none;
+  white-space: normal;
+  transform: translateX(-50%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.term-tip:hover > .term-tip__bubble,
+.term-tip:focus > .term-tip__bubble,
+.term-tip:focus-visible > .term-tip__bubble {
+  opacity: 1;
+  visibility: visible;
+}
+@media (prefers-reduced-motion: reduce) {
+  .term-tip__bubble {
+    transition: none;
+  }
+}
+
 /* Crimson/Rose/Blush is the brand's secondary (pink) palette; see the
    --color-* declarations at the top of this file. Crimson fails contrast
    on the dark-mode Noir background (same reasoning as --error above), so
