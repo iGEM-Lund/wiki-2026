@@ -2666,10 +2666,10 @@ article .layout__column p {
   background-color: color-mix(in srgb, var(--color-peacock) 35%, transparent);
 }
 
-/* Pillars: Greek columns in line art, each an anchor link to a heading
-   further down the page. The capital and base are SVGs (see Pillars.tsx);
-   the shaft is the text block between them, outlined by its side borders,
-   which sit at the 16% / 84% marks where the SVG paths meet them. */
+/* Pillars: plain columns in line art, each an anchor link to a heading
+   further down the page. The capital and base are SVG slabs (see
+   Pillars.tsx); the shaft is the text block between them, outlined by its
+   side borders. */
 .pillars {
   margin: 2rem 0;
 }
@@ -2714,8 +2714,8 @@ article .layout__column p {
   height: auto;
   fill: none;
   stroke: var(--pillar-line);
-  stroke-width: 2;
-  stroke-linejoin: round;
+  stroke-width: 4;
+  stroke-linejoin: miter;
   overflow: visible;
   transition: stroke 0.15s ease;
 }
@@ -2729,29 +2729,11 @@ article .layout__column p {
   flex: 1;
   flex-direction: column;
   gap: 0.4rem;
-  margin: 0 16%;
-  padding: 1.25rem 1.25rem 1.5rem;
-  border-inline: 2px solid var(--pillar-line);
+  margin: 0 12%;
+  padding: 1.25rem 1rem 1.5rem;
+  border-inline: 4px solid var(--pillar-line);
   text-align: center;
   transition: border-color 0.15s ease;
-}
-/* Flutes: faint lines just inside each edge, kept clear of the text by the
-   shaft's padding. */
-.pillars__shaft::before,
-.pillars__shaft::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--pillar-line);
-  opacity: 0.35;
-}
-.pillars__shaft::before {
-  left: 0.45rem;
-}
-.pillars__shaft::after {
-  right: 0.45rem;
 }
 .site .pillars__title {
   font-family: var(--font-heading);

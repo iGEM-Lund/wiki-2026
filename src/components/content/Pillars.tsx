@@ -3,32 +3,23 @@ import GithubSlugger from 'github-slugger';
 type Pillar = { title: string; description?: string; heading?: string };
 type PillarsProps = { pillars?: Pillar[] };
 
-// Each pillar is drawn as a Greek column in line art: an Ionic capital (a
-// flat abacus over a volute on either side) and a stepped base, both inline
-// SVG, with the shaft between them drawn by the two side borders of the text
-// block (see .pillars__shaft in globals.css). vector-effect keeps the strokes
-// a constant 2px however wide the column gets. The shaft edges sit at 16% and
-// 84% of the width, which is where both SVGs' paths meet them.
+// Each pillar is drawn as a plain column in line art: a flat slab on top, a
+// flat slab as the base, both inline SVG, with the shaft between them drawn
+// by the two side borders of the text block (see .pillars__shaft in
+// globals.css). vector-effect keeps the strokes a constant width however wide
+// the column gets. The shaft sits inset 12% from each side.
 function Capital() {
   return (
-    <svg className="pillars__capital" viewBox="0 0 100 22" aria-hidden="true">
-      <rect x="2" y="1" width="96" height="5" />
-      <circle cx="9" cy="13" r="4.5" />
-      <circle cx="9" cy="13" r="1.4" />
-      <circle cx="91" cy="13" r="4.5" />
-      <circle cx="91" cy="13" r="1.4" />
-      <path d="M 9 17.5 Q 9 21 16 21 L 16 22 M 91 17.5 Q 91 21 84 21 L 84 22 M 16 21 L 84 21 M 13.5 13 L 13.5 6 M 86.5 13 L 86.5 6" />
+    <svg className="pillars__capital" viewBox="0 0 100 12" aria-hidden="true">
+      <rect x="2" y="2" width="96" height="10" />
     </svg>
   );
 }
 
 function Base() {
   return (
-    <svg className="pillars__base" viewBox="0 0 100 18" aria-hidden="true">
-      <path d="M 16 0 L 16 2 M 84 0 L 84 2" />
-      <rect x="10" y="2" width="80" height="4" />
-      <rect x="5" y="6" width="90" height="4" />
-      <rect x="1" y="10" width="98" height="6" />
+    <svg className="pillars__base" viewBox="0 0 100 12" aria-hidden="true">
+      <rect x="2" y="0" width="96" height="10" />
     </svg>
   );
 }
