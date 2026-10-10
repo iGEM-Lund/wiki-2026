@@ -8,6 +8,9 @@ type MoleculeViewerStyle = 'cartoon' | 'stick' | 'sphere' | 'line';
 // Zooming in past this fraction of the initial camera distance pops the
 // viewer out into a dimmed, full-size dialog.
 const POP_OUT_ZOOM_RATIO = 0.5;
+// Zooming back out past this closes it again. Higher than the opening
+// threshold so it doesn't flicker right at the boundary.
+const POP_IN_ZOOM_RATIO = 0.75;
 
 // What a renderer hands back: teardown, a way to restore the initial framing,
 // and a way to re-measure after the container's size changed. Zoom is
@@ -23,6 +26,10 @@ type MoleculeViewerProps = {
   format?: MoleculeViewerFormat;
   style?: MoleculeViewerStyle;
   caption?: string;
+  // GLB only. When set, ChimeraX's baked-in text labels are dropped and
+  // hovering any region colored differently from the rest of the model
+  // (e.g. a highlighted mutation site) shows this text as a tooltip instead.
+  highlightLabel?: string;
 };
 
 // Interactive 3D structure viewer (proteins, ligands, small molecules).
@@ -50,6 +57,7 @@ export function MoleculeViewer({
   format = 'pdb',
   style = 'cartoon',
   caption,
+  highlightLabel,
 }: MoleculeViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
@@ -67,12 +75,17 @@ export function MoleculeViewer({
     handleRef.current?.resetView();
   }, []);
 
-  const onZoom = useCallback((ratio: number) => {
-    if (!poppedRef.current && ratio < POP_OUT_ZOOM_RATIO) {
-      poppedRef.current = true;
-      setPopped(true);
-    }
-  }, []);
+  const onZoom = useCallback(
+    (ratio: number) => {
+      if (!poppedRef.current && ratio < POP_OUT_ZOOM_RATIO) {
+        poppedRef.current = true;
+        setPopped(true);
+      } else if (poppedRef.current && ratio > POP_IN_ZOOM_RATIO) {
+        closePopOut();
+      }
+    },
+    [closePopOut],
+  );
 
   useEffect(() => {
     if (!modelUrl || !containerRef.current) return;
@@ -89,7 +102,7 @@ export function MoleculeViewer({
         if (cancelled || !containerRef.current) return;
 
         const handle = isGlb(buffer)
-          ? await renderGlb(containerRef.current, buffer, onZoom)
+          ? await renderGlb(containerRef.current, buffer, onZoom, highlightLabel)
           : await renderMolecule(
               containerRef.current,
               new TextDecoder().decode(buffer),
@@ -114,7 +127,7 @@ export function MoleculeViewer({
       handleRef.current = null;
       dispose?.();
     };
-  }, [modelUrl, format, style, onZoom]);
+  }, [modelUrl, format, style, highlightLabel, onZoom]);
 
   // While popped out: Escape closes, the page behind doesn't scroll, and
   // focus moves to the close button then returns to where it was.
@@ -232,6 +245,7 @@ async function renderGlb(
   container: HTMLElement,
   buffer: ArrayBuffer,
   onZoom: (ratio: number) => void,
+  highlightLabel?: string,
 ): Promise<ViewerHandle> {
   const [THREE, { GLTFLoader }, { OrbitControls }] = await Promise.all([
     import('three'),
@@ -240,6 +254,18 @@ async function renderGlb(
   ]);
 
   const gltf = await new GLTFLoader().parseAsync(buffer, '');
+
+  // ChimeraX exports its 2D labels as textured quads; with a tooltip label
+  // configured they're redundant, so drop them before framing the model.
+  if (highlightLabel) {
+    const labels: import('three').Object3D[] = [];
+    gltf.scene.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return;
+      const materials = Array.isArray(object.material) ? object.material : [object.material];
+      if (materials.some((material) => 'map' in material && material.map)) labels.push(object);
+    });
+    for (const label of labels) label.removeFromParent();
+  }
 
   const scene = new THREE.Scene();
   scene.add(gltf.scene);
@@ -258,10 +284,14 @@ async function renderGlb(
   container.appendChild(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);
+  // Assigned below once the tooltip exists; the first controls.update()
+  // already fires 'change', before that.
+  let scheduleHover = () => {};
   const render = () => renderer.render(scene, camera);
   controls.addEventListener('change', () => {
     render();
     onZoom(camera.position.distanceTo(controls.target) / distance);
+    scheduleHover();
   });
 
   // Frame the whole model: center the orbit on it and back the camera off
@@ -281,6 +311,52 @@ async function renderGlb(
   controls.update();
   controls.saveState();
 
+  const hover = highlightLabel ? createHighlightHover(THREE, gltf.scene) : null;
+  let tooltip: HTMLDivElement | null = null;
+  let hoverFrame = 0;
+  let lastPointer: { x: number; y: number } | null = null;
+  // Re-run on every camera move too, not just pointer moves: zooming or
+  // rotating under a stationary cursor changes what's beneath it.
+  const updateHover = () => {
+    if (!hover || !tooltip || !lastPointer) return;
+    const { x, y } = lastPointer;
+    const bounds = renderer.domElement.getBoundingClientRect();
+    const pointer = new THREE.Vector2(
+      ((x - bounds.left) / bounds.width) * 2 - 1,
+      -((y - bounds.top) / bounds.height) * 2 + 1,
+    );
+    const over = hover.isOverHighlight(pointer, camera);
+    tooltip.style.display = over ? 'block' : 'none';
+    renderer.domElement.style.cursor = over ? 'help' : '';
+    if (over) {
+      tooltip.style.left = `${x - bounds.left + 14}px`;
+      tooltip.style.top = `${y - bounds.top + 14}px`;
+    }
+  };
+  scheduleHover = () => {
+    cancelAnimationFrame(hoverFrame);
+    hoverFrame = requestAnimationFrame(updateHover);
+  };
+  const onPointerMove = (event: PointerEvent) => {
+    lastPointer = { x: event.clientX, y: event.clientY };
+    scheduleHover();
+  };
+  const onPointerLeave = () => {
+    lastPointer = null;
+    cancelAnimationFrame(hoverFrame);
+    if (tooltip) tooltip.style.display = 'none';
+    renderer.domElement.style.cursor = '';
+  };
+  if (hover && highlightLabel) {
+    tooltip = document.createElement('div');
+    tooltip.className = 'molecule-viewer__tooltip';
+    tooltip.textContent = highlightLabel;
+    tooltip.style.display = 'none';
+    container.appendChild(tooltip);
+    renderer.domElement.addEventListener('pointermove', onPointerMove);
+    renderer.domElement.addEventListener('pointerleave', onPointerLeave);
+  }
+
   const resize = () => {
     const { clientWidth, clientHeight } = container;
     if (!clientWidth || !clientHeight) return;
@@ -294,6 +370,11 @@ async function renderGlb(
   resize();
 
   const dispose = () => {
+    cancelAnimationFrame(hoverFrame);
+    renderer.domElement.removeEventListener('pointermove', onPointerMove);
+    renderer.domElement.removeEventListener('pointerleave', onPointerLeave);
+    tooltip?.remove();
+    hover?.dispose();
     observer.disconnect();
     controls.dispose();
     gltf.scene.traverse((object) => {
@@ -313,4 +394,86 @@ async function renderGlb(
   };
 
   return { dispose, resetView: () => controls.reset() };
+}
+
+// Finds "colored regions" in a vertex-colored mesh: the dominant vertex color
+// is the base look of the model, and any triangle whose vertices differ from
+// it is a highlight. Only those triangles go into a small proxy mesh, so a
+// hover test is one cheap raycast against the proxy; the (expensive) full
+// mesh is only raycast on a proxy hit, to make sure the highlight isn't
+// hidden behind other geometry.
+function createHighlightHover(THREE: typeof import('three'), root: import('three').Object3D) {
+  const raycaster = new THREE.Raycaster();
+  const proxies: import('three').Mesh[] = [];
+  const sources: import('three').Mesh[] = [];
+
+  root.updateWorldMatrix(true, true);
+  root.traverse((object) => {
+    if (!(object instanceof THREE.Mesh)) return;
+    const geometry = object.geometry as import('three').BufferGeometry;
+    const color = geometry.getAttribute('color');
+    const position = geometry.getAttribute('position');
+    if (!color || !position) return;
+
+    const key = (i: number) =>
+      `${Math.round(color.getX(i) * 31)},${Math.round(color.getY(i) * 31)},${Math.round(color.getZ(i) * 31)}`;
+    const counts = new Map<string, number>();
+    for (let i = 0; i < color.count; i++) counts.set(key(i), (counts.get(key(i)) ?? 0) + 1);
+    let base = '';
+    let best = -1;
+    for (const [candidate, n] of counts) if (n > best) [base, best] = [candidate, n];
+    if (counts.size < 2) return;
+
+    const index = geometry.getIndex();
+    const triangleCount = (index ? index.count : position.count) / 3;
+    const vertexAt = (t: number, corner: number) => (index ? index.getX(t * 3 + corner) : t * 3 + corner);
+    const highlighted: number[] = [];
+    for (let t = 0; t < triangleCount; t++) {
+      for (let corner = 0; corner < 3; corner++) {
+        const v = vertexAt(t, corner);
+        if (key(v) !== base) {
+          highlighted.push(t);
+          break;
+        }
+      }
+    }
+    if (!highlighted.length) return;
+
+    const positions = new Float32Array(highlighted.length * 9);
+    highlighted.forEach((t, n) => {
+      for (let corner = 0; corner < 3; corner++) {
+        const v = vertexAt(t, corner);
+        positions.set([position.getX(v), position.getY(v), position.getZ(v)], n * 9 + corner * 3);
+      }
+    });
+    const proxyGeometry = new THREE.BufferGeometry();
+    proxyGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const proxy = new THREE.Mesh(
+      proxyGeometry,
+      new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }),
+    );
+    proxy.matrixAutoUpdate = false;
+    proxy.matrix.copy(object.matrixWorld);
+    proxy.matrixWorld.copy(object.matrixWorld);
+    proxies.push(proxy);
+    sources.push(object);
+  });
+
+  return {
+    isOverHighlight(pointer: import('three').Vector2, camera: import('three').Camera): boolean {
+      if (!proxies.length) return false;
+      raycaster.setFromCamera(pointer, camera);
+      const proxyHit = raycaster.intersectObjects(proxies, false)[0];
+      if (!proxyHit) return false;
+      const sceneHit = raycaster.intersectObjects(sources, false)[0];
+      // Within a small tolerance of the nearest surface = actually visible.
+      return !sceneHit || proxyHit.distance <= sceneHit.distance + 1e-3 * (sceneHit.distance || 1);
+    },
+    dispose() {
+      for (const proxy of proxies) {
+        proxy.geometry.dispose();
+        (proxy.material as import('three').Material).dispose();
+      }
+    },
+  };
 }

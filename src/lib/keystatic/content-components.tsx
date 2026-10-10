@@ -309,6 +309,11 @@ export const contentComponents = {
         ],
         defaultValue: 'cartoon',
       }),
+      highlightLabel: fields.text({
+        label: 'Highlight tooltip (optional, GLB only)',
+        description:
+          'Shown when hovering any region colored differently from the rest of the model (e.g. a mutated residue). When set, the text labels baked into the GLB are hidden, so this replaces them.',
+      }),
       caption: fields.text({ label: 'Caption (optional)' }),
     },
     ContentView: (props) => (
