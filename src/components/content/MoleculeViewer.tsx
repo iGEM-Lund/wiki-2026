@@ -8,9 +8,13 @@ type MoleculeViewerStyle = 'cartoon' | 'stick' | 'sphere' | 'line';
 // Zooming in past this fraction of the initial camera distance pops the
 // viewer out into a dimmed, full-size dialog.
 const POP_OUT_ZOOM_RATIO = 0.5;
-// Zooming back out past this closes it again. Higher than the opening
-// threshold so it doesn't flicker right at the boundary.
-const POP_IN_ZOOM_RATIO = 0.75;
+// The dialog fills the viewport, so the zoom that triggered the pop-out
+// would look far too close there. It opens at this gentler zoom instead...
+const POPPED_START_ZOOM_RATIO = 0.8;
+// ...and zooming back out past this closes it again. Just above the start
+// zoom, so a few notches out dismisses it, and well above the opening
+// threshold so it can't flicker at the boundary.
+const POP_IN_ZOOM_RATIO = 0.92;
 
 // What a renderer hands back: teardown, a way to restore the initial framing,
 // and a way to re-measure after the container's size changed. Zoom is
@@ -19,6 +23,8 @@ const POP_IN_ZOOM_RATIO = 0.75;
 type ViewerHandle = {
   dispose: () => void;
   resetView: () => void;
+  // Move the camera along its current line of sight to this zoom ratio.
+  setZoomRatio: (ratio: number) => void;
 };
 
 type MoleculeViewerProps = {
@@ -80,6 +86,9 @@ export function MoleculeViewer({
       if (!poppedRef.current && ratio < POP_OUT_ZOOM_RATIO) {
         poppedRef.current = true;
         setPopped(true);
+        // Deferred: this runs inside the renderer's own change/render
+        // callback, which must not be re-entered with a camera move.
+        requestAnimationFrame(() => handleRef.current?.setZoomRatio(POPPED_START_ZOOM_RATIO));
       } else if (poppedRef.current && ratio > POP_IN_ZOOM_RATIO) {
         closePopOut();
       }
@@ -233,6 +242,10 @@ async function renderMolecule(
     },
     resetView: () => {
       viewer.setView(initialView);
+      viewer.render();
+    },
+    setZoomRatio: (ratio) => {
+      viewer.setPerceivedDistance(initialDistance * ratio);
       viewer.render();
     },
   };
@@ -393,7 +406,14 @@ async function renderGlb(
     renderer.domElement.remove();
   };
 
-  return { dispose, resetView: () => controls.reset() };
+  const setZoomRatio = (ratio: number) => {
+    const offset = camera.position.clone().sub(controls.target);
+    camera.position.copy(controls.target).add(offset.setLength(distance * ratio));
+    controls.update();
+    render();
+  };
+
+  return { dispose, resetView: () => controls.reset(), setZoomRatio };
 }
 
 // Finds "colored regions" in a vertex-colored mesh: the dominant vertex color
