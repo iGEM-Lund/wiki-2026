@@ -413,6 +413,39 @@ export const contentComponents = {
     ),
   }),
 
+  // Plain data (title, summary, optional heading text), so unlike WorldMap's
+  // pins there is no nested MDX field here. The link target is computed on
+  // the site from the heading text (see src/components/content/Pillars.tsx).
+  Pillars: block({
+    label: 'Pillars',
+    description: 'A row of pillars; clicking one jumps to its heading further down the page.',
+    schema: {
+      pillars: fields.array(
+        fields.object({
+          title: fields.text({
+            label: 'Title',
+            description: 'Shown on the pillar. Also the heading it links to, unless "Heading to link to" is set.',
+            validation: { isRequired: true },
+          }),
+          description: fields.text({
+            label: 'Short description (optional)',
+            description: 'One or two sentences under the title.',
+            multiline: true,
+          }),
+          heading: fields.text({
+            label: 'Heading to link to (optional)',
+            description:
+              'Only needed when the heading on the page is worded differently from the title. Type its text exactly as it appears.',
+          }),
+        }),
+        { label: 'Pillars', itemLabel: (props) => props.fields.title.value || 'Pillar' },
+      ),
+    },
+    ContentView: (props) => (
+      <div>[Pillars: {(props.value.pillars ?? []).map((pillar) => pillar.title).join(' / ') || 'no pillars'}]</div>
+    ),
+  }),
+
   // Generalized responsive layout system: Layout/LayoutSidebar are the two
   // container shapes, LayoutColumn is the shared column marker. The count of
   // LayoutColumn children IS the column count (enforced by each container's

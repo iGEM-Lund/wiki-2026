@@ -13,6 +13,7 @@ import { FormulaBlock } from './FormulaBlock';
 import { ChemStructure } from './ChemStructure';
 import { ChemReaction } from './ChemReaction';
 import { MoleculeViewer } from './MoleculeViewer';
+import { Pillars } from './Pillars';
 import { Layout } from './Layout';
 import { LayoutSidebar } from './LayoutSidebar';
 import { LayoutColumn } from './LayoutColumn';
@@ -38,6 +39,7 @@ export const embeddableComponents = {
   Expandable,
   Citation,
   Quote,
+  Pillars,
   Formula,
   FormulaBlock,
   ChemStructure,
