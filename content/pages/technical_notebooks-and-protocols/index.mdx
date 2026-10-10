@@ -91,16 +91,16 @@ Summer Lab was the main time we spent in the lab. We had a summer break from oth
     | **Sample**                               | **Concentration (ng/µL)** | **Abs 260/280** | **Abs 260/230** |
     | ---------------------------------------- | ------------------------- | --------------- | --------------- |
     | S1 (positive control-undigested plasmid) | 8.449                     | 1.889           | 0.195           |
-    | S2 **clear FD buffer, no phosphatase**   | 19.9                      | 1.905           | 0.506           |
-    | S3 **clear FD buffer, no phosphatase**   | 13.9                      | 2.000           | 0.538           |
-    | S4 **clear FD buffer, no phosphatase**   | 15.9                      | 2.133           | 0.232           |
-    | S5 **clear FD buffer, with phosphatase** | 16.4                      | 2.082           | 0.083           |
-    | S6 **clear FD buffer, with phosphatase** | 11.9                      | 2.000           | 0.304           |
-    | S7 **clear FD buffer, with phosphatase** | 19.4                      | 2.053           | 0.402           |
-    | S8 **green FD buffer, with phosphatase** | 19.4                      | 2.053           | 0.722           |
-    | S9 **green FD buffer, with phosphatase** | 13.9                      | 2.000           | 0.483           |
-    | S10 **green FD buffer, no phosphatase**  | 15.9                      | 1.882           | 0.542           |
-    | S11 **green FD buffer, no phosphatase**  | 17.4                      | 2.059           | 0.347           |
+    | S2 clear FD buffer, no phosphatase       | 19.9                      | 1.905           | 0.506           |
+    | S3 clear FD buffer, no phosphatase       | 13.9                      | 2.000           | 0.538           |
+    | S4 clear FD buffer, no phosphatase       | 15.9                      | 2.133           | 0.232           |
+    | S5 clear FD buffer, with phosphatase     | 16.4                      | 2.082           | 0.083           |
+    | S6 clear FD buffer, with phosphatase     | 11.9                      | 2.000           | 0.304           |
+    | S7 clear FD buffer, with phosphatase     | 19.4                      | 2.053           | 0.402           |
+    | S8 green FD buffer, with phosphatase     | 19.4                      | 2.053           | 0.722           |
+    | S9 green FD buffer, with phosphatase     | 13.9                      | 2.000           | 0.483           |
+    | S10 green FD buffer, no phosphatase      | 15.9                      | 1.882           | 0.542           |
+    | S11 green FD buffer, no phosphatase      | 17.4                      | 2.059           | 0.347           |
 
     A test transformation of competent *E. coli* TG1 with empty pET-11a was done, which resulted in many colonies, indicating that our competent cells are viable for transformations.
 
@@ -148,7 +148,7 @@ Summer Lab was the main time we spent in the lab. We had a summer break from oth
 
 <Card>
   <CardTitle>
-    Week 28 (pdf notebook missing)
+    Week 28
   </CardTitle>
 
   **Weekly summary:**
@@ -316,7 +316,7 @@ Summer Lab was the main time we spent in the lab. We had a summer break from oth
 
 <Card>
   <CardTitle>
-    Week 31 (pdf missing and figures)
+    Week 31 (pdf missing)
   </CardTitle>
 
   **Weekly summary:**
@@ -330,37 +330,41 @@ Summer Lab was the main time we spent in the lab. We had a summer break from oth
 
     SDS-PAGE analysis of IMAC purification was performed on samples from last Friday’s expression, ci2350-MBP cultivated overnight at either 37ºC or 17ºC, and ci2350-His with 3 hour induction time. The ci2350-MBP gel showed successful purification, with our protein visible in the eluted fraction, though additional proteins were also present, possibly due to unspecific binding to the column. The gel also showed an additional band at \~60 kDa, suggesting expression of a truncated ci2350-MBP protein. Our supervisor Camille noted that the corresponding position in the nucleotide sequence contains a repeat of several adenine nucleotides, raising the possibility that the ribosome slipped during translation. This would produce a truncated protein that could still be purified, since the His-tag is located at the N-terminus. 
 
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-24-gel-named.avif" />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-27-gel-named-table.avif" caption="Figure: SDS-PAGE analysis of ci2350-MBP purification fractions. Lanes and cultivation conditions are described on the table aside. Ladder used was Amersham ECL Rainbow Molecular Weight Marker, Full Range." />
 
     The second gel analysed fractions from the ci2350-His purification. No bands were visible in the eluate, while a band consistent with the expected size of ci2350-His was present in the flowthrough, indicating the overexpressed protein failed to bind to the column. Several explanations could lead to this outcome: insufficiently charged IMAC column, inaccessible His-tag due to misfolding, or the protein may have aggregated together. Given the difficulties encountered with ci2350-His purification, compared to successful purification of ci2350-MBP, we proceeded with the ci2350-MBP for further work. Considering only one successfully purified construct was required to begin steroid reduction assays, further optimisation of ci2350-His purification was not prioritized, due to time constraints.
 
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-27-gel2-named-table.avif" />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-27-gel2-named-table.avif" caption="Figure: SDS-PAGE analysis of ci2350-His purification fractions. Lanes and cultivation conditions are described on the table aside. Ladder used was Amersham ECL Rainbow Molecular Weight Marker, Full Range." />
 
     SDS-PAGE analysis was performed on whole-cell lysates of the ci2350-MBP construct, comparing expression in *E. coli* BL21(DE3) at 37 ºC for 3h with overnight expression at 25 ºC, both induced with 0.4 mM IPTG. A band consistent with the predicted molecular weight of ci2350-MBP was visible at approximately 110 kDa under both conditions, with 37ºC and 3h induction time showing stronger expression than the overnight induction. The same band was faintly visible in pre-induction samples, and more intense after IPTG addition, indicating slightly leaky expression from the T7 promoter alongside successful induction.
 
-    <FigureWithCaption />
+    <FigureWithCaption
+      src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-28-gel-named.avif"
+      caption="Figure: SDS-PAGE analysis of ci2350-MBP expression at 0.4 mM IPTG. Ladder used was Amersham ECL Rainbow Molecular Weight Marker, Full Range. Lanes: (1-6) whole-cell lysates before induction, (7) Ladder, (8-11) whole-cell lysates after 3h of induction at 37ºC, (12-13) culture medium fractions after centrifugation, (14-15) whole-cell lysates after overnight induction at 25ºC.
+"
+    />
 
     Both ci2350-MBP expression conditions shown above (37ºC for 3h and 25ºC overnight expression) were taken forward for purification, and their resulting fractions have been analysed by SDS-PAGE. The expressed ci2350-MBP protein was present in the eluate from the IMAC column, along with an additional lower-molecular-weight band, most likely a truncated ci2350-MBP. These eluates were stored at 4ºC and used for steroid reduction assays the following week. The presence of additional bands was not considered problematic at this stage, as the steroid reduction assays were intended only to detect whether any reduction activity was present, not to determine enzyme kinetics.
 
-    <FigureWithCaption />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-30-gel-named-table.avif" caption="Figure: SDS-PAGE analysis of ci2350-MBP purification fractions. Lanes and cultivation conditions are described on the table aside. Ladder used was Amersham ECL Rainbow Molecular Weight Marker, Full Range." />
 
     Restriction digestion of pET-BLANK carrying ci2350-MBP with NdeI and BamHI was repeated. In addition to the expected backbone (5.4 kb) and insert (3 kb) bands, a band corresponding to a single digested plasmid (8.4 kb) was present on the gel, indicating incomplete digestion. Despite this, the pET-BLANK backbone was still extracted and used for ligation. We decided to extend the incubation time in subsequent restriction digestions, in order to achieve full digestion.
 
-    <FigureWithCaption />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-28-gel2-named.avif" caption="Figure: Restriction digestion of pET-BLANK containing ci2350-MBP with NdeI and BamHI. Lanes: (1,16,30) Ampliqon High Range DNA Ladder, (2) NdeI control, (3) BamHI control, (4) Undigested sample, (5-15, 17-29) double digested sample." />
 
     Following ligation of all insert constructs with the digested pET-BLANK backbone and transformation into *E. coli* TG1, very few colonies appeared across all plates. Colony PCR was performed to assess ligation success, and showed no positive colonies, so no samples were sent for sequencing. A second round of ligation and transformation into *E. coli* TG1 was carried out, using an overnight ligation at 16ºC, instead of standard 2 hour incubation. The same digested pET-BLANK samples were used, as they were left over from previous digestion. The second round of transformation yielded positive colonies, from which one AKR1D1-SUMO and two AKR1D1-Trx colonies were sent for sequencing. This suggests that the extended ligation time improved ligation efficiency.
 
-    <FigureWithCaption />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-29-gel-named.avif" caption="Figure: Colony PCR screening of pET-BLANK ligations with our inserts. Lanes: (1,13) Ampliqon High Range DNA Ladder, (2-4) Ligation controls, (5-8) AKR1D1-MBP colonies, (9-12,14-15) AKR1D1-SUMO colonies, (16-18) AKR1D1-TrxA colonies, (19-24) ci2350-TrxA." />
 
-    <FigureWithCaption />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-31-gel-named.avif" caption="Figure: Colony PCR screening of pET-BLANK ligations with our inserts. Loading order can be found in the notebook." />
 
     Agarose gel electrophoresis of the mutagenic PCR products generated from pET-BLANK containing ci2350-MBP showed that only the V263I reaction produced an amplified product of the expected size (\~8.4 kb), corresponding to the full-length plasmid. The other reaction, R215A, did not produce a product of the correct size, but a smear at low-molecular-weight smear. The V263I PCR product was transformed into *E. coli* TG1, and the R215A mutagenesis will be repeated, with an extended elongation time.
 
-    <FigureWithCaption />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-29-gel2-named.avif" caption="Figure: Mutagenic PCR of ci2350-MBP to insert R125A and V263I mutations. Lanes: (1,8) Ampliqon High Range DNA Ladder, (2-3) V263I mutation, (4-5) R215A mutation, (6) V235I PCR control, (7) R215A PCR control." />
 
     The mutagenic PCR was repeated with an almost doubled elongation time of 17 minutes. As the plasmid is close to the 10 kb limit, improved results were expected applying the 2 min/kb rule typically used for larger constructs. The R215A reaction still produced a low-molecular-weight smear, but a product of the expected size (\~8.4 kb) was now also present. This indicated the smear was not a result of low elongation time, but by another factor, most likely non-specific primer binding. If the mutagenesis were to be repeated, increasing the annealing temperature could be tested to improve specificity. All amplified products were used for transformation into *E. coli* TG1.
 
-    <FigureWithCaption />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/07-31-gel2-named.avif" caption="Figure: Mutagenic PCR of ci2350-MBP to insert R125A and V263I mutations. Lanes: (1) Ampliqon High Range DNA Ladder, (2-3) V263I mutation, (4-5) R215A mutation, (6) V235I PCR control, (7) R215A PCR control, (8) Empty." />
 
     Lab notebook for this week can be found on the link below:
 
@@ -374,7 +378,7 @@ After the break ended, and the next semester started, we had less time to spend 
 
 <Card>
   <CardTitle>
-    Week 36 (pdf missing and finishing naming figures)
+    Week 36 (pdf missing)
   </CardTitle>
 
   **Weekly summary:**
@@ -388,11 +392,11 @@ After the break ended, and the next semester started, we had less time to spend 
 
     On the SDS-PAGE gels, the bands across the gel formed a ‘frowning’ pattern, the middle lanes migrated less than outer lanes. The current during the run was also very low (\~7mA). After troubleshooting with our PI Johan, we linked this to an incorrectly prepared SDS running buffer. The stock was assumed to be 50X and was diluted 1:50 prior to running the gel. It was in fact a 10X stock, so the working buffer was too dilute. The resulting low ion concentration gave the buffer low conductivity, explaining the low current and the poor run. When the buffer was was instead diluted 1:10, the gel ran better and the current was higher (\~50 mA). Aside from this, the bands of our overexpressed proteins were clearly visible, mostly in the whole-cell lysate fractions, and less in the soluble fractions.
 
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/09-04-his-named.avif" caption="Figure: AKR1D1-His SDS-PAGE gel" />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/09-04-his-named.avif" caption="Figure: SDS-PAGE analysis of AKR1D1-His fractions, cultivated at 1 mM IPTG. Ladder used was PageRuler Broad Range Unstained. Lanes: (1) Whole-cell lysate of uninduced control, (2-4) Whole-cell lysate of induced samples, (5) Ladder, (6) Soluble fraction of induced pET-11a, (7) Soluble fraction of uninduced control, (8-10) Soluble fraction of induced samples." />
 
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/09-04-sumo-named.avif" caption="Figure: AKR1D1-SUMO SDS-PAGE gel" />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/09-04-sumo-named.avif" caption="Figure: SDS-PAGE analysis of AKR1D1-SUMO fractions, cultivated at 1 mM IPTG. Ladder used was PageRuler Broad Range Unstained. Lanes: (1) Whole-cell lysate of uninduced control, (2) Ladder, (3,4,6) Whole-cell lysate of induced samples, (5) Empty, (7) Soluble fraction of uninduced control, (8-10) Soluble fraction of induced samples." />
 
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/09-04-trx-named.avif" caption="Figure: AKR1D1-TrxA SDS-PAGE gel" />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/09-04-trx-named.avif" caption="Figure: SDS-PAGE analysis of AKR1D1-TrxA fractions, cultivated at 1 mM IPTG. Ladder used was PageRuler Broad Range Unstained. Lanes: (1) Ladder, (2) Whole-cell lysate of induced pET-11a, (3) Whole-cell lysate of uninduced control, (4-6) Whole-cell lysate of induced samples, (7) Soluble fraction of uninduced control, (8-10) Soluble fraction of induced samples." />
 
     Protein concentrations of each sample were measured by Bradford assay and multiplied by the target band’s fraction of the total lane intensity on SDS-PAGE, allowing us to estimate the mass concentration of the expressed recombinant protein in the whole-cell and soluble fraction for each AK1D1 construct.
 
@@ -451,7 +455,7 @@ After the break ended, and the next semester started, we had less time to spend 
 
 <Card>
   <CardTitle>
-    Week 38 (missing gel description)
+    Week 38
   </CardTitle>
 
   **Weekly summary:**
@@ -463,9 +467,9 @@ After the break ended, and the next semester started, we had less time to spend 
 
     **Main results of the week:**
 
-    After expressing AKR1D1-TrxA at 0.2 and 0.4 mM IPTG, we compared the band intensities of the whole-cell lysate and soluble fractions, to estimate solubility. Solubility was calculated as the AKr1D1.TrxA band intensity in the soluble fraction divided by its intensity in the whole.cell lysate fraction (x100), with all samples standardized by OD before loading. Expression at 0.2 mM yielded \~37.43% soluble AKR1D1-TrxA, compared with \~28.31% at 0.4 mM, indicating that lower IPTG concentrations increase the solubility fraction of AKR1D1-TrxA. This is relevant to our final design, since slower expression could lower the burden on the host bacteria. Further reductions in IPTG concentrations could be tested, and expression should be evaluated under the hypoxia-responsive promoter, as the expression may behave differently under hypoxic conditions.
+    After expressing AKR1D1-TrxA at 0.2 and 0.4 mM IPTG, we compared the band intensities of the whole-cell lysate and soluble fractions, to estimate solubility. Solubility was calculated as the AKR1D1-TrxA band intensity in the soluble fraction divided by its intensity in the whole.cell lysate fraction (x100), with all samples standardized by OD before loading. Expression at 0.2 mM yielded \~37.43% soluble AKR1D1-TrxA, compared with \~28.31% at 0.4 mM, indicating that lower IPTG concentrations increase the solubility fraction of AKR1D1-TrxA. This is relevant to our final design, since slower expression could lower the burden on the host bacteria. Further reductions in IPTG concentrations could be tested, and expression should be evaluated under the hypoxia-responsive promoter, as the expression may behave differently under hypoxic conditions.
 
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/09-16-gel-named.avif" caption="Figure: SDS-PAGe of AKR1D1-TrxA under different IPTG conditions" />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/09-16-gel-named-table.avif" caption="Figure: SDS-PAGE of AKR1D1-TrxA under different IPTG conditions. Loading order can be found on the table aside. Ladder used was PageRuler Broad Range Unstained." />
 
     The testosterone reduction assays on ci2350-MBP and ci2350-MBP double mutant (R215A and V263I) were inconclusive, as no clear decrease in NADPH absorbance was observed during the run. This could mean either that the enzymes were inactive, possibly because they had been stored at 4ºC for almost two weeks, or that the assay conditions need to be changed. After discussing with our PI Johan, we concluded that the enzyme had probably degraded. We will therefore express and purify fresh protein, and repeat the assays. Results of the assays can be found in the notebook for Week 38.
 
