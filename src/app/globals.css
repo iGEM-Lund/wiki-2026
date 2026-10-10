@@ -2769,6 +2769,37 @@ article .layout__column p {
   font-weight: 500;
   line-height: 1.2;
 }
+/* In a section heading's place: the same row, the section's pillar larger
+   and accented in crimson with a blush shaft, not a link. */
+.pillars-section {
+  margin: 2.5rem 0 1.5rem;
+}
+.pillars-section .pillars {
+  margin: 0;
+}
+.pillars__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.pillars__item--active {
+  position: relative;
+  z-index: 1;
+  transform: scale(1.14);
+}
+.pillars__item--active .pillars__link {
+  --pillar-line: var(--color-crimson);
+  cursor: default;
+}
+.pillars__item--active .pillars__shaft {
+  background: color-mix(in srgb, var(--color-blush) 70%, transparent);
+}
 @media (prefers-reduced-motion: reduce) {
   .pillars__link {
     transition: none;

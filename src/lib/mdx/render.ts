@@ -2,13 +2,15 @@ import { evaluate } from '@mdx-js/mdx';
 import * as runtime from 'react/jsx-runtime';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
-import type { ComponentType } from 'react';
+import { createElement, type ComponentPropsWithoutRef, type ComponentType } from 'react';
 import { mdxComponents } from '@/components/content';
 import { Citation } from '@/components/content/Citation';
 import { Table } from '@/components/content/Table';
 import { WorldMap } from '@/components/content/WorldMap';
 import { SliceWheel } from '@/components/content/SliceWheel';
+import { PillarsSectionHeading, pillarTarget } from '@/components/content/Pillars';
 import { SectionHeading } from '@/components/section-heading';
+import { extractPillars } from '@/lib/pillars';
 import { rehypeClampHeadings, rehypeCollectHeadings, type HeadingItem } from '@/lib/headings';
 
 // fields.mdx() stores raw MDX source text; unlike the older fields.document,
@@ -35,10 +37,27 @@ export async function renderMdx(
   // Override Citation with the page's resolved reference lookup bound in;
   // the MDX-authored `reference` prop is just a slug, and only render.ts's
   // caller (the page) knows the resolved short forms for this render.
+  // A page's Pillars block turns each pillar's section heading into the same
+  // pillar row, that pillar enlarged (see PillarsSectionHeading). Matched by
+  // the heading's id, which is exactly what the pillar links to.
+  const pillars = extractPillars(source);
+  const pillarIds = pillars.map(pillarTarget);
+  const Heading2 = (props: ComponentPropsWithoutRef<'h2'>) => {
+    const index = props.id ? pillarIds.indexOf(props.id) : -1;
+    return index === -1
+      ? createElement(SectionHeading, props)
+      : createElement(PillarsSectionHeading, {
+          id: props.id,
+          pillars,
+          activeIndex: index,
+          children: props.children,
+        });
+  };
+
   const components = {
     ...mdxComponents,
     table: Table,
-    h2: SectionHeading,
+    h2: Heading2,
     Citation: (props: { reference?: string | null }) => Citation({ ...props, lookup: referenceLookup }),
     // Pin popup bodies are raw MDX that may embed <Citation>; forward the
     // same resolved lookup so those resolve too, not just top-level ones.
