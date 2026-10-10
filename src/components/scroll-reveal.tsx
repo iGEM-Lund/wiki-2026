@@ -2,11 +2,15 @@
 
 import { useEffect } from 'react';
 
-// What fades in: every block of the page content and every paragraph, even
-// ones inside those blocks, so a long card fills in as it scrolls up. The
-// title banner has its own collapse; h2s fade their text and draw their
-// flourishes instead, so they're targeted separately.
-const TARGETS = 'article > :not(.page-title, .page-title-top, .section-heading), article p:not(.page-title *), .section-heading';
+// What triggers on scroll: h2s (they fade their text and draw their
+// flourishes) and the pillars row that stands in for an h2 (it rises). The
+// title banner has its own collapse. Everything else under a top-level
+// heading or pillars row fades in as one group once that has been
+// triggered and has finished its animation (delay in globals.css, or
+// --reveal-delay for the pillars); content above the first one comes in
+// when the title's arrival is done.
+const TARGETS = 'article .section-heading, article > .pillars-section';
+const BLOCKS = 'article > :not(.page-title, .page-title-top, .section-heading, .pillars-section)';
 
 // Where the entrance triggers, as a share of the viewport from the bottom.
 const TRIGGER_SHARE = 0.1;
@@ -41,10 +45,45 @@ export function ScrollReveal() {
     const atEnd = new Set<HTMLElement>();
     const targets = [...document.querySelectorAll<HTMLElement>(TARGETS)];
     let held = introSeconds() > 0;
-    const apply = (el: HTMLElement) => {
-      if (!held && (past.has(el) || atEnd.has(el))) el.dataset.reveal = '';
-      else delete el.dataset.reveal;
+
+    // Each top-level block belongs to the nearest top-level h2 above it
+    // (null above the first one).
+    const groups = new Map<HTMLElement | null, HTMLElement[]>();
+    let leader: HTMLElement | null = null;
+    for (const child of document.querySelectorAll<HTMLElement>('article > *')) {
+      if (child.matches('.section-heading, .pillars-section')) {
+        leader = child;
+      } else if (child.matches(BLOCKS)) {
+        const group = groups.get(leader) ?? [];
+        group.push(child);
+        groups.set(leader, group);
+        if (leader) {
+          child.dataset.afterHeading = '';
+          if (leader.matches('.pillars-section')) {
+            // Wait for the last pillar to finish rising: the stagger is
+            // 0.45s a step out from the active one, each rise takes 1s with
+            // an ease-out that is nearly settled by 0.7s.
+            const steps = [...leader.querySelectorAll<HTMLElement>('.pillars__item')].map(
+              (item) => Number(item.style.getPropertyValue('--pillar-distance')) || 0,
+            );
+            child.style.setProperty('--reveal-delay', `${0.7 + Math.max(0, ...steps) * 0.45}s`);
+          }
+        }
+      }
+    }
+    const setGroup = (key: HTMLElement | null, on: boolean) => {
+      for (const block of groups.get(key) ?? []) {
+        if (on) block.dataset.reveal = '';
+        else delete block.dataset.reveal;
+      }
     };
+    const apply = (el: HTMLElement) => {
+      const on = !held && (past.has(el) || atEnd.has(el));
+      if (on) el.dataset.reveal = '';
+      else delete el.dataset.reveal;
+      setGroup(el, on);
+    };
+    setGroup(null, !held);
 
     // The zone reaches from far above the viewport down to the trigger
     // line, so an element counts as past it even if a jump (an outline
@@ -81,6 +120,7 @@ export function ScrollReveal() {
     const release = held
       ? window.setTimeout(() => {
           held = false;
+          setGroup(null, true);
           targets.forEach(apply);
         }, introSeconds() * 1000)
       : undefined;
