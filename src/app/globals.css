@@ -2859,22 +2859,62 @@ article .layout__column p {
 }
 /* The rise: once the row has scrolled in (ScrollReveal sets data-reveal on
    .pillars-section, the same trigger and the same reduced-motion conditions
-   as the page's fade-in), the active pillar comes up out of the ground
-   first, then the pillars either side of it, then the next ones out. Each
-   is revealed from its base upward by a clip-path while it slides up; the
-   `translate` property is used because `transform` already holds the sizing.
-   The clip rests slightly outside the box so the strokes aren't trimmed. */
+   as the page's fade-in) each pillar first slides up into place as an
+   outline, then its colour and title are revealed from the bottom up. The
+   active pillar goes first, then the ones either side, then the next ones
+   out, each started a step (--pillar-distance, set per item) after the one
+   before. The outline is .pillars__ghost, an outline-only copy underneath;
+   .pillars__body is the filled column, clipped away until its turn. The
+   `translate` property is used for the slide because `transform` already
+   holds the sizing, and the clip rests slightly outside the box so the
+   strokes aren't trimmed. */
+.pillars__link {
+  position: relative;
+}
+.pillars__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.pillars__ghost {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  flex-direction: column;
+  pointer-events: none;
+}
+.pillars__ghost .pillars__capital,
+.pillars__ghost .pillars__base {
+  fill: none;
+}
+.pillars__ghost .pillars__shaft {
+  background: none;
+}
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   :root:not([data-motion='reduce']) .pillars-section .pillars__item {
+    --pillar-delay: calc(var(--pillar-distance, 0) * 0.35s);
     translate: 0 3rem;
+    transition: translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) var(--pillar-delay);
+  }
+  :root:not([data-motion='reduce']) .pillars-section .pillars__ghost {
+    display: flex;
+  }
+  :root:not([data-motion='reduce']) .pillars-section .pillars__body {
     clip-path: inset(100% -8px -8px -8px);
-    transition:
-      translate 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--pillar-distance, 0) * 0.4s),
-      clip-path 0.9s ease-out calc(var(--pillar-distance, 0) * 0.4s);
+    transition: clip-path 0.8s ease-out calc(var(--pillar-delay) + 0.7s);
   }
   :root:not([data-motion='reduce']) .pillars-section[data-reveal] .pillars__item {
     translate: 0 0;
+  }
+  :root:not([data-motion='reduce']) .pillars-section[data-reveal] .pillars__body {
     clip-path: inset(-8px);
+  }
+  /* Once the filled column is fully up, the outline underneath has done its
+     job; dropping it avoids doubling the anti-aliased edges. */
+  :root:not([data-motion='reduce']) .pillars-section[data-reveal] .pillars__ghost {
+    opacity: 0;
+    transition: opacity 0s linear calc(var(--pillar-delay) + 1.6s);
   }
 }
 @media (prefers-reduced-motion: reduce) {
