@@ -2745,7 +2745,7 @@ article .layout__column p {
   border-inline: 5px solid var(--pillar-line);
   text-align: center;
   overflow-wrap: anywhere;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 /* Flutes: a dashed line just inside each edge, kept clear of the text by the
    shaft's padding. */
@@ -2770,6 +2770,7 @@ article .layout__column p {
   right: 0.2rem;
 }
 .site .pillars__title {
+  transition: color 0.15s ease;
   font-family: var(--font-heading);
   font-size: 1.3rem;
   font-weight: 500;
@@ -2835,6 +2836,27 @@ article .layout__column p {
 }
 .site .pillars__item--active .pillars__title {
   color: var(--color-crimson);
+}
+/* Hovering or focusing another pillar: that one takes the active look
+   (crimson lines and text, blush shaft) and the active one steps back to the
+   default look, peacock lines with a shallows shaft. Only sizes stay put. */
+.pillars-section .pillars__item:not(.pillars__item--active):is(:hover, :focus-within) .pillars__link {
+  --pillar-line: var(--color-crimson);
+}
+.pillars-section .pillars__item:not(.pillars__item--active):is(:hover, :focus-within) .pillars__shaft {
+  background: color-mix(in srgb, var(--color-blush) 70%, transparent);
+}
+.site .pillars-section .pillars__item:not(.pillars__item--active):is(:hover, :focus-within) .pillars__title {
+  color: var(--color-crimson);
+}
+.pillars-section .pillars__list:has(.pillars__item:not(.pillars__item--active):is(:hover, :focus-within)) .pillars__item--active .pillars__link {
+  --pillar-line: var(--color-peacock);
+}
+.pillars-section .pillars__list:has(.pillars__item:not(.pillars__item--active):is(:hover, :focus-within)) .pillars__item--active .pillars__shaft {
+  background: var(--color-shallows);
+}
+.site .pillars-section .pillars__list:has(.pillars__item:not(.pillars__item--active):is(:hover, :focus-within)) .pillars__item--active .pillars__title {
+  color: var(--heading);
 }
 @media (prefers-reduced-motion: reduce) {
   .pillars__link {
