@@ -2691,6 +2691,7 @@ article .layout__column p {
 }
 .pillars__link {
   --pillar-line: var(--color-peacock);
+  --pillar-fill: var(--color-shallows);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -2719,13 +2720,13 @@ article .layout__column p {
   display: block;
   width: 100%;
   height: auto;
-  fill: none;
+  fill: var(--pillar-fill);
   stroke: var(--pillar-line);
   stroke-width: 5;
   stroke-linecap: round;
   stroke-linejoin: round;
   overflow: visible;
-  transition: stroke 0.15s ease;
+  transition: stroke 0.15s ease, fill 0.15s ease;
 }
 .pillars__capital *,
 .pillars__base * {
@@ -2743,6 +2744,7 @@ article .layout__column p {
   margin: 0 calc(12% - 2.5px);
   padding: 1rem 0.8rem;
   border-inline: 5px solid var(--pillar-line);
+  background: var(--pillar-fill);
   text-align: center;
   overflow-wrap: anywhere;
   transition: border-color 0.15s ease, background-color 0.15s ease;
@@ -2804,6 +2806,9 @@ article .layout__column p {
 /* The other pillars shrink to make room, and every pillar scales from its
    base so they all keep standing on the same line. */
 .pillars-section {
+  /* The active pillar grows upward past this box, so an anchor jump has to
+     stop a little above it or the fixed header would cut its top off. */
+  scroll-margin-top: 3.5rem;
   --pillar-small: 0.82;
   --pillar-big: 1.12;
   /* Shrinking pulls the small pillars away from each other by (1 - small)
@@ -2829,31 +2834,25 @@ article .layout__column p {
 }
 .pillars__item--active .pillars__link {
   --pillar-line: var(--color-crimson);
+  --pillar-fill: var(--color-blush);
   cursor: default;
-}
-.pillars__item--active .pillars__shaft {
-  background: color-mix(in srgb, var(--color-blush) 70%, transparent);
 }
 .site .pillars__item--active .pillars__title {
   color: var(--color-crimson);
 }
 /* Hovering or focusing another pillar: that one takes the active look
-   (crimson lines and text, blush shaft) and the active one steps back to the
-   default look, peacock lines with a shallows shaft. Only sizes stay put. */
+   (crimson lines and text, blush fill) and the active one steps back to the
+   default look, peacock lines with a shallows fill. Only sizes stay put. */
 .pillars-section .pillars__item:not(.pillars__item--active):is(:hover, :focus-within) .pillars__link {
   --pillar-line: var(--color-crimson);
-}
-.pillars-section .pillars__item:not(.pillars__item--active):is(:hover, :focus-within) .pillars__shaft {
-  background: color-mix(in srgb, var(--color-blush) 70%, transparent);
+  --pillar-fill: var(--color-blush);
 }
 .site .pillars-section .pillars__item:not(.pillars__item--active):is(:hover, :focus-within) .pillars__title {
   color: var(--color-crimson);
 }
 .pillars-section .pillars__list:has(.pillars__item:not(.pillars__item--active):is(:hover, :focus-within)) .pillars__item--active .pillars__link {
   --pillar-line: var(--color-peacock);
-}
-.pillars-section .pillars__list:has(.pillars__item:not(.pillars__item--active):is(:hover, :focus-within)) .pillars__item--active .pillars__shaft {
-  background: var(--color-shallows);
+  --pillar-fill: var(--color-shallows);
 }
 .site .pillars-section .pillars__list:has(.pillars__item:not(.pillars__item--active):is(:hover, :focus-within)) .pillars__item--active .pillars__title {
   color: var(--heading);

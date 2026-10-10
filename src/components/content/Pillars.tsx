@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import GithubSlugger from 'github-slugger';
 
-// Each pillar is drawn as an Ionic column in line art: a rounded top slab, a
+// Each pillar is drawn as an Ionic column, outlined and filled: a rounded top slab, a
 // tapering echinus, and a scroll band with a curled volute at either end, then
 // a base that flares out into a plinth, all inline SVG; the shaft between
 // them is drawn by the two side borders of the text block (see
@@ -12,12 +12,10 @@ function Capital() {
   return (
     <svg className="pillars__capital" viewBox="0 0 100 38" aria-hidden="true">
       <rect x="2" y="2" width="96" height="7" rx="2" />
-      <path d="M 7 9 L 13 18 M 93 9 L 87 18" />
-      <path d="M 12 18 L 88 18 M 12 38 L 88 38" />
-      <path d="M 12 18 A 10 10 0 0 0 12 38" />
-      <path d="M 88 18 A 10 10 0 0 1 88 38" />
-      <path d="M 17 28 A 5 5 0 1 0 12 33" />
-      <path d="M 83 28 A 5 5 0 1 1 88 33" />
+      <path d="M 7 9 L 13 18 L 87 18 L 93 9 Z" />
+      <path d="M 12 18 L 88 18 A 10 10 0 0 1 88 38 L 12 38 A 10 10 0 0 1 12 18 Z" />
+      <path fill="none" d="M 17 28 A 5 5 0 1 0 12 33" />
+      <path fill="none" d="M 83 28 A 5 5 0 1 1 88 33" />
     </svg>
   );
 }
@@ -25,7 +23,7 @@ function Capital() {
 function Base() {
   return (
     <svg className="pillars__base" viewBox="0 0 100 16" aria-hidden="true">
-      <path d="M 12 0 L 88 0 M 12 0 L 5 9 M 88 0 L 95 9" />
+      <path d="M 12 0 L 88 0 L 95 9 L 5 9 Z" />
       <rect x="2" y="9" width="96" height="7" rx="2" />
     </svg>
   );
