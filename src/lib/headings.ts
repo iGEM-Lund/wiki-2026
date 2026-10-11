@@ -61,8 +61,12 @@ export function rehypeCollectHeadings(headings: HeadingItem[]) {
       const depth = Number(node.tagName[1]);
       if (depth > OUTLINE_MAX_DEPTH) return;
       const id = node.properties?.id;
-      if (typeof id !== 'string') return;
-      headings.push({ depth, text: toString(node), id });
+      if (typeof id !== 'string' || id === '') return;
+      // A stray empty `###` in the content would otherwise be a blank,
+      // unclickable entry (a link to "#") in every outline.
+      const text = toString(node).trim();
+      if (text === '') return;
+      headings.push({ depth, text, id });
     });
   };
 }

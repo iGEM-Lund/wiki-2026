@@ -21,6 +21,7 @@ import { AccessibilityMenu } from '@/components/accessibility-menu';
 import { SiteSearch } from '@/components/site-search';
 import { HeaderHeightSync } from '@/components/header-height-sync';
 import { BackToTop } from '@/components/back-to-top';
+import { ScrollString } from '@/components/scroll-string';
 import { SiteFooter } from '@/components/site-footer';
 
 // getNav() is called here, not in the root layout, so a nav-build failure
@@ -72,6 +73,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       <main className="site__main">{children}</main>
       <SiteFooter />
       <BackToTop />
+      <ScrollString />
     </div>
   );
 }

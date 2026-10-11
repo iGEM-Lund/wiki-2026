@@ -3573,3 +3573,173 @@ article .layout__column p {
     transform: none;
   }
 }
+
+/* Scroll string: a string down the right edge with a knot that rides along it
+   as the page scrolls (src/components/scroll-string.tsx), drawn in the same
+   tapered, filled style and --heading colour as the h2 ornaments. Desktop
+   only: on phones the native overlay scrollbar is already unobtrusive and
+   touch drag is what people use. The native scrollbar is hidden only once
+   the component has mounted and flagged <html>. */
+.scroll-string {
+  --knot: 60px;
+  --p: 0;
+  /* The knot's own span along the track, cut out of the string so the two
+     meet end to end (1px of overlap each side hides the seam). */
+  --knot-top: calc(var(--p) * (100% - var(--knot)));
+  position: fixed;
+  /* `top` is set from script (below the header and the title banner); this
+     is only the first-paint value. `bottom` is read from here by script;
+     it stops a rem above the back-to-top button (1.5rem + 3rem tall). */
+  top: var(--header-height, 6rem);
+  right: 1.5rem;
+  bottom: 5.5rem;
+  z-index: 40;
+  width: 28px;
+  display: none;
+  color: var(--heading);
+  cursor: pointer;
+  touch-action: none;
+}
+/* Nothing to show: page too short to scroll, or the title banner still full
+   size. Fades rather than vanishing, and stops taking pointer events. */
+.scroll-string {
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s;
+}
+.scroll-string[data-hidden] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.scroll-string svg {
+  display: block;
+  overflow: visible;
+}
+.scroll-string path {
+  fill: currentColor;
+}
+.scroll-string__line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 calc(var(--knot-top) + 1px),
+    transparent calc(var(--knot-top) + 1px),
+    transparent calc(var(--knot-top) + var(--knot) - 1px),
+    #000 calc(var(--knot-top) + var(--knot) - 1px)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 calc(var(--knot-top) + 1px),
+    transparent calc(var(--knot-top) + 1px),
+    transparent calc(var(--knot-top) + var(--knot) - 1px),
+    #000 calc(var(--knot-top) + var(--knot) - 1px)
+  );
+}
+.scroll-string__knot {
+  position: absolute;
+  left: 0;
+  top: var(--knot-top);
+  cursor: grab;
+}
+/* No scale-up while dragging: the knot has to stay exactly its own size to
+   keep meeting the string at both ends. */
+.scroll-string[data-dragging] .scroll-string__knot {
+  cursor: grabbing;
+}
+/* Each heading's own knot (see scroll-string.tsx). Placed and tilted by
+   script. The knots are always full strength; it is the heading names
+   beside them are always shown, h2s larger than h3s, and the heading being
+   read and its section's heading are crimson (--heading-minor). */
+.scroll-string__notches {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.scroll-string__notch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  /* BEAD_HEIGHT in scroll-string.tsx. */
+  height: 24px;
+  display: block;
+  color: var(--heading);
+  text-decoration: none;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.scroll-string__notch[hidden] {
+  display: none;
+}
+.scroll-string__notch svg {
+  display: block;
+  overflow: visible;
+  transform-origin: 50% 50%;
+}
+.scroll-string__notch:focus-visible {
+  outline: none;
+}
+.scroll-string__notch:focus-visible svg {
+  filter: drop-shadow(0 0 3px var(--accent));
+}
+.scroll-string__label {
+  position: absolute;
+  right: calc(100% + 0.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 16rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  color: var(--heading);
+  font-size: 1.1rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+  /* Part of the link: clicking the name follows it like clicking the knot. */
+  pointer-events: auto;
+  transition: color 0.2s ease;
+}
+.scroll-string__notch[data-depth='2'] .scroll-string__label {
+  font-size: 0.8rem;
+}
+/* The heading being read and its section's heading: crimson name and knot. */
+.scroll-string__notch[data-on] {
+  color: var(--heading-minor);
+}
+.scroll-string__notch[data-on] .scroll-string__label {
+  color: var(--heading-minor);
+  /* Poppins is only loaded at 200, 300 and 600 (see the site layout). */
+  font-weight: 600;
+}
+.scroll-string__notch:hover .scroll-string__label,
+.scroll-string__notch:focus-visible .scroll-string__label {
+  text-decoration: underline;
+}
+@media (min-width: 48.0625rem) {
+  .scroll-string {
+    display: block;
+  }
+  /* The string carries the outline; the floating panel and its toggle are
+     only for when it isn't on screen. */
+  :root[data-scroll-string] .toc {
+    display: none;
+  }
+  :root[data-scroll-string] {
+    scrollbar-width: none;
+  }
+  :root[data-scroll-string]::-webkit-scrollbar {
+    display: none;
+  }
+}
+@media print {
+  .scroll-string {
+    display: none !important;
+  }
+}
