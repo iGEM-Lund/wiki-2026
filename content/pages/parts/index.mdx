@@ -3,69 +3,87 @@ title: Parts
 ---
 ## Parts
 
-This page summarizes our contributions to the Registry of Standard Biological Parts. A full description of each part is available in the iGEM Parts Registry.
+This page summarizes our contributions to the Registry of Standard Biological Parts. A full description of each part is available in the [iGEM Parts Registry](https://registry.igem.org/) \{Modify link when done}.
 
-During the project, we designed new basic and composite parts, which can be divided into two categories: &#x20;
-
-* 4 new basic parts and 9 composite parts for the expression of testosterone reducing enzymes;
-
-- &#x20;2 composite parts for the hypoxia gate system.
+During the project, we designed 4 new basic and 9 new composite parts, that help us with our goal of reducing testosterone  into its less active form, 5β-dihydrotestosterone, using steroid-5β-reductases.
 
 ### **Enzymes**
 
-ci2350
+**ci2350**
 
-AKR1D1
+NADH-dependent 5β-reductase, first identified in *Clostridium innocuum*, that catalyzes the reduction of progesterone to 5β-dihydroprogesterone \[[citation](https://www.nature.com/articles/s41467-025-61425-6)]. It has broad activity on steroid hormones (Δ⁴-3-ketosteroids), due to their structural similarity,  among which is testosterone, that is also readily reduced to 5β-dihydrotestosterone, resulting in lesser androgenic effect.
 
-mutant ci2350
+<MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/parts/3d-ci2350.glb" format="glb" style="cartoon" caption="Figure 1. Predicted 3D structure of ci2350 (AlphaFold)." />
 
-### **Solubility Tags**
+**ci2350\_R215A:V263I**
 
-Trx
+A double mutant of ci2350 that was modeled to shift the specificity from progesterone towards testosterone (see [Modelling](https://wiki.igemlund.org/technical_modelling) for more details).
 
-SUMO
+<MoleculeViewer format="pdb" style="cartoon" highlightLabel="Alanine (Ala): the mutated residue, replacing arginine" caption="Figure 2. Predicted 3D structure of ci2350_R215A:V263I (AlphaFold)." />
 
-MBP
+&#x20;&#x20;
 
-### **Gate**
+**AKR1D1**
 
-Hypoxia
+NADPH-dependent steroid-5β-reductase of human origin, primarily expressed in the liver, that catalyzes the reduction of Δ⁴-3-ketosteroids. Similar to ci2350, it has broad activity on steroid hormones.
 
-### **Contributions**
+<MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/parts/3d-akr1d1.glb" format="glb" style="cartoon" caption="Figure 3. 3D structure of AKR1D1  in complex with NADP+ (PDB ID: 3DOP)." />
 
-## Basic Parts
+## New Basic Parts
 
-| ID          | Name          | Description | Type? | Length |
-| ----------- | ------------- | ----------- | ----- | ------ |
-| BBa\_       | 6xHis-tag     |             |       |        |
-| +hyperlinks | SUMO-tag      |             |       |        |
-|             | Trx-tag       |             |       |        |
-|             | MBP-tag       |             |       |        |
-|             | RBS           |             |       |        |
-|             | Promoter      |             |       |        |
-|             | ci2350        |             |       |        |
-|             | ci2350 mutant |             |       |        |
-|             | AKR1D1        |             |       |        |
-|             |               |             |       |        |
-|             |               |             |       |        |
-|             |               |             |       |        |
-|             |               |             |       |        |
+| **ID** | **Name**                       | **Type**          | **Functional Description**                                                                                                                                                                                                                                                                            | **Length (bp)** |
+| ------ | ------------------------------ | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| BBa\_  | **ci2350-6xHis**               | CDS               | Steroid reducing 5β-reductase from *Clostridium innocuum*. Codon harmonization tool (Horst Lechner, to be published) was used to redesign gene sequence from *Clostridium innocuum* to *Escherichia coli.* N-terminal 6xHis-tag was added for purification via affinity chromatography.               | 1959            |
+| BBa\_  | **ci2350\_R215A\_V263I-6xHis** | CDS               | A double mutant of ci2350. Arginine in 215 position was mutated to alanine, and valine in 263 position to isoleucine, which was modelled to shift the specificity from progesterone towards testosterone.                                                                                             | 1959            |
+| BBa\_  | **AKR1D1-6xHis**               | CDS               | Human origin steroid-5β-reductase, catalyses the reduction of Δ⁴-3-ketosteroids. Codon harmonization tool (Horst Lechner, to be published) was used to redesign gene sequence from *Homo sapiens* to *Escherichia coli.* N-terminal 6xHis-tag was added for purification via affinity chromatography. | 1011            |
+| BBa\_  | **GSG**                        | Biological region | Glycine-serine-glycine (GSG) flexible linker, optimized for fusion proteins in *E. coli*                                                                                                                                                                                                              | 9               |
 
 &#x20;
 
-## &#x20; Composite Parts
+## New Composite Parts
 
-| ID          | Name                    | Description |   | Length |
-| ----------- | ----------------------- | ----------- | - | ------ |
-| BBa\_       | hypoxia gate for ci2350 |             |   |        |
-| +hyperlinks | hypoxia gate for AKR1D1 |             |   |        |
-|             |                         |             |   |        |
-|             |                         |             |   |        |
-|             |                         |             |   |        |
-|             |                         |             |   |        |
-|             |                         |             |   |        |
-|             |                         |             |   |        |
-|             |                         |             |   |        |
-|             |                         |             |   |        |
+| **ID**   | **Name**              | **Functional Description**                                                                                                                                                                                                                        | **Type** | **Length** |
+| -------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ---------- |
+| BBa\_zzz | ci2350-MBP            | ci2350 5β-reductase (BBa\_xxx) fused with maltose binding protein (MBP) tag using GSG linker (BBa\_---) via the N-terminal, to increase its solubility. N-terminal has 6xHis-tag for purification via affinity chromatography                     | CDS      | 3069       |
+| BBa\_    | Ci2350-SUMO           | ci2350 5β-reductase (BBa\_xxx) fused with Small Ubiquitin-like Modifier (SUMO) tag using GSG linker (BBa\_---) via the N-terminal, to increase its solubility. Also has 6xHis-tag on the N-terminal for purification via affinity chromatography  | CDS      | 2262       |
+| BBa\_    | Ci2350-Trx            | ci2350 5β-reductase (BBa\_xxx) fused with Thioredoxin (Trx) tag using GSG linker (BBa\_---)  via the N-terminal, to increase its solubility. Also has 6xHis-tag on the N-terminal for purification via affinity chromatography                    | CDS      | 2295       |
+| BBa\_    | AKR1D1-MBP            | AKR1D1 5β-reductase (BBa\_yyy) fused with maltose binding protein (MBP) tag using GSG linker (BBa\_---) via the N-terminal, to increase its solubility. Also has 6xHis-tag on the N-terminal for purification via affinity chromatography         | CDS      | 2121       |
+| BBa\_    | AKR1D1-SUMO           | AKR1D1 5β-reductase (BBa\_yyy) fused with Small Ubiquitin-like Modifier (SUMO) tag using GSG linker (BBa\_---)  via the N-terminal, to increase its solubility. Also has 6xHis-tag on the N-terminal for purification via affinity chromatography | CDS      | 1314       |
+| BBa\_    | AKR1D1-Trx            | AKR1D1 5β-reductase (BBa\_yyy) fused with Thioredoxin (Trx) tag using GSG linker (BBa\_---) via the N-terminal, to increase its solubility. Also has 6xHis-tag on the N-terminal for purification via affinity chromatography                     | CDS      | 1347       |
+| BBa\_    | ci2350-MBP\_(no\_AAA) | Multi-adenine (AAAAAA) regions of BBa\_ZZZ  were replaced with other codons, to help prevent protein truncation.                                                                                                                                  | CDS      | 3069       |
+| BBa\_    | pFnrS\_ci2350-MBP     | Operon for the expression of ci2350-MBP (BBa\_zzz), regulated using PfnrS\_BBa\_25DMNRIB hypoxia promoter and Lambda t0 terminator (BBa\_....).                                                                                                   | Operon   | 3384       |
+| BBa\_    | pFnrS\_AKR1D1-SUMO    | Operon for the expression of AKR1D1-SUMO (BBa\_zzz), regulated using PfnrS\_BBa\_25DMNRIB hypoxia promoter and Lambda t0 terminator (BBa\_....).                                                                                                  | Operon   | 1621       |
 
-&#x20;  &#x20;
+## **Used basic parts from previous iGEM teams**
+
+| **ID**                                                        | **Name**      | **Functional Description**                                                                                                                                                                                                                                   | **Type**            | **Length** |
+| ------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- | ---------- |
+| ~~BBa\_~~                                                     | ~~6xHis-tag~~ | ~~His-tag for purification of protein via affinity chromatography.~~                                                                                                                                                                                         | ~~Engineered Tag~~  | ~~18~~     |
+| [BBa\_25RJ1ATY](https://registry.igem.org/parts/bba-25rj1aty) | SUMO-tag      | Small Ubiquitin-like Modifier (SUMO-tag) is a small protein (11 kDa), often fused to recombinant proteins to improve their solubility, prevent aggregation into inclusion bodies and reduce proteolytic degradation.                                         | Engineered Tag      | 294        |
+| BBa\_                                                         | Trx-tag       | Thioredoxin (Trx-tag) is a small (12 kDa), soluble oxidoreductase protein, derived from *Escherichia coli* thioredoxin-1 (trxA) that is often fused to other recombinant proteins to improve their solubility and prevent aggregation into inclusion bodies. | Engineered Tag      | 327        |
+| BBa\_                                                         | MBP-tag       | Maltose Binding Protein (MBP) is a medium sized protein (40 kDa) from *E. coli*, that is often fused to other recombinant proteins to improve their solubility and prevent aggregation into inclusion bodies.                                                | Engineered Tag      | 1101       |
+| [BBa\_K4634001](https://registry.igem.org/parts/bba-k4634001) | RBS           | Efficient ribosome binding site from bacteriophage T7 gene 10 (Olins and Rangwala, 1989)                                                                                                                                                                     | Ribosome Entry Site | 23         |
+| [BBa\_25DMNRIB](https://registry.igem.org/parts/bba-25dmnrib) | PFnrS         | Promoter that activates under hypoxic condition to initiate the transcription of downstream genes.                                                                                                                                                           | Promoter            | 95         |
+
+## Primers
+
+| **Primer name**             | **Purpose**                                | **Sequence**                                           | **Tm (℃)** |
+| --------------------------- | ------------------------------------------ | ------------------------------------------------------ | ---------- |
+| His\_tag\_Fw\_for\_ampl     | PCR amplification of ci2350                | GAGCTACATATGCACCATCACCATCACC                           | 62         |
+| ci2350\_rev\_for\_ampl      | PCR amplification of ci2350                | TAGCTCGGATCCTTATAAGGACCTTGC                            | 62         |
+| His\_tag\_Fw\_for\_ampl     | PCR amplification of AKR1D1                | GAGCTACATATGCACCATCACCATCACC                           | 62         |
+| AKR1D1\_rev\_for\_ampl      | PCR amplification of AKR1D1                | TAGCTCGGATCCTTAGTATTCGTCATGG                           | 62         |
+| Primer\_ci2350\_forward     | Colony PCR of ci2350 contructs             | CAGGATTGTGTTACCTGCAATGGG                               | 60         |
+| T7ter\_rev                  | Colony PCR of ci2350 contructs             | GCTAGTTATTGCTCAGCGG                                    | 57         |
+| Primer\_AKR1D1\_CH\_forward | Colony PCR of AKR1D1 constructs            | GGAAACAGCATACCGATCATCGG                                | 60         |
+| T7ter\_rev                  | Colony PCR of AKR1D1 constructs            | GCTAGTTATTGCTCAGCGG                                    | 57         |
+| T7pro\_fw                   | Sequencing of ci2350 constructs            | CTCACTATAGGGGAATTGTGAGCGG                              | 60         |
+| T7ter\_rev                  | Sequencing of ci2350 constructs            | GCTAGTTATTGCTCAGCGG                                    | 57         |
+| Primer\_ci2350\_forward     | Sequencing of ci2350 constructs            | CAGGATTGTGTTACCTGCAATGGG                               | 60         |
+| T7pro\_fw                   | Sequencing of AKR1D1 constructs            | CTCACTATAGGGGAATTGTGAGCGG                              | 60         |
+| T7ter\_rev                  | Sequencing of AKR1D1 constructs            | GCTAGTTATTGCTCAGCGG                                    | 57         |
+| Primer\_AKR1D1\_CH\_forward | Sequencing of AKR1D1 constructs            | GGAAACAGCATACCGATCATCGG                                | 60         |
+| V263I\_forward              | Site-directed mutagenesis of ci2350\_V263I | GCTGGGTTAAAATACGAGATTCCTCCTATTGATATTCCC                | 63         |
+| V263I\_reverse              | Site-directed mutagenesis of ci2350\_V263I | GGGAATATCAATAGGAGGAATCTCGTATTTTAACCCAGC                | 63         |
+| R215A\_forward              | Site-directed mutagenesis of ci2350\_R215A | GGATATGCCTTTATTAATGGCGTTAGATGCACAAGATGATTATTTAGAGAATGG | 60         |
+| R215A\_reverse              | Site-directed mutagenesis of ci2350\_R215A | CCATTCTCTAAATAATCATCTTGTGCATCTAACGCCATTAATAAAGGCATATCC | 60         |
