@@ -13,13 +13,21 @@ During the project, we designed 3 new basic and 8 new composite parts, that help
 
 NADH-dependent 5β-reductase, first identified in *Clostridium innocuum*, that catalyzes the reduction of progesterone to 5β-dihydroprogesterone \[[citation](https://www.nature.com/articles/s41467-025-61425-6)]. It has broad activity on steroid hormones (Δ⁴-3-ketosteroids), due to their structural similarity,  among which is testosterone, that is also readily reduced to 5β-dihydrotestosterone, resulting in lesser androgenic effect.
 
+<MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/parts/3d-ci2350.glb" format="glb" style="cartoon" caption="Figure 1. Predicted 3D structure of ci2350 (AlphaFold)." />
+
 **ci2350\_R215A:V263I**
 
 A double mutant of ci2350 that was modeled to shift the specificity from progesterone towards testosterone (see [Modelling](https://wiki.igemlund.org/technical_modelling) for more details).
 
+<MoleculeViewer format="pdb" style="cartoon" highlightLabel="Alanine (Ala): the mutated residue, replacing arginine" caption="Figure 2. Predicted 3D structure of ci2350_R215A:V263I (AlphaFold)." />
+
+&#x20;&#x20;
+
 **AKR1D1**
 
 NADPH-dependent steroid-5β-reductase of human origin, primarily expressed in the liver, that catalyzes the reduction of Δ⁴-3-ketosteroids. Similar to ci2350, it has broad activity on steroid hormones.
+
+<MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/parts/3d-akr1d1.glb" format="glb" style="cartoon" caption="Figure 3. 3D structure of AKR1D1 (PDB ID: 3DOP)." />
 
 ## New Basic Parts
 
@@ -45,8 +53,6 @@ NADPH-dependent steroid-5β-reductase of human origin, primarily expressed in th
 | BBa\_    | ci2350-MBP\_(no\_AAA) | Multi-adenine (AAAAAA) regions of BBa\_ZZZ  were replaced with other codons, to help prevent protein truncation.                                                                                                                                  | CDS      | 3069       |
 | BBa\_    | pFnrS\_ci2350-MBP     | Operon for the expression of ci2350-MBP (BBa\_zzz), regulated using PfnrS\_BBa\_25DMNRIB hypoxia promoter and Lambda t0 terminator (BBa\_....).                                                                                                   | Operon   | 3384       |
 | BBa\_    | pFnrS\_AKR1D1-SUMO    | Operon for the expression of AKR1D1-SUMO (BBa\_zzz), regulated using PfnrS\_BBa\_25DMNRIB hypoxia promoter and Lambda t0 terminator (BBa\_....).                                                                                                  | Operon   | 1621       |
-
-
 
 ## **Used basic parts from previous iGEM teams**
 
