@@ -598,8 +598,8 @@ body {
    arrives together once that heading has been triggered and has finished
    drawing (the delay is a little under its flourishes' 1.6s, whose last
    stretch is barely visible; under a pillars row ScrollReveal sets
-   --reveal-delay to when its last pillar has nearly risen), and goes back
-   out when the heading is scrolled back below the line. Blocks above the
+   --reveal-delay to when its last pillar has nearly risen), and stays once
+   shown, even when the heading is scrolled back below the line. Blocks above the
    first heading arrive as soon as the title's arrival is done.
    ScrollReveal groups the blocks and sets data-reveal. Same conditions for
    starting out hidden as above. The slide overshoots its place a little

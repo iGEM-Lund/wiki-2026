@@ -34,9 +34,9 @@ function introSeconds(): number {
 }
 
 // Triggers the page content's entrance (see [data-reveal] in globals.css)
-// as each element scrolls up past the trigger line, and reverses it as it
-// scrolls back down below it. Each entrance plays out in full on its own
-// once triggered. Anything too close to the end of the page to ever get
+// as each element scrolls up past the trigger line. Each entrance plays out
+// in full on its own once triggered, and stays: scrolling back up does not
+// reverse it. Anything too close to the end of the page to ever get
 // that far is revealed while the footer is in view (it's short, so by then
 // there's hardly any page left to scroll).
 export function ScrollReveal() {
@@ -92,8 +92,9 @@ export function ScrollReveal() {
       (entries) => {
         for (const entry of entries) {
           const el = entry.target as HTMLElement;
+          // Sticky: once an entrance has been triggered it stays, so
+          // scrolling back up never takes it away again.
           if (entry.isIntersecting) past.add(el);
-          else past.delete(el);
           apply(el);
         }
       },
@@ -105,7 +106,6 @@ export function ScrollReveal() {
     const footer = document.querySelector('.site__footer');
     if (footer) {
       const endObserver = new IntersectionObserver(([entry]) => {
-        atEnd.clear();
         if (entry.isIntersecting) {
           for (const el of targets) {
             if (el.getBoundingClientRect().top < window.innerHeight) atEnd.add(el);
