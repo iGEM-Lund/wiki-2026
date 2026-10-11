@@ -3195,7 +3195,7 @@ article .layout__column p {
 .table-scroll th,
 .table-scroll td {
   padding: 0.6rem 0.9rem;
-  text-align: left;
+  text-align: justify;
   vertical-align: top;
   border-bottom: 1px solid var(--border);
 }
