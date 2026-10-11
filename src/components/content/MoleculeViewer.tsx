@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 type MoleculeViewerFormat = 'pdb' | 'cif' | 'sdf' | 'mol2' | 'xyz' | 'glb';
 type MoleculeViewerStyle = 'cartoon' | 'stick' | 'sphere' | 'line';
@@ -15,6 +15,9 @@ const POPPED_START_ZOOM_RATIO = 0.8;
 // zoom, so a few notches out dismisses it, and well above the opening
 // threshold so it can't flicker at the boundary.
 const POP_IN_ZOOM_RATIO = 0.92;
+// The dialog grows out of the inline slot (and shrinks back into it) over
+// this long. The backdrop's fade uses the same duration in globals.css.
+const POP_ANIMATION_MS = 260;
 
 // What a renderer hands back: teardown, a way to restore the initial framing,
 // and a way to re-measure after the container's size changed. Zoom is
@@ -66,26 +69,69 @@ export function MoleculeViewer({
   highlightLabel,
 }: MoleculeViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const handleRef = useRef<ViewerHandle | null>(null);
   const poppedRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
+  // `popped` means the dialog is mounted; `closing` is the short window after
+  // a close request where it plays its exit animation before unmounting.
   const [popped, setPopped] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const closeTimerRef = useRef<number | undefined>(undefined);
+  const frameAnimationRef = useRef<Animation | null>(null);
+
+  // Animates the dialog frame's box between two viewport rects (null = the
+  // full viewport, its resting position). The canvas follows the frame's size
+  // through the renderer's ResizeObserver, so the molecule visibly grows and
+  // shrinks with it rather than fading.
+  const flyFrame = useCallback((from: DOMRect | null, to: DOMRect | null) => {
+    const frame = frameRef.current;
+    if (!frame || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const { clientWidth, clientHeight } = document.documentElement;
+    const box = (rect: DOMRect | null) => ({
+      top: `${rect?.top ?? 0}px`,
+      left: `${rect?.left ?? 0}px`,
+      right: `${rect ? clientWidth - rect.right : 0}px`,
+      bottom: `${rect ? clientHeight - rect.bottom : 0}px`,
+    });
+    frameAnimationRef.current?.cancel();
+    frameAnimationRef.current = frame.animate([box(from), box(to)], {
+      duration: POP_ANIMATION_MS,
+      easing: 'cubic-bezier(0.3, 0.7, 0.2, 1)',
+      fill: 'forwards',
+    });
+  }, []);
 
   const closePopOut = useCallback(() => {
+    if (!poppedRef.current) return;
     poppedRef.current = false;
-    setPopped(false);
-    // Back to the framed view, otherwise the next zoom event would pop the
-    // viewer straight out again.
-    handleRef.current?.resetView();
-  }, []);
+    setClosing(true);
+    flyFrame(frameRef.current?.getBoundingClientRect() ?? null, stageRef.current?.getBoundingClientRect() ?? null);
+    const finish = () => {
+      closeTimerRef.current = undefined;
+      setPopped(false);
+      setClosing(false);
+      // Back to the framed view, otherwise the next zoom event would pop the
+      // viewer straight out again.
+      handleRef.current?.resetView();
+    };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) finish();
+    else closeTimerRef.current = window.setTimeout(finish, POP_ANIMATION_MS);
+  }, [flyFrame]);
 
   const onZoom = useCallback(
     (ratio: number) => {
       if (!poppedRef.current && ratio < POP_OUT_ZOOM_RATIO) {
+        // Zoomed back in mid-exit: cancel the pending unmount and reopen.
+        const wasClosing = closeTimerRef.current !== undefined;
+        window.clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = undefined;
         poppedRef.current = true;
+        setClosing(false);
         setPopped(true);
+        if (wasClosing) flyFrame(frameRef.current?.getBoundingClientRect() ?? null, null);
         // Deferred: this runs inside the renderer's own change/render
         // callback, which must not be re-entered with a camera move.
         requestAnimationFrame(() => handleRef.current?.setZoomRatio(POPPED_START_ZOOM_RATIO));
@@ -93,7 +139,7 @@ export function MoleculeViewer({
         closePopOut();
       }
     },
-    [closePopOut],
+    [closePopOut, flyFrame],
   );
 
   useEffect(() => {
@@ -138,6 +184,14 @@ export function MoleculeViewer({
     };
   }, [modelUrl, format, style, highlightLabel, onZoom]);
 
+  useEffect(() => () => window.clearTimeout(closeTimerRef.current), []);
+
+  // Grow the dialog out of the inline slot as it mounts.
+  useLayoutEffect(() => {
+    if (popped) flyFrame(stageRef.current?.getBoundingClientRect() ?? null, null);
+    else frameAnimationRef.current?.cancel();
+  }, [popped, flyFrame]);
+
   // While popped out: Escape closes, the page behind doesn't scroll, and
   // focus moves to the close button then returns to where it was.
   useEffect(() => {
@@ -166,14 +220,26 @@ export function MoleculeViewer({
       ) : (
         // The stage keeps the inline slot's height while the frame inside
         // is lifted out of flow as a dialog, so the page doesn't jump.
-        <div className="molecule-viewer__stage">
+        <div className="molecule-viewer__stage" ref={stageRef}>
           {popped ? (
-            <div className="molecule-viewer__backdrop" onClick={closePopOut} aria-hidden="true" />
+            <div
+              className={
+                closing
+                  ? 'molecule-viewer__backdrop molecule-viewer__backdrop--closing'
+                  : 'molecule-viewer__backdrop'
+              }
+              onClick={closePopOut}
+              aria-hidden="true"
+            />
           ) : null}
           <div
             ref={frameRef}
             className={
-              popped ? 'molecule-viewer__frame molecule-viewer__frame--popped' : 'molecule-viewer__frame'
+              popped
+                ? `molecule-viewer__frame molecule-viewer__frame--popped${
+                    closing ? ' molecule-viewer__frame--closing' : ''
+                  }`
+                : 'molecule-viewer__frame'
             }
             {...(popped
               ? { role: 'dialog', 'aria-modal': true, 'aria-label': caption || '3D molecule viewer' }

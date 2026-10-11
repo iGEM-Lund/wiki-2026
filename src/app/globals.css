@@ -2255,6 +2255,24 @@ a.inline-icon--link:focus-visible {
   z-index: 1000;
   background: rgba(0, 0, 0, 0.6);
 }
+@media (prefers-reduced-motion: no-preference) {
+  .molecule-viewer__backdrop {
+    animation: molecule-viewer-fade-in 260ms ease-out both;
+  }
+  .molecule-viewer__backdrop--closing {
+    animation: molecule-viewer-fade-out 260ms ease-in both;
+  }
+}
+@keyframes molecule-viewer-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes molecule-viewer-fade-out {
+  to {
+    opacity: 0;
+  }
+}
 .molecule-viewer__frame--popped {
   /* No panel: the molecule floats over the dimmed page and uses the whole
      viewport (the canvas background is already transparent). */
