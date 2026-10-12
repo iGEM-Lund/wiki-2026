@@ -19,15 +19,13 @@ For a project to move beyond a proof-of-concept, it has to consider, and be cons
 
 By mapping the path our product would have to travel from a construct in the lab to a therapeutic in the clinic, we have identified five groups of stakeholders. They do not form a list, but rather an interdependent cycle: researchers develop, manufacturers produce, regulators establish safety, clinicians prescribe, and the patients give their feedback, redirecting the research. Each group affects the one after it, and the last one closes the cycle back to the first.
 
-<SliceWheel slices={[{"title":"People living with PMOS","body":"AnTigone exists for people living with PMOS. For them, we aim to reduce the symptoms driven by androgen excess, without the systemic exposure that makes existing anti-androgens difficult to tolerate long-term.\n\nThe people taking therapy understand better than anyone what taking it is actually like. That experience would return to researchers, who would implement their feedback, in hope of improving the therapy even more. "},{"title":"Researchers"},{"title":"Manufacturers"},{"title":"Regulators"},{"title":"Clinicians"}]} />
+<SliceWheel slices={[{"title":"People living with PMOS","body":"People living with PMOS taking therapy understand better than anyone what taking it is actually like. That experience would return to researchers, who would implement their feedback, in hope of improving the therapy even more. "},{"title":"Researchers","body":"Researchers and the synthetic biology community design, build, and test the therapy. However, this does not happen in isolation, but what clinicians, regulators and patients need from a therapy shapes how it's built in the first place."},{"title":"Manufacturers"},{"title":"Regulators"},{"title":"Clinicians"}]} />
 
 ## Integrated HP
 
-Small paragraphs of what decisions we have made to change the project and to implement the feedback from experts. Something similar to a condensed version of all integrations from interviews. Can be ordered in categories possibly.
+Throughout the development of the project, we consulted researchers and experts across different fields to evaluate our assumptions and shape our decisions. We spoke with specialists in steroid-transforming enzymes, PMOS and hyperandrogenism research, microbiome containment, sustainability practice, clinical practice, and innovation management, just to name a few. Each conversation is summarized below, together with what we learned and how it shaped the project.
 
 ## Academia
-
-Academia Consultations
 
 <Card>
   <CardTitle
@@ -53,9 +51,8 @@ Department of Physiology, University of Gothenburg"
 
     Integration:
 
-    **Expression system design** - adopting a hypoxia-responsive promoter as a fixed gut on/off switch
-
-    **Project framing** - framing the project as an early-stage hypothesis rather than a validated therapeutic mechanism
+    * **Expression system design** - adopting a hypoxia-responsive promoter as a fixed gut on/off switch
+    * **Project framing** - framing the project as an early-stage hypothesis rather than a validated therapeutic mechanism
   </Expandable>
 </Card>
 
@@ -91,6 +88,22 @@ Joint Faculties of Humanities and Theology, Lund University"
 
     **Content framing** - Her advice to link science to its societal relevance reinforced the approach we started with, using iGEM to show the range of experts involved in synthetic biology (ethics, policymakers, researchers, etc.).
   </Expandable>
+</Card>
+
+<Card>
+  <CardTitle
+    image="https://static.igem.wiki/teams/6160/wiki/human-practices/eduardo-amo-gonz-lez.avif"
+    subtitle="Doctoral student
+Center for Molecular Protein Science, Lund University"
+  >
+    Eduardo Amo González
+  </CardTitle>
+
+  Eduardo Amo González is a doctoral student at Lund University, and was a member of last year's iGEM Team, primarily on the Dry Lab/Modelling committee. He was contacted for advice on how to approach protein and mutation modelling during the early stages of the project, and on which software programmes he would recommend. He suggested using ChimeraX, as it is user-friendly and suited for beginners. He also introduced us to iGEM at the very beginning of the project and explained what the competition involves.
+
+  Integration:
+
+  **Modelling Software**: Based on Eduardo’s advice, we decided to use ChimeraX for protein visualisation and mutation modeling.
 </Card>
 
 <Card>
@@ -222,7 +235,6 @@ Department of Law, Lund University
 
     She sent us the relevant regulations afterwards that set a great starting point for developing the GDPR part of the surveys.
 
-    \
     Integration:
 
     **Survey Structure -** Her input served as a starting point for developing the GDPR regulations and ensuring proper consent for the clinician and patient surveys. The latter was not published due to lack of time to get the ethical review for it.
@@ -252,8 +264,6 @@ Karolinska Institutet"
     We discussed whether reducing androgen activity in the gut could meaningfully affect systemic androgen levels and PMOS symptoms, and whether AKR1D1-mediated 5β-reduction is a suitable approach. We also asked which androgens and biomarkers are most clinically relevant, whether excessive androgen reduction could pose risks, and whether a gut-based approach could offer advantages for women seeking pregnancy. Finally, we discussed the relationship between hyperandrogenism, metabolic dysfunction, and inflammation in PMOS.
 
     She confirmed that targeting hyperandrogenism is highly relevant, but emphasized that free testosterone, rather than total testosterone alone, is particularly important because reduced SHBG can increase circulating free androgens in PMOS. She considered AKR1D1 useful as a proof of concept but noted that its direct relevance to PMOS remains uncertain and that other androgen pathways may ultimately be more suitable targets. Lowering circulating androgens could potentially improve hormonal feedback, although this remains hypothetical, and androgen levels should be normalized rather than reduced excessively. Importantly, she highlighted the potential value of a gut-based approach for women seeking pregnancy, since several current anti-androgen treatments cannot be used during this period. She also suggested that inflammation in PMOS may largely be secondary to hyperandrogenism, hyperinsulinemia, and metabolic dysfunction.
-
-    Integration:
   </Expandable>
 </Card>
 
@@ -404,7 +414,7 @@ Center for Advanced Biotechnology and Medicine, Rutgers University"
 
   Integration:
 
-  Effector choice: Liisa’s feedback that the 5β-reduction strategy is a valid starting point reinforced our choice to use it for our proof-of-concept.
+  **Effector choice**: Liisa’s feedback that the 5β-reduction strategy is a valid starting point reinforced our choice to use it for our proof-of-concept.
 </Card>
 
 <Card>
@@ -490,18 +500,6 @@ Monash Centre for Health Research and Implementation, Monash University"
 </Card>
 
 <Card>
-  <CardTitle>
-    Eduardo Amo (not finished)
-  </CardTitle>
-
-  Short text
-
-  <Expandable defaultOpen={false}>
-    Long text
-  </Expandable>
-</Card>
-
-<Card>
   <CardTitle
     image="https://static.igem.wiki/teams/6160/wiki/human-practices/nelly-garcia-gonzalez.avif"
     subtitle="Associate Senior Lecturer
@@ -522,8 +520,6 @@ Division of Environmental and Energy System Studies, Lund University"
 </Card>
 
 ## Clinicians
-
-Different Clinician Consultations
 
 <Card>
   <CardTitle
@@ -617,22 +613,17 @@ Private practice and public hospital work in San Severo, Foggia, Italy
 
     We contacted Katia Palombino to understand how PMOS is seen and treated by clinicians on a daily basis. We asked how common PMOS is and how it is diagnosed and treated. We also asked her the main concerns and worries expressed by a patient and finally asked her if she would be willing to take part in our survey. 
 
-    Katia explained that PMOS is common but the term “ polycystic ovary” is often overused even among clinicians and specialists. She also said that an ultrasound alone is not enough since ovarian morphology should be judged around 8 years after menarche. The main criteria are hyperandrogenism, irregular menstrual cycles and polyscystic ovaries on ultrasound. She generally avoids giving the pill straight away and suggests lifestyle changes with nutrition guidance from a nutritionist and an endocrinologist when needed. She also said that when the cycles become regular due to a pill patients drop the lifestyle changes that matter more. When she does prescribe it is most often a pill with an anti androgenic progestin. She rarely uses anti androgens like flutamide since they lead to regular check-ups of the liver. She also uses inositol supplements and metformin in some cases. For most patients,  fertility is the main concern. The symptoms usually come back after stopping the pill if the lifestyle has not been corrected.
+    Katia explained that PMOS is common but the term “polycystic ovary” is often overused even among clinicians and specialists. She also said that an ultrasound alone is not enough since ovarian morphology should be judged around 8 years after menarche. The main criteria are hyperandrogenism, irregular menstrual cycles and polyscystic ovaries on ultrasound. She generally avoids giving the pill straight away and suggests lifestyle changes with nutrition guidance from a nutritionist and an endocrinologist when needed. She also said that when the cycles become regular due to a pill, patients drop the lifestyle changes that matter more. When she does prescribe it is most often a pill with an anti-androgenic progestin. She rarely prescribes anti-androgens, such as flutamide, since they require regular check-ups of the liver. She also prescribes inositol supplements and metformin in some cases. For most patients, fertility is the main concern. The symptoms usually come back after stopping the pill if the lifestyle has not been corrected.
 
-    She said that the microbiome tests are expensive and do not yet give her the results that she can work with. She also mentioned the practical barriers such as lack of PMOS clinics in her region, many of her patients cannot afford a nutritionist , a gynecologist , supplements and pills together. For the survey she said that with informed consent and anonymity the survey should not be a problem.
+    She said that the microbiome tests are expensive and do not yet give her the results that she can work with. She also mentioned the practical barriers such as lack of PMOS clinics in her region, many of her patients cannot afford a nutritionist, a gynecologist, supplements and pills together. For the survey she said that with informed consent and anonymity, the survey should not be a problem.
 
-    \
     **Integration:**
 
-    * &#x20;**Clinician survey:** Katia agreed to answer our clinician survey once it is ready.
-
-    \\
+    **Clinician survey:** Katia agreed to answer our clinician survey once it is ready.
   </Expandable>
 </Card>
 
 ## Industry
-
-Different Industry Consultations
 
 <Card>
   <CardTitle
@@ -656,11 +647,80 @@ Future by Lund"
 
     Integration: 
 
-    **General** Support - As a collaboration partner, their contribution was infrastructure, visibility, and framing support rather than direct project feedback.&#x20;
+    **General Support** - As a collaboration partner, their contribution was infrastructure, visibility, and framing support rather than direct project feedback.&#x20;
 
     **Venue** - They offered us their venue and promotional support for our PMOS awareness workshop, reaching a student audience outside biotech (LINK) which strengthened our impact toward SDG 4 (quality education) and SDG 5 (gender equality).&#x20;
 
     **Science Communication** - They also published an article ("[Student collaboration with workshop in women's health](https://www.futurebylund.se/en/nyheter/studentsamarbete-med-workshop-inom-kvinnohalsa)") on their platform about our project's progress, highlighting the PMOS awareness workshop, as well as our successful attendance at the iGEM European Meet-Up in Málaga, increasing PMOS and iGEM visibility.
+  </Expandable>
+</Card>
+
+<Card>
+  <CardTitle
+    image="https://static.igem.wiki/teams/6160/wiki/human-practices/francesco-bez.avif"
+    subtitle="Innovation Manager
+Medicon Village, Lund"
+  >
+    Francesco Bez&#x20;
+  </CardTitle>
+
+  Francesco has been our constant contact for industry connections, forwarding our outreach to contacts at GutFeelingLabs, ImmuneBiotech, Gedea, Vati of Sweden, and AstraZeneca, and introducing us to the [Medicon Village](https://www.mediconvillage.se/) ecosystem. Through him, we got in contact with both Magdalena Nour, CEO of Vati of Sweden, and Shahram Lavasani, CEO of ImmuneBiotech. He also gave us insight into what pursuing AnTigone beyond the competition could look like, from company formation to lab space and incubator access.
+
+  <Expandable defaultOpen={false}>
+    ---
+
+    Summary of interview:
+
+    [Medicon Village](https://www.mediconvillage.se/) is Scandinavia's largest life science park, located in Lund and home to over 180 organizations and 2,800 professionals spanning biotech, pharma, and healthcare. We reached out wanting outreach support, industry contacts, possible lab space, and a clearer picture of how a project like ours could move beyond the iGEM competition. 
+
+    Francesco forwarded our outreach to his contactsat [GutFeelingLabs](https://gutfeelinglabs.com/), [ImmuneBiotech](https://immunebiotech.com/), [Gedea](https://gedeabiotech.com/), [Vati of Sweden](https://vatiofsweden.com/), and [AstraZeneca](https://www.astrazeneca.com/); not all of them responded, but it gave us direct access to companies we otherwise had no route into. He also walked us through how Medicon Village operates more broadly: they primarily work with companies and researchers rather than student teams, but could still connect a team like ours with incubator networks like Smile or [LU Innovation](https://www.innovation.lu.se/en/), though several of these, such as Smile Incubator access or startup funding, require first forming a company. On our clinician survey specifically, he was upfront that Medicon Village can't compel clinicians to participate, but could facilitate introductions, and noted that having real survey statistics would strengthen our case in future industry conversations.
+
+    Integration:
+
+    **Industry contacts** - Of the companies Francesco forwarded us to, Magdalena Nour (Vati of Sweden) and Shahram Lavasani (ImmuneBiotech) responded and resulted in direct contact.
+
+    **Survey strategy** - His comments on contacting clinicians confirmed that industry introductions wouldn't meaningfully speed up clinician outreach, reinforcing our decision to contact clinicians directly via email rather than route through intermediaries. 
+
+    **Future pathway** - A first picture of what forming a company around AnTigone would require, and what support is available to do it (LU Innovation, Smile Incubator).
+
+    **Lab space** - Open Lab Skåne as a flexible, pay-per-hour option, not needed for this project, but worth knowing if the work continues.
+  </Expandable>
+</Card>
+
+<Card>
+  <CardTitle
+    image="https://static.igem.wiki/teams/6160/wiki/human-practices/simon-ekstrom.avif"
+    subtitle="Head of unit: Structural Proteomics
+SciLifeLab, Lund University
+"
+  >
+    Simon Ekström
+  </CardTitle>
+
+  We met with Simon Ekström and Anton Sellerberg, researchers at SciLifeLab with expertise relevant to protein characterization and structural analysis. We reached out to receive their perspective on how we could characterize and improve our androgen converting enzyme. They encouraged us to prioritize simple activity assays and protein production, while starting computational modelling in parallel to guide point mutations for improving enzyme performance.
+
+  <Expandable defaultOpen={false}>
+    ---
+
+    Summary of interview:
+
+    Simon Ekström and Anton Sellerberg are researchers at SciLifeLab working with protein structural analysis and mass spectrometry. We reached out to them for advice on how we could experimentally characterize our androgen converting enzyme and use computational methods to guide its further improvement.
+
+    When discussing how to demonstrate enzyme activity, they recommended starting with simpler and faster assays, such as commercial testosterone or estradiol assays, rather than immediately relying on mass spectrometry. Mass spectrometry would be more valuable at a later stage when investigating substrate specificity or identifying reaction products, which would also require appropriate reference compounds.
+
+    For improving the enzyme, Anton and Simon recommended starting computational work early and running it in parallel with wet-lab experiments. They suggested using docking and molecular dynamics to evaluate enzyme substrate interactions and guide the selection of promising mutations. Rather than introducing several mutations at once, they recommended focusing on point mutations and comparing multiple computational models before selecting candidates for experimental testing.
+
+    They also emphasized that producing and characterizing the enzyme should come before more complex experimental systems. When we discussed using microfluidics to better mimic physiological hormone concentrations, they advised us to postpone this until we had first demonstrated enzymatic conversion in vitro. For protein purification, they considered a His-tag suitable and unlikely to significantly interfere with the enzyme's catalytic activity.
+
+    Integration:
+
+    **Experimental priority** - Their recommendation to first establish enzyme activity made us prioritize protein expression, purification and straightforward androgen conversion assays before moving to more complex characterization methods.
+
+    **Computational modelling** - Their advice led us to start docking and molecular dynamics alongside our wet lab work, allowing computational results to guide which enzyme variants should be experimentally tested.
+
+    **Mutation strategy** - Their recommendation to focus on point substitutions shaped our protein engineering strategy, where individual mutations could be modelled and compared before selecting promising variants for experimental validation.
+
+    **Project scope** - Their feedback on microfluidics led us to deprioritize complex physiological models and focus our available time and resources on demonstrating enzyme production and androgen conversion first.
   </Expandable>
 </Card>
 
@@ -682,7 +742,9 @@ Recipharm Advanced Bio"
     \
     Recipharm is a global pharmaceutical Contract Development and Manufacturing Organisation (CDMO), headquartered in Stockholm and founded in 1995. \
     \
-    We met with Natalie Kazimierczak (Senior Director, Business Development at Recipharm, based in Scotland, working remotely with European customers) and Shubharthi Nandi from the Recipharm team. \
+    We met with Natalie Kazimierczak (Senior Director, Business Development at Recipharm, based in Scotland, working remotely with European customers) and Shubharthi Nandi from the Recipharm team.&#x20;
+
+    \
     Natalie gave background on Recipharm's advanced biotherapeutics business: they cover a range of modalities: RNA and plasmid work, LNP fill-finish, viral vector manufacturing, recombinant proteins, and microbial/live biotherapeutics with incoming projects routed to whichever site has the right expertise. Their facilities include process development labs, manufacturing suites at different scales (including microbial fermentation), lyophilisation capability at some sites, and in-house QC, with some specialist testing outsourced to partner labs. \
     \
     In terms of how they typically work with a project, Natalie described starting with smaller-scale process development and proof-of-concept work and then if a team wants to move further providing a high-level budget and timeline estimate that could support a funding application (e.g. costs to get to first-in-human clinical material). Her suggested next step was to put a confidentiality agreement in place, have their site teams review whatever information we can share, and set up a deeper technical call with the relevant specialists.
@@ -703,8 +765,8 @@ Nordic Women's Health Hub"
   <Expandable defaultOpen={false}>
     ---
 
-    Summary of interview:\
-    \
+    Summary of interview:
+
     We met with Dimitra Manou, Head of Marketing. This was a preliminary, scoping-style meeting and her role was to assess our project. \
     On our survey: Her main advice was to pin down our target audience first (patients vs. clinics/hospitals), since GDPR requirements differ depending on which. She seemed interested and asked us to send a plan of what the survey would actually look like (questionnaire, interviews, or focus groups) before taking it further. She confirmed the Hub could potentially help distribute it through their Öresund/Skåne network, but which stakeholders make sense still depends on whether we want patient-level or institutional data.
   </Expandable>
@@ -748,70 +810,32 @@ VATI of Sweden"
 
 <Card>
   <CardTitle
-    image="https://static.igem.wiki/teams/6160/wiki/human-practices/simon-ekstrom.avif"
-    subtitle="Head of unit: Structural Proteomics
-SciLifeLab, Lund University
+    image="https://static.igem.wiki/teams/6160/wiki/human-practices/shahram-lavasani.avif"
+    subtitle="Ph.D. in Immunology
+CEO of Immunebiotech
 "
   >
-    Simon Ekström
+    Shahram Lavasani
   </CardTitle>
 
-  We met with Simon Ekström and Anton Sellerberg, researchers at SciLifeLab with expertise relevant to protein characterization and structural analysis. We reached out to receive their perspective on how we could characterize and improve our androgen converting enzyme. They encouraged us to prioritize simple activity assays and protein production, while starting computational modelling in parallel to guide point mutations for improving enzyme performance.
+  Dr. Shahram Lavasani was introduced to us by our contact at Medicon, Francesco Bez, who recognized that our project aligned with his company's research area. Dr. Lavasani's company, ImmuneBiotech, works with precision probiotics to manage various gastrointestinal and neurological conditions (e.g., SIBO, chronic fatigue syndrome, etc.). Dr. Lavasani advised against integrating our construct into a *Lactobacillus* chassis, recommending instead that we polish our results in *E. coli* due to time limitations and the difficulty of working with Gram-positive bacteria. He also pointed us to several delayed-release capsule options for probiotic delivery that we could explore in the future.
 
   <Expandable defaultOpen={false}>
-    ---
-
     Summary of interview:
 
-    Simon Ekström and Anton Sellerberg are researchers at SciLifeLab working with protein structural analysis and mass spectrometry. We reached out to them for advice on how we could experimentally characterize our androgen converting enzyme and use computational methods to guide its further improvement.
+    We contacted Dr. Lavasani because of his expertise in probiotics and their use as therapeutic products. We wanted his perspective on possible final chassis selection, probiotic delivery methods and whether probiotic products could potentially cause issues like SIBO (Small Intestinal Bacterial Overgrowth).
 
-    When discussing how to demonstrate enzyme activity, they recommended starting with simpler and faster assays, such as commercial testosterone or estradiol assays, rather than immediately relying on mass spectrometry. Mass spectrometry would be more valuable at a later stage when investigating substrate specificity or identifying reaction products, which would also require appropriate reference compounds.
+    When asked about ImmuneBiotech’s strategy for selecting their chassis, Dr. Lavasani revealed that they have a functional strain-selection approach, where they select strains by what they produce, and noted a fundamental mismatch with our approach, since we are trying to engineer the chassis to produce what we want. Thus, he was limited in how much direct support they could offer with this.
 
-    For improving the enzyme, Anton and Simon recommended starting computational work early and running it in parallel with wet-lab experiments. They suggested using docking and molecular dynamics to evaluate enzyme substrate interactions and guide the selection of promising mutations. Rather than introducing several mutations at once, they recommended focusing on point mutations and comparing multiple computational models before selecting candidates for experimental testing.
+    Nonetheless, Dr. Lavasani shared his experience — when asked about the *Lactobacillus,* he emphasized that switching to Gram-positive *Lactobacillus* would be significantly more challenging than continuing with Gram-negative *E. coli*, especially given our short timeline and lack of prior Gram-positive experience.
 
-    They also emphasized that producing and characterizing the enzyme should come before more complex experimental systems. When we discussed using microfluidics to better mimic physiological hormone concentrations, they advised us to postpone this until we had first demonstrated enzymatic conversion in vitro. For protein purification, they considered a His-tag suitable and unlikely to significantly interfere with the enzyme's catalytic activity.
+    When we raised questions about probiotic survival through the GI tract, Dr. Lavasani described delayed-release capsule technologies for probiotic delivery, like Embo caps and Capsugel, that release contents in the small intestine based on time and pH. When asked if there would be a risk of SIBO due to using that, he stated that would not be a concern, since SIBO results from colonic bacteria migrating upward, not from the capsule release.
 
-    Integration:
+    **Integration:**
 
-    **Experimental priority** - Their recommendation to first establish enzyme activity made us prioritize protein expression, purification and straightforward androgen conversion assays before moving to more complex characterization methods.
+    **Chassis strategy:** we maintained *E. coli* as our experimental chassis and repositioned chassis migration as theoretical future work requiring no lab validation this year.
 
-    **Computational modelling** - Their advice led us to start docking and molecular dynamics alongside our wet lab work, allowing computational results to guide which enzyme variants should be experimentally tested.
-
-    **Mutation strategy** - Their recommendation to focus on point substitutions shaped our protein engineering strategy, where individual mutations could be modelled and compared before selecting promising variants for experimental validation.
-
-    **Project scope** - Their feedback on microfluidics led us to deprioritize complex physiological models and focus our available time and resources on demonstrating enzyme production and androgen conversion first.
-  </Expandable>
-</Card>
-
-<Card>
-  <CardTitle
-    image="https://static.igem.wiki/teams/6160/wiki/human-practices/francesco-bez.avif"
-    subtitle="Innovation Manager
-Medicon Village, Lund"
-  >
-    Francesco Bez&#x20;
-  </CardTitle>
-
-  Francesco has been our constant contact for industry connections, forwarding our outreach to contacts at GutFeelingLabs, ImmuneBiotech, Gedea, Vati of Sweden, and AstraZeneca, and introducing us to the [Medicon Village](https://www.mediconvillage.se/) ecosystem. Through him, we got in contact with both Magdalena Nour, CEO of Vati of Sweden, and Shahram Lavasani, CEO of ImmuneBiotech. He also gave us insight into what pursuing AnTigone beyond the competition could look like, from company formation to lab space and incubator access.
-
-  <Expandable defaultOpen={false}>
-    ---
-
-    Summary of interview:
-
-    [Medicon Village](https://www.mediconvillage.se/) is Scandinavia's largest life science park, located in Lund and home to over 180 organizations and 2,800 professionals spanning biotech, pharma, and healthcare. We reached out wanting outreach support, industry contacts, possible lab space, and a clearer picture of how a project like ours could move beyond the iGEM competition. 
-
-    Francesco forwarded our outreach to his contactsat [GutFeelingLabs](https://gutfeelinglabs.com/), [ImmuneBiotech](https://immunebiotech.com/), [Gedea](https://gedeabiotech.com/), [Vati of Sweden](https://vatiofsweden.com/), and [AstraZeneca](https://www.astrazeneca.com/); not all of them responded, but it gave us direct access to companies we otherwise had no route into. He also walked us through how Medicon Village operates more broadly: they primarily work with companies and researchers rather than student teams, but could still connect a team like ours with incubator networks like Smile or [LU Innovation](https://www.innovation.lu.se/en/), though several of these, such as Smile Incubator access or startup funding, require first forming a company. On our clinician survey specifically, he was upfront that Medicon Village can't compel clinicians to participate, but could facilitate introductions, and noted that having real survey statistics would strengthen our case in future industry conversations.
-
-    Integration:
-
-    **Industry contacts** - Of the companies Francesco forwarded us to, Magdalena Nour (Vati of Sweden) and Shahram Lavasani (ImmuneBiotech) responded and resulted in direct contact.
-
-    **Survey strategy** - His comments on contacting clinicians confirmed that industry introductions wouldn't meaningfully speed up clinician outreach, reinforcing our decision to contact clinicians directly via email rather than route through intermediaries. 
-
-    **Future pathway** - A first picture of what forming a company around AnTigone would require, and what support is available to do it (LU Innovation, Smile Incubator).
-
-    **Lab space** - Open Lab Skåne as a flexible, pay-per-hour option, not needed for this project, but worth knowing if the work continues.
+    **Delivery system:** we researched possible delayed-release capsule options (Embo caps, Capsugel) for small intestine delivery and pH-resistant coating alternatives.
   </Expandable>
 </Card>
 
@@ -846,36 +870,6 @@ LU Innovation, Lund"
     **Entrepreneurship training:** Team members were introduced to the programme INSIGHTS to learn the basics of turning an idea into a venture. One team member joined.
 
     **Future route:** The incubator place and free legal advice remain available if we decide to continue after iGEM.
-  </Expandable>
-</Card>
-
-<Card>
-  <CardTitle
-    image="https://static.igem.wiki/teams/6160/wiki/human-practices/shahram-lavasani.avif"
-    subtitle="Ph.D. in Immunology
-CEO of Immunebiotech
-"
-  >
-    Shahram Lavasani
-  </CardTitle>
-
-  Dr. Shahram Lavasani was introduced to us by our contact at Medicon, Francesco Bez, who recognized that our project aligned with his company's research area. Dr. Lavasani's company, ImmuneBiotech, works with precision probiotics to manage various gastrointestinal and neurological conditions (e.g., SIBO, chronic fatigue syndrome, etc.). Dr. Lavasani advised against integrating our construct into a *Lactobacillus* chassis, recommending instead that we polish our results in *E. coli* due to time limitations and the difficulty of working with Gram-positive bacteria. He also pointed us to several delayed-release capsule options for probiotic delivery that we could explore in the future.
-
-  <Expandable defaultOpen={false}>
-    Summary of interview:
-
-    We contacted Dr. Lavasani because of his expertise in probiotics and their use as therapeutic products. We wanted his perspective on possible final chassis selection, probiotic delivery methods and whether probiotic products could potentially cause issues like SIBO (Small Intestinal Bacterial Overgrowth).
-
-    When asked about ImmuneBiotech’s strategy for selecting their chassis, Dr. Lavasani revealed that they have a functional strain-selection approach, where they select strains by what they produce, and noted a fundamental mismatch with our approach, since we are trying to engineer the chassis to produce what we want. Thus, he was limited in how much direct support they could offer with this.
-
-    Nonetheless, Dr. Lavasani shared his experience — when asked about the *Lactobacillus,* he emphasized that switching to Gram-positive *Lactobacillus* would be significantly more challenging than continuing with Gram-negative *E. coli*, especially given our short timeline and lack of prior Gram-positive experience.
-
-    When we raised questions about probiotic survival through the GI tract, Dr. Lavasani described delayed-release capsule technologies for probiotic delivery, like Embo caps and Capsugel, that release contents in the small intestine based on time and pH. When asked if there would be a risk of SIBO due to using that, he stated that would not be a concern, since SIBO results from colonic bacteria migrating upward, not from the capsule release.
-
-    **Integration:**
-
-    * **Chassis strategy:** we maintained *E. coli* as our experimental chassis and repositioned chassis migration as theoretical future work requiring no lab validation this year.
-    * **Delivery system:** we researched possible delayed-release capsule options (Embo caps, Capsugel) for small intestine delivery and pH-resistant coating alternatives.
   </Expandable>
 </Card>
 
