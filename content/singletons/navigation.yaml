@@ -29,10 +29,10 @@ items:
           target: technical_modelling
         - label: Notebooks and Protocols
           target: technical_notebooks-and-protocols
+        - label: Results`
+          target: project_results
         - label: Parts
           target: parts
-        - label: Results
-          target: project_results
   - name: Engagement
     icon:
       discriminant: library
