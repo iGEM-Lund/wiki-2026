@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { ZoomableImage } from './ZoomableImage';
+import { SmallFigureWatcher } from './SmallFigureWatcher';
 import { tiltFor } from '@/lib/tilt';
 
 type FigureWithCaptionProps = {
@@ -38,6 +39,7 @@ export function FigureWithCaption({ src, alt = '', caption, link, scale }: Figur
       className="figure-with-caption"
       style={{ '--tilt': tiltFor(src || caption || ''), ...(pct ? { maxWidth: `${pct}%` } : {}) } as CSSProperties}
     >
+      <SmallFigureWatcher />
       {link ? (
         <a className="figure-with-caption__anchor" href={link} target="_blank" rel="noopener noreferrer">
           {media}

@@ -1778,6 +1778,18 @@ body {
   rotate: 38deg;
 }
 
+/* A small polaroid (flagged by SmallFigureWatcher) needs only one strip,
+   centred across the top edge, to hold it. */
+.figure-with-caption[data-small]::before {
+  left: 50%;
+  top: -8px;
+  translate: -50% 0;
+  rotate: -3deg;
+}
+.figure-with-caption[data-small]::after {
+  display: none;
+}
+
 /* A polaroid: the image on a white card with the caption in the strip
    below it. The card shrinks to the image (the caption is kept from
    widening it, see figcaption below) and sits centred in its column at
@@ -2316,8 +2328,8 @@ a.inline-icon--link:focus-visible {
    the brand's secondary pink palette, see the --color-* declarations at
    the top of this file), one pin, its bottom right corner curling up off
    the page, and a tilt seeded by Quote.tsx. Narrower than the column and
-   pushed to its right, a top-level one reaching a little past it, so it
-   reads as stuck on top of the page rather than part of the text. Crimson
+   centred in it, so it reads as stuck on top of the page rather than part
+   of the text, with the quote itself set in the accent colour. Crimson
    fails contrast on the dark-mode Noir background (same reasoning as
    --error above), so dark mode swaps to a crimson-tinted dark surface with
    Rose text instead of reusing the Blush/Crimson pairing verbatim. */
@@ -2327,7 +2339,7 @@ a.inline-icon--link:focus-visible {
   --pin: var(--pin-red);
   position: relative;
   width: min(24rem, 100%);
-  margin: 2.25rem 0 2.25rem auto;
+  margin: 2.25rem auto;
   padding: 2rem 1.65rem 1.65rem;
   border-bottom-right-radius: 24px 6px;
   background: var(--quote-surface);
@@ -2335,13 +2347,6 @@ a.inline-icon--link:focus-visible {
     var(--lift),
     8px 14px 14px -10px rgb(0 0 0 / 0.25);
   rotate: calc(var(--tilt, 0deg) * 1.5);
-}
-/* Only where the page has gutters wide enough to reach into; on phones
-   the column already runs to the screen's side padding. */
-@media (min-width: 48.0625rem) {
-  .site article > .quote-block {
-    margin-right: clamp(-5.5rem, -6vw, 0rem);
-  }
 }
 :root[data-theme='dark'] .site .quote-block {
   --quote-surface: color-mix(in srgb, var(--color-crimson) 22%, var(--bg-alt));
@@ -2355,15 +2360,16 @@ a.inline-icon--link:focus-visible {
   margin: 0;
   font-family: var(--font-heading);
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 1.2rem;
   line-height: 1.35;
-  color: var(--heading);
+  text-align: center;
+  color: var(--quote-accent);
   text-wrap: balance;
 }
 .quote-block__quotee {
   margin: 0.65rem 0 0;
-  text-align: left;
+  text-align: center;
   font-style: normal;
   font-weight: 400;
   font-size: 0.8rem;
@@ -2405,6 +2411,10 @@ a.inline-icon--link:focus-visible {
 }
 .quote-block--with-figure .quote-block__text {
   grid-row: 2;
+}
+.site .quote-block--with-figure .quote-block__text,
+.quote-block--with-figure .quote-block__quotee {
+  text-align: left;
 }
 .quote-block--with-figure .quote-block__quotee {
   grid-row: 3;
