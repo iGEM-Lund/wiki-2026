@@ -327,52 +327,82 @@ body {
    never changes height and the page below it never jumps; the title and
    edge animate over that same stretch of scroll. --page-title-height (the
    banner's height, which depends on how the title wraps) and the
-   data-collapsible gate come from PageTitleSync. Browsers without
-   scroll-driven animations keep the banner scrolling away as a whole, and
-   so does reduced motion (either way it's asked for): the global override
-   above would otherwise snap the title straight to its collapsed state. */
+   data-collapsible gate come from PageTitleSync. Reduced motion keeps the
+   banner scrolling away as a whole (either way it's asked for): the global
+   override above would otherwise snap the title straight to its collapsed
+   state. Registered so it computes to px: PageTitleSync reads it back in
+   browsers without scroll-driven animations (see below). */
+@property --collapse-distance {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']):has(.page-title[data-collapsible]) {
+    /* In-page jumps land below the bar too, not under it. */
+    scroll-padding-top: calc(var(--header-height) + var(--page-title-collapsed) + 1rem);
+  }
+  :root:not([data-motion='reduce']) .site .page-title[data-collapsible] {
+    --collapse-distance: calc(var(--page-title-height) - var(--page-title-collapsed));
+    position: sticky;
+    top: calc(var(--pane-top) - var(--collapse-distance));
+    /* Over the page content scrolling under the bar, under the floating
+       buttons (50) and the drawers (60, 90). */
+    z-index: 40;
+  }
+  :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__edge {
+    animation: page-title-edge-collapse linear both;
+  }
+  /* The heading also plays its arrival (see the intro below, same
+     timing), which has to stay in the list or the collapsible flag would cut it short. */
+  :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__heading {
+    animation-name: page-title-text-in, page-title-heading-collapse;
+    animation-delay: 0.4s, 0s;
+    animation-timing-function: ease-out, linear;
+    animation-fill-mode: backwards, both;
+  }
+  /* The top wave pins under the header and squashes to the bottom
+     edge's height as the banner collapses. */
+  :root:not([data-motion='reduce']) .page-title-top:has(+ .page-title[data-collapsible]) {
+    /* A sibling of the banner, so it doesn't inherit the banner's. */
+    --collapse-distance: calc(var(--page-title-height) - var(--page-title-collapsed));
+    position: sticky;
+    top: calc(var(--pane-top) - 2px);
+    z-index: 41;
+    animation: page-title-top-collapse linear both;
+  }
+}
+/* The collapse itself runs on the page's scroll, */
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
-    :root:not([data-motion='reduce']):has(.page-title[data-collapsible]) {
-      /* In-page jumps land below the bar too, not under it. */
-      scroll-padding-top: calc(var(--header-height) + var(--page-title-collapsed) + 1rem);
-    }
-    :root:not([data-motion='reduce']) .site .page-title[data-collapsible] {
-      --collapse-distance: calc(var(--page-title-height) - var(--page-title-collapsed));
-      position: sticky;
-      top: calc(var(--pane-top) - var(--collapse-distance));
-      /* Over the page content scrolling under the bar, under the floating
-         buttons (50) and the drawers (60, 90). */
-      z-index: 40;
-    }
-    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__edge {
-      animation: linear both;
+    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__edge,
+    :root:not([data-motion='reduce']) .page-title-top:has(+ .page-title[data-collapsible]) {
       animation-timeline: scroll(root);
       animation-range: 0 var(--collapse-distance);
     }
-    /* The heading also plays its arrival (see the intro below, same
-       timing), which has to stay in the list or the collapsible flag would cut it short. */
     :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__heading {
-      animation-name: page-title-text-in, page-title-heading-collapse;
       animation-duration: 0.4s, auto;
-      animation-delay: 0.4s, 0s;
-      animation-timing-function: ease-out, linear;
-      animation-fill-mode: backwards, both;
       animation-timeline: auto, scroll(root);
       animation-range: normal, 0 var(--collapse-distance);
     }
-    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__edge {
-      animation-name: page-title-edge-collapse;
-    }
-    /* The top wave pins under the header and squashes to the bottom
-       edge's height as the banner collapses. */
+  }
+}
+/* or, where there are no scroll-driven animations (Firefox), is held
+   paused and scrubbed through by a negative delay: 1s of animation per
+   collapse, and PageTitleSync sets --collapse-p (0 to 1, how far it has
+   got) on the banner and the top wave as the page scrolls. */
+@supports not (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__edge,
     :root:not([data-motion='reduce']) .page-title-top:has(+ .page-title[data-collapsible]) {
-      position: sticky;
-      top: calc(var(--pane-top) - 2px);
-      z-index: 41;
-      animation: page-title-top-collapse linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0 calc(var(--page-title-height) - var(--page-title-collapsed));
+      animation-duration: 1s;
+      animation-delay: calc(var(--collapse-p, 0) * -1s);
+      animation-play-state: paused;
+    }
+    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__heading {
+      animation-duration: 0.4s, 1s;
+      animation-delay: 0.4s, calc(var(--collapse-p, 0) * -1s);
+      animation-play-state: running, paused;
     }
   }
 }
@@ -546,7 +576,9 @@ body {
   stroke: white;
   stroke-linecap: round;
   stroke-dasharray: 2 2;
-  stroke-dashoffset: calc(2 - (var(--head) * (1 + var(--taper)) - var(--taper) * (1 - var(--layer))));
+  /* Times 1px (a user unit here): Firefox only takes a bare number, not a
+     calc() that comes out as one, and would drop it to 0, fully drawn. */
+  stroke-dashoffset: calc((2 - (var(--head) * (1 + var(--taper)) - var(--taper) * (1 - var(--layer)))) * 1px);
 }
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   :root:not([data-motion='reduce']) .section-heading {
