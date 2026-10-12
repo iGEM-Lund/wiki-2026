@@ -12,7 +12,7 @@ import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/ch
 // (FigureWithCaption, Citation) so the MDX tags written here resolve
 // correctly when rendered on the live site.
 const ALT_TEXT_DESCRIPTION =
-  'Required. What the image shows, for readers who cannot see it (screen readers read this aloud). One or two plain sentences: say what matters about it, not "image of". Do not just repeat the caption.';
+  'Always fill this in. What the image shows, for readers who cannot see it (screen readers read this aloud). One or two plain sentences: say what matters about it, not "image of". Do not just repeat the caption.';
 
 export const contentComponents = {
   FigureWithCaption: block({
@@ -22,7 +22,7 @@ export const contentComponents = {
         label: 'Image URL',
         description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
       }),
-      alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION, validation: { isRequired: true } }),
+      alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION }),
       caption: fields.text({ label: 'Caption', multiline: true }),
       link: fields.url({
         label: 'Link (optional)',
@@ -47,7 +47,7 @@ export const contentComponents = {
             label: 'Image URL',
             description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
           }),
-          alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION, validation: { isRequired: true } }),
+          alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION }),
         }),
         { label: 'Figures', itemLabel: (props) => props.fields.alt.value || props.fields.src.value || 'Figure' },
       ),
