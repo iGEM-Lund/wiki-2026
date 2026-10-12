@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { easeOut, taperedPath, type Cubic } from '@/lib/tapered-stroke';
 
-// A string running down the right edge with a knot that rides along it as the
+// A string running down the left of the content with a knot that rides along it as the
 // page scrolls. It replaces the native scrollbar on desktop (the flag set on
 // <html> below is what globals.css keys the hiding off, so a failed hydration
 // never leaves the page with no scrollbar at all). The knot is draggable and
@@ -225,14 +225,22 @@ export function ScrollString() {
         return p * (trackHeight - KNOT_HEIGHT) + KNOT_HEIGHT / 2;
       });
       // Keep knots apart: forward from the top, then back from the bottom
-      // for any that ended up past the end of the string.
+      // for any that ended up past the end of the string. Names that wrap
+      // onto more lines need more room than a knot (labels are centred on
+      // their knot, so a pair needs half of each one's height).
+      const halves = els.map((el) => {
+        const label = el.lastElementChild as HTMLElement | null;
+        return (label?.offsetHeight ?? 0) / 2;
+      });
+      const gap = (a: number, b: number) => Math.max(BEAD_GAP, halves[a] + halves[b] + 4);
       const order = meta.map((_, i) => i);
       for (let k = 1; k < order.length; k++) {
-        ys[order[k]] = Math.max(ys[order[k]], ys[order[k - 1]] + BEAD_GAP);
+        ys[order[k]] = Math.max(ys[order[k]], ys[order[k - 1]] + gap(order[k - 1], order[k]));
       }
       const limit = trackHeight - BEAD_HEIGHT / 2;
       for (let k = order.length - 1; k >= 0; k--) {
-        const ceil = k === order.length - 1 ? limit : ys[order[k + 1]] - BEAD_GAP;
+        const ceil =
+          k === order.length - 1 ? limit : ys[order[k + 1]] - gap(order[k], order[k + 1]);
         ys[order[k]] = Math.min(ys[order[k]], ceil);
       }
 

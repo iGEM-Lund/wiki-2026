@@ -1567,18 +1567,33 @@ body {
   --main-pad-top: 2.5rem;
   --main-pad-x: 2rem;
   --pane-top: var(--header-height);
-  --pane-left: 0px;
   --pane-right: 0px;
   flex: 1;
-  margin-left: var(--pane-left);
   margin-right: var(--pane-right);
-  padding: calc(var(--pane-top) + var(--main-pad-top)) var(--main-pad-x) 2rem;
+  /* Padding rather than margin for the left pane's space, so the overflow
+     clip below reaches the screen edge and the full-bleed banners show. */
+  padding: calc(var(--pane-top) + var(--main-pad-top)) var(--main-pad-x) 2rem
+    calc(var(--main-pad-x) + var(--pane-left));
   /* Lets the page title banner size itself to this pane (cqi units). */
   container-type: inline-size;
   /* Tilted and nudged cards can poke a pixel past a narrow screen's edge;
      clip (not hidden) so it isn't a scroll container and sticky pieces
      still stick. */
   overflow-x: clip;
+}
+/* The scroll string's pane (see .scroll-string). On wide screens it only
+   nudges the column right of centre (the column moves half of it); as the
+   screen narrows it grows, pushing the column right so the column, and the
+   wider layouts reaching 32.5rem either side of its centre, keep clear of
+   the string and its heading names. The full-bleed banners reach back to
+   the screen edge via --pane-left. */
+.site {
+  --pane-left: 0px;
+}
+@media (min-width: 64.0625rem) {
+  .site {
+    --pane-left: clamp(5rem, 109.5rem - 100vw, 20.25rem);
+  }
 }
 /* The reading column, centred on the screen. From 75rem up the page
    outline floats in the empty gutter to its right (see .toc). */
@@ -1950,6 +1965,10 @@ body {
      this clips that whole zone. */
   overflow: hidden;
 }
+/* Over the scroll string (38), under the sticky title banner (40). */
+.site article > .figure-carousel {
+  z-index: 39;
+}
 /* A top-level carousel spans the whole content pane, from the nav sidebar
    to the outline rail (the screen edges on mobile), like the page title
    banner: since it clips its cards at its own edges, they seem to slide in
@@ -1957,6 +1976,7 @@ body {
    columns stay inside them. */
 .site article > .figure-carousel {
   margin-inline: calc(50% - 50cqi - var(--main-pad-x));
+  margin-left: calc(50% - 50cqi - var(--main-pad-x) - var(--pane-left));
 }
 /* The string itself: a true parabola. A quadratic Bezier whose control
    point sits directly above the curve's own horizontal midpoint has an
@@ -3498,7 +3518,7 @@ article .layout__column p {
   position: fixed;
   top: calc(var(--header-height) + var(--page-title-collapsed) + 1.5rem);
   right: 1rem;
-  width: min(13rem, calc((100vw - 50rem) / 2 - 3rem));
+  width: min(13rem, calc((100vw - 50rem) / 2 - 5.5rem));
   max-height: calc(100vh - var(--header-height) - var(--page-title-collapsed) - 3rem);
   overflow-y: auto;
   font-size: 0.9rem;
@@ -4355,10 +4375,10 @@ article .layout__column p {
   }
 }
 
-/* Scroll string: a string down the right edge with a knot that rides along it
+/* Scroll string: a string down the left of the content with a knot that rides along it
    as the page scrolls (src/components/scroll-string.tsx), drawn in the same
-   tapered, filled style and --heading colour as the h2 ornaments. Desktop
-   only: on phones the native overlay scrollbar is already unobtrusive and
+   tapered, filled style and --heading colour as the h2 ornaments. Wide
+   screens only (see the media query below): on phones the native overlay scrollbar is already unobtrusive and
    touch drag is what people use. The native scrollbar is hidden only once
    the component has mounted and flagged <html>. */
 .scroll-string {
@@ -4372,9 +4392,17 @@ article .layout__column p {
      is only the first-paint value. `bottom` is read from here by script;
      it stops a rem above the back-to-top tag (1.5rem + 4.4rem tall). */
   top: var(--header-height, 6rem);
-  right: 1.5rem;
+  /* 3.5rem left of the widest layouts (32.5rem either side of the
+     column's centre, or the content pane's own edge when that is
+     narrower). --pane-left keeps this at least 17rem from the screen edge,
+     room for the longest heading name beside it. */
+  left: calc(
+    max(var(--pane-left) + 2rem, (100vw + var(--pane-left)) / 2 - 32.5rem) - 3.5rem - 28px
+  );
   bottom: 7rem;
-  z-index: 40;
+  /* Under the figure carousels (39), which pass over it, and the sticky
+     title banner (40). */
+  z-index: 38;
   width: 28px;
   display: none;
   color: var(--heading);
@@ -4479,9 +4507,10 @@ article .layout__column p {
   color: var(--heading);
   font-size: 1.1rem;
   line-height: 1.3;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* Long names wrap (the script spaces the knots for their height). */
+  width: max-content;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
   text-align: right;
   /* Part of the link: clicking the name follows it like clicking the knot. */
   pointer-events: auto;
@@ -4503,7 +4532,9 @@ article .layout__column p {
 .scroll-string__notch:focus-visible .scroll-string__label {
   text-decoration: underline;
 }
-@media (min-width: 48.0625rem) {
+/* From 64rem up: narrower, the column and the heading names can't both
+   fit, so the outline is the corner button instead. */
+@media (min-width: 64.0625rem) {
   .scroll-string {
     display: block;
   }
