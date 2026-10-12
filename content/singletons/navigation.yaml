@@ -10,16 +10,12 @@ items:
           target: project_background
         - label: Project Design
           target: project_solution-and-project-design
-        - label: Results
-          target: project_results
         - label: Future Outlook
           target: future_outlook
-        - label: Safety
-          target: safety
+        - label: Biosafety
+          target: biosafety
         - label: Economic Assessment
           target: economical-assessment
-        - label: Proof of Concept
-          target: project_proof-of-concept
   - name: Technical
     icon:
       discriminant: library
@@ -33,8 +29,12 @@ items:
           target: technical_modelling
         - label: Notebooks and Protocols
           target: technical_notebooks-and-protocols
+        - label: Results
+          target: project_results
         - label: Parts
           target: parts
+        - label: Lab Safety
+          target: lab-safety
   - name: Engagement
     icon:
       discriminant: library
