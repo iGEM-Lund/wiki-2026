@@ -4,6 +4,9 @@ export type CardTitleProps = {
   image?: string;
   imageAlt?: string;
   subtitle?: string;
+  // The id of the heading typed as the title, set by rehypeCardTitleAnchors
+  // (src/lib/headings.ts); Card puts it on itself for outline links.
+  anchor?: string;
   children?: ReactNode;
 };
 

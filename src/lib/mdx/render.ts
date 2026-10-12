@@ -11,7 +11,12 @@ import { SliceWheel } from '@/components/content/SliceWheel';
 import { PillarsSectionHeading, pillarTarget } from '@/components/content/Pillars';
 import { SectionHeading } from '@/components/section-heading';
 import { extractPillars } from '@/lib/pillars';
-import { rehypeClampHeadings, rehypeCollectHeadings, type HeadingItem } from '@/lib/headings';
+import {
+  rehypeCardTitleAnchors,
+  rehypeClampHeadings,
+  rehypeCollectHeadings,
+  type HeadingItem,
+} from '@/lib/headings';
 
 // fields.mdx() stores raw MDX source text; unlike the older fields.document,
 // there's no pre-parsed document tree to walk, so rendering requires actually
@@ -31,7 +36,7 @@ export async function renderMdx(
     // every heading a stable `id` (so the outline's links and the
     // References section's anchors both resolve); the collector runs after
     // it to read those ids back out for the page outline.
-    rehypePlugins: [rehypeClampHeadings, rehypeSlug, [rehypeCollectHeadings, headings]],
+    rehypePlugins: [rehypeClampHeadings, rehypeSlug, [rehypeCollectHeadings, headings], rehypeCardTitleAnchors],
   });
 
   // Override Citation with the page's resolved reference lookup bound in;

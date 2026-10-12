@@ -52,9 +52,9 @@ function plainText(node: AnyNode): string {
 
 // Splits a page's hast tree into sections at its outline headings. Matches
 // the outline's rule (see rehypeCollectHeadings in src/lib/headings.ts):
-// headings inside an <Expandable> may be hidden in a collapsed body, and
-// ones inside a <CardTitle> aren't rendered as headings, so neither starts
-// a section; their text stays in the enclosing one.
+// headings inside an <Expandable> may be hidden in a collapsed body, so
+// they don't start a section; their text stays in the enclosing one. One
+// inside a <CardTitle> does, under the id the card itself carries.
 function splitSections(tree: Root): SearchSection[] {
   const sections: SearchSection[] = [];
   let current: SearchSection = { id: null, heading: null, text: '' };

@@ -29,7 +29,7 @@ export function Card({ children }: { children?: ReactNode }) {
   const title = isValidElement<CardTitleProps>(titleElement) ? titleElement.props : null;
 
   return (
-    <section className="card">
+    <section className="card" id={title?.anchor}>
       {title ? (
         <header className="card__header">
           {title.image ? (

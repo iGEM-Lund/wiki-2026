@@ -3976,11 +3976,18 @@ article .layout__column p {
   padding: 0.6rem 0.65rem;
   text-align: left;
   vertical-align: top;
-  /* `anywhere` (unlike `break-word`) also counts the break points toward
-     the cell's minimum width, so a long unbroken string such as a DNA
-     sequence wraps instead of forcing the table wider than the page. */
-  overflow-wrap: anywhere;
+  /* Words stay whole: each column is at least as wide as its longest
+     word, so a long description column can't squeeze its neighbours down
+     to a letter per line. */
+  overflow-wrap: break-word;
   border-bottom: 1px solid var(--border);
+}
+/* Set by TableScroll on cells holding a very long unbroken string, such as
+   a DNA sequence: `anywhere` (unlike `break-word`) also counts its break
+   points toward the column's minimum width, so it wraps instead of forcing
+   the table far wider than the page. */
+.table-scroll [data-break-anywhere] {
+  overflow-wrap: anywhere;
 }
 /* Set by TableScroll on cells long and wide enough to read well justified. */
 .table-scroll [data-justify] {
@@ -4404,6 +4411,12 @@ article .layout__column p {
    screens only (see the media query below): on phones the native overlay scrollbar is already unobtrusive and
    touch drag is what people use. The native scrollbar is hidden only once
    the component has mounted and flagged <html>. */
+/* Registered so it computes to px for the script that reads it. */
+@property --string-bottom {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
 .scroll-string {
   --knot: 60px;
   --p: 0;
@@ -4411,9 +4424,10 @@ article .layout__column p {
      meet end to end (1px of overlap each side hides the seam). */
   --knot-top: calc(var(--p) * (100% - var(--knot)));
   position: fixed;
-  /* `top` is set from script (below the header and the title banner); this
-     is only the first-paint value. `bottom` is read from here by script;
-     it stops a rem above the back-to-top tag (1.5rem + 4.4rem tall). */
+  /* `top` and `bottom` are set from script (below the header and the title
+     banner, above the footer once it scrolls in); these are only the
+     first-paint values. --string-bottom is read by script: it stops a rem
+     above the back-to-top tag (1.5rem + 4.4rem tall). */
   top: var(--header-height, 6rem);
   /* 3.5rem left of the widest layouts (32.5rem either side of the
      column's centre, or the content pane's own edge when that is
@@ -4422,7 +4436,8 @@ article .layout__column p {
   left: calc(
     max(var(--pane-left) + 2rem, (100vw + var(--pane-left)) / 2 - 32.5rem) - 3.5rem - 28px
   );
-  bottom: 7rem;
+  --string-bottom: 7rem;
+  bottom: var(--string-bottom);
   /* Under the figure carousels (39), which pass over it, and the sticky
      title banner (40). */
   z-index: 38;

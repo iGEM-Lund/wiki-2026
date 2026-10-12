@@ -15,8 +15,8 @@ import { easeOut, taperedPath, type Cubic } from '@/lib/tapered-stroke';
 // tapered outlines at the headings' stroke weight in --heading, with the
 // knot a crossing loop shaped after their awareness ribbon.
 //
-// It is also the page outline on wide screens: every h2 (and the h3s of the
-// section being read) gets a small knot of its own, placed where the big knot
+// It is also the page outline on wide screens: every h2 and h3 (card titles
+// included) gets a small knot of its own, placed where the big knot
 // sits when the page is scrolled to that heading, and sitting on the string's
 // curve. The links are read from the outline TableOfContents renders (kept in
 // the DOM, hidden by CSS while this is on) so the two can't disagree.
@@ -35,6 +35,8 @@ const WAVES = 2;
 // centre line, with the stroke weight left alone) so the loop reads at a
 // glance next to the thin string.
 const BANNER_GAP = 12;
+// Room left between the string's end and the footer once it scrolls in.
+const FOOTER_GAP = 24;
 const KNOT_SCALE = 1.2;
 const KNOT_HEIGHT = 50 * KNOT_SCALE;
 
@@ -160,6 +162,7 @@ export function ScrollString() {
     if (!track) return;
 
     const header = document.querySelector<HTMLElement>('.site__header');
+    const footer = document.querySelector<HTMLElement>('.site__footer');
     const knotPath = track.querySelector('.scroll-string__knot path');
     const lineGradient = track.querySelector(`#${LINE_GRADIENT}`);
     const linePath = track.querySelector('.scroll-string__line path');
@@ -171,7 +174,11 @@ export function ScrollString() {
     // has to land short of it (scroll-padding-top) when following a link.
     let offsets: number[] = [];
     let scrollPad = 0;
-    let bottomGap = parseFloat(getComputedStyle(track).bottom) || 0;
+    // The stylesheet's `bottom` (update() overrides it inline), from the
+    // registered --string-bottom, which computes to px.
+    const readBottomGap = () =>
+      parseFloat(getComputedStyle(track).getPropertyValue('--string-bottom')) || 0;
+    let bottomGap = readBottomGap();
 
     // The outline links TableOfContents renders: depth is the number of
     // lists they sit inside, a depth 2 link belongs to the last depth 1.
@@ -198,7 +205,7 @@ export function ScrollString() {
       }
     }
     function measure() {
-      bottomGap = parseFloat(getComputedStyle(track!).bottom) || 0;
+      bottomGap = readBottomGap();
       scrollPad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
       // Where following the link lands: some targets (the pillar sections)
       // add their own scroll-margin-top on top of the page's padding.
@@ -277,9 +284,9 @@ export function ScrollString() {
       frame = 0;
       // The string starts below the header and, while the page's title banner
       // is on screen, below that too (it scrolls and collapses, so this is
-      // re-read every frame). Its bottom edge is `bottom` in globals.css
-      // above the viewport's (read from there, it's in rem, and clears the
-      // back-to-top button).
+      // re-read every frame). Its bottom edge is --string-bottom in
+      // globals.css above the viewport's (read from there, it's in rem, and
+      // clears the back-to-top button).
       const banner = document.querySelector<HTMLElement>('.page-title');
       if (!introDone) {
         track!.dataset.hidden = '';
@@ -292,10 +299,17 @@ export function ScrollString() {
           banner ? banner.getBoundingClientRect().bottom + BANNER_GAP : 0,
         ),
       );
+      // And it ends above the footer once that scrolls into view, so the
+      // string shortens instead of running over it.
+      const bottom = Math.min(
+        window.innerHeight - bottomGap,
+        footer ? footer.getBoundingClientRect().top - FOOTER_GAP : Infinity,
+      );
       track!.style.top = `${top.toFixed(1)}px`;
-      trackHeight = window.innerHeight - top - bottomGap;
+      track!.style.bottom = `${(window.innerHeight - bottom).toFixed(1)}px`;
+      trackHeight = bottom - top;
       const max = root.scrollHeight - window.innerHeight;
-      if (max <= 0 || trackHeight <= 0) {
+      if (max <= 0 || trackHeight <= KNOT_HEIGHT) {
         track!.dataset.hidden = '';
         return;
       }
