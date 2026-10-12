@@ -18,13 +18,13 @@ type FigureCarouselProps = {
 // its card width follows from that. The shared height scales with the
 // carousel's own width, so a phone gets smaller cards, capped at the desktop
 // size. BASE_IMG_H is the desktop image height; PAD_X/PAD_Y are the card's
-// white margin around the image: globals.css's .figure-carousel__photo-half
-// padding (24/10/16px) plus its 1px border on each side.
+// white margin around the image: globals.css's .figure-carousel__card
+// padding (12/10/28px).
 const BASE_IMG_H = 280;
 const MIN_SCALE = 0.58;
 const WIDTH_FOR_FULL_SCALE = 470;
-const PAD_X = 22;
-const PAD_Y = 42;
+const PAD_X = 20;
+const PAD_Y = 40;
 // Aspect ratio (width / height) used until an image has loaded, and the
 // range real ratios are clamped to, so an extreme panorama or sliver still
 // gets a sensible card (only such outliers get cropped).
@@ -39,16 +39,13 @@ const GAP_PX = 24;
 const EDGE_MARGIN = 24;
 // String geometry, shared with the SVG path below: the string sits
 // STRING_BASE px from the top at both ends and sags SAG px at the middle.
-// HOLE_OFFSET is where the punched hole sits below each card's top edge
-// (must match the 12px in globals.css's photo-half mask and ring).
-// HANG_DROP lowers each card so the string rests against the TOP edge of its
-// 8px-radius hole (string center 5px above the hole center, leaving room for
-// the ~5px stroke) instead of threading through the middle, so the photo
-// reads as actually hanging from it.
-const STRING_BASE = 20;
+// CLIP_AT is how far below each card's top edge the string runs, where
+// the clothes peg holds the card to it (must match the 10px pivot in
+// globals.css's .figure-carousel__card). STRING_BASE leaves room above the
+// string for the pegs, which stick up past the cards' top edges.
+const STRING_BASE = 30;
 const SAG = 60;
-const HOLE_OFFSET = 12;
-const HANG_DROP = 5;
+const CLIP_AT = 10;
 const SWING_SECONDS = 2.4;
 // Reduced motion: how long each set of frozen figures stays up before the
 // next set replaces it.
@@ -116,14 +113,14 @@ function computeLayout(width: number, aspects: number[]): Layout {
 }
 
 // Top-left corner of a card whose center sits at centerX px, following the
-// string's parabola so the hole always hangs from the drawn string.
+// string's parabola so the peg always clips onto the drawn string.
 // Past either end of the string (where the drawn string stops) a card keeps
 // the end height instead of climbing the parabola out through the top edge.
 function cardPosition(l: Layout, index: number, centerX: number): Position {
   const x = Math.min(1, Math.max(0, centerX / l.width));
   return {
     x: centerX - l.sizes[index].w / 2,
-    y: STRING_BASE - HOLE_OFFSET + HANG_DROP + 4 * x * (1 - x) * SAG,
+    y: STRING_BASE - CLIP_AT + 4 * x * (1 - x) * SAG,
   };
 }
 
@@ -207,7 +204,7 @@ function stillLayout(width: number, rawAspects: number[]): StillLayout {
       const x = Math.min(1, Math.max(0, centerX / width));
       positions[i] = {
         x: left,
-        y: row * pitch + STRING_BASE - HOLE_OFFSET + HANG_DROP + 4 * x * (1 - x) * SAG,
+        y: row * pitch + STRING_BASE - CLIP_AT + 4 * x * (1 - x) * SAG,
       };
       left += sizes[i].w + gap;
     }
@@ -241,16 +238,11 @@ function prefersReducedMotion() {
   );
 }
 
-// Each photo renders as TWO identically positioned halves rather than one
-// card: figure-carousel__photo-half--behind (clipped to its own left half,
-// z-index below the string) and --front (clipped to its own right half,
-// z-index above the string). This is what makes the string read as passing
-// "through" the photo: it's the same single drawn string, with the photo
-// simply stacked around it differently on each side. The two halves share a
-// plain wrapper that only carries the --x/--y custom properties they both
-// translate by; the wrapper deliberately has no transform, opacity or
-// z-index, since any of those would give it its own stacking context and
-// stop the halves from sandwiching the string.
+// Each photo is a polaroid hanging from the string by a wooden clothes peg
+// (drawn by globals.css on the card itself, so peg and card always swing
+// together), in front of the string so the string runs in behind it.
+// The card sits in a plain wrapper that only carries the --x/--y custom
+// properties it translates by.
 //
 // Position is driven from JS (one requestAnimationFrame loop writing --x/--y
 // straight to the DOM, no React re-renders) because both the loop length
@@ -261,8 +253,8 @@ function prefersReducedMotion() {
 //
 // Hovering or keyboard-focusing a photo pauses the carousel (and globals.css
 // zooms that photo in slightly); clicking it opens it in the Lightbox, which
-// also keeps the carousel paused while open. The --behind half is a real
-// <button> (named by its image's alt text) so this works by keyboard too.
+// also keeps the carousel paused while open. The card is a real <button>
+// (named by its image's alt text) so this works by keyboard too.
 export function FigureCarousel({ images = [], speedSeconds = 25, still = false }: FigureCarouselProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const photoRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -415,10 +407,10 @@ export function FigureCarousel({ images = [], speedSeconds = 25, still = false }
     visibility.observe(root);
 
     // Pause while the pointer is over a photo or keyboard focus is on one.
-    // Events bubble up from the halves, so one listener on the root covers
+    // Events bubble up from the cards, so one listener on the root covers
     // every photo.
     const onPhoto = (target: EventTarget | null) =>
-      target instanceof Element && target.closest('.figure-carousel__photo-half') !== null;
+      target instanceof Element && target.closest('.figure-carousel__card') !== null;
     const onPointerOver = (event: PointerEvent) => {
       hoveredRef.current = onPhoto(event.target);
     };
@@ -497,7 +489,7 @@ export function FigureCarousel({ images = [], speedSeconds = 25, still = false }
               is then exactly linear in the curve parameter) its equation is
               y = STRING_BASE + 4 * x * (1 - x) * SAG for x in [0, 1]. That
               is the same equation cardPosition() (and stillLayout) use,
-              which is what keeps every photo's hole sitting exactly on this
+              which is what keeps every photo's peg sitting exactly on this
               drawn string. */}
           <path d={`M 0,${STRING_BASE} Q 50,${STRING_BASE + 2 * SAG} 100,${STRING_BASE}`} />
         </svg>
@@ -510,7 +502,7 @@ export function FigureCarousel({ images = [], speedSeconds = 25, still = false }
             '--w': `${initialSizes[index].w}px`,
             '--h': `${initialSizes[index].h}px`,
           } as CSSProperties;
-          const halfStyle: CSSProperties = { animationDelay: `${-(index / count) * SWING_SECONDS}s` };
+          const cardStyle: CSSProperties = { animationDelay: `${-(index / count) * SWING_SECONDS}s` };
           return (
             <div
               key={index}
@@ -523,15 +515,12 @@ export function FigureCarousel({ images = [], speedSeconds = 25, still = false }
             >
               <button
                 type="button"
-                className="figure-carousel__photo-half figure-carousel__photo-half--behind"
-                style={halfStyle}
+                className="figure-carousel__card"
+                style={cardStyle}
                 aria-label={image.alt ? undefined : `Enlarge figure ${index + 1}`}
               >
                 <img src={image.src} alt={image.alt ?? ''} />
               </button>
-              <div className="figure-carousel__photo-half figure-carousel__photo-half--front" style={halfStyle}>
-                <img src={image.src} alt="" aria-hidden="true" />
-              </div>
             </div>
           );
         })}

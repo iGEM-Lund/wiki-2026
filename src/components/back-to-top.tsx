@@ -37,7 +37,11 @@ export function BackToTop() {
       // in-page jump on the site instead of hardcoding "smooth".
       onClick={() => window.scrollTo({ top: 0, left: 0 })}
     >
-      <ArrowUp size={18} />
+      {/* A paper tag hanging off a pin (see .float-tag in globals.css). */}
+      <span className="float-tag" aria-hidden="true">
+        <ArrowUp size={18} />
+        <span className="float-tag__label">Top</span>
+      </span>
     </button>
   );
 }

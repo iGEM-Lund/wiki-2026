@@ -141,7 +141,10 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
         aria-label={open ? 'Close page outline' : 'Open page outline'}
         onClick={() => setOpen((value) => !value)}
       >
-        {open ? <X size={18} /> : <List size={18} />}
+        <span className="float-tag" aria-hidden="true">
+          {open ? <X size={18} /> : <List size={18} />}
+          <span className="float-tag__label">{open ? 'Close' : 'Contents'}</span>
+        </span>
       </button>
       <div
         id="toc-panel"
