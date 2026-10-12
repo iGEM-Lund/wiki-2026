@@ -34,7 +34,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
   return (
     <div className="page-layout">
       <article>
-        <PageTitle outline={outline}>{entry.title}</PageTitle>
+        <PageTitle>{entry.title}</PageTitle>
         <Content />
         {citedReferences.length > 0 ? (
           <section className="references">

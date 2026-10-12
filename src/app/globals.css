@@ -1,6 +1,7 @@
 :root {
-  /* Light is the preferred default regardless of OS preference; dark is
-     opt-in only, via the header toggle (see the data-theme rules below). */
+  /* The theme follows the OS preference unless the accessibility menu
+     overrides it; either way the init script in src/app/layout.tsx
+     resolves it to data-theme (see the data-theme rules below). */
   color-scheme: light;
 
   /* Text size is opt-in only too, via the accessibility menu's data-font-size
@@ -99,8 +100,9 @@ body {
   font-weight: 300;
 }
 
-/* Dark mode is opt-in only, via the header toggle's explicit data-theme
-   attribute; the site never follows prefers-color-scheme. */
+/* Dark mode keys off data-theme alone, never prefers-color-scheme
+   directly: the init script and the accessibility menu resolve the "System"
+   choice to 'light' or 'dark' there. */
 :root[data-theme='dark'] {
   color-scheme: dark;
 }
@@ -147,6 +149,22 @@ body {
 :root[data-font='dyslexic'] .site {
   --font-heading: 'OpenDyslexic', system-ui, sans-serif;
   --font-body: 'OpenDyslexic', system-ui, sans-serif;
+}
+
+/* Comfortable spacing (the accessibility menu's data-spacing attribute):
+   WCAG 1.4.12's text-spacing values for the page content, with room to
+   spare on line height. Cards keep their text on the ruling by widening
+   the ruling itself (--rule) rather than overriding line-height. */
+:root[data-spacing='wide'] .site__main {
+  line-height: 1.8;
+  letter-spacing: 0.12em;
+  word-spacing: 0.16em;
+}
+:root[data-spacing='wide'] .site__main p {
+  margin-block-end: 1.5em;
+}
+:root[data-spacing='wide'] .site .card {
+  --rule: 2.2rem;
 }
 
 /* Reduced motion is honored both automatically (OS-level preference) and
@@ -300,59 +318,6 @@ body {
   fill: var(--bg);
   transform: scaleY(-1);
 }
-/* The page's sections, listed under the title while the banner is at full
-   height (from 48rem up; narrower screens have the corner button only).
-   Sits just above the bottom edge, inside the padding that makes room for
-   it (--page-title-outline-h is measured by PageTitleSync). */
-.page-title__outline {
-  display: none;
-}
-@media (min-width: 48.0625rem) {
-  .site .page-title.page-title--outline {
-    --page-title-outline-h: 8rem;
-    --title-pad-bottom: calc(clamp(4rem, 9vh, 5.5rem) + var(--page-title-outline-h) + 0.75rem);
-  }
-  /* Styled like the floating outline (.toc): the same title and plain
-     link list, in one column, in the banner's light-on-teal colors; the
-     banner grows to hold it (see --page-title-outline-h). */
-  .page-title__outline {
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 3.75rem;
-    width: max-content;
-    max-width: min(100% - 3rem, 38rem);
-    margin-inline: auto;
-    text-align: left;
-    font-size: 0.9rem;
-  }
-  .page-title__outline .toc__title {
-    margin: 0 0 0.35rem;
-    padding-left: 0.6rem;
-  }
-  .page-title__outline ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .page-title__outline li {
-    margin: 0.2rem 0;
-    break-inside: avoid;
-  }
-  .site .page-title__outline a {
-    display: block;
-    padding-left: 0.6rem;
-    border-left: 2px solid transparent;
-    color: inherit;
-    text-decoration: none;
-  }
-  .site .page-title__outline a:hover,
-  .site .page-title__outline a:focus-visible {
-    color: inherit;
-    text-decoration: underline;
-  }
-}
 
 /* Collapse: as the page scrolls, the banner scrolls away until only its
    bottom --page-title-collapsed is left under the top of the viewport, and
@@ -409,18 +374,10 @@ body {
       animation-timeline: scroll(root);
       animation-range: 0 calc(var(--page-title-height) - var(--page-title-collapsed));
     }
-    /* The in-banner section list fades out over the first half of the
-       collapse, handing over to the floating outline (see .toc). */
-    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__outline {
-      animation: page-title-outline-out linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0 calc(var(--collapse-distance) * 0.5);
-    }
   }
 }
 /* Arrival: the banner is drawn on from the left like a brush stroke, a
-   solid fill with a rough, bristly leading edge. Then the title and the
-   section list appear. The stroke is a page-colored cover sitting over the
+   solid fill with a rough, bristly leading edge. Then the title appears. The stroke is a page-colored cover sitting over the
    banner whose jagged left edge slides off to the right; it only moves with
    a transform, so it runs on the compositor and doesn't stutter while the
    page hydrates. At rest the cover is parked past the banner's right edge
@@ -446,18 +403,12 @@ body {
   :root:not([data-motion='reduce']) .site .page-title::before {
     animation: page-title-brush 0.7s cubic-bezier(0.45, 0, 0.25, 1) backwards;
   }
-  /* Then, in order: the title fades in, the section list fades in top
-     down, and only then does the page content below it (ScrollReveal
-     holds its entrances until the list is nearly done; keep its INTRO timing in
-     step with the numbers here). */
+  /* Then the title fades in, and only then the page content below it
+     (ScrollReveal holds its entrances until the title is done) and the
+     scroll string with the page outline (it waits for these animations to
+     finish); keep ScrollReveal's timing in step with the numbers here. */
   :root:not([data-motion='reduce']) .site .page-title__heading {
     animation: page-title-text-in 0.4s ease-out 0.4s backwards;
-  }
-  :root:not([data-motion='reduce']) .page-title__outline .toc__title {
-    animation: page-title-text-in 0.25s ease-out 0.75s backwards;
-  }
-  :root:not([data-motion='reduce']) .page-title__outline li {
-    animation: page-title-text-in 0.25s ease-out calc(0.9s + var(--i, 0) * 0.07s) backwards;
   }
 }
 @keyframes page-title-brush {
@@ -482,25 +433,6 @@ body {
           (var(--page-title-height) + var(--title-pad-top) - var(--title-pad-bottom)) / 2
       );
     scale: 0.55;
-  }
-}
-@keyframes page-title-outline-out {
-  to {
-    opacity: 0;
-    translate: 0 0.5rem;
-    visibility: hidden;
-  }
-}
-@keyframes toc-pop-in {
-  from {
-    opacity: 0;
-    translate: 1rem 0;
-    visibility: hidden;
-  }
-  to {
-    opacity: 1;
-    translate: 0 0;
-    visibility: visible;
   }
 }
 @keyframes page-title-top-collapse {
@@ -686,7 +618,10 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.5rem 1.5rem;
+  /* Named so the nav string can reach up through it to the screen's top
+     edge (see .site__nav-string). */
+  --header-pad-y: 0.5rem;
+  padding: var(--header-pad-y) 1.5rem;
   background: var(--bg);
 }
 
@@ -924,10 +859,10 @@ body {
 }
 
 /* Hanging tags (above 48rem; the phone drawer keeps its plain list): the
-   bar is a paper strip pinned at both ends, with a crimson string sagging
-   across the nav and every top-level entry hanging from it as a paper tag,
-   the string showing through its punched hole. Each tag drops to where the
-   string is at its place (--sag-at, from layout.tsx, times --nav-sag) and
+   bar is a paper strip, with a crimson string tied off at the top edge of
+   the screen and sagging across the nav, and every top-level entry hanging
+   from it as a paper tag. Each tag drops to where the string is at its
+   place (--sag-at, from layout.tsx, times --string-depth) and
    leans a little, alternating (--tilt); hovered it swings the other way. A
    group's dropdown hangs below its tag on a short string and swings into
    place as it opens. It all hangs inside the bar's own height, so
@@ -937,26 +872,11 @@ body {
 }
 .site__header {
   box-shadow: var(--lift);
-  --pin: var(--pin-teal);
-}
-.site__header::before {
-  left: 0.65rem;
-  top: 50%;
-}
-.site__header::after {
-  left: calc(100% - 0.65rem);
-  top: 50%;
-}
-/* The phone bar's toggles sit right at its ends: no room for pins. */
-@media (max-width: 48rem) {
-  .site .site__header::before,
-  .site .site__header::after {
-    content: none;
-  }
 }
 @media (min-width: 48.0625rem) {
   .site__nav {
     --nav-sag: 6px;
+    --string-depth: calc(var(--header-pad-y) + 2px + var(--nav-sag));
     position: relative;
     align-self: stretch;
     align-items: flex-start;
@@ -965,13 +885,17 @@ body {
     /* One soft shadow for the string, the tags and any open dropdown. */
     filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.16));
   }
+  /* The string's ends are tied off at the very top of the screen, above
+     the bar's padding; its lowest point is --nav-sag below where the
+     tags' row starts (2px down the nav). --string-depth is that whole
+     drop, which the tags use to find their place on it. */
   .site__nav-string {
     display: block;
     position: absolute;
     left: 0;
-    top: 2px;
+    top: calc(-1 * var(--header-pad-y));
     width: 100%;
-    height: var(--nav-sag);
+    height: var(--string-depth);
     overflow: visible;
     pointer-events: none;
   }
@@ -984,7 +908,7 @@ body {
   }
   /* The tag's hole (0.5rem down its face) sits on the string. */
   .site__nav > :not(.site__nav-string) {
-    margin-top: calc(2px + var(--sag-at, 0) * var(--nav-sag) - 0.5rem);
+    margin-top: calc(var(--sag-at, 0) * var(--string-depth) - var(--header-pad-y) - 0.5rem);
   }
   .site__nav .site__nav-item {
     position: relative;
@@ -994,10 +918,8 @@ body {
     color: var(--heading);
     font-family: var(--font-heading);
     font-weight: 500;
-    /* A luggage tag: the top corners cut off, and a hole punched through
-       (masked out, so the string really shows through it). */
+    /* A luggage tag: the top corners cut off. */
     clip-path: polygon(16% 0, 84% 0, 100% 0.65rem, 100% 100%, 0 100%, 0 0.65rem);
-    mask: radial-gradient(circle 3.5px at 50% 0.5rem, transparent 97%, #000 100%);
     rotate: var(--tilt, 0deg);
     transform-origin: 50% 0.5rem;
     transition:
@@ -1005,17 +927,19 @@ body {
       background-color 0.15s ease,
       color 0.15s ease;
   }
-  /* A ring around the hole, like a reinforcement sticker. */
+  /* The hole is only drawn on, not punched through: a small dot in the
+     tag's own text colour, so it reads on the dark current-page tag too. */
   .site__nav .site__nav-item::before {
     content: '';
     position: absolute;
     left: 50%;
     top: 0.5rem;
-    width: 11px;
-    height: 11px;
+    width: 5px;
+    height: 5px;
     translate: -50% -50%;
     border-radius: 50%;
-    box-shadow: inset 0 0 0 1.5px var(--border);
+    background: color-mix(in srgb, currentColor 30%, transparent);
+    box-shadow: inset 0 1px 1px rgb(0 0 0 / 0.25);
   }
   .site__nav .site__nav-item:hover,
   .site__nav .site__nav-group:is(:hover, :focus-within) > .site__nav-group-label {
@@ -1218,6 +1142,11 @@ body {
 .site__a11y-option:hover {
   background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
+.site__a11y-option:focus-visible,
+.site__a11y-size:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 .site__a11y-switch {
   margin-left: auto;
@@ -1287,7 +1216,38 @@ body {
 .site__a11y-size[data-size='larger'] {
   font-size: 1.3em;
 }
-.site__a11y-size[aria-checked='true'] {
+.site__a11y-reset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.5rem;
+  border: 1px dashed var(--border);
+  border-radius: 2px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.site__a11y-reset:hover:not([aria-disabled='true']) {
+  border-style: solid;
+  color: var(--heading);
+}
+.site__a11y-reset:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.site__a11y-reset[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.site__a11y-size--theme {
+  gap: 0.3rem;
+  font-size: 0.8rem;
+}
+.site__a11y-size[aria-pressed='true'] {
   background: var(--heading);
   color: var(--bg);
 }
@@ -1368,7 +1328,8 @@ body {
   }
   .site__header {
     gap: 1.5rem;
-    padding: 0.75rem 2rem;
+    --header-pad-y: 0.75rem;
+    padding: var(--header-pad-y) 2rem;
   }
   .site__brand-mark {
     height: 3.5rem;
@@ -1561,6 +1522,35 @@ body {
   }
 }
 
+/* Skip link (src/app/(site)/layout.tsx): hidden above the viewport until
+   keyboard focus lands on it, then dropped in over the header's left end
+   as a paper tag, like the nav's tags. */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 1rem;
+  z-index: 101;
+  padding: 0.5rem 0.9rem;
+  border-radius: 2px;
+  background: var(--mat);
+  box-shadow: var(--lift-high);
+  color: var(--heading);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-decoration: none;
+  translate: 0 calc(-100% - 1rem);
+}
+.skip-link:focus {
+  translate: 0 0;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+/* <main> only takes focus programmatically (from the skip link), so it
+   needs no ring of its own. */
+.site__main:focus {
+  outline: none;
+}
+
 .site__main {
   /* Named so full-bleed pieces (the page title banner) can undo them: the
      padding, and the space the fixed panes around this one take up. */
@@ -1747,8 +1737,6 @@ body {
    owner positions its own (left/top) and picks a colour via --pin. */
 .quote-block::before,
 .card::before,
-.site__header::before,
-.site__header::after,
 .table-frame::before,
 .table-frame::after,
 .site-search::before,
@@ -3530,18 +3518,6 @@ article .layout__column p {
     display: none;
   }
 }
-/* While the banner is at full height it carries the section list itself;
-   the floating outline slides in from the right as that fades out. */
-@supports (animation-timeline: scroll()) {
-  @media (min-width: 75.0625rem) and (prefers-reduced-motion: no-preference) {
-    :root:not([data-motion='reduce']):has(.page-title[data-collapsible]) .toc {
-      animation: toc-pop-in linear both;
-      animation-timeline: scroll(root);
-      animation-range: calc((var(--page-title-height) - var(--page-title-collapsed)) * 0.4)
-        calc(var(--page-title-height) - var(--page-title-collapsed));
-    }
-  }
-}
 .toc__title {
   font-family: var(--font-heading);
   font-weight: 500;
@@ -4409,8 +4385,9 @@ article .layout__column p {
   cursor: pointer;
   touch-action: none;
 }
-/* Nothing to show: page too short to scroll, or the title banner still full
-   size. Fades rather than vanishing, and stops taking pointer events. */
+/* Nothing to show: page too short to scroll, or the title banner's arrival
+   still playing. Fades rather than vanishing, and stops taking pointer
+   events. */
 .scroll-string {
   transition:
     opacity 0.25s ease,

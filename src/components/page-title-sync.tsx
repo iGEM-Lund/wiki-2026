@@ -12,15 +12,11 @@ export function PageTitleSync() {
   useEffect(() => {
     const banner = document.querySelector<HTMLElement>('.page-title');
     if (!banner) return;
-    const outline = banner.querySelector<HTMLElement>('.page-title__outline');
     const root = document.documentElement;
     const update = () => {
       // On the root, not the banner, so the floating outline (which pops in
       // as the banner collapses) can read it too.
       root.style.setProperty('--page-title-height', `${banner.offsetHeight}px`);
-      // The section list wraps to as many rows as it needs, and the banner's
-      // bottom padding has to make room for them.
-      if (outline) banner.style.setProperty('--page-title-outline-h', `${outline.offsetHeight}px`);
     };
     update();
     banner.dataset.collapsible = '';
@@ -28,12 +24,10 @@ export function PageTitleSync() {
     // changing the content box.
     const resizeObserver = new ResizeObserver(update);
     resizeObserver.observe(banner, { box: 'border-box' });
-    if (outline) resizeObserver.observe(outline);
     return () => {
       resizeObserver.disconnect();
       delete banner.dataset.collapsible;
       root.style.removeProperty('--page-title-height');
-      banner.style.removeProperty('--page-title-outline-h');
     };
   }, []);
 

@@ -1,6 +1,5 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { PageTitleSync } from '@/components/page-title-sync';
-import type { HeadingNode } from '@/lib/headings';
 
 // The banner's bottom edge: one gentle wave across the full width, in a
 // 100 x 56 viewBox that stretches sideways only (1 vertical unit = 1/16 rem).
@@ -59,17 +58,10 @@ const TOP_EDGE_PATH = edgeCutout(TOP_EDGE, TOP_EDGE_HEIGHT);
 
 // The page's h1: a banner spanning the whole content pane whose top and
 // bottom edges are waves that break up into thinner and thinner stripes of
-// themselves. While the page is scrolled to the top it also lists the
-// page's sections under the title; as the page scrolls it collapses into a
-// slim bar pinned under the header and that list pops out into the floating
-// outline (TableOfContents) instead.
-export function PageTitle({
-  children,
-  outline = [],
-}: {
-  children: ReactNode;
-  outline?: HeadingNode[];
-}) {
+// themselves. As the page scrolls it collapses into a slim bar pinned under
+// the header. The page's sections are listed by the scroll string (or the
+// outline button on narrow screens), not here.
+export function PageTitle({ children }: { children: ReactNode }) {
   return (
     <>
       {/* Its own element, before the banner and overlapping it, so it can
@@ -80,33 +72,8 @@ export function PageTitle({
           <path d={TOP_EDGE_PATH} />
         </svg>
       </div>
-      <div
-        className={outline.length > 0 ? 'page-title page-title--outline' : 'page-title'}
-        // Room for the list before PageTitleSync has measured it: the title
-        // plus a line (with spacing) per section. Kept close to the real
-        // height (one line per section) so the banner doesn't visibly
-        // resize when the measurement lands.
-        style={
-          outline.length > 0
-            ? ({
-                '--page-title-outline-h': `${(1.5 + outline.length * 1.575).toFixed(2)}rem`,
-              } as CSSProperties)
-            : undefined
-        }
-      >
+      <div className="page-title">
         <h1 className="page-title__heading">{children}</h1>
-        {outline.length > 0 ? (
-          <nav className="page-title__outline" aria-label="Page sections">
-            <p className="toc__title">On this page</p>
-            <ol>
-              {outline.map((node, i) => (
-                <li key={node.id} style={{ '--i': i } as CSSProperties}>
-                  <a href={`#${node.id}`}>{node.text}</a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-        ) : null}
         <svg
           className="page-title__edge"
           viewBox={`0 0 100 ${EDGE_HEIGHT}`}

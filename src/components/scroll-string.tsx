@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { easeOut, taperedPath, type Cubic } from '@/lib/tapered-stroke';
 
@@ -147,6 +147,13 @@ export function ScrollString() {
   // The effect's own helpers, so a change of notches can trigger a relayout.
   const relayoutRef = useRef<() => void>(() => {});
 
+  // A new page plays its banner's arrival again: hide the string before the
+  // new page first paints, so the old page's string doesn't show over it
+  // until the effect below has caught up.
+  useLayoutEffect(() => {
+    trackRef.current?.setAttribute('data-hidden', '');
+  }, [pathname]);
+
   useEffect(() => {
     const root = document.documentElement;
     const track = trackRef.current;
@@ -274,18 +281,9 @@ export function ScrollString() {
       // above the viewport's (read from there, it's in rem, and clears the
       // back-to-top button).
       const banner = document.querySelector<HTMLElement>('.page-title');
-      // While the banner is still full size (it pins as a slim bar once the
-      // page has scrolled far enough, see .page-title[data-collapsible] in
-      // globals.css) there's no string: it appears when the banner has
-      // finished shrinking. Pinned means its top has reached its sticky
-      // offset. Banners that don't collapse (reduced motion, no
-      // scroll-driven animations) just scroll away and don't gate it.
-      if (banner?.hasAttribute('data-collapsible')) {
-        const pinnedTop = parseFloat(getComputedStyle(banner).top);
-        if (banner.getBoundingClientRect().top > pinnedTop + 1) {
-          track!.dataset.hidden = '';
-          return;
-        }
+      if (!introDone) {
+        track!.dataset.hidden = '';
+        return;
       }
       const top = Math.min(
         window.innerHeight * 0.7,
@@ -334,6 +332,24 @@ export function ScrollString() {
       if (!frame) frame = requestAnimationFrame(update);
     }
 
+    // The string (and with it the page outline) waits for the title
+    // banner's arrival, the brush stroke and then the title fading in, so
+    // it comes in once the banner has settled. Already finished, cut short
+    // or never played (reduced motion): there's nothing to wait for.
+    let introDone = false;
+    let cancelled = false;
+    const titleBanner = document.querySelector('.page-title');
+    const intro = (titleBanner?.getAnimations({ subtree: true }) ?? []).filter(
+      (a) =>
+        a instanceof CSSAnimation &&
+        (a.animationName === 'page-title-brush' || a.animationName === 'page-title-text-in'),
+    );
+    Promise.all(intro.map((a) => a.finished.catch(() => undefined))).then(() => {
+      if (cancelled) return;
+      introDone = true;
+      schedule();
+    });
+
     root.dataset.scrollString = '';
     scan();
     measure();
@@ -354,6 +370,7 @@ export function ScrollString() {
     observer.observe(track);
 
     return () => {
+      cancelled = true;
       delete root.dataset.scrollString;
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);

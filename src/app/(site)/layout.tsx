@@ -46,6 +46,12 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
 
   return (
     <div className="site">
+      {/* First focusable element, so keyboard users can jump past the
+          header's tab stops (every dropdown link is one) straight to the
+          page. tabIndex={-1} on <main> lets it take that focus. */}
+      <a href="#main-content" className="skip-link">
+        Skip to content
+      </a>
       <HeaderHeightSync />
       <header className="site__header">
         <Link href="/" className="site__brand">
@@ -94,7 +100,9 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
           <AccessibilityMenu />
         </div>
       </header>
-      <main className="site__main">{children}</main>
+      <main id="main-content" className="site__main" tabIndex={-1}>
+        {children}
+      </main>
       <SiteFooter />
       <BackToTop />
       <ScrollString />

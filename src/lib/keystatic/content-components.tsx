@@ -11,6 +11,9 @@ import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/ch
 // src/components/content/index.ts. Both maps must share the same key names
 // (FigureWithCaption, Citation) so the MDX tags written here resolve
 // correctly when rendered on the live site.
+const ALT_TEXT_DESCRIPTION =
+  'Required. What the image shows, for readers who cannot see it (screen readers read this aloud). One or two plain sentences: say what matters about it, not "image of". Do not just repeat the caption.';
+
 export const contentComponents = {
   FigureWithCaption: block({
     label: 'Figure',
@@ -19,7 +22,7 @@ export const contentComponents = {
         label: 'Image URL',
         description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
       }),
-      alt: fields.text({ label: 'Alt text' }),
+      alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION, validation: { isRequired: true } }),
       caption: fields.text({ label: 'Caption', multiline: true }),
       link: fields.url({
         label: 'Link (optional)',
@@ -44,7 +47,7 @@ export const contentComponents = {
             label: 'Image URL',
             description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
           }),
-          alt: fields.text({ label: 'Alt text' }),
+          alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION, validation: { isRequired: true } }),
         }),
         { label: 'Figures', itemLabel: (props) => props.fields.alt.value || props.fields.src.value || 'Figure' },
       ),
@@ -147,7 +150,10 @@ export const contentComponents = {
         description:
           'A small round photo shown next to the title, e.g. of an interviewee. Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
       }),
-      imageAlt: fields.text({ label: 'Portrait alt text (optional)' }),
+      imageAlt: fields.text({
+        label: 'Portrait alt text (optional)',
+        description: 'Leave empty if the photo is just a portrait of the person named in the title. Describe it only if it shows something more.',
+      }),
       subtitle: fields.text({
         label: 'Subtitle (optional)',
         description: 'Shown under the title, e.g. role and affiliation. Each line is kept as its own line.',
@@ -186,7 +192,10 @@ export const contentComponents = {
         description:
           'A small image shown to the left of the quote, e.g. a portrait of the quotee. Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
       }),
-      figureAlt: fields.text({ label: 'Figure alt text (optional)' }),
+      figureAlt: fields.text({
+        label: 'Figure alt text (optional)',
+        description: 'Leave empty if the figure is just a portrait of the quotee. Otherwise describe what it shows.',
+      }),
     },
     ContentView: (props) => (
       <blockquote style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
