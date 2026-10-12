@@ -68,6 +68,25 @@ body {
   --error: var(--color-crimson);
   --border: color-mix(in srgb, var(--text) 25%, var(--bg));
   --muted: color-mix(in srgb, var(--text) 60%, var(--bg));
+  /* Pinboard: objects stuck onto the page (pinned quotes, cards and tables,
+     taped figures) lift off it with --lift, figures sit on a --mat, and
+     their pins and tape are drawn from these (see "Pinboard" below). */
+  --mat: #fff;
+  /* Slightly warm, like masking tape: a white strip vanishes on a white mat. */
+  --tape: rgb(236 226 210 / 0.72);
+  --tape-edge: rgb(26 26 24 / 0.1);
+  --pin-red: var(--color-crimson);
+  --pin-teal: var(--color-peacock);
+  --pin-pearl: #f3ece4;
+  --pin-string: var(--color-crimson);
+  --pin-rose: var(--color-rose);
+  /* Index card (Card): its paper, the pale blue lines ruled under each line
+     of text, and the red rule under the title. */
+  --index: #fdfcf7;
+  --index-rule: #cfe3e6;
+  --index-header-rule: var(--color-crimson);
+  --lift: 0 1px 2px rgb(0 50 50 / 0.12), 0 8px 18px -6px rgb(0 50 50 / 0.22);
+  --lift-high: 0 2px 4px rgb(0 50 50 / 0.12), 0 16px 30px -10px rgb(0 50 50 / 0.3);
 
   display: flex;
   flex-direction: column;
@@ -96,6 +115,19 @@ body {
      accessible stand-in for error/missing states and h4s in dark mode. */
   --heading-minor: var(--color-rose);
   --error: var(--color-rose);
+  --mat: #262624;
+  --tape: rgb(232 244 244 / 0.18);
+  --tape-edge: rgb(232 244 244 / 0.06);
+  --pin-red: #c4506d;
+  --pin-teal: #2aa3a3;
+  --pin-pearl: #e8dcc0;
+  --pin-string: var(--color-rose);
+  --pin-rose: var(--color-rose);
+  --index: #232321;
+  --index-rule: #2f3c3d;
+  --index-header-rule: var(--color-rose);
+  --lift: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 18px -6px rgb(0 0 0 / 0.6);
+  --lift-high: 0 2px 4px rgb(0 0 0 / 0.5), 0 16px 30px -10px rgb(0 0 0 / 0.7);
 }
 
 /* Text size and dyslexia-friendly font are opt-in only too, via the
@@ -864,7 +896,7 @@ body {
     transition: none;
   }
   .site__nav-wrap[data-dismissed='true'] .site__nav-group > .site__nav-group-label {
-    background: transparent;
+    background: var(--mat);
   }
 }
 .site__nav-group-links li + li {
@@ -885,6 +917,164 @@ body {
   color: var(--accent);
   font-weight: 500;
   background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+/* Hanging tags (above 48rem; the phone drawer keeps its plain list): the
+   bar is a paper strip pinned at both ends, with a crimson string sagging
+   across the nav and every top-level entry hanging from it as a paper tag,
+   the string showing through its punched hole. Each tag drops to where the
+   string is at its place (--sag-at, from layout.tsx, times --nav-sag) and
+   leans a little, alternating (--tilt); hovered it swings the other way. A
+   group's dropdown hangs below its tag on a short string and swings into
+   place as it opens. It all hangs inside the bar's own height, so
+   --header-height doesn't change. */
+.site__nav-string {
+  display: none;
+}
+.site__header {
+  box-shadow: var(--lift);
+  --pin: var(--pin-teal);
+}
+.site__header::before {
+  left: 0.65rem;
+  top: 50%;
+}
+.site__header::after {
+  left: calc(100% - 0.65rem);
+  top: 50%;
+}
+/* The phone bar's toggles sit right at its ends: no room for pins. */
+@media (max-width: 48rem) {
+  .site .site__header::before,
+  .site .site__header::after {
+    content: none;
+  }
+}
+@media (min-width: 48.0625rem) {
+  .site__nav {
+    --nav-sag: 6px;
+    position: relative;
+    align-self: stretch;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0 0.75rem;
+    /* One soft shadow for the string, the tags and any open dropdown. */
+    filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.16));
+  }
+  .site__nav-string {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 100%;
+    height: var(--nav-sag);
+    overflow: visible;
+    pointer-events: none;
+  }
+  .site__nav-string path {
+    fill: none;
+    stroke: var(--pin-string);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+  /* The tag's hole (0.5rem down its face) sits on the string. */
+  .site__nav > :not(.site__nav-string) {
+    margin-top: calc(2px + var(--sag-at, 0) * var(--nav-sag) - 0.5rem);
+  }
+  .site__nav .site__nav-item {
+    position: relative;
+    padding: 0.95rem 0.8rem 0.45rem;
+    border-radius: 0 0 4px 4px;
+    background: var(--mat);
+    color: var(--heading);
+    font-family: var(--font-heading);
+    font-weight: 500;
+    /* A luggage tag: the top corners cut off, and a hole punched through
+       (masked out, so the string really shows through it). */
+    clip-path: polygon(16% 0, 84% 0, 100% 0.65rem, 100% 100%, 0 100%, 0 0.65rem);
+    mask: radial-gradient(circle 3.5px at 50% 0.5rem, transparent 97%, #000 100%);
+    rotate: var(--tilt, 0deg);
+    transform-origin: 50% 0.5rem;
+    transition:
+      rotate 0.55s cubic-bezier(0.3, 1.7, 0.5, 1),
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+  /* A ring around the hole, like a reinforcement sticker. */
+  .site__nav .site__nav-item::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0.5rem;
+    width: 11px;
+    height: 11px;
+    translate: -50% -50%;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--border);
+  }
+  .site__nav .site__nav-item:hover,
+  .site__nav .site__nav-group:is(:hover, :focus-within) > .site__nav-group-label {
+    rotate: calc(var(--tilt, 0deg) * -1.4);
+    background: color-mix(in srgb, var(--accent) 12%, var(--mat));
+  }
+  .site__nav .site__nav-item:focus-visible {
+    outline: none;
+    text-decoration: underline 2px;
+    text-underline-offset: 4px;
+  }
+  /* The current page's entry: a dark tag. */
+  .site__nav > a.site__nav-item[aria-current='page'],
+  .site__nav .site__nav-group:has(a[aria-current='page']) > .site__nav-group-label {
+    background: var(--heading);
+    color: var(--bg);
+  }
+  /* The dropdown hangs a little below its tag on a short string; an
+     invisible bridge over the gap keeps the group hovered on the way
+     down to it. */
+  .site__nav-group::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 1rem;
+  }
+  .site__nav-group-links {
+    top: calc(100% + 0.9rem);
+    left: 50%;
+    translate: -50% 0;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--mat);
+    box-shadow: var(--lift-high);
+    rotate: -4deg;
+    transform-origin: 50% -0.9rem;
+    transition:
+      opacity 0.12s ease,
+      rotate 0.55s cubic-bezier(0.3, 1.7, 0.5, 1);
+  }
+  .site__nav-group-links::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    height: 0.9rem;
+    border-left: 2px solid var(--pin-string);
+    translate: -1px 0;
+  }
+  .site__nav-group:hover > .site__nav-group-links,
+  .site__nav-group:focus-within > .site__nav-group-links {
+    rotate: 0deg;
+  }
+}
+@media (min-width: 64.0625rem) {
+  .site__nav {
+    --nav-sag: 10px;
+  }
+  .site__nav .site__nav-item {
+    padding: 1rem 0.9rem 0.5rem;
+  }
 }
 
 .site__a11y {
@@ -1260,7 +1450,11 @@ body {
 }
 @media (max-width: 48rem) {
   .site-footer__columns {
-    grid-template-columns: 1fr;
+    /* minmax(0, ...), not a bare 1fr: a 1fr track won't shrink below its
+       content, and the sponsor strip's track is one line as wide as all
+       its logos, which widened the whole page on phones instead of
+       scrolling inside the column. */
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 .site-footer__heading {
@@ -1371,12 +1565,97 @@ body {
   object-fit: contain;
 }
 
+/* Pinboard: discrete objects read as stuck onto the page rather than
+   printed on it, the way FigureCarousel's photos hang from their string.
+   Quotes and cards (ruled index cards) get a pushpin, tables are printouts
+   pinned at both top corners, figures are polaroids taped at two corners;
+   each lifts off the page with a soft shadow. Running body text never
+   tilts, and the things that do (quotes, cards, figures) stay within about
+   a degree (src/lib/tilt.ts) so what's on them stays easy to read. The pins
+   are pseudo-elements, so no component needs extra markup for them; each
+   owner positions its own (left/top) and picks a colour via --pin. */
+.quote-block::before,
+.card::before,
+.site__header::before,
+.site__header::after,
+.table-frame::before,
+.table-frame::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background:
+    radial-gradient(circle at 34% 30%, rgb(255 255 255 / 0.85) 0 1.8px, transparent 3px),
+    radial-gradient(circle, var(--pin) 0 55%, color-mix(in srgb, var(--pin) 60%, #000) 100%);
+  box-shadow:
+    0 1px 0 rgb(0 0 0 / 0.25),
+    3px 4px 4px -1px rgb(0 0 0 / 0.32);
+  pointer-events: none;
+}
+/* Torn-edged translucent strips, angled across the polaroid's top corners. */
+.figure-with-caption::before,
+.figure-with-caption::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: 6px;
+  width: 96px;
+  height: 26px;
+  background: var(--tape);
+  border-inline: 1px solid var(--tape-edge);
+  clip-path: polygon(0 10%, 5% 0, 10% 12%, 15% 0, 20% 0, 80% 0, 85% 10%, 90% 0, 95% 12%, 100% 4%, 100% 92%, 95% 100%, 90% 88%, 85% 100%, 80% 100%, 20% 100%, 15% 90%, 10% 100%, 5% 88%, 0 96%);
+  pointer-events: none;
+}
+.figure-with-caption::before {
+  left: -26px;
+  rotate: -38deg;
+}
+.figure-with-caption::after {
+  right: -26px;
+  rotate: 38deg;
+}
+
+/* A polaroid: the image on a white card with the caption in the strip
+   below it. The card shrinks to the image (the caption is kept from
+   widening it, see figcaption below) and sits centred in its column at
+   the tilt FigureWithCaption.tsx sets. Hovered or focused it straightens
+   and lifts off the page, replacing ZoomableImage's own zoom, which would
+   spill over the white border. The lift is a transform, not translate:
+   ScrollReveal's entrance animates translate on top-level blocks. */
 .figure-with-caption {
-  margin: 1rem 0;
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin: 1.75rem auto;
+  padding: 0.75rem 0.75rem 0;
+  background: var(--mat);
+  box-shadow: var(--lift-high);
+  rotate: var(--tilt, 0deg);
+  transition:
+    rotate 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+/* No caption: the polaroid's thicker bottom strip on its own. */
+.figure-with-caption:not(:has(figcaption)) {
+  padding-bottom: 1.75rem;
+}
+.figure-with-caption:hover,
+.figure-with-caption:has(:focus-visible) {
+  rotate: 0deg;
+  transform: translateY(-3px);
+}
+.figure-with-caption .zoomable-image:hover img,
+.figure-with-caption .zoomable-image:focus-visible img {
+  scale: none;
+  box-shadow: none;
 }
 .figure-with-caption img {
   max-width: 100%;
-  border-radius: 10px;
+  border-radius: 1px;
 }
 /* A figure with a link is one anchor around image and caption
    (FigureWithCaption.tsx). The icon in the image's lower left corner is only
@@ -1471,9 +1750,16 @@ body {
   cursor: default;
 }
 .figure-with-caption figcaption {
+  /* width 0 + min-width 100%: the caption takes the polaroid's width
+     without counting toward it, so a long caption wraps under the image
+     instead of stretching the card wider than the photo. */
+  width: 0;
+  min-width: 100%;
+  padding: 0.6rem 0.2rem 0.9rem;
   color: var(--muted);
   font-size: 0.8125rem;
-  font-weight: 200;
+  font-weight: 300;
+  line-height: 1.45;
 }
 
 .figure-carousel {
@@ -1483,7 +1769,10 @@ body {
      default used until then). The height leaves room for the string's sag,
      the card itself and a little swing. */
   --card-h: 320px;
-  height: calc(var(--card-h) + 100px);
+  /* --rows: how many strings (rows of figures) a still carousel stacks,
+     set by FigureCarousel.tsx; a moving one has one. The 100px per row is
+     ROW_EXTRA there. */
+  height: calc(var(--rows, 1) * (var(--card-h) + 100px));
   margin: 1rem 0;
   /* Cards travel (or are parked) past both ends of the string, off-screen;
      this clips that whole zone. */
@@ -1506,7 +1795,8 @@ body {
    stay in sync as photos move. */
 .figure-carousel__string {
   position: absolute;
-  top: 0;
+  /* A still carousel's later strings, one row-height further down each. */
+  top: calc(var(--row, 0) * (var(--card-h) + 100px));
   left: 0;
   width: 100%;
   height: 100px;
@@ -1851,33 +2141,66 @@ a.inline-icon--link:focus-visible {
   text-underline-offset: 0.2em;
 }
 .term-tip__bubble {
+  /* A paper tag hanging from the term on a short string (::before), with
+     a punched hole (::after) where the string is tied on. It swings in
+     from a tilt around that knot, overshoots and comes to rest hanging a
+     little askew. The translate property (not transform) centres it
+     without moving that pivot. */
   position: absolute;
   left: 50%;
-  top: calc(100% + 0.4rem);
+  top: calc(100% + 1.15rem);
   z-index: 5;
   width: max-content;
-  max-width: min(18rem, 80vw);
-  padding: 0.4rem 0.7rem;
-  border-radius: 8px;
-  background: var(--heading);
-  color: var(--bg);
+  max-width: min(16rem, 70vw);
+  padding: 1.35rem 0.8rem 0.7rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: var(--lift-high);
   font-size: 0.8125rem;
+  font-style: normal;
   font-weight: 400;
-  line-height: 1.4;
+  line-height: 1.5;
   text-align: left;
   text-decoration: none;
   white-space: normal;
-  transform: translateX(-50%);
+  translate: -50% 0;
+  rotate: -6deg;
+  transform-origin: 50% -1.15rem;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    rotate 0.6s cubic-bezier(0.3, 1.7, 0.5, 1);
+}
+.term-tip__bubble::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 0.75rem);
+  height: calc(1.15rem + 0.75rem);
+  border-left: 2px solid var(--pin-string);
+  translate: -1px 0;
+}
+.term-tip__bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0.45rem;
+  width: 7px;
+  height: 7px;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1.5px var(--border);
 }
 .term-tip:hover > .term-tip__bubble,
 .term-tip:focus > .term-tip__bubble,
 .term-tip:focus-visible > .term-tip__bubble {
   opacity: 1;
   visibility: visible;
+  rotate: 1.5deg;
 }
 @media (prefers-reduced-motion: reduce) {
   .term-tip__bubble {
@@ -1885,72 +2208,68 @@ a.inline-icon--link:focus-visible {
   }
 }
 
-/* Crimson/Rose/Blush is the brand's secondary (pink) palette; see the
-   --color-* declarations at the top of this file. Crimson fails contrast
-   on the dark-mode Noir background (same reasoning as --error above), so
-   the card swaps to a crimson-tinted dark surface with Rose text instead
-   of reusing the light-mode Blush/Crimson pairing verbatim. */
+/* A sticky note pinned to the page: Blush paper (Crimson/Rose/Blush is
+   the brand's secondary pink palette, see the --color-* declarations at
+   the top of this file), one pin, its bottom right corner curling up off
+   the page, and a tilt seeded by Quote.tsx. Narrower than the column and
+   pushed to its right, a top-level one reaching a little past it, so it
+   reads as stuck on top of the page rather than part of the text. Crimson
+   fails contrast on the dark-mode Noir background (same reasoning as
+   --error above), so dark mode swaps to a crimson-tinted dark surface with
+   Rose text instead of reusing the Blush/Crimson pairing verbatim. */
 .quote-block {
   --quote-surface: var(--color-blush);
   --quote-accent: var(--color-crimson);
+  --pin: var(--pin-red);
   position: relative;
-  margin: 1.5rem 0;
-  padding: 2.5rem 2.25rem;
-  border-radius: 14px;
+  width: min(24rem, 100%);
+  margin: 2.25rem 0 2.25rem auto;
+  padding: 2rem 1.65rem 1.65rem;
+  border-bottom-right-radius: 24px 6px;
   background: var(--quote-surface);
-  /* One shrink-to-fit column, centred as a whole: the text and attribution
-     stay left-aligned within it, but the pair's bounding box sits in the
-     middle of the card instead of hugging the left edge. */
-  display: grid;
-  grid-template-columns: fit-content(100%);
-  justify-content: center;
+  box-shadow:
+    var(--lift),
+    8px 14px 14px -10px rgb(0 0 0 / 0.25);
+  rotate: calc(var(--tilt, 0deg) * 1.5);
+}
+/* Only where the page has gutters wide enough to reach into; on phones
+   the column already runs to the screen's side padding. */
+@media (min-width: 48.0625rem) {
+  .site article > .quote-block {
+    margin-right: clamp(-5.5rem, -6vw, 0rem);
+  }
 }
 :root[data-theme='dark'] .site .quote-block {
   --quote-surface: color-mix(in srgb, var(--color-crimson) 22%, var(--bg-alt));
   --quote-accent: var(--color-rose);
 }
-.quote-block__mark {
-  position: absolute;
-  width: 2.75rem;
-  height: auto;
-  color: var(--quote-accent);
-  opacity: 0.6;
+.quote-block::before {
+  left: 50%;
+  top: 0.65rem;
 }
-.quote-block__mark--close {
-  top: -0.3rem;
-  right: 1.25rem;
-}
-.quote-block__mark--open {
-  bottom: -0.3rem;
-  left: 1.25rem;
-}
-.quote-block__text {
+.site .quote-block__text {
   margin: 0;
-  font-style: italic;
-  font-weight: 300;
-  font-size: 1.0625rem;
-  line-height: 1.6;
-  color: var(--text);
+  font-family: var(--font-heading);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1.2rem;
+  line-height: 1.35;
+  color: var(--heading);
+  text-wrap: balance;
 }
 .quote-block__quotee {
-  margin: 0.85rem 0 0;
-  /* Below the quote, left-aligned rather than centered/right, so it reads
-     as an attribution line under the text instead of a caption under a
-     figure. */
+  margin: 0.65rem 0 0;
   text-align: left;
   font-style: normal;
-  font-weight: 600;
-  font-size: 0.85rem;
-  letter-spacing: 0.02em;
-  color: var(--quote-accent);
-}
-.quote-block__quotee::before {
-  content: '- ';
+  font-weight: 400;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--muted);
 }
 /* Optional figure: a narrow fixed-width column on the left, with the quote
-   and the attribution line stacked to its right. The quote marks stay
-   absolutely positioned, so they aren't grid items. */
+   and the attribution line stacked to its right, on a wider note. */
 .quote-block--with-figure {
+  width: min(32rem, 100%);
   display: grid;
   --quote-figure-col: 6rem;
   --quote-figure-gap: 1.25rem;
@@ -1974,7 +2293,7 @@ a.inline-icon--link:focus-visible {
   height: auto;
   max-height: 9rem;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 2px;
 }
 .quote-block--with-figure .quote-block__text,
 .quote-block--with-figure .quote-block__quotee {
@@ -1994,27 +2313,81 @@ a.inline-icon--link:focus-visible {
 }
 
 .card {
-  margin: 1.5rem 0;
-  padding: 1.5rem 1.75rem;
-  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
-  border-radius: 14px;
-  background: var(--bg-alt);
-  /* Clips the header band to the card's rounded corners; `clip` rather than
-     `hidden` so the card doesn't become a scroll container. */
+  position: relative;
+  margin: 2rem 0;
+  /* The extra top padding is room for the pin. */
+  padding: 2rem 1.75rem 1.5rem;
+  /* A ruled index card pinned to the page, at a slight tilt that
+     alternates between neighbouring cards. The pin stays inside the card:
+     the overflow clip below would cut off one poking above it. */
+  background: var(--index);
+  box-shadow: var(--lift), 0 12px 24px -12px rgb(0 0 0 / 0.3);
+  rotate: -0.6deg;
+  --pin: var(--pin-rose);
+  /* Line spacing of the ruling, see below. */
+  --rule: 1.75rem;
+  /* `clip` rather than `hidden` so the card doesn't become a scroll
+     container. */
   overflow: clip;
 }
-/* A filled header band: negative margins pull it out over the card's
-   padding so it spans edge to edge. With a portrait it takes the same shape
-   as .quote-block--with-figure: a narrow figure column on the left, title
-   and subtitle stacked to its right, vertically centered on each other. */
+.card:nth-of-type(even) {
+  rotate: 0.5deg;
+}
+/* Cards straight on the page are also pinned up a little off-centre,
+   alternating left and right with their tilt, so a run of them doesn't
+   stack into one neat column. Scaled down on narrow screens so it never
+   pushes a card past the page edge. A transform, not translate: that's
+   ScrollReveal's entrance animation. Ones in columns or layouts stay put
+   inside them. */
+.site article > .card {
+  --card-nudge: clamp(0.25rem, 1.6vw, 1.1rem);
+  transform: translateX(calc(-1 * var(--card-nudge)));
+}
+.site article > .card:nth-of-type(even) {
+  transform: translateX(var(--card-nudge));
+}
+.card::before {
+  left: 50%;
+  top: 0.8rem;
+}
+/* The card's text lies on its ruling: each paragraph and list item draws
+   a pale line under every line of its own text (its line-height and the
+   rule spacing are both --rule), so the lines always match the text
+   whatever sits above it. Gaps between paragraphs are padding, not
+   margin, so the ruling runs on through them too. Images, tables and
+   layouts sit on the card unruled, like things stuck onto it, and the
+   header's title and subtitle sit above the red rule. */
+.card p:not(.card__header *),
+.card li:not(.card__header *) {
+  line-height: var(--rule);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 calc(var(--rule) - 1px),
+    var(--index-rule) calc(var(--rule) - 1px) var(--rule)
+  );
+  /* Raised a little from the bottom of each line box so the text rests on
+     its line (just clear of descenders) instead of floating above it. */
+  background-position-y: -0.2rem;
+}
+.card p:not(.card__header *) {
+  margin: 0;
+  padding-bottom: var(--rule);
+}
+.card p:not(.card__header *):last-child {
+  padding-bottom: 0;
+}
+/* The header: the title (and optional portrait and subtitle) written above
+   the card's red rule, which spans the card edge to edge. With a portrait
+   it takes the same shape as .quote-block--with-figure: a narrow figure
+   column on the left, title and subtitle stacked to its right. */
 .card__header {
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  margin: -1.5rem -1.75rem 1.25rem;
-  padding: 1.25rem 1.75rem;
-  background: linear-gradient(135deg, var(--color-peacock), var(--color-depths));
-  color: var(--color-pearl);
+  margin: -0.5rem -1.75rem 1.25rem;
+  padding: 0.5rem 1.75rem 0.75rem;
+  border-bottom: 2px solid var(--index-header-rule);
+  color: var(--heading);
 }
 .card__figure {
   flex: 0 0 6rem;
@@ -2027,7 +2400,7 @@ a.inline-icon--link:focus-visible {
   height: auto;
   max-height: 9rem;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 2px;
 }
 .card__heading {
   min-width: 0;
@@ -2037,7 +2410,7 @@ a.inline-icon--link:focus-visible {
   font-size: 1.375rem;
   font-weight: 500;
   line-height: 1.2;
-  color: var(--color-pearl);
+  color: var(--heading);
 }
 .site .card__subtitle {
   margin: 0.15rem 0 0;
@@ -2045,11 +2418,10 @@ a.inline-icon--link:focus-visible {
   line-height: 1.45;
   text-align: left;
   white-space: pre-line;
-  color: color-mix(in srgb, var(--color-pearl) 80%, transparent);
+  color: var(--muted);
 }
 /* Bold in a card's body is Depths (--heading: Shallows in dark mode, where
-   Depths would vanish on the dark surface). Not the header, which is already
-   a Depths band with Pearl text. */
+   Depths would vanish on the dark surface), not the page's Crimson. */
 .site .card > :not(.card__header) :is(strong, b) {
   color: var(--heading);
 }
@@ -2069,13 +2441,10 @@ a.inline-icon--link:focus-visible {
 .expandable__body-inner > :last-child {
   margin-bottom: 0;
 }
-/* A title-only card: the header band fills the card to its bottom edge. */
+/* A title-only card: no rule hanging under nothing. */
 .card__header:last-child {
-  margin-bottom: -1.5rem;
-}
-/* A trailing Expandable's toggle brings its own bottom spacing. */
-.card:has(> .expandable:last-child) {
-  padding-bottom: 0.5rem;
+  margin-bottom: 0;
+  border-bottom: none;
 }
 /* Collapsing grid-template-rows to 0fr and back to 1fr animates the body to
    its real content height with no JS measuring; the inner wrapper's
@@ -2099,6 +2468,90 @@ a.inline-icon--link:focus-visible {
 .expandable[data-open='true'] .expandable__body-inner {
   padding-top: 1rem;
 }
+/* A paper roll: the hidden part of a card (Expandable) or of a long table
+   (CollapsibleTable) drawn as the sheet's bottom edge rolled up, a paper
+   cylinder (shaded light to dark top to bottom, faint layers of paper
+   across it) in the sheet's own --roll-paper. Opening unrolls it: it rides
+   down as the content grows, gets thinner as its paper runs out (same
+   duration and easing as the content's own growth) and its layers scroll
+   past as if it were turning, until it's gone and the sheet hangs at full
+   length. Closing plays that backwards. */
+.card > .expandable > .expandable__roll,
+.table-collapse__roll {
+  display: block;
+  flex: none;
+  height: 1.5rem;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 3px, rgb(0 0 0 / 0.05) 3px 4px),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--roll-paper) 80%, #000) 0%,
+      var(--roll-paper) 28%,
+      color-mix(in srgb, var(--roll-paper) 60%, #fff) 42%,
+      var(--roll-paper) 60%,
+      color-mix(in srgb, var(--roll-paper) 72%, #000) 100%
+    );
+  background-size: 100% 11px, 100% 100%;
+  /* The curl's shadow falling back onto the sheet just above it, and its
+     own shadow on the page below. */
+  box-shadow:
+    0 -6px 8px -6px rgb(0 0 0 / 0.3),
+    0 4px 5px -3px rgb(0 0 0 / 0.25);
+  transition:
+    height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    margin-top 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    background-position 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.4s ease;
+}
+.card > .expandable[data-open='true'] > .expandable__roll,
+.table-collapse[data-open='true'] > .table-collapse__roll {
+  height: 0;
+  margin-top: 0;
+  background-position: 0 44px, 0 0;
+  box-shadow: 0 0 0 0 transparent;
+}
+/* Closed by useCollapseOffscreen while out of view: instantly, with no
+   roll or height animation, so the page can be corrected in one step. */
+.expandable[data-snap] .expandable__body,
+.expandable[data-snap] .expandable__roll,
+.table-collapse[data-snap] .table-collapse__roll {
+  transition: none;
+}
+/* Outside a card there's no paper to roll, so no roll. In a card the roll
+   is the card's last thing, below the toggle: the card's bottom edge. */
+.expandable__roll {
+  display: none;
+}
+.card > .expandable {
+  display: flex;
+  flex-direction: column;
+}
+.card > .expandable > .expandable__roll {
+  --roll-paper: var(--index);
+  order: 1;
+  margin: 0.4rem -1.75rem 0;
+}
+/* A table's roll is its printout's bottom edge, between the sheet and the
+   toggle below it. */
+.table-collapse__roll {
+  --roll-paper: var(--mat);
+}
+/* The roll is the card's bottom edge, so no card padding below it. */
+.card:has(> .expandable:last-child) {
+  padding-bottom: 0;
+}
+/* Opened, the button is gone and the roll has run out: the card's usual
+   bottom padding comes back. */
+.card:has(> .expandable[data-open='true']:last-child) {
+  padding-bottom: 1.5rem;
+}
+/* Focus moves onto the revealed content when the button that opened it
+   disappears (Expandable.tsx, CollapsibleTable.tsx); it's only a place to
+   continue tabbing from, not a control, so it gets no focus ring. */
+.expandable__body-inner:focus,
+.table-collapse__body:focus {
+  outline: none;
+}
 .expandable__toggle {
   display: flex;
   align-items: center;
@@ -2108,7 +2561,7 @@ a.inline-icon--link:focus-visible {
   margin-top: 1rem;
   padding: 0.75rem 0 0.5rem;
   border: none;
-  border-top: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  border-top: 1px dashed var(--index-rule);
   background: none;
   color: var(--accent);
   font: inherit;
@@ -2133,12 +2586,7 @@ a.inline-icon--link:focus-visible {
 .expandable__toggle:hover .expandable__icon {
   transform: translateY(2px);
 }
-.expandable[data-open='true'] .expandable__icon {
-  transform: rotate(180deg);
-}
-.expandable[data-open='true'] .expandable__toggle:hover .expandable__icon {
-  transform: rotate(180deg) translateY(2px);
-}
+
 
 .formula--block {
   margin: 1rem 0;
@@ -3114,6 +3562,10 @@ article .layout__column p {
     align-items: center;
     justify-content: center;
     order: 1;
+    /* Above the open drawer (z-index 90 below), which slides in under the
+       bar's left end: the button that closes it has to stay reachable. */
+    position: relative;
+    z-index: 91;
     /* 44px minimum touch target (up from the desktop 36px). */
     width: 2.75rem;
     height: 2.75rem;
@@ -3199,11 +3651,28 @@ article .layout__column p {
   }
 }
 
+/* A printout pinned at both top corners: a white sheet (the frame, from
+   Table.tsx) lifted off the page, never tilted, with the table printed on
+   it. The pins live on the frame rather than the scroll box so they stay
+   put when a wide table scrolls sideways. */
+.table-frame {
+  position: relative;
+  margin: 1.75rem 0;
+  padding: 1.9rem 1.1rem 0.9rem;
+  background: var(--mat);
+  box-shadow: var(--lift);
+  --pin: var(--pin-teal);
+}
+.table-frame::before {
+  left: 1.1rem;
+  top: 0.75rem;
+}
+.table-frame::after {
+  left: calc(100% - 1.1rem);
+  top: 0.75rem;
+}
 .table-scroll {
   overflow-x: auto;
-  margin: 1.5rem 0;
-  border: 1px solid var(--border);
-  border-radius: 8px;
 }
 .table-scroll table {
   width: 100%;
@@ -3212,23 +3681,27 @@ article .layout__column p {
 }
 .table-scroll th,
 .table-scroll td {
-  padding: 0.6rem 0.9rem;
+  padding: 0.6rem 0.65rem;
   text-align: justify;
   vertical-align: top;
   border-bottom: 1px solid var(--border);
 }
 .table-scroll thead th {
-  background: var(--bg-alt);
   color: var(--heading);
   font-family: var(--font-heading);
+  font-size: 0.8em;
   font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
   white-space: nowrap;
+  border-bottom: 2px solid var(--heading);
+}
+.table-scroll tbody td:first-child {
+  font-weight: 500;
 }
 .table-scroll tbody tr:last-child td {
   border-bottom: none;
-}
-.table-scroll tbody tr:nth-child(even) {
-  background: color-mix(in srgb, var(--bg-alt) 45%, var(--bg));
 }
 
 /* A long table collapsed to its first rows (CollapsibleTable.tsx). The
@@ -3239,7 +3712,7 @@ article .layout__column p {
 .table-collapse {
   margin: 1.5rem 0;
 }
-.table-collapse .table-scroll {
+.table-collapse .table-frame {
   margin: 0;
 }
 .table-collapse__body {
@@ -3253,17 +3726,11 @@ article .layout__column p {
   .table-collapse[data-open='false'] .table-cell__extra:not([hidden]) {
     display: none;
   }
-  .table-collapse[data-open='false'] .table-collapse__body::after {
-    content: '';
-    position: absolute;
-    inset: auto 1px 1px;
-    height: 3.5rem;
-    border-radius: 0 0 7px 7px;
-    background: linear-gradient(transparent, var(--bg));
-    pointer-events: none;
-  }
 }
 @media print {
+  .table-collapse__roll {
+    display: none;
+  }
   .table-cell__extra[hidden] {
     display: block;
     content-visibility: visible;
@@ -3304,12 +3771,7 @@ article .layout__column p {
 .table-collapse__toggle:hover .table-collapse__icon {
   transform: translateY(2px);
 }
-.table-collapse[data-open='true'] .table-collapse__icon {
-  transform: rotate(180deg);
-}
-.table-collapse[data-open='true'] .table-collapse__toggle:hover .table-collapse__icon {
-  transform: rotate(180deg) translateY(2px);
-}
+
 
 .table-with-caption {
   margin: 1.5rem 0;
@@ -3321,7 +3783,7 @@ article .layout__column p {
   font-weight: 200;
   white-space: pre-line;
 }
-.table-with-caption .table-scroll,
+.table-with-caption .table-frame,
 .table-with-caption .table-collapse {
   margin: 0;
 }
@@ -3333,10 +3795,11 @@ article .layout__column p {
   background-color: color-mix(in srgb, var(--color-peacock) 35%, transparent);
 }
 
-/* Pillars: plain columns in line art, each an anchor link to a heading
-   further down the page. The capital and base are SVG slabs (see
-   Pillars.tsx); the shaft is the text block between them, outlined by its
-   side borders. */
+/* Pillars: columns in line art, each an anchor link to a heading further
+   down the page, embroidered on a fabric patch that's sewn onto the page.
+   The capital and base are SVG slabs (see Pillars.tsx); the shaft is the
+   text block between them, outlined by its side borders. The patch is the
+   link itself (see "Patch" below). */
 .pillars {
   margin: 3.5rem 0;
 }
@@ -3359,6 +3822,12 @@ article .layout__column p {
 .pillars__link {
   --pillar-line: var(--color-peacock);
   --pillar-fill: var(--color-shallows);
+  /* The patch's own cloth, a shade darker than the column's fill thread so
+     the embroidered column stands out on it, and the thread it's sewn on
+     with, contrasting with the edge. */
+  --patch-cloth: color-mix(in srgb, var(--pillar-fill) 72%, var(--pillar-line));
+  --patch-thread: var(--color-crimson);
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -3371,22 +3840,25 @@ article .layout__column p {
   transform: translateY(-3px);
 }
 /* Beats the site-wide `.site a:hover` accent colour, so a hovered pillar's
-   text stays the same colour as an unhovered one. */
+   text stays the same colour as an unhovered one. Depths in both themes,
+   not --heading: the patches keep their light cloth in dark mode too, where
+   --heading turns pale. */
 .site .pillars__link,
 .site .pillars__link:hover,
 .site .pillars__link:focus-visible {
-  color: var(--heading);
+  color: var(--color-depths);
 }
 .pillars__link:focus-visible {
   outline: 2px solid var(--pillar-line);
   outline-offset: 4px;
-  border-radius: 4px;
+  border-radius: 20px;
 }
 /* The hovered or focused pillar lights up in crimson with a blush fill, in
    the plain row of equal pillars as well as in a section heading's row. */
 .pillars__link[href]:is(:hover, :focus-visible) {
   --pillar-line: var(--color-crimson);
   --pillar-fill: var(--color-blush);
+  --patch-thread: var(--color-peacock);
 }
 .site .pillars__link[href]:is(:hover, :focus-visible) .pillars__title {
   color: var(--color-crimson);
@@ -3418,7 +3890,9 @@ article .layout__column p {
   /* The border is drawn inside the box, so pull the box out by half its
      width to centre the line on the 12% mark where the SVG lines end. */
   margin: 0 calc(12% - 2.5px);
-  padding: 1rem 0.8rem;
+  /* Just enough side padding to keep text off the flutes: the shaft has to
+     fit "Sustainability" on one line inside a patch. */
+  padding: 1rem 0.3rem;
   border-inline: 5px solid var(--pillar-line);
   background: var(--pillar-fill);
   text-align: center;
@@ -3454,6 +3928,47 @@ article .layout__column p {
   font-weight: 500;
   line-height: 1.2;
 }
+/* Patch: the link is a rounded piece of twill cloth (two fine diagonal
+   weaves over --patch-cloth) with a thick overlocked edge (a dense run of
+   slanted stitches in the line colour, drawn as a background clipped to the
+   border box under a transparent border), sewn onto the page with a
+   running stitch just inside that edge (::after, a dashed line in
+   --patch-thread). It sits slightly raised off the page, and each one is
+   sewn on a little crooked, alternating. `rotate`, since `transform` holds
+   the hover lift and `translate` the section row's rise. */
+.pillars__link {
+  /* Kept tight at the sides so the shaft keeps room for a long one-word
+     title ("Sustainability") without it breaking mid-word. */
+  padding: 0.8rem 0.55rem 0.95rem;
+  border: 5px solid transparent;
+  border-radius: 20px;
+  background:
+    repeating-linear-gradient(45deg, rgb(255 255 255 / 0.22) 0 1px, transparent 1px 4px) padding-box,
+    repeating-linear-gradient(-45deg, rgb(0 0 0 / 0.05) 0 1px, transparent 1px 4px) padding-box,
+    linear-gradient(var(--patch-cloth), var(--patch-cloth)) padding-box,
+    repeating-linear-gradient(
+        60deg,
+        var(--pillar-line) 0 2px,
+        color-mix(in srgb, var(--pillar-line) 70%, #000) 2px 3px
+      )
+      border-box;
+  box-shadow:
+    0 1px 0 rgb(0 0 0 / 0.08),
+    0 4px 8px -3px rgb(0 40 40 / 0.35);
+  rotate: -1.2deg;
+}
+.pillars__item:nth-child(even) .pillars__link {
+  rotate: 1deg;
+}
+.pillars__link::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 2px dashed var(--patch-thread);
+  border-radius: 13px;
+  pointer-events: none;
+  transition: border-color 0.15s ease;
+}
 /* In a section heading's place: the same row, the section's pillar larger
    and accented in crimson with a blush shaft, not a link, and the rest
    smaller. */
@@ -3464,9 +3979,13 @@ article .layout__column p {
   margin: 0;
 }
 /* Wider than the plain row's gap: the active pillar overhangs its column
-   by a few percent, so it needs the room to not crowd its neighbours. */
+   by a few percent, so it needs the room to not crowd its neighbours. The
+   side padding is that same room at the row's two ends, so an enlarged
+   (and crooked) patch in the first or last column never reaches past the
+   column, and on phones past the screen. */
 .pillars-section .pillars__list {
   gap: 2.5rem;
+  padding-inline: 1rem;
 }
 .pillars__sr-only {
   position: absolute;
@@ -3511,6 +4030,7 @@ article .layout__column p {
 .pillars__item--active .pillars__link {
   --pillar-line: var(--color-crimson);
   --pillar-fill: var(--color-blush);
+  --patch-thread: var(--color-peacock);
   cursor: default;
 }
 .site .pillars__item--active .pillars__title {
@@ -3522,6 +4042,7 @@ article .layout__column p {
 .pillars-section .pillars__item:not(.pillars__item--active):is(:hover, :focus-within) .pillars__link {
   --pillar-line: var(--color-crimson);
   --pillar-fill: var(--color-blush);
+  --patch-thread: var(--color-peacock);
 }
 .site .pillars-section .pillars__item:not(.pillars__item--active):is(:hover, :focus-within) .pillars__title {
   color: var(--color-crimson);
@@ -3529,38 +4050,41 @@ article .layout__column p {
 .pillars-section .pillars__list:has(.pillars__item:not(.pillars__item--active):is(:hover, :focus-within)) .pillars__item--active .pillars__link {
   --pillar-line: var(--color-peacock);
   --pillar-fill: var(--color-shallows);
+  --patch-thread: var(--color-crimson);
 }
 .site .pillars-section .pillars__list:has(.pillars__item:not(.pillars__item--active):is(:hover, :focus-within)) .pillars__item--active .pillars__title {
-  color: var(--heading);
+  color: var(--color-depths);
 }
-/* The rise: once the row has scrolled in (ScrollReveal sets data-reveal on
-   .pillars-section, the same trigger and the same reduced-motion conditions
-   as the page's fade-in) the pillars come up out of the ground. Each item
-   keeps a fixed clip that ends at its own base, which is the ground line;
-   the link inside starts a full pillar's height below it, buried, and slides
-   up through it, so the top clears the ground first and nothing is ever
-   faded or gradually unmasked. The active pillar rises first, then the ones
-   either side, then the next ones out, each a step (--pillar-distance, set
-   per item) after the one before. `translate` is used for the slide because
-   `transform` already holds the hover lift. The clip is open on the other
-   three sides, and a few px below the base for its stroke. */
+/* Sewing on: once the row has scrolled in (ScrollReveal sets data-reveal
+   on .pillars-section, the same trigger and the same reduced-motion
+   conditions as the page's fade-in) each patch is pressed onto the page:
+   it arrives a little large and lifted, as if held just above the page,
+   and settles flat into place with a small overshoot. The active pillar's
+   patch goes on first, then the ones either side, then the next ones out,
+   each a step (--pillar-distance, set per item) after the one before. The
+   `scale` and `translate` properties, since `transform` holds the hover
+   lift and `rotate` the patch's crooked angle. ScrollReveal waits for the
+   last one (0.45s + 0.25s per step) before the section's content. */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  /* The page's block fade-in would fade the row in under the rise. */
+  /* The page's block fade-in would fade the row in under its own. */
   :root:not([data-motion='reduce']) article > .pillars-section {
     opacity: 1;
     transition: none;
   }
-  :root:not([data-motion='reduce']) .pillars-section .pillars__item {
-    --pillar-delay: calc(var(--pillar-distance, 0) * 0.45s);
-    clip-path: inset(-100vh -8px -3px -8px);
-  }
   :root:not([data-motion='reduce']) .pillars-section .pillars__link {
-    translate: 0 calc(100% + 1rem);
+    --pillar-delay: calc(var(--pillar-distance, 0) * 0.25s);
+    opacity: 0;
+    scale: 1.12;
+    translate: 0 -0.6rem;
     transition:
-      translate 1s cubic-bezier(0.2, 0.7, 0.2, 1) var(--pillar-delay),
+      opacity 0.2s ease-out var(--pillar-delay),
+      scale 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) var(--pillar-delay),
+      translate 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) var(--pillar-delay),
       transform 0.15s ease;
   }
   :root:not([data-motion='reduce']) .pillars-section[data-reveal] .pillars__link {
+    opacity: 1;
+    scale: 1;
     translate: 0 0;
   }
 }

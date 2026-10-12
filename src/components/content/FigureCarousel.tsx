@@ -8,6 +8,9 @@ type FigureCarouselImage = { src: string; alt?: string };
 type FigureCarouselProps = {
   images?: FigureCarouselImage[];
   speedSeconds?: number;
+  // Hang every figure still on the string at once instead of travelling
+  // along it (see stillLayout); speedSeconds is then unused.
+  still?: boolean;
 };
 
 // Every photo gets the same image height and keeps its own aspect ratio
@@ -50,6 +53,9 @@ const SWING_SECONDS = 2.4;
 // Reduced motion: how long each set of frozen figures stays up before the
 // next set replaces it.
 const SWAP_SECONDS = 5;
+// Still mode: the smallest image height a figure may shrink to so that
+// everyone fits on one string; below it they wrap onto more strings.
+const MIN_STILL_IMG_H = 130;
 // Width assumed for the server render, before the real width is measured.
 const DEFAULT_WIDTH = 720;
 // Longest frame step the animation will take, so returning to a
@@ -69,10 +75,18 @@ type Layout = {
   loop: number;
 };
 
+function clampAspect(aspect: number) {
+  return Math.min(MAX_ASPECT, Math.max(MIN_ASPECT, aspect));
+}
+
+// The image height every card gets at this carousel width.
+function baseImgH(width: number) {
+  return BASE_IMG_H * Math.min(1, Math.max(MIN_SCALE, width / WIDTH_FOR_FULL_SCALE));
+}
+
 function cardSize(width: number, aspect: number): Size {
-  const scale = Math.min(1, Math.max(MIN_SCALE, width / WIDTH_FOR_FULL_SCALE));
-  const a = Math.min(MAX_ASPECT, Math.max(MIN_ASPECT, aspect));
-  let imgH = BASE_IMG_H * scale;
+  const a = clampAspect(aspect);
+  let imgH = baseImgH(width);
   // A wide image on a narrow screen: shrink it (keeping its ratio) so the
   // card still fits on the string with a gap on either side.
   const maxImgW = width - 2 * GAP_PX - PAD_X;
@@ -139,6 +153,68 @@ function staticLayout(l: Layout, first: number) {
   return { positions, shown: shown.length };
 }
 
+// Still layout: every figure hanging on the string at once, in order,
+// spread with equal gaps like staticLayout. They share one image height,
+// as large as the moving size allows but small enough that each string's
+// cards (plus at least GAP_PX between them) fit its width. When that would
+// make them smaller than MIN_STILL_IMG_H, they're split, in order, over as
+// few strings as keep them at least that big, stacked one below the other
+// (each string's row is ROW_EXTRA px taller than the cards, matching the
+// height globals.css gives .figure-carousel per row).
+const ROW_EXTRA = 100;
+
+type StillLayout = { sizes: Size[]; positions: Position[]; rows: number };
+
+// Contiguous groups of card indices, split so each group's total aspect
+// ratio (and so its total width at a shared height) is as even as possible.
+function splitRows(aspects: number[], rows: number): number[][] {
+  const total = aspects.reduce((sum, a) => sum + a, 0);
+  const groups: number[][] = [[]];
+  let sum = 0;
+  aspects.forEach((a, i) => {
+    const target = (total * groups.length) / rows;
+    const current = groups[groups.length - 1];
+    // Start the next group when this card lands closer to the boundary
+    // past it than before it, leaving at least one card per group left.
+    if (current.length > 0 && groups.length < rows && sum + a / 2 > target) groups.push([]);
+    groups[groups.length - 1].push(i);
+    sum += a;
+  });
+  return groups;
+}
+
+function stillLayout(width: number, rawAspects: number[]): StillLayout {
+  const aspects = rawAspects.map(clampAspect);
+  const count = aspects.length;
+  // The image height at which a group of cards exactly fills the width.
+  const fit = (group: number[]) =>
+    (width - group.length * (PAD_X + GAP_PX)) / group.reduce((sum, i) => sum + aspects[i], 0);
+  let groups = [aspects.map((_, i) => i)];
+  let imgH = Math.min(baseImgH(width), fit(groups[0]));
+  for (let rows = 2; rows <= count && imgH < MIN_STILL_IMG_H; rows++) {
+    groups = splitRows(aspects, rows);
+    imgH = Math.min(baseImgH(width), ...groups.map(fit));
+  }
+  const sizes = aspects.map((a) => ({ w: Math.round(imgH * a + PAD_X), h: Math.round(imgH + PAD_Y) }));
+  const pitch = Math.max(...sizes.map((size) => size.h)) + ROW_EXTRA;
+  const positions = new Array<Position>(count);
+  groups.forEach((group, row) => {
+    const used = group.reduce((sum, i) => sum + sizes[i].w, 0);
+    const gap = (width - used) / group.length;
+    let left = gap / 2;
+    for (const i of group) {
+      const centerX = left + sizes[i].w / 2;
+      const x = Math.min(1, Math.max(0, centerX / width));
+      positions[i] = {
+        x: left,
+        y: row * pitch + STRING_BASE - HOLE_OFFSET + HANG_DROP + 4 * x * (1 - x) * SAG,
+      };
+      left += sizes[i].w + gap;
+    }
+  });
+  return { sizes, positions, rows: groups.length };
+}
+
 // Center x where the widest card has fully left the string on the right;
 // phase 0..1 maps a card from (exitX - loop) up to exitX.
 function exitX(l: Layout) {
@@ -187,13 +263,18 @@ function prefersReducedMotion() {
 // zooms that photo in slightly); clicking it opens it in the Lightbox, which
 // also keeps the carousel paused while open. The --behind half is a real
 // <button> (named by its image's alt text) so this works by keyboard too.
-export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouselProps) {
+export function FigureCarousel({ images = [], speedSeconds = 25, still = false }: FigureCarouselProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const photoRefs = useRef<(HTMLDivElement | null)[]>([]);
   const hoveredRef = useRef(false);
   const lightboxOpenRef = useRef(false);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const count = images.length;
+  // How many strings a still carousel needs (one string per row of
+  // figures); a moving one always has the one.
+  const [rows, setRows] = useState(() =>
+    still && count > 0 ? stillLayout(DEFAULT_WIDTH, new Array<number>(count).fill(DEFAULT_ASPECT)).rows : 1,
+  );
 
   useEffect(() => {
     lightboxOpenRef.current = openIndex !== null;
@@ -254,6 +335,19 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
 
     function start() {
       stop();
+      if (still) {
+        const layout = stillLayout(l.width, aspects);
+        layout.sizes.forEach((size, i) => {
+          const el = photoRefs.current[i];
+          if (!el) return;
+          el.style.setProperty('--w', `${size.w}px`);
+          el.style.setProperty('--h', `${size.h}px`);
+        });
+        root!.style.setProperty('--card-h', `${Math.max(...layout.sizes.map((s) => s.h))}px`);
+        place(layout.positions);
+        setRows(layout.rows);
+        return;
+      }
       if (reduce) {
         let shown = placeStatic();
         if (count > shown && onScreen) {
@@ -370,38 +464,51 @@ export function FigureCarousel({ images = [], speedSeconds = 25 }: FigureCarouse
       root.removeEventListener('focusin', onFocusIn);
       root.removeEventListener('focusout', onFocusOut);
     };
-  }, [count, speedSeconds]);
+  }, [count, speedSeconds, still]);
 
   if (count === 0) return null;
 
-  // Server render (and first client render): the frozen layout at an assumed
-  // width, so nothing moves before JS has measured the real one.
-  const initialLayout = computeLayout(DEFAULT_WIDTH, new Array<number>(count).fill(DEFAULT_ASPECT));
-  const initial = staticLayout(initialLayout, 0).positions;
+  // Server render (and first client render): the frozen (or still) layout
+  // at an assumed width, so nothing moves before JS has measured the real
+  // one.
+  const defaultAspects = new Array<number>(count).fill(DEFAULT_ASPECT);
+  const initialLayout = computeLayout(DEFAULT_WIDTH, defaultAspects);
+  const initialStill = still ? stillLayout(DEFAULT_WIDTH, defaultAspects) : null;
+  const initial = initialStill ? initialStill.positions : staticLayout(initialLayout, 0).positions;
+  const initialSizes = initialStill ? initialStill.sizes : initialLayout.sizes;
 
   return (
-    <div className="figure-carousel" ref={rootRef}>
-      <svg
-        className="figure-carousel__string"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        {/* A quadratic Bezier with its control point directly above the
-            midpoint is exactly a parabola, and (because its x-component is
-            then exactly linear in the curve parameter) its equation is
-            y = STRING_BASE + 4 * x * (1 - x) * SAG for x in [0, 1]. That is
-            the same equation cardPosition() uses, which is what keeps every
-            photo's hole sitting exactly on this drawn string. */}
-        <path d={`M 0,${STRING_BASE} Q 50,${STRING_BASE + 2 * SAG} 100,${STRING_BASE}`} />
-      </svg>
+    <div
+      className={still ? 'figure-carousel figure-carousel--still' : 'figure-carousel'}
+      ref={rootRef}
+      style={{ '--rows': rows } as CSSProperties}
+    >
+      {Array.from({ length: rows }, (_, row) => (
+        <svg
+          key={row}
+          className="figure-carousel__string"
+          style={{ '--row': row } as CSSProperties}
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          {/* A quadratic Bezier with its control point directly above the
+              midpoint is exactly a parabola, and (because its x-component
+              is then exactly linear in the curve parameter) its equation is
+              y = STRING_BASE + 4 * x * (1 - x) * SAG for x in [0, 1]. That
+              is the same equation cardPosition() (and stillLayout) use,
+              which is what keeps every photo's hole sitting exactly on this
+              drawn string. */}
+          <path d={`M 0,${STRING_BASE} Q 50,${STRING_BASE + 2 * SAG} 100,${STRING_BASE}`} />
+        </svg>
+      ))}
       <div className="figure-carousel__track">
         {images.map((image, index) => {
           const wrapperStyle = {
             '--x': `${initial[index].x}px`,
             '--y': `${initial[index].y}px`,
-            '--w': `${initialLayout.sizes[index].w}px`,
-            '--h': `${initialLayout.sizes[index].h}px`,
+            '--w': `${initialSizes[index].w}px`,
+            '--h': `${initialSizes[index].h}px`,
           } as CSSProperties;
           const halfStyle: CSSProperties = { animationDelay: `${-(index / count) * SWING_SECONDS}s` };
           return (

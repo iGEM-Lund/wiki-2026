@@ -3,7 +3,8 @@
 import { useEffect } from 'react';
 
 // What triggers on scroll: h2s (they fade their text and draw their
-// flourishes) and the pillars row that stands in for an h2 (it rises). The
+// flourishes) and the pillars row that stands in for an h2 (its patches
+// are pressed on). The
 // title banner has its own collapse. Everything else under a top-level
 // heading or pillars row fades in as one group once that has been
 // triggered and has finished its animation (delay in globals.css, or
@@ -60,13 +61,13 @@ export function ScrollReveal() {
         if (leader) {
           child.dataset.afterHeading = '';
           if (leader.matches('.pillars-section')) {
-            // Wait for the last pillar to finish rising: the stagger is
-            // 0.45s a step out from the active one, each rise takes 1s with
-            // an ease-out that is nearly settled by 0.7s.
+            // Wait for the last pillar's patch to be pressed on: the stagger
+            // is 0.25s a step out from the active one, each press takes
+            // 0.55s and is nearly settled by 0.45s.
             const steps = [...leader.querySelectorAll<HTMLElement>('.pillars__item')].map(
               (item) => Number(item.style.getPropertyValue('--pillar-distance')) || 0,
             );
-            child.style.setProperty('--reveal-delay', `${0.7 + Math.max(0, ...steps) * 0.45}s`);
+            child.style.setProperty('--reveal-delay', `${0.45 + Math.max(0, ...steps) * 0.25}s`);
           }
         }
       }

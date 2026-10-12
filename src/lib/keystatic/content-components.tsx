@@ -55,6 +55,12 @@ export const contentComponents = {
         defaultValue: 25,
         validation: { min: 1 },
       }),
+      still: fields.checkbox({
+        label: 'Keep still',
+        description:
+          'Show every photo at once, hanging still on the string, instead of travelling along it. Photos that do not fit on one string continue on a second one below. The speed above is then ignored.',
+        defaultValue: false,
+      }),
     },
     ContentView: (props) => <div>[Figure Carousel: {(props.value.images ?? []).length} figure(s)]</div>,
   }),

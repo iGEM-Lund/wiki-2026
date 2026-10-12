@@ -1,5 +1,7 @@
+import type { CSSProperties } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { ZoomableImage } from './ZoomableImage';
+import { tiltFor } from '@/lib/tilt';
 
 type FigureWithCaptionProps = {
   src?: string;
@@ -29,7 +31,13 @@ export function FigureWithCaption({ src, alt = '', caption, link, scale }: Figur
   ) : null;
   const captionElement = caption ? <figcaption>{caption}</figcaption> : null;
   return (
-    <figure className="figure-with-caption" style={pct ? { maxWidth: `${pct}%` } : undefined}>
+    // A polaroid taped to the page at a slight tilt (see .figure-with-caption
+    // in globals.css), seeded by the image URL (or caption) so the angle is
+    // stable across renders and neighbouring figures lean different ways.
+    <figure
+      className="figure-with-caption"
+      style={{ '--tilt': tiltFor(src || caption || ''), ...(pct ? { maxWidth: `${pct}%` } : {}) } as CSSProperties}
+    >
       {link ? (
         <a className="figure-with-caption__anchor" href={link} target="_blank" rel="noopener noreferrer">
           {media}

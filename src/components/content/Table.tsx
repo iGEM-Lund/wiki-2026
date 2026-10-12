@@ -26,7 +26,9 @@ function hideRow(row: WithChildren) {
 }
 
 // Markdown tables written in the editor. Wrapped so a wide table scrolls
-// sideways inside its own box instead of stretching the page on phones.
+// sideways inside its own box instead of stretching the page on phones, and
+// that box in a frame that carries the pins holding it to the page: pinned
+// to the scroll box itself they would scroll away with a wide table.
 export function Table({ children, ...props }: ComponentPropsWithoutRef<'table'>) {
   const parts = elements(children);
   const body = parts.find((part) => part.type === 'tbody');
@@ -34,8 +36,10 @@ export function Table({ children, ...props }: ComponentPropsWithoutRef<'table'>)
 
   if (!body || rows.length <= COLLAPSE_ABOVE) {
     return (
-      <div className="table-scroll">
-        <table {...props}>{children}</table>
+      <div className="table-frame">
+        <div className="table-scroll">
+          <table {...props}>{children}</table>
+        </div>
       </div>
     );
   }
@@ -47,8 +51,10 @@ export function Table({ children, ...props }: ComponentPropsWithoutRef<'table'>)
   );
   return (
     <CollapsibleTable rowCount={rows.length}>
-      <div className="table-scroll">
-        <table {...props}>{parts.map((part) => (part === body ? collapsedBody : part))}</table>
+      <div className="table-frame">
+        <div className="table-scroll">
+          <table {...props}>{parts.map((part) => (part === body ? collapsedBody : part))}</table>
+        </div>
       </div>
     </CollapsibleTable>
   );

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 // Strips the trailing slash the production export adds (trailingSlash is
 // on there only), so "/team" and "/team/" count as the same page.
@@ -15,17 +15,19 @@ function normalize(path: string) {
 export function NavLink({
   href,
   className,
+  style,
   children,
 }: {
   href: string;
   className?: string;
+  style?: CSSProperties;
   children: ReactNode;
 }) {
   const pathname = usePathname();
   const current = normalize(pathname) === normalize(href);
 
   return (
-    <Link href={href} className={className} aria-current={current ? 'page' : undefined}>
+    <Link href={href} className={className} style={style} aria-current={current ? 'page' : undefined}>
       {children}
     </Link>
   );
