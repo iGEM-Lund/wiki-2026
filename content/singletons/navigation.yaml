@@ -10,8 +10,6 @@ items:
           target: project_background
         - label: Project Design
           target: project_solution-and-project-design
-        - label: Results
-          target: project_results
         - label: Future Outlook
           target: future_outlook
         - label: Safety
@@ -33,6 +31,8 @@ items:
           target: technical_notebooks-and-protocols
         - label: Parts
           target: parts
+        - label: Results
+          target: project_results
   - name: Engagement
     icon:
       discriminant: library
