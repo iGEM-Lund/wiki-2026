@@ -29,7 +29,7 @@ items:
           target: technical_modelling
         - label: Notebooks and Protocols
           target: technical_notebooks-and-protocols
-        - label: Results`
+        - label: Results
           target: project_results
         - label: Parts
           target: parts
