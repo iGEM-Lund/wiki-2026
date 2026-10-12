@@ -18,8 +18,6 @@ items:
           target: safety
         - label: Economic Assessment
           target: economical-assessment
-        - label: Proof of Concept
-          target: project_proof-of-concept
   - name: Technical
     icon:
       discriminant: library
