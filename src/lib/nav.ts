@@ -49,3 +49,18 @@ export async function getNav(): Promise<NavItem[]> {
 
   return items;
 }
+
+export type NextPage = { label: string; section: string; href: string };
+
+// The page after `slug` in the nav's reading order: every link left to
+// right, dropdowns read top to bottom. Null on the last page and on pages
+// the nav doesn't link to.
+export async function getNextPage(slug: string): Promise<NextPage | null> {
+  const order = (await getNav()).flatMap((item) =>
+    item.kind === 'link'
+      ? [{ label: item.name, section: item.name, href: item.target.href }]
+      : item.items.map((entry) => ({ label: entry.label.trim(), section: item.name, href: entry.target.href })),
+  );
+  const index = order.findIndex((page) => page.href === `/${slug}`);
+  return index === -1 ? null : (order[index + 1] ?? null);
+}

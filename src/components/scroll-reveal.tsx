@@ -7,8 +7,9 @@ import { useEffect } from 'react';
 // are pressed on). The
 // title banner has its own collapse. Everything else under a top-level
 // heading or pillars row fades in as one group once that has been
-// triggered and has finished its animation (delay in globals.css, or
-// --reveal-delay for the pillars); content above the first one comes in
+// triggered and its text is in (delay in globals.css), or under a pillars
+// row once its patches are pressed on (--reveal-delay); content above the
+// first one comes in
 // when the title's arrival is done.
 const TARGETS = 'article .section-heading, article > .pillars-section';
 const BLOCKS = 'article > :not(.page-title, .page-title-top, .section-heading, .pillars-section)';

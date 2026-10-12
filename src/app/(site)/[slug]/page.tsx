@@ -7,6 +7,8 @@ import { TableOfContents } from '@/components/table-of-contents';
 import { SectionHeading } from '@/components/section-heading';
 import { PageTitle } from '@/components/page-title';
 import { ScrollReveal } from '@/components/scroll-reveal';
+import { NextPageLink } from '@/components/next-page-link';
+import { getNextPage } from '@/lib/nav';
 
 // Every page on the site, including the mandatory iGEM Standard URL Pages,
 // is a `pages` collection entry, so one route serves all of them.
@@ -30,6 +32,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
   const citedReferences = await resolveCitedReferences(source);
   const { Content, headings } = await renderMdx(source, toReferenceLookup(citedReferences));
   const outline = buildHeadingTree(headings);
+  const nextPage = await getNextPage(slug);
 
   return (
     <div className="page-layout">
@@ -48,6 +51,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
             </ol>
           </section>
         ) : null}
+        {nextPage ? <NextPageLink page={nextPage} /> : null}
       </article>
       <TableOfContents headings={outline} />
       {/* Here rather than in the layout, which stays mounted across
