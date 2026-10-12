@@ -1,5 +1,6 @@
 import { Children, cloneElement, isValidElement, type ComponentPropsWithoutRef, type ReactElement, type ReactNode } from 'react';
 import { CollapsibleTable } from './CollapsibleTable';
+import { TableScroll } from './TableScroll';
 
 // Tables with more body rows than this start collapsed to their first
 // VISIBLE_ROWS, with a button to show the rest.
@@ -37,9 +38,9 @@ export function Table({ children, ...props }: ComponentPropsWithoutRef<'table'>)
   if (!body || rows.length <= COLLAPSE_ABOVE) {
     return (
       <div className="table-frame">
-        <div className="table-scroll">
+        <TableScroll>
           <table {...props}>{children}</table>
-        </div>
+        </TableScroll>
       </div>
     );
   }
@@ -52,9 +53,9 @@ export function Table({ children, ...props }: ComponentPropsWithoutRef<'table'>)
   return (
     <CollapsibleTable rowCount={rows.length}>
       <div className="table-frame">
-        <div className="table-scroll">
+        <TableScroll>
           <table {...props}>{parts.map((part) => (part === body ? collapsedBody : part))}</table>
-        </div>
+        </TableScroll>
       </div>
     </CollapsibleTable>
   );

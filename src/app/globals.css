@@ -3921,9 +3921,17 @@ article .layout__column p {
 .table-scroll th,
 .table-scroll td {
   padding: 0.6rem 0.65rem;
-  text-align: justify;
+  text-align: left;
   vertical-align: top;
+  /* `anywhere` (unlike `break-word`) also counts the break points toward
+     the cell's minimum width, so a long unbroken string such as a DNA
+     sequence wraps instead of forcing the table wider than the page. */
+  overflow-wrap: anywhere;
   border-bottom: 1px solid var(--border);
+}
+/* Set by TableScroll on cells long and wide enough to read well justified. */
+.table-scroll [data-justify] {
+  text-align: justify;
 }
 .table-scroll thead th {
   color: var(--heading);
