@@ -18,13 +18,14 @@ import {
   rehypeCollectHeadings,
   type HeadingItem,
 } from '@/lib/headings';
+import type { ReferenceLookup } from '@/lib/references';
 
 // fields.mdx() stores raw MDX source text; unlike the older fields.document,
 // there's no pre-parsed document tree to walk, so rendering requires actually
 // compiling the MDX via @mdx-js/mdx at request/build time.
 export async function renderMdx(
   source: string,
-  referenceLookup: Record<string, { shortForm: string }> = {},
+  referenceLookup: ReferenceLookup = {},
 ): Promise<{ Content: ComponentType; headings: HeadingItem[] }> {
   const headings: HeadingItem[] = [];
   const { default: MDXContent } = await evaluate(source, {

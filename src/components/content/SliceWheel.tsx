@@ -1,12 +1,13 @@
 import { compileMdxSnippet } from './compile-mdx-snippet';
 import { SliceWheelClient, type SliceWheelClientSlice } from './SliceWheelClient';
+import type { ReferenceLookup } from '@/lib/references';
 
 type SliceWheelSlice = { title: string; body: string };
 type SliceWheelProps = {
   slices?: SliceWheelSlice[];
   // Injected by src/lib/mdx/render.ts, same as WorldMap: slice bodies are
   // raw MDX and may embed <Citation>.
-  referenceLookup?: Record<string, { shortForm: string }>;
+  referenceLookup?: ReferenceLookup;
 };
 
 // The wheel is drawn in a viewBox centred on the origin, so a slice's hover

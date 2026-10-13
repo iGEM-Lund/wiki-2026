@@ -1,6 +1,7 @@
 import { compileMdxSnippet } from './compile-mdx-snippet';
 import { WorldMapClient, type WorldMapClientPin } from './WorldMapClient';
 import { WORLD_MAP_VIEWBOX, projectLatLng, worldLandPath } from '@/lib/world-map';
+import type { ReferenceLookup } from '@/lib/references';
 
 // lat/lng arrive as strings, not numbers; see the WorldMap schema comment
 // in src/lib/keystatic/content-components.tsx for why (Keystatic's MDX
@@ -11,7 +12,7 @@ type WorldMapProps = {
   // Injected by src/lib/mdx/render.ts, the same way it injects Citation's
   // lookup; pin bodies are raw MDX and may themselves embed <Citation>,
   // which needs the page's resolved bibliography short forms.
-  referenceLookup?: Record<string, { shortForm: string }>;
+  referenceLookup?: ReferenceLookup;
 };
 
 export async function WorldMap({ pins = [], referenceLookup = {} }: WorldMapProps) {

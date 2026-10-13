@@ -15,9 +15,18 @@ const SETTLE_MS = 800;
 const GLOBE_DX = 58;
 const GLOBE_DY = 38;
 
+// A figure's line leaves from its top edge this far in from the corner
+// (of its width), clear of a rounded corner.
+const FIGURE_INSET = 0.2;
+
 const normalize = (path: string) => (path.length > 1 ? path.replace(/\/$/, '') : path);
 
 type Target = { el: HTMLElement; end: 'side' | 'bottom' | 'globe'; cleanup?: () => void };
+
+// What the globe's line leaves from: a box, how far in from its corner,
+// and where its top and bottom edges are (a tilted card's sit a little
+// inside its bounding box).
+type Origin = { left: number; right: number; top: number; bottom: number; inset: number };
 
 // While a link in the page content is hovered or focused, a dashed line
 // draws itself from the link to where the link goes:
@@ -102,20 +111,46 @@ export function LinkArrow() {
       };
     }
 
-    // Puts the globe beside the end of the link (its last line, if it
-    // wraps): up and to the right, or below when the header is in the way,
-    // or to the left near the screen's right edge.
+    // What the line leaves from: a linked figure (a polaroid's white
+    // card, or a plain figure's image), or the end of a text link. A link
+    // that wraps is left from its first line going up, its last going
+    // down, so the line never crosses the link's own words.
+    function originOf(a: HTMLAnchorElement, up: boolean): Origin {
+      const figure = a.closest<HTMLElement>('.figure-with-caption');
+      const img = figure && a.querySelector('img');
+      if (figure && img) {
+        const plain = figure.classList.contains('figure-with-caption--plain');
+        const box = (plain ? img : figure).getBoundingClientRect();
+        // A tilted card's corners sit a little inside its bounding box:
+        // start just inside its edge so the line touches it.
+        const into = plain ? 0 : 4;
+        return {
+          left: box.left,
+          right: box.right,
+          top: box.top + into,
+          bottom: box.bottom - into,
+          inset: box.width * FIGURE_INSET,
+        };
+      }
+      const lines = [...a.getClientRects()].filter((r) => r.width > 0);
+      const line = (up ? lines[0] : lines[lines.length - 1]) ?? a.getBoundingClientRect();
+      return { left: line.left, right: line.right, top: line.top, bottom: line.bottom, inset: 10 };
+    }
+
+    // Puts the globe beside where the line leaves from (see originOf): up
+    // and to the right, or below when the header is in the way, or to the
+    // left near the screen's right edge.
     function placeGlobe(a: HTMLAnchorElement) {
-      const rects = a.getClientRects();
-      const last = rects[rects.length - 1] ?? a.getBoundingClientRect();
       const r = globe!.offsetWidth / 2;
       const header = document.querySelector('.site__header')?.getBoundingClientRect().bottom ?? 0;
-      const up = last.top - GLOBE_DY - r - 8 > header;
-      const right = last.right + GLOBE_DX + r + 8 < document.documentElement.clientWidth;
+      const above = originOf(a, true);
+      const up = above.top - GLOBE_DY - r - 8 > header;
+      const from = up ? above : originOf(a, false);
+      const right = from.right + GLOBE_DX + r + 8 < document.documentElement.clientWidth;
       const x1 = right
-        ? Math.max(last.left, last.right - 10)
-        : Math.min(last.right, last.left + 10);
-      const y1 = up ? last.top - 2 : last.bottom + 2;
+        ? Math.max(from.left, from.right - from.inset)
+        : Math.min(from.right, from.left + from.inset);
+      const y1 = up ? from.top - 2 : from.bottom + 2;
       const cx = x1 + (right ? GLOBE_DX : -GLOBE_DX);
       const cy = y1 + (up ? -GLOBE_DY : GLOBE_DY);
       globe!.style.left = `${cx}px`;
@@ -135,11 +170,11 @@ export function LinkArrow() {
       if (!link || !target) return;
       let d: string;
       if (target.end === 'globe') {
-        // Up (or down) from the end of the link, then across into the
-        // globe's side, arriving horizontally.
+        // One even arc, a parabola: up (or down) from the end of the link,
+        // bending all the way into the globe's side, arriving horizontally.
         const { x1, y1, cx, cy, r, right } = placeGlobe(link);
         const x2 = cx + (right ? -1 : 1) * (r + END_GAP);
-        d = `M${x1} ${y1} C${x1} ${cy} ${x1} ${cy} ${x2} ${cy}`;
+        d = `M${x1} ${y1} Q${x1} ${cy} ${x2} ${cy}`;
         line!.setAttribute('d', d);
         reveal!.setAttribute('d', d);
         return;

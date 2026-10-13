@@ -45,7 +45,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
             <ol>
               {citedReferences.map((ref) => (
                 <li key={ref.slug} id={`ref-${ref.slug}`}>
-                  {ref.longForm}
+                  <span className="references__text">{ref.longForm}</span>
                 </li>
               ))}
             </ol>

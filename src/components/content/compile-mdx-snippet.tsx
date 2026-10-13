@@ -4,6 +4,7 @@ import type { ComponentType } from 'react';
 import { embeddableComponents } from './embeddable-components';
 import { ContentLink } from './ContentLink';
 import { Citation } from './Citation';
+import type { ReferenceLookup } from '@/lib/references';
 
 // Compiles a short piece of raw MDX source text (a WorldMap pin body, a
 // SliceWheel slice body: fields.text, not fields.mdx; see the WorldMap
@@ -16,7 +17,7 @@ import { Citation } from './Citation';
 // for bad SMILES.
 export async function compileMdxSnippet(
   body: string,
-  referenceLookup: Record<string, { shortForm: string }>,
+  referenceLookup: ReferenceLookup,
   errorClassName: string,
   errorLabel: string,
 ): Promise<ComponentType> {

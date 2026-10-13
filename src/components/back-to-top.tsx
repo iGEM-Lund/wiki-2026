@@ -9,6 +9,10 @@ const MOBILE_QUERY = '(max-width: 48rem)';
 
 export function BackToTop() {
   const [visible, setVisible] = useState(false);
+  // Clicking tears the tag off its pin and it falls away; the button stays
+  // mounted until the fall finishes, even once the scroll has passed the
+  // threshold that would otherwise hide it.
+  const [ripped, setRipped] = useState(false);
 
   useEffect(() => {
     function onScroll() {
@@ -25,20 +29,30 @@ export function BackToTop() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  if (!visible) return null;
+  if (!visible && !ripped) return null;
 
   return (
     <button
       type="button"
       className="back-to-top"
       aria-label="Back to top"
+      data-ripped={ripped || undefined}
       // No explicit `behavior`; this inherits the root's scroll-behavior
       // (smooth, or auto under reduced motion), matching every other
       // in-page jump on the site instead of hardcoding "smooth".
-      onClick={() => window.scrollTo({ top: 0, left: 0 })}
+      onClick={() => {
+        setRipped(true);
+        window.scrollTo({ top: 0, left: 0 });
+      }}
     >
       {/* A paper tag hanging off a pin (see .float-tag in globals.css). */}
-      <span className="float-tag" aria-hidden="true">
+      <span
+        className="float-tag"
+        aria-hidden="true"
+        onAnimationEnd={(event) => {
+          if (event.animationName === 'float-tag-rip') setRipped(false);
+        }}
+      >
         <ArrowUp size={18} />
         <span className="float-tag__label">Top</span>
       </span>

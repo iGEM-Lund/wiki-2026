@@ -33,6 +33,12 @@ export async function resolveCitedReferences(source: string): Promise<CitedRefer
     .sort((a, b) => a.shortForm.localeCompare(b.shortForm));
 }
 
-export function toReferenceLookup(refs: CitedReference[]): Record<string, { shortForm: string }> {
-  return Object.fromEntries(refs.map((r) => [r.slug, { shortForm: r.shortForm }]));
+// What a Citation needs to render: its label, and the full citation for its
+// hover sign.
+export type ReferenceLookup = Record<string, { shortForm: string; longForm: string }>;
+
+export function toReferenceLookup(refs: CitedReference[]): ReferenceLookup {
+  return Object.fromEntries(
+    refs.map((r) => [r.slug, { shortForm: r.shortForm, longForm: r.longForm }]),
+  );
 }

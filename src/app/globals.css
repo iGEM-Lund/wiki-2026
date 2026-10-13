@@ -77,6 +77,16 @@ body {
   --pin-pearl: #f3ece4;
   --pin-string: var(--color-crimson);
   --pin-rose: var(--color-rose);
+  /* The metal eyelet set into the hole of every tag hung on a string (nav
+     tags, the floating tags, the tooltip and accessibility panel): a
+     matte steel ring, with a tiny dent at its centre. */
+  --eyelet:
+    radial-gradient(circle at 50% 45%, rgb(0 0 0 / 0.4) 0 0.6px, transparent 1.3px),
+    radial-gradient(circle at 50% 62%, rgb(255 255 255 / 0.25) 0 0.7px, transparent 1.4px),
+    conic-gradient(from 210deg, #c3c6c9, #a2a6ab, #b9bcc0, #979ba0, #b0b4b8, #c3c6c9);
+  --eyelet-shadow:
+    0 0.5px 0.5px rgb(0 0 0 / 0.35),
+    inset 0 0 0 0.5px rgb(0 0 0 / 0.3);
   /* Index card (Card): its paper, the pale blue lines ruled under each line
      of text, and the red rule under the title. */
   --index: #fdfcf7;
@@ -840,19 +850,18 @@ body {
       background-color 0.15s ease,
       color 0.15s ease;
   }
-  /* The hole is only drawn on, not punched through: a small dot in the
-     tag's own text colour, so it reads on the dark current-page tag too. */
+  /* The hole is a metal eyelet set into the tag, not punched through. */
   .site__nav .site__nav-item::before {
     content: '';
     position: absolute;
     left: 50%;
     top: 0.5rem;
-    width: 5px;
-    height: 5px;
+    width: 7px;
+    height: 7px;
     translate: -50% -50%;
     border-radius: 50%;
-    background: color-mix(in srgb, currentColor 30%, transparent);
-    box-shadow: inset 0 1px 1px rgb(0 0 0 / 0.25);
+    background: var(--eyelet);
+    box-shadow: var(--eyelet-shadow);
   }
   .site__nav .site__nav-item:hover,
   .site__nav .site__nav-group:is(:hover, :focus-within) > .site__nav-group-label {
@@ -1074,8 +1083,8 @@ body {
   height: 8px;
   translate: 50% 0;
   border-radius: 50%;
-  background: var(--bg);
-  box-shadow: inset 0 0 0 1.5px var(--border);
+  background: var(--eyelet);
+  box-shadow: var(--eyelet-shadow);
 }
 @keyframes a11y-panel-swing {
   from {
@@ -1837,13 +1846,13 @@ body {
   color: #fff;
   filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.7));
   pointer-events: none;
-  transform-origin: left bottom;
-  transition: scale 0.2s ease, color 0.2s ease;
+  transition: opacity 0.2s ease;
 }
+/* Hovered, the link's dashed line out to a globe (LinkArrow) says where it
+   goes instead. */
 .figure-with-caption__anchor:hover .figure-with-caption__link-icon,
 .figure-with-caption__anchor:focus-visible .figure-with-caption__link-icon {
-  scale: 1.5;
-  color: var(--accent);
+  opacity: 0;
 }
 .figure-with-caption__anchor:focus-visible {
   outline: 2px solid var(--accent);
@@ -2245,6 +2254,7 @@ html:has(dialog.lightbox[open]) {
 }
 
 .citation {
+  position: relative;
   text-decoration: underline;
   text-decoration-style: dotted;
 }
@@ -2496,7 +2506,8 @@ a.inline-icon--link:focus-visible {
   text-decoration-style: dotted;
   text-underline-offset: 0.2em;
 }
-.term-tip__bubble {
+.term-tip__bubble,
+.citation__sign {
   /* A paper tag hanging from the term on a short string (::before), with
      a punched hole (::after) where the string is tied on. It swings in
      from a tilt around that knot, overshoots and comes to rest hanging a
@@ -2530,7 +2541,8 @@ a.inline-icon--link:focus-visible {
     opacity 0.15s ease,
     rotate 0.6s cubic-bezier(0.3, 1.7, 0.5, 1);
 }
-.term-tip__bubble::before {
+.term-tip__bubble::before,
+.citation__sign::before {
   content: '';
   position: absolute;
   left: 50%;
@@ -2539,7 +2551,8 @@ a.inline-icon--link:focus-visible {
   border-left: 2px solid var(--pin-string);
   translate: -1px 0;
 }
-.term-tip__bubble::after {
+.term-tip__bubble::after,
+.citation__sign::after {
   content: '';
   position: absolute;
   left: 50%;
@@ -2548,20 +2561,137 @@ a.inline-icon--link:focus-visible {
   height: 7px;
   translate: -50% 0;
   border-radius: 50%;
-  background: var(--bg);
-  box-shadow: inset 0 0 0 1.5px var(--border);
+  background: var(--eyelet);
+  box-shadow: var(--eyelet-shadow);
 }
 .term-tip:hover > .term-tip__bubble,
 .term-tip:focus > .term-tip__bubble,
-.term-tip:focus-visible > .term-tip__bubble {
+.term-tip:focus-visible > .term-tip__bubble,
+.citation:hover > .citation__sign,
+.citation:focus-visible > .citation__sign {
   opacity: 1;
   visibility: visible;
   rotate: 1.5deg;
 }
 @media (prefers-reduced-motion: reduce) {
-  .term-tip__bubble {
+  .term-tip__bubble,
+  .citation__sign {
     transition: none;
   }
+}
+/* Both are shown in the top layer (useHangingPopover), out of reach of any
+   clipping around them, and hung from their anchor's bottom centre by hand.
+   Undoes the popover's defaults: centred in the viewport, its own scroll
+   box (which would cut off the string above it). */
+.term-tip__bubble[popover],
+.citation__sign[popover] {
+  position: fixed;
+  inset: auto;
+  left: var(--anchor-x, 0);
+  top: calc(var(--anchor-y, 0) + 1.15rem);
+  margin: 0;
+  overflow: visible;
+}
+/* Opening takes them from display: none, so their swing in starts from
+   here. */
+@starting-style {
+  .term-tip:is(:hover, :focus, :focus-visible) > .term-tip__bubble:popover-open,
+  .citation:is(:hover, :focus-visible) > .citation__sign:popover-open {
+    opacity: 0;
+    rotate: -6deg;
+  }
+}
+/* A citation hangs the same tag, with the full citation on it and, under
+   a rule, a note pointing down to its entry in the page's References. */
+.citation__sign {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: min(22rem, 80vw);
+  max-width: none;
+  padding: 1.15rem 0.8rem 0.55rem;
+  border: none;
+  background: var(--mat);
+  /* Long URLs break anywhere rather than spilling off the card. */
+  overflow-wrap: anywhere;
+}
+/* Followed, the sign tears off its string and falls away (CitationLink),
+   as back to top's tag does: a copy at a fixed spot on the screen does the
+   falling, and the one on the link stays hidden until the pointer leaves. */
+.citation[data-ripped] > .citation__sign {
+  visibility: hidden;
+  transition: none;
+}
+.citation__sign-fall {
+  position: fixed;
+  z-index: 60;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.18)) drop-shadow(0 6px 10px rgb(0 0 0 / 0.18));
+}
+.citation__sign--falling {
+  left: 0;
+  top: 0;
+  opacity: 1;
+  visibility: visible;
+  transform-origin: 50% 0.67rem;
+  clip-path: polygon(0 0, 45% 0, 48% 0, 50% 0, 52% 0, 55% 0, 100% 0, 100% 100%, 0 100%);
+  animation: citation-sign-rip 1s forwards;
+}
+/* The string stays behind on the link. */
+.citation__sign--falling::before {
+  display: none;
+}
+@keyframes citation-sign-rip {
+  0% {
+    rotate: 1.5deg;
+    animation-timing-function: ease-out;
+  }
+  18% {
+    translate: -50% 0.25rem;
+    rotate: -3deg;
+    animation-timing-function: ease-in-out;
+  }
+  30% {
+    translate: -50% 0.45rem;
+    rotate: 4.5deg;
+    clip-path: polygon(
+      0 0,
+      45% 0,
+      48% 0.4rem,
+      50% 0.75rem,
+      52% 0.3rem,
+      55% 0,
+      100% 0,
+      100% 100%,
+      0 100%
+    );
+    animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6);
+  }
+  100% {
+    translate: calc(-50% + 1.5rem) 100vh;
+    rotate: 160deg;
+    clip-path: polygon(
+      0 0,
+      45% 0,
+      48% 0.4rem,
+      50% 0.75rem,
+      52% 0.3rem,
+      55% 0,
+      100% 0,
+      100% 100%,
+      0 100%
+    );
+  }
+}
+.citation__sign-go {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding-top: 0.4rem;
+  border-top: 1px dashed var(--border);
+  color: var(--heading);
+  font-family: var(--font-heading);
+  font-weight: 500;
 }
 
 /* A sticky note pinned to the page: Blush paper (Crimson/Rose/Blush is
@@ -3717,6 +3847,24 @@ a.inline-icon--link:focus-visible {
 .references li {
   margin: 0.5rem 0;
 }
+/* The reference a citation jumps to is gone over with a pink highlighter,
+   stroke by stroke along each of its lines, uneven at the ends like the
+   search's matches. */
+.references__text {
+  padding-inline: 0.1em;
+  border-radius: 0.3em 0.15em 0.35em 0.1em;
+  background: linear-gradient(
+      color-mix(in srgb, var(--color-rose) 38%, transparent),
+      color-mix(in srgb, var(--color-rose) 38%, transparent)
+    )
+    no-repeat 0 0 / 0% 100%;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.references li:target .references__text {
+  background-size: 100% 100%;
+  transition: background-size 0.6s ease-out 0.3s;
+}
 
 .next-page {
   display: flex;
@@ -4135,16 +4283,42 @@ article .layout__column p {
   height: 3.1rem;
   padding-top: 0.85rem;
   background: var(--mat);
-  /* A luggage tag: the top corners cut off, and a hole punched through
-     (masked out, so the string really shows through it). */
-  clip-path: polygon(18% 0, 82% 0, 100% 0.7rem, 100% 100%, 0 100%, 0 0.7rem);
-  mask: radial-gradient(circle 3.5px at 50% 0.55rem, transparent 97%, #000 100%);
+  /* A luggage tag: the top corners cut off. */
+  /* The points along the top edge are the tear back-to-top rips through
+     to the hole (see float-tag-rip), lying flat until then. */
+  clip-path: polygon(
+    18% 0,
+    42% 0,
+    47% 0,
+    50% 0,
+    53% 0,
+    58% 0,
+    82% 0,
+    100% 0.7rem,
+    100% 100%,
+    0 100%,
+    0 0.7rem
+  );
   rotate: var(--tilt);
   transform-origin: 50% 0.55rem;
   transition:
     rotate 0.55s cubic-bezier(0.3, 1.7, 0.5, 1),
     background-color 0.15s ease;
   animation: float-tag-drop 0.8s cubic-bezier(0.3, 1.7, 0.5, 1);
+}
+/* The tag's hole: a metal eyelet over the string's end, as on the nav's
+   tags. */
+.float-tag::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0.55rem;
+  width: 7px;
+  height: 7px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--eyelet);
+  box-shadow: var(--eyelet-shadow);
 }
 .float-tag__label {
   font-family: var(--font-heading);
@@ -4161,6 +4335,79 @@ article .layout__column p {
 @keyframes float-tag-drop {
   from {
     rotate: 30deg;
+  }
+}
+/* Back to top tears its tag off the pin: a tug that rips the paper from
+   the top edge down into the hole, then it drops away off the screen,
+   tumbling, while the freed string sways. */
+.back-to-top[data-ripped] {
+  pointer-events: none;
+}
+.back-to-top[data-ripped] .float-tag {
+  animation: float-tag-rip 1s forwards;
+}
+.back-to-top[data-ripped]::after {
+  transform-origin: top;
+  animation: float-string-sway 1s ease-out;
+}
+@keyframes float-tag-rip {
+  0% {
+    rotate: var(--tilt);
+    animation-timing-function: ease-out;
+  }
+  18% {
+    translate: 0 0.25rem;
+    rotate: calc(var(--tilt) * -2);
+    animation-timing-function: ease-in-out;
+  }
+  30% {
+    translate: 0 0.45rem;
+    rotate: calc(var(--tilt) * 3);
+    clip-path: polygon(
+      18% 0,
+      42% 0,
+      47% 0.35rem,
+      50% 0.7rem,
+      53% 0.25rem,
+      58% 0,
+      82% 0,
+      100% 0.7rem,
+      100% 100%,
+      0 100%,
+      0 0.7rem
+    );
+    animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6);
+  }
+  100% {
+    translate: 1.5rem 100vh;
+    rotate: 160deg;
+    clip-path: polygon(
+      18% 0,
+      42% 0,
+      47% 0.35rem,
+      50% 0.7rem,
+      53% 0.25rem,
+      58% 0,
+      82% 0,
+      100% 0.7rem,
+      100% 100%,
+      0 100%,
+      0 0.7rem
+    );
+  }
+}
+@keyframes float-string-sway {
+  30% {
+    rotate: 0deg;
+  }
+  50% {
+    rotate: -14deg;
+  }
+  70% {
+    rotate: 8deg;
+  }
+  85% {
+    rotate: -3deg;
   }
 }
 @media (max-width: 75rem) {
