@@ -174,11 +174,12 @@ export function ScrollString() {
     // has to land short of it (scroll-padding-top) when following a link.
     let offsets: number[] = [];
     let scrollPad = 0;
-    // The stylesheet's `bottom` (update() overrides it inline), from the
-    // registered --string-bottom, which computes to px.
-    const readBottomGap = () =>
-      parseFloat(getComputedStyle(track).getPropertyValue('--string-bottom')) || 0;
-    let bottomGap = readBottomGap();
+    // The room left above and below the string, the same at both ends so
+    // it sits centred in the viewport below the header: the registered
+    // --string-gap, which computes to px.
+    const readEndGap = () =>
+      parseFloat(getComputedStyle(track).getPropertyValue('--string-gap')) || 0;
+    let endGap = readEndGap();
 
     // The outline links TableOfContents renders: depth is the number of
     // lists they sit inside, a depth 2 link belongs to the last depth 1.
@@ -205,7 +206,7 @@ export function ScrollString() {
       }
     }
     function measure() {
-      bottomGap = readBottomGap();
+      endGap = readEndGap();
       scrollPad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
       // Where following the link lands: some targets (the pillar sections)
       // add their own scroll-margin-top on top of the page's padding.
@@ -282,11 +283,10 @@ export function ScrollString() {
     let trackHeight = track.clientHeight;
     function update() {
       frame = 0;
-      // The string starts below the header and, while the page's title banner
-      // is on screen, below that too (it scrolls, so this is re-read
-      // every frame). Its bottom edge is --string-bottom in
-      // globals.css above the viewport's (read from there, it's in rem, and
-      // clears the back-to-top button).
+      // The string starts --string-gap (in globals.css, read from there,
+      // it's in rem) below the header and, while the page's title banner is
+      // on screen, below that too (it scrolls, so this is re-read every
+      // frame). It ends the same gap above the viewport's bottom edge.
       const banner = document.querySelector<HTMLElement>('.page-title');
       if (!introDone) {
         track!.dataset.hidden = '';
@@ -295,14 +295,14 @@ export function ScrollString() {
       const top = Math.min(
         window.innerHeight * 0.7,
         Math.max(
-          header ? header.getBoundingClientRect().bottom : 0,
+          (header ? header.getBoundingClientRect().bottom : 0) + endGap,
           banner ? banner.getBoundingClientRect().bottom + BANNER_GAP : 0,
         ),
       );
       // And it ends above the footer once that scrolls into view, so the
       // string shortens instead of running over it.
       const bottom = Math.min(
-        window.innerHeight - bottomGap,
+        window.innerHeight - endGap,
         footer ? footer.getBoundingClientRect().top - FOOTER_GAP : Infinity,
       );
       track!.style.top = `${top.toFixed(1)}px`;

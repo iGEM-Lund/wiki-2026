@@ -4378,7 +4378,7 @@ article .layout__column p {
    touch drag is what people use. The native scrollbar is hidden only once
    the component has mounted and flagged <html>. */
 /* Registered so it computes to px for the script that reads it. */
-@property --string-bottom {
+@property --string-gap {
   syntax: '<length>';
   inherits: false;
   initial-value: 0px;
@@ -4392,9 +4392,10 @@ article .layout__column p {
   position: fixed;
   /* `top` and `bottom` are set from script (below the header and the title
      banner, above the footer once it scrolls in); these are only the
-     first-paint values. --string-bottom is read by script: it stops a rem
-     above the back-to-top tag (1.5rem + 4.4rem tall). */
-  top: var(--header-height, 6rem);
+     first-paint values. --string-gap is read by script: the room left
+     above (below the header) and below the string, the same at both ends
+     so it sits centred in the space under the header. */
+  top: calc(var(--header-height, 6rem) + var(--string-gap));
   /* 3.5rem left of the widest layouts (32.5rem either side of the
      column's centre, or the content pane's own edge when that is
      narrower). --pane-left keeps this at least 17rem from the screen edge,
@@ -4402,8 +4403,8 @@ article .layout__column p {
   left: calc(
     max(var(--pane-left) + 2rem, (100vw + var(--pane-left)) / 2 - 32.5rem) - 3.5rem - 28px
   );
-  --string-bottom: 7rem;
-  bottom: var(--string-bottom);
+  --string-gap: 3rem;
+  bottom: var(--string-gap);
   /* Under the figure carousels (39), which pass over it, and the sticky
      title banner (40). */
   z-index: 38;
