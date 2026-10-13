@@ -2,6 +2,7 @@ import { evaluate } from '@mdx-js/mdx';
 import * as runtime from 'react/jsx-runtime';
 import type { ComponentType } from 'react';
 import { embeddableComponents } from './embeddable-components';
+import { ContentLink } from './ContentLink';
 import { Citation } from './Citation';
 
 // Compiles a short piece of raw MDX source text (a WorldMap pin body, a
@@ -26,6 +27,7 @@ export async function compileMdxSnippet(
     });
     const components = {
       ...embeddableComponents,
+      a: ContentLink,
       Citation: (props: { reference?: string | null }) => Citation({ ...props, lookup: referenceLookup }),
     };
     return () => MDXContent({ components });

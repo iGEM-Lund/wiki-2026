@@ -6,6 +6,7 @@ import { createElement, type ComponentPropsWithoutRef, type ComponentType } from
 import { mdxComponents } from '@/components/content';
 import { Citation } from '@/components/content/Citation';
 import { Table } from '@/components/content/Table';
+import { ContentLink } from '@/components/content/ContentLink';
 import { WorldMap } from '@/components/content/WorldMap';
 import { SliceWheel } from '@/components/content/SliceWheel';
 import { PillarsSectionHeading, pillarTarget } from '@/components/content/Pillars';
@@ -62,6 +63,7 @@ export async function renderMdx(
   const components = {
     ...mdxComponents,
     table: Table,
+    a: ContentLink,
     h2: Heading2,
     Citation: (props: { reference?: string | null }) => Citation({ ...props, lookup: referenceLookup }),
     // Pin popup bodies are raw MDX that may embed <Citation>; forward the
