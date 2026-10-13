@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
+import { captionPlainText, renderCaption } from '@/lib/caption-text';
 
 type LightboxProps = {
   src: string;
@@ -31,7 +32,7 @@ export function Lightbox({ src, alt = '', caption, onClose }: LightboxProps) {
     <dialog
       ref={ref}
       className="lightbox"
-      aria-label={alt || caption || 'Figure'}
+      aria-label={alt || (caption && captionPlainText(caption)) || 'Figure'}
       onClose={onClose}
       // A click anywhere closes it (the image fills most of the screen, so
       // "outside the image" would be a thin margin), except on the caption,
@@ -45,7 +46,7 @@ export function Lightbox({ src, alt = '', caption, onClose }: LightboxProps) {
       </button>
       <figure className="lightbox__figure">
         <img src={src} alt={alt} />
-        {caption ? <figcaption>{caption}</figcaption> : null}
+        {caption ? <figcaption>{renderCaption(caption)}</figcaption> : null}
       </figure>
     </dialog>
   );

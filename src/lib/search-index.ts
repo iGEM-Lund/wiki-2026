@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm';
 import type { Root } from 'hast';
 import { reader } from '@/lib/keystatic/reader';
 import { NON_OUTLINE_COMPONENTS, rehypeClampHeadings } from '@/lib/headings';
+import { captionPlainText } from '@/lib/caption-text';
 
 // One stretch of a page between two outline headings. `id` is the heading's
 // anchor (null for the text before a page's first heading), so a result can
@@ -37,7 +38,7 @@ type AnyNode = {
 function propText(node: AnyNode): string[] {
   return (node.attributes ?? []).flatMap((attr) =>
     attr.type === 'mdxJsxAttribute' && attr.name && TEXT_PROPS.has(attr.name) && typeof attr.value === 'string'
-      ? [attr.value]
+      ? [attr.name === 'caption' ? captionPlainText(attr.value) : attr.value]
       : [],
   );
 }

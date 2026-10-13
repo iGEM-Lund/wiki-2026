@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { renderCaption } from '@/lib/caption-text';
 
 // A Markdown table (rendered by Table.tsx) wrapped with a caption. Tables
 // take their caption above, figures below, the usual convention for each.
@@ -8,7 +9,7 @@ import type { ReactNode } from 'react';
 export function TableWithCaption({ caption, children }: { caption?: string; children?: ReactNode }) {
   return (
     <figure className="table-with-caption">
-      {caption ? <figcaption>{caption}</figcaption> : null}
+      {caption ? <figcaption>{renderCaption(caption)}</figcaption> : null}
       {children}
     </figure>
   );

@@ -1,3 +1,5 @@
+import { renderCaption } from '@/lib/caption-text';
+
 type PdfEmbedProps = {
   src?: string;
   title?: string;
@@ -21,7 +23,7 @@ export function PdfEmbed({ src, title = 'PDF document', caption }: PdfEmbedProps
           </a>
         </>
       ) : null}
-      {caption ? <figcaption>{caption}</figcaption> : null}
+      {caption ? <figcaption>{renderCaption(caption)}</figcaption> : null}
     </figure>
   );
 }

@@ -1,4 +1,5 @@
 import { renderSmilesToStructureSvg } from '@/lib/chemistry';
+import { renderCaption } from '@/lib/caption-text';
 
 type ChemStructureProps = {
   smiles?: string;
@@ -15,7 +16,7 @@ export function ChemStructure({ smiles = '', caption }: ChemStructureProps) {
   return (
     <figure className="chem-structure">
       <div className="chem-structure__diagram" dangerouslySetInnerHTML={{ __html: html }} />
-      {caption ? <figcaption>{caption}</figcaption> : null}
+      {caption ? <figcaption>{renderCaption(caption)}</figcaption> : null}
     </figure>
   );
 }

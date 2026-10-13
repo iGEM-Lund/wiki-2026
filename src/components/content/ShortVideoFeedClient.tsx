@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react';
 import { Eye, Heart, Play, Volume2, VolumeX } from 'lucide-react';
+import { renderCaption } from '@/lib/caption-text';
 import { videoUniverseApiUrl, type ResolvedVideo } from '@/lib/video-universe';
 
 export type ShortVideo = ResolvedVideo & { title?: string; caption?: string };
@@ -464,7 +465,7 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
               {video.title || video.caption || video.href ? (
                 <div className="short-feed__overlay">
                   {video.title ? <p className="short-feed__title">{video.title}</p> : null}
-                  {video.caption ? <p className="short-feed__caption">{video.caption}</p> : null}
+                  {video.caption ? <p className="short-feed__caption">{renderCaption(video.caption)}</p> : null}
                   {video.href ? (
                     <a
                       className="short-feed__source"

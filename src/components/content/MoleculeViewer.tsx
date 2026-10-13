@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { captionPlainText, renderCaption } from '@/lib/caption-text';
 
 type MoleculeViewerFormat = 'pdb' | 'cif' | 'sdf' | 'mol2' | 'xyz' | 'glb';
 type MoleculeViewerStyle = 'cartoon' | 'stick' | 'sphere' | 'line';
@@ -242,7 +243,7 @@ export function MoleculeViewer({
                 : 'molecule-viewer__frame'
             }
             {...(popped
-              ? { role: 'dialog', 'aria-modal': true, 'aria-label': caption || '3D molecule viewer' }
+              ? { role: 'dialog', 'aria-modal': true, 'aria-label': (caption && captionPlainText(caption)) || '3D molecule viewer' }
               : {})}
           >
             <div className="molecule-viewer__canvas" ref={containerRef} />
@@ -288,7 +289,7 @@ export function MoleculeViewer({
           </div>
         </div>
       )}
-      {caption ? <figcaption>{caption}</figcaption> : null}
+      {caption ? <figcaption>{renderCaption(caption)}</figcaption> : null}
     </figure>
   );
 }

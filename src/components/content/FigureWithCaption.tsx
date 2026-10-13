@@ -3,6 +3,7 @@ import { ExternalLink } from 'lucide-react';
 import { ZoomableImage } from './ZoomableImage';
 import { SmallFigureWatcher } from './SmallFigureWatcher';
 import { tiltFor } from '@/lib/tilt';
+import { renderCaption } from '@/lib/caption-text';
 
 type FigureWithCaptionProps = {
   src?: string;
@@ -30,7 +31,7 @@ export function FigureWithCaption({ src, alt = '', caption, link, scale }: Figur
       {link ? <ExternalLink className="figure-with-caption__link-icon" aria-hidden size={18} /> : null}
     </div>
   ) : null;
-  const captionElement = caption ? <figcaption>{caption}</figcaption> : null;
+  const captionElement = caption ? <figcaption>{renderCaption(caption)}</figcaption> : null;
   return (
     // A polaroid taped to the page at a slight tilt (see .figure-with-caption
     // in globals.css), seeded by the image URL (or caption) so the angle is

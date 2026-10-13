@@ -4,6 +4,7 @@ import { helpCircleIcon } from '@keystar/ui/icon/icons/helpCircleIcon';
 import { ICON_NAMES } from '@/lib/icon-names';
 import { renderLatexToHtml } from '@/lib/katex';
 import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/chemistry';
+import { renderCaption } from '@/lib/caption-text';
 
 // Editor-side registration only: these govern what writers can insert in the
 // MDX field's toolbar and how each component previews inside the Keystatic
@@ -11,6 +12,9 @@ import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/ch
 // src/components/content/index.ts. Both maps must share the same key names
 // (FigureWithCaption, Citation) so the MDX tags written here resolve
 // correctly when rendered on the live site.
+// Captions are plain text with one bit of Markdown (src/lib/caption-text.tsx).
+const CAPTION_HINT = 'Put *asterisks* around a word to set it in italics, e.g. *E. coli*.';
+
 const ALT_TEXT_DESCRIPTION =
   'Always fill this in. What the image shows, for readers who cannot see it (screen readers read this aloud). One or two plain sentences: say what matters about it, not "image of". Do not just repeat the caption.';
 
@@ -23,7 +27,7 @@ export const contentComponents = {
         description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
       }),
       alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION }),
-      caption: fields.text({ label: 'Caption', multiline: true }),
+      caption: fields.text({ label: 'Caption', description: CAPTION_HINT, multiline: true }),
       link: fields.url({
         label: 'Link (optional)',
         description: 'Makes the whole figure a link that opens in a new tab, hinted by a small icon in the lower left corner. The image no longer enlarges on click.',
@@ -74,11 +78,11 @@ export const contentComponents = {
     label: 'Table with caption',
     description: 'Insert this, then put a table inside it. The caption is shown above the table.',
     schema: {
-      caption: fields.text({ label: 'Caption', multiline: true }),
+      caption: fields.text({ label: 'Caption', description: CAPTION_HINT, multiline: true }),
     },
     ContentView: ({ children, value }) => (
       <div>
-        {value.caption ? <div style={{ fontSize: '0.85em', opacity: 0.7 }}>{value.caption}</div> : null}
+        {value.caption ? <div style={{ fontSize: '0.85em', opacity: 0.7 }}>{renderCaption(value.caption)}</div> : null}
         {children}
       </div>
     ),
@@ -96,7 +100,7 @@ export const contentComponents = {
         description: 'The embed\'s accessible label, and the text used in the "open in new tab" fallback link.',
         validation: { isRequired: true },
       }),
-      caption: fields.text({ label: 'Caption (optional)', multiline: true }),
+      caption: fields.text({ label: 'Caption (optional)', description: CAPTION_HINT, multiline: true }),
     },
     ContentView: (props) => <div>[PDF: {props.value.title ?? ''}]</div>,
   }),
@@ -117,7 +121,7 @@ export const contentComponents = {
               'Upload the video to the iGEM Video Universe (video.igem.org) and paste its link here, e.g. https://video.igem.org/w/abc123. Portrait (9:16) videos fit best. A direct .mp4 link also works.',
           }),
           title: fields.text({ label: 'Title (optional)' }),
-          caption: fields.text({ label: 'Caption (optional)', multiline: true }),
+          caption: fields.text({ label: 'Caption (optional)', description: CAPTION_HINT, multiline: true }),
         }),
         { label: 'Videos', itemLabel: (props) => props.fields.title.value || props.fields.url.value || 'Video' },
       ),
@@ -344,7 +348,7 @@ export const contentComponents = {
         description:
           'A SMILES string, e.g. testosterone: C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@@H]2O)CCC4=CC(=O)CC[C@]34C, rendered as a 2D structure.',
       }),
-      caption: fields.text({ label: 'Caption (optional)' }),
+      caption: fields.text({ label: 'Caption (optional)', description: CAPTION_HINT }),
     },
     ContentView: (props) => (
       <div dangerouslySetInnerHTML={{ __html: renderSmilesToStructureSvg(props.value.smiles ?? '') }} />
@@ -359,7 +363,7 @@ export const contentComponents = {
         description:
           'Reactants and products separated by ">>", multiple components on a side separated by ".". e.g. ethanol + acetic acid -> ethyl acetate + water: CCO.CC(=O)O>>CCOC(=O)C.O',
       }),
-      caption: fields.text({ label: 'Caption (optional)' }),
+      caption: fields.text({ label: 'Caption (optional)', description: CAPTION_HINT }),
     },
     ContentView: (props) => (
       <div dangerouslySetInnerHTML={{ __html: renderReactionSmilesToHtml(props.value.smiles ?? '') }} />
@@ -406,7 +410,7 @@ export const contentComponents = {
         description:
           'Shown when hovering any region colored differently from the rest of the model (e.g. a mutated residue). When set, the text labels baked into the GLB are hidden, so this replaces them.',
       }),
-      caption: fields.text({ label: 'Caption (optional)' }),
+      caption: fields.text({ label: 'Caption (optional)', description: CAPTION_HINT }),
     },
     ContentView: (props) => (
       <div>

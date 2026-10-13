@@ -1,4 +1,5 @@
 import { renderReactionSmilesToHtml } from '@/lib/chemistry';
+import { renderCaption } from '@/lib/caption-text';
 
 type ChemReactionProps = {
   smiles?: string;
@@ -13,7 +14,7 @@ export function ChemReaction({ smiles = '', caption }: ChemReactionProps) {
   return (
     <figure className="chem-reaction">
       <div dangerouslySetInnerHTML={{ __html: html }} />
-      {caption ? <figcaption>{caption}</figcaption> : null}
+      {caption ? <figcaption>{renderCaption(caption)}</figcaption> : null}
     </figure>
   );
 }
