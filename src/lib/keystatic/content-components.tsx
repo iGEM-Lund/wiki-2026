@@ -662,7 +662,14 @@ export const contentComponents = {
   Layout3: repeating({
     label: 'Layout (3 columns)',
     description: 'Three side-by-side columns of equal width. Stacks to one column on mobile.',
-    schema: {},
+    schema: {
+      centerFilled: fields.checkbox({
+        label: 'Centre filled columns',
+        description:
+          'Leaves out empty columns and centres the rest. Each column keeps its one-third width, so two filled columns sit side by side in the middle.',
+        defaultValue: false,
+      }),
+    },
     children: 'LayoutColumn',
     validation: { children: { min: 3, max: 3 } },
     ContentView: ({ children }) => (

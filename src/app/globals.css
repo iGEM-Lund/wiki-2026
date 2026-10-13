@@ -2205,6 +2205,17 @@ html:has(dialog.lightbox[open]) {
 .layout--3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+/* Empty columns are left out and the filled ones centred, each still a
+   third of the row (minus its share of the two gaps). */
+.layout--center-filled {
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 3rem) / 3);
+  justify-content: center;
+}
+.layout--center-filled > .layout__column:empty {
+  display: none;
+}
 .layout-sidebar {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
@@ -2221,19 +2232,15 @@ html:has(dialog.lightbox[open]) {
 .layout__column > :last-child {
   margin-bottom: 0;
 }
-/* Three columns are too tight inside the 50rem reading column, so from
-   75rem up (where the outline floats in the gutter and there is room) they
-   reach 7rem past it on each side, to 64rem. Prose keeps its measure. */
-@media (min-width: 75rem) {
-  .layout--3 {
-    margin-inline: -7rem;
-  }
-}
 @media (max-width: 48rem) {
   .layout--2,
   .layout--3,
   .layout-sidebar {
     grid-template-columns: 1fr;
+  }
+  .layout--center-filled {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
   }
 }
 
