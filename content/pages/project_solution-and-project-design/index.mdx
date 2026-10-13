@@ -22,6 +22,24 @@ Elisabet Stener-Victorin further encouraged us to distinguish a useful proof-of-
 \
 For AnTigone, this reaction offers a **defined starting point for engineering**. We can investigate enzyme production, substrate conversion and the biological activity of the resulting mixture as separate experimental questions.&#x20;
 
+### Substrate selectivity: a computational rationale&#x20;
+
+A 5β-reductase acting on gut encounters a chemically diverse steroid pool. Androgens (mainly testosterone) and progestogens share the same core scaffold, and an enzyme with broad activity could act on both. **Understanding what a candidate enzyme is likely to act on and how that preference might be modified was therefore a necessary step before committing to experimental characterisation.**
+
+The structural distinction between these two steroid classes lies at the **C17 position**: testosterone carries a **17β-hydroxyl group**, while progesterone carries an **acetyl group**. These substituents differ in size and polarity yet occupy the same region of the active site. This provides a defined structural target for engineering.
+
+**Simon Ekström** (link?) and **Eduardo Amo González** (link??) encouraged us to approach selectivity through **rational mutagenesis**: using the three-dimensional structure of each candidate enzyme to identify active-site residues near C17, selecting substitutions with a chemical basis for altering substrate preference, and screening variants for structural stability before assessing their predicted binding profiles.
+
+This analysis allowed us to generate specific sequence variants with a mechanistic rationale, a structured starting point for experimental characterisation rather than an exhaustive screen. The full pipeline is documented on our Modelling page (Link to page).
+
+### **A predictive model for enzyme activity**
+
+***Docking tells us how well a variant might bind a steroid. It does not tell us how that variant would behave in bacterial culture.***
+
+Steroid conversion in bacterial culture depends on more than binding affinity: on how many cells are present, how much enzyme cells produce, and how the enzyme handles testosterone and progesterone when both compete for it. To connect these steps, we built a **mathematical model** with three linked layers: **bacterial growth, enzyme expression and enzyme activity**. Our docking results feed into the activity layer, linking the structural analysis to the model.
+
+The model ranks our variants by a testable readout, the time needed to consume half of each steroid, and identifies the parameters the prediction depends on most. It serves as a guide and predictive layer to support our experimental work. Its output is a prediction to be tested, not a forecast of absolute rates. The equations, parameters and results are documented on our Modelling page (link to page).&#x20;
+
 ### **Connecting activity to environmental conditions**&#x20;
 
 The second component of AnTigone is hypoxia-responsive expression. Our intended design uses low oxygen availability as an environmental input to regulate production of the steroid-transforming enzyme. Low oxygen is only one feature of the intended intestinal environment: a response to hypoxia would demonstrate environmental regulation, but would not by itself establish exclusive expression in the gut, relevant clinical situation or sufficient biological containment.
