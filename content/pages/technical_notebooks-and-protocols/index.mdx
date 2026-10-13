@@ -30,7 +30,7 @@ Summer Lab was the main time we spent in the lab. We had a summer break from oth
     Plasmid Miniprep of *E. coli* TG1 cells containing pET-11a. Jenna Bioscience Plasmid Miniprep Kit instructions state how the cells could be resuspended in Lysis buffer by pipetting or vortexing, and we decided to test if there was a difference. By looking at the results in Table 1, non-vortexed samples had higher DNA concentration, and resuspension by pipetting was done in future experiments. Samples were pooled, allowing for more convenient downstream applications. A260/280 were slightly higher than expected, but we still decided to use these samples for restriction digestion.
 
     <TableWithCaption
-      caption="Table 1: Concentration and purity of pET-11a plasmid DNA extracted from *E. coli* TG1, using the Jenna Bioscience plasmid miniprep kit, measured by NanoDrop.
+      caption="Table 1. Concentration and purity of pET-11a plasmid DNA extracted from *E. coli* TG1, using the Jenna Bioscience plasmid miniprep kit, measured by NanoDrop.
 "
     >
       | Sample                                 | **Concentration (ng/µL)** | **Abs 260/280** | Abs 260/230 |
@@ -49,7 +49,10 @@ Summer Lab was the main time we spent in the lab. We had a summer break from oth
 
     Gel extracted plasmid concentrations were too low to be measured using NanoDrop, thus microcuvettes were used. Since the sample volume was 30 μL, they were diluted to 70 μL using MQ water. Measurement results are shown in Table 2. Their concentration was too low to be used for transformations, so restriction digestion will be repeated next week, with prolonged incubation time.
 
-    <TableWithCaption caption="Table 2: Concentrations of pET-11a digested with NdeI and BamHI, measured using microcuvettes after gel extraction.">
+    <TableWithCaption
+      caption="Table 2. Concentrations of pET-11a digested with NdeI and BamHI, measured using microcuvettes after gel extraction. *main*
+"
+    >
       | **Sample**                | **Concentration (ng/µL)** | **Abs 260/280** | **Abs 260/230** |
       | ------------------------- | ------------------------- | --------------- | --------------- |
       | 1                         | 0.30                      | 3.0             | 0.035           |
@@ -80,7 +83,7 @@ Summer Lab was the main time we spent in the lab. We had a summer break from oth
 
     E.Z.N.A. plasmid miniprep kit was used as an alternative to Jena Bioscience kit, resulting in less concentration with higher purity (Table 3). After consulting with our PI Johan, we concluded that samples prepared with Jena Bioscience Kit were contaminated with RNA, due to absorbance ratio 260/280 being \~2.0, and the concentration of nucleic acids being a lot higher than our PI usually gets. For future experiments, E.Z.N.A. plasmid miniprep kit was used.
 
-    <TableWithCaption caption="Table 3: Concentration and purity of pET-11a plasmid DNA extracted from E. coli TG1 using the E.Z.N.A. plasmid miniprep kit, measured by NanoDrop.">
+    <TableWithCaption caption="Table 3. Concentration and purity of pET-11a plasmid DNA extracted from E. coli TG1 using the E.Z.N.A. plasmid miniprep kit, measured by NanoDrop.">
       | **Sample**               | **Concentration (ng/µL)** | **Abs 260/280** | **Abs  260/230** |
       | ------------------------ | ------------------------- | --------------- | ---------------- |
       | S1                       | 73.1                      | 1.838           | 2.410            |
@@ -91,25 +94,27 @@ Summer Lab was the main time we spent in the lab. We had a summer break from oth
       | S6 (column equilibrated) | 112                       | 1.852           | 2.306            |
     </TableWithCaption>
 
-    Restriction digestion with BamHI and NdeI of plasmid extracted with E.Z.N.A. plasmid miniprep kit showed noticeably stronger bands on agarose gel electrophoresis. This supports our assumption that earlier plasmid samples were significantly RNA contaminated. When we thought we were quantifying plasmid concentration, it was mostly RNA, leaving only a small fraction of DNA for digestion. This would explain both the faint bands in earlier digestions and the low plasmid yields after gel extraction.
+    Restriction digestion with BamHI and NdeI of plasmid extracted with E.Z.N.A. plasmid miniprep kit showed noticeably stronger bands on agarose gel electrophoresis (Figure 2). This supports our assumption that earlier plasmid samples were significantly RNA contaminated. When we thought we were quantifying plasmid concentration, it was mostly RNA, leaving only a small fraction of DNA for digestion. This would explain both the faint bands in earlier digestions and the low plasmid yields after gel extraction.
 
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/06-26-gel-named.avif" caption="Figure: Restriction digestion of pET-11a with NdeI and BamHI, analysed by agarose gel electrophoresis. Lanes: (1) NdeI control, (2) BamHI control, (3) undigested pET-11a, (4,11) Ampliqon High Range DNA Ladder, (5-10, 12-15) double digested pET-11a." />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/notebooks-and-protocols/06-26-gel-named.avif" caption="Figure 2: Restriction digestion of pET-11a with NdeI and BamHI, analysed by agarose gel electrophoresis. Lanes: (1) NdeI control, (2) BamHI control, (3) undigested pET-11a, (4,11) Ampliqon High Range DNA Ladder, (5-10, 12-15) double digested pET-11a." />
 
-    Quantification of digested plasmid after gel extraction showed better results than previously. We continued using E.Z.N.A. gel extraction kit, as it showed better results.
+    Quantification of digested plasmid after gel extraction (Table 4) showed better results than previously. We continued using E.Z.N.A. plasmid miniprep kit, as it showed better results.
 
-    | **Sample**                               | **Concentration (ng/µL)** | **Abs 260/280** | **Abs 260/230** |
-    | ---------------------------------------- | ------------------------- | --------------- | --------------- |
-    | S1 (positive control-undigested plasmid) | 8.449                     | 1.889           | 0.195           |
-    | S2 clear FD buffer, no phosphatase       | 19.9                      | 1.905           | 0.506           |
-    | S3 clear FD buffer, no phosphatase       | 13.9                      | 2.000           | 0.538           |
-    | S4 clear FD buffer, no phosphatase       | 15.9                      | 2.133           | 0.232           |
-    | S5 clear FD buffer, with phosphatase     | 16.4                      | 2.082           | 0.083           |
-    | S6 clear FD buffer, with phosphatase     | 11.9                      | 2.000           | 0.304           |
-    | S7 clear FD buffer, with phosphatase     | 19.4                      | 2.053           | 0.402           |
-    | S8 green FD buffer, with phosphatase     | 19.4                      | 2.053           | 0.722           |
-    | S9 green FD buffer, with phosphatase     | 13.9                      | 2.000           | 0.483           |
-    | S10 green FD buffer, no phosphatase      | 15.9                      | 1.882           | 0.542           |
-    | S11 green FD buffer, no phosphatase      | 17.4                      | 2.059           | 0.347           |
+    <TableWithCaption caption="Table 4. Con">
+      | **Sample**                               | **Concentration (ng/µL)** | **Abs 260/280** | **Abs 260/230** |
+      | ---------------------------------------- | ------------------------- | --------------- | --------------- |
+      | S1 (positive control-undigested plasmid) | 8.449                     | 1.889           | 0.195           |
+      | S2 clear FD buffer, no phosphatase       | 19.9                      | 1.905           | 0.506           |
+      | S3 clear FD buffer, no phosphatase       | 13.9                      | 2.000           | 0.538           |
+      | S4 clear FD buffer, no phosphatase       | 15.9                      | 2.133           | 0.232           |
+      | S5 clear FD buffer, with phosphatase     | 16.4                      | 2.082           | 0.083           |
+      | S6 clear FD buffer, with phosphatase     | 11.9                      | 2.000           | 0.304           |
+      | S7 clear FD buffer, with phosphatase     | 19.4                      | 2.053           | 0.402           |
+      | S8 green FD buffer, with phosphatase     | 19.4                      | 2.053           | 0.722           |
+      | S9 green FD buffer, with phosphatase     | 13.9                      | 2.000           | 0.483           |
+      | S10 green FD buffer, no phosphatase      | 15.9                      | 1.882           | 0.542           |
+      | S11 green FD buffer, no phosphatase      | 17.4                      | 2.059           | 0.347           |
+    </TableWithCaption>
 
     A test transformation of competent *E. coli* TG1 with empty pET-11a was done, which resulted in many colonies, indicating that our competent cells are viable for transformations.
 
