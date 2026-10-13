@@ -4609,9 +4609,13 @@ article .layout__column p {
 .pillars {
   margin: 3.5rem 0;
 }
+/* One row: every pillar gets an equal share of the width, up to 14rem,
+   down to phone widths (see the phone sizes further down; only really
+   narrow screens split it into two rows). */
 .pillars__list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 14rem));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 14rem);
   justify-content: center;
   gap: 1rem;
   margin: 0;
@@ -4706,6 +4710,8 @@ article .layout__column p {
   background: var(--pillar-fill);
   text-align: center;
   overflow-wrap: anywhere;
+  /* The title sizes itself to this box's width (cqi, below). */
+  container-type: inline-size;
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 /* Flutes: a dashed line just inside each edge, kept clear of the text by the
@@ -4733,7 +4739,11 @@ article .layout__column p {
 .site .pillars__title {
   transition: color 0.15s ease;
   font-family: var(--font-heading);
-  font-size: 1.3rem;
+  /* Small enough that the row's longest word (--pillar-word letters, set
+     in Pillars.tsx) fits the shaft whole rather than breaking mid-word.
+     0.55em is a little over Fredoka's average letter width, to be safe;
+     the same size across the row, so the pillars match. */
+  font-size: min(1.3rem, 100cqi / (var(--pillar-word, 10) * 0.55));
   font-weight: 500;
   line-height: 1.2;
 }
@@ -4898,6 +4908,81 @@ article .layout__column p {
     opacity: 1;
     scale: 1;
     translate: 0 0;
+  }
+}
+/* Phones: three pillars share the row, so the patch and shaft slim down. */
+@media (max-width: 36rem) {
+  .pillars__list {
+    gap: 0.5rem;
+  }
+  .pillars-section .pillars__list {
+    gap: 1rem;
+    padding-inline: 0.5rem;
+  }
+  .pillars__link {
+    padding: 0.5rem 0.3rem 0.6rem;
+    border-width: 3px;
+    border-radius: 14px;
+  }
+  .pillars__link::after {
+    inset: 3px;
+    border-width: 1.5px;
+    border-radius: 10px;
+  }
+  .pillars__shaft {
+    min-height: 8rem;
+    margin: 0 calc(12% - 1.5px);
+    padding: 0.75rem 0.15rem;
+    border-inline-width: 3px;
+  }
+  .pillars__shaft::before,
+  .pillars__shaft::after {
+    width: 2px;
+  }
+  .pillars__shaft::before {
+    left: 0.1rem;
+  }
+  .pillars__shaft::after {
+    right: 0.1rem;
+  }
+  .pillars__capital,
+  .pillars__base {
+    stroke-width: 3;
+  }
+}
+/* Really narrow screens: a third of the row is too little for a long word
+   at a readable size, so the pillars go two to a row instead. A section
+   heading's own pillar gets a row to itself, centred under the others; in
+   a plain row it's the odd one out at the end that's centred. Two pillars
+   just share one row. The
+   sideways shift that evens out the gaps around the big pillar is for a
+   single row, so it's off here. */
+@media (max-width: 30rem) {
+  .pillars__list {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, minmax(0, 14rem));
+    /* The centred one's width below assumes this gap. */
+    gap: 1rem;
+  }
+  /* Shorter, so two rows of them don't fill the screen. */
+  .pillars__shaft {
+    min-height: 4.5rem;
+  }
+  /* Only with an odd count: an even one fills its rows in pairs as it is. */
+  .pillars__list:not(:has(.pillars__item--active)) > .pillars__item:last-child:nth-child(odd),
+  .pillars__list:has(> :last-child:nth-child(odd)) > .pillars__item--active {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc((100% - 1rem) / 2);
+  }
+  .pillars__list:has(> :last-child:nth-child(odd)) > .pillars__item--active {
+    order: 1;
+  }
+  .pillars-section .pillars__list {
+    gap: 2rem 1rem;
+  }
+  .pillars-section {
+    --pillar-shift: 0%;
   }
 }
 @media (prefers-reduced-motion: reduce) {

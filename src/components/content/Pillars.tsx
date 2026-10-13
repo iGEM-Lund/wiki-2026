@@ -38,6 +38,13 @@ export function pillarTarget(pillar: Pillar): string {
   return new GithubSlugger().slug(pillar.heading || pillar.title || '');
 }
 
+// The longest single word across the row's titles, in letters: the titles
+// shrink until a word that long fits the shaft (see .pillars__title in
+// globals.css), the same size across the row so the pillars stay matched.
+function longestWord(pillars: Pillar[]): number {
+  return Math.max(1, ...pillars.flatMap((pillar) => pillar.title.split(/[\s-]+/).map((word) => word.length)));
+}
+
 // A row of pillars, each a plain anchor link to a heading further down the
 // page. No client JS; the browser's own anchor scroll does the work (see
 // scroll-padding-top in globals.css for the fixed header). With
@@ -49,7 +56,7 @@ export function PillarRow({ pillars, activeIndex }: { pillars: Pillar[]; activeI
 
   return (
     <nav className="pillars" aria-label="Pillars">
-      <ul className="pillars__list">
+      <ul className="pillars__list" style={{ '--pillar-word': longestWord(pillars) } as CSSProperties}>
         {pillars.map((pillar, index) => {
           const active = index === activeIndex;
           // Which side of the active pillar this one is on, so CSS can move
