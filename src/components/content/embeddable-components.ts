@@ -1,5 +1,6 @@
 import { FigureWithCaption } from './FigureWithCaption';
 import { FigureCarousel } from './FigureCarousel';
+import { LogoStrip } from './LogoStrip';
 import { TableWithCaption } from './TableWithCaption';
 import { PdfEmbed } from './PdfEmbed';
 import { ShortVideoFeed } from './ShortVideoFeed';
@@ -33,6 +34,7 @@ import { LayoutColumn } from './LayoutColumn';
 export const embeddableComponents = {
   FigureWithCaption,
   FigureCarousel,
+  LogoStrip,
   TableWithCaption,
   PdfEmbed,
   ShortVideoFeed,

@@ -72,6 +72,32 @@ export const contentComponents = {
     ContentView: (props) => <div>[Figure Carousel: {(props.value.images ?? []).length} figure(s)]</div>,
   }),
 
+  LogoStrip: block({
+    label: 'Logo Strip',
+    description:
+      'A line of small square logos, like the sponsors in the footer. Up to 5 sit still; more scroll past endlessly and pause when hovered.',
+    schema: {
+      logos: fields.array(
+        fields.object({
+          src: fields.url({
+            label: 'Image URL',
+            description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
+          }),
+          alt: fields.text({
+            label: 'Name',
+            description: 'What the logo stands for, e.g. "SDG 3: Good health and well-being". Read aloud by screen readers and shown on hover.',
+          }),
+          link: fields.url({
+            label: 'Link (optional)',
+            description: 'Makes the logo a link that opens in a new tab.',
+          }),
+        }),
+        { label: 'Logos', itemLabel: (props) => props.fields.alt.value || props.fields.src.value || 'Logo' },
+      ),
+    },
+    ContentView: (props) => <div>[Logo Strip: {(props.value.logos ?? []).length} logo(s)]</div>,
+  }),
+
   // A wrapper so the table itself stays an ordinary Markdown table, edited
   // with the editor's own table tools, rather than a grid of form fields.
   TableWithCaption: wrapper({

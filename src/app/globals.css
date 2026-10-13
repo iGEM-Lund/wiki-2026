@@ -1643,6 +1643,10 @@ body {
 .sponsor-rotator {
   max-width: 100%;
 }
+/* The same line inside page content (LogoStrip). */
+.logo-strip {
+  margin: 1.5rem 0;
+}
 .sponsor-rotator__list {
   display: flex;
   gap: 0.6rem;
@@ -1688,7 +1692,7 @@ body {
 .sponsor-rotator__slide {
   flex: none;
 }
-.sponsor-rotator__slide a {
+.sponsor-rotator__tile {
   display: flex;
   align-items: center;
   justify-content: center;
