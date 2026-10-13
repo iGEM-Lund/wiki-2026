@@ -7,10 +7,14 @@ export function NextPageLink({ page }: { page: NextPage }) {
   return (
     <nav className="next-page" aria-label="Next page">
       <Link href={page.href} className="next-page__link">
-        <span className="next-page__kicker">Next in {page.section}</span>
-        <span className="next-page__title">
-          {page.label}
-          <ArrowRight className="next-page__icon" size={20} aria-hidden="true" />
+        {/* A paper tag pinned through its eyelet (see .next-page__tag in
+            globals.css). */}
+        <span className="next-page__tag">
+          <span className="next-page__kicker">Next in {page.section}</span>
+          <span className="next-page__title">
+            {page.label}
+            <ArrowRight className="next-page__icon" size={20} aria-hidden="true" />
+          </span>
         </span>
       </Link>
     </nav>

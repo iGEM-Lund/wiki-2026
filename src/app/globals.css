@@ -1756,7 +1756,8 @@ body {
 .site-search::before,
 .site__nav-toggle::before,
 .back-to-top::before,
-.toc__toggle::before {
+.toc__toggle::before,
+.next-page__link::before {
   content: '';
   position: absolute;
   z-index: 2;
@@ -3889,20 +3890,49 @@ a.inline-icon--link:focus-visible {
   transition: background-size 0.6s ease-out 0.3s;
 }
 
+/* The way on: a paper tag pinned through its eyelet at the end it
+   points to, so it reads as the arrow onward. It rests a little askew
+   and swings about the pin under the pointer, like the nav's tags. */
 .next-page {
   display: flex;
   justify-content: flex-end;
   margin-top: 3rem;
-  padding-top: 1rem;
-  border-top: 1px dashed var(--index-rule);
 }
 .next-page__link {
+  --pin: var(--pin-teal);
+  --tilt: -1deg;
+  --hole: 1.3rem;
+  position: relative;
+  display: flex;
+  text-decoration: none;
+  /* One shadow for the tag (whose clip-path would cut off a box-shadow). */
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.18)) drop-shadow(0 4px 6px rgb(0 0 0 / 0.16));
+}
+.next-page__link::before {
+  left: calc(100% - var(--hole));
+  top: 50%;
+}
+.next-page__tag {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 0.2rem;
-  padding: 0.5rem 0;
-  text-decoration: none;
+  padding: 0.85rem calc(var(--hole) * 2 + 0.6rem) 0.85rem 1.4rem;
+  background: var(--mat);
+  /* A luggage tag on its side: the corners at the eyelet end cut off. */
+  clip-path: polygon(
+    0 0,
+    calc(100% - 1.1rem) 0,
+    100% 1.1rem,
+    100% calc(100% - 1.1rem),
+    calc(100% - 1.1rem) 100%,
+    0 100%
+  );
+  rotate: var(--tilt);
+  transform-origin: calc(100% - var(--hole)) 50%;
+  transition:
+    rotate 0.55s cubic-bezier(0.3, 1.7, 0.5, 1),
+    background-color 0.15s ease;
 }
 .next-page__kicker {
   color: var(--accent);
@@ -3924,8 +3954,9 @@ a.inline-icon--link:focus-visible {
   flex: none;
   transition: translate 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.next-page__link:hover .next-page__title {
-  color: var(--accent);
+.next-page__link:hover .next-page__tag {
+  rotate: calc(var(--tilt) * -1.4);
+  background: color-mix(in srgb, var(--accent) 12%, var(--mat));
 }
 .next-page__link:hover .next-page__icon {
   translate: 0.3rem 0;
@@ -3933,7 +3964,7 @@ a.inline-icon--link:focus-visible {
 .next-page__link:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 article p {

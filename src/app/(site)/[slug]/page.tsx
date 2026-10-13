@@ -39,6 +39,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
       <article>
         <PageTitle>{entry.title}</PageTitle>
         <Content />
+        {nextPage ? <NextPageLink page={nextPage} /> : null}
         {citedReferences.length > 0 ? (
           <section className="references">
             <SectionHeading>References</SectionHeading>
@@ -51,7 +52,6 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
             </ol>
           </section>
         ) : null}
-        {nextPage ? <NextPageLink page={nextPage} /> : null}
       </article>
       <TableOfContents headings={outline} />
       {/* Here rather than in the layout, which stays mounted across
