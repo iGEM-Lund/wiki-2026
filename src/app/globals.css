@@ -96,6 +96,9 @@ body {
   --index-header-rule: var(--color-crimson);
   --lift: 0 1px 2px rgb(0 50 50 / 0.12), 0 8px 18px -6px rgb(0 50 50 / 0.22);
   --lift-high: 0 2px 4px rgb(0 50 50 / 0.12), 0 16px 30px -10px rgb(0 50 50 / 0.3);
+  /* Selected text (see ::selection below). */
+  --selection: var(--color-blush);
+  --selection-text: var(--color-truffle);
 
   display: flex;
   flex-direction: column;
@@ -140,6 +143,24 @@ body {
   --index-header-rule: var(--color-rose);
   --lift: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 18px -6px rgb(0 0 0 / 0.6);
   --lift-high: 0 2px 4px rgb(0 0 0 / 0.5), 0 16px 30px -10px rgb(0 0 0 / 0.7);
+  /* Blush under pearl text is unreadable; Depths keeps the highlight dark. */
+  --selection: var(--color-depths);
+  --selection-text: var(--color-pearl);
+}
+
+.site ::selection {
+  background: var(--selection);
+  color: var(--selection-text);
+}
+/* On a Blush or Shallows surface the page's own highlight would barely
+   show, so it turns to the darker shade of the same family: Crimson on
+   Blush (the quotes and lit pillars set it themselves), Depths on
+   Shallows (the index cards count, ruled in a Shallows blue). */
+.site__nav-group-links,
+.world-map__popup,
+.card {
+  --selection: var(--color-depths);
+  --selection-text: var(--color-pearl);
 }
 
 /* Text size and dyslexia-friendly font are opt-in only too, via the
@@ -2707,6 +2728,8 @@ a.inline-icon--link:focus-visible {
   --quote-surface: var(--color-blush);
   --quote-accent: var(--color-crimson);
   --pin: var(--pin-red);
+  --selection: var(--color-crimson);
+  --selection-text: var(--color-pearl);
   position: relative;
   width: min(24rem, 100%);
   margin: 2.25rem auto;
@@ -4605,6 +4628,8 @@ article .layout__column p {
 .pillars__link {
   --pillar-line: var(--color-peacock);
   --pillar-fill: var(--color-shallows);
+  --selection: var(--color-depths);
+  --selection-text: var(--color-pearl);
   /* The patch's own cloth, a shade darker than the column's fill thread so
      the embroidered column stands out on it, and the thread it's sewn on
      with, contrasting with the edge. */
@@ -4642,6 +4667,7 @@ article .layout__column p {
   --pillar-line: var(--color-crimson);
   --pillar-fill: var(--color-blush);
   --patch-thread: var(--color-peacock);
+  --selection: var(--color-crimson);
 }
 .site .pillars__link[href]:is(:hover, :focus-visible) .pillars__title {
   color: var(--color-crimson);
@@ -4814,6 +4840,7 @@ article .layout__column p {
   --pillar-line: var(--color-crimson);
   --pillar-fill: var(--color-blush);
   --patch-thread: var(--color-peacock);
+  --selection: var(--color-crimson);
   cursor: default;
 }
 .site .pillars__item--active .pillars__title {
@@ -4826,6 +4853,7 @@ article .layout__column p {
   --pillar-line: var(--color-crimson);
   --pillar-fill: var(--color-blush);
   --patch-thread: var(--color-peacock);
+  --selection: var(--color-crimson);
 }
 .site .pillars-section .pillars__item:not(.pillars__item--active):is(:hover, :focus-within) .pillars__title {
   color: var(--color-crimson);
@@ -4834,6 +4862,7 @@ article .layout__column p {
   --pillar-line: var(--color-peacock);
   --pillar-fill: var(--color-shallows);
   --patch-thread: var(--color-crimson);
+  --selection: var(--color-depths);
 }
 .site .pillars-section .pillars__list:has(.pillars__item:not(.pillars__item--active):is(:hover, :focus-within)) .pillars__item--active .pillars__title {
   color: var(--color-depths);
@@ -4923,6 +4952,9 @@ article .layout__column p {
   color: var(--heading);
   cursor: pointer;
   touch-action: none;
+  /* Dragging the knot past the heading labels would otherwise select them. */
+  user-select: none;
+  -webkit-user-select: none;
 }
 /* Nothing to show: page too short to scroll, or the title banner's arrival
    still playing. Fades rather than vanishing, and stops taking pointer
@@ -4952,9 +4984,6 @@ article .layout__column p {
   -webkit-mask-image: linear-gradient(
     to bottom,
     #000 calc(var(--knot-top) + 1px),
-  /* Dragging the knot past the heading labels would otherwise select them. */
-  user-select: none;
-  -webkit-user-select: none;
     transparent calc(var(--knot-top) + 1px),
     transparent calc(var(--knot-top) + var(--knot) - 1px),
     #000 calc(var(--knot-top) + var(--knot) - 1px)
