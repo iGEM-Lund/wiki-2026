@@ -3702,14 +3702,33 @@ a.inline-icon--link:focus-visible {
 }
 
 /* A pie of clickable slices; see src/components/content/SliceWheel.tsx
-   (server: geometry, colours, compiles slice bodies) and
-   SliceWheelClient.tsx ('use client': the popup). */
+   (server: geometry, compiles slice bodies) and SliceWheelClient.tsx
+   (markup). The wheel is a round patch made like the pillars' (see
+   .pillars__link): twill cloth with an overlocked edge, a crimson running
+   stitch just inside it, and the slices sewn on in the pillars' Shallows
+   fill and Peacock line, their shared sides one seam. A hovered slice
+   lights up the way a hovered pillar does, Crimson on Blush, lifted off the
+   patch and stretched out past its edge to hold the slice's text. Like the
+   pillars, the patch keeps its light cloth in dark mode. */
 .slice-wheel {
-  /* Hovered slices extend outside the wheel, over whatever sits next to it. */
+  --wheel-line: var(--color-peacock);
+  --wheel-fill: var(--color-shallows);
+  --wheel-cloth: color-mix(in srgb, var(--wheel-fill) 72%, var(--wheel-line));
+  --wheel-thread: var(--color-crimson);
+  --wheel-ink: var(--color-depths);
+  --selection: var(--color-depths);
+  --selection-text: var(--color-pearl);
+  /* Lifted slices reach outside the wheel, over whatever sits next to it. */
   position: relative;
   z-index: 3;
-  margin: 2rem auto;
+  margin: 2.5rem auto;
   width: min(100%, 30rem);
+}
+/* An open slice reaches well past the wheel, so while one is open the wheel
+   also goes over the figure carousel (39) and the outline's string (38),
+   though still under the header. */
+.slice-wheel:has(.slice-wheel__slice:is(:hover, :focus-within)) {
+  z-index: 40;
 }
 .slice-wheel__disc {
   display: block;
@@ -3717,54 +3736,45 @@ a.inline-icon--link:focus-visible {
   height: auto;
   overflow: visible;
 }
-.slice-wheel__slice {
-  cursor: default;
-  outline: none;
-  transition: opacity 0.25s ease;
+.slice-wheel__patch {
+  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.08)) drop-shadow(0 2px 2px rgb(0 40 40 / 0.3));
 }
-/* The only part of a slice that takes the pointer; see SliceWheelClient. */
-.slice-wheel__hit {
-  fill: transparent;
+.slice-wheel__cloth {
+  fill: var(--wheel-cloth);
 }
-.slice-wheel__visual {
-  pointer-events: none;
-  transition:
-    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-    filter 0.25s ease;
+.slice-wheel__weave-light {
+  fill: rgb(255 255 255 / 0.22);
 }
-/* SVG elements transform around the viewBox origin, which the wheel puts at
-   its hub, so scale() grows a slice straight outward; the translate slides
-   it a little further out along its own bisector. */
-.slice-wheel__slice:hover .slice-wheel__visual,
-.slice-wheel__slice:focus-visible .slice-wheel__visual {
-  transform: translate(var(--slice-dx), var(--slice-dy)) scale(1.05);
-  filter: drop-shadow(0 3px 6px color-mix(in srgb, var(--color-noir) 25%, transparent));
+.slice-wheel__weave-dark {
+  fill: rgb(0 0 0 / 0.05);
 }
-.slice-wheel__disc:has(.slice-wheel__slice:hover) .slice-wheel__slice:not(:hover) {
-  opacity: 0.7;
-}
-/* The stripes ride along with their slice, and on hover each also slides a
-   little further out than the one inside it, so the edge fans open. */
-.slice-wheel__stripe {
+.slice-wheel__overlock {
   fill: none;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transition-delay: calc(var(--stripe-k) * 30ms);
 }
-.slice-wheel__slice:hover .slice-wheel__stripe,
-.slice-wheel__slice:focus-visible .slice-wheel__stripe {
-  transform: translate(
-    calc(var(--slice-dx) * var(--stripe-k) * 0.4),
-    calc(var(--slice-dy) * var(--stripe-k) * 0.4)
-  );
+.slice-wheel__overlock-stitch {
+  fill: var(--wheel-line);
 }
-/* Slices have no outline (their gaps are cut into the shapes); a keyboard
-   focus ring is the one exception. */
-.slice-wheel__slice:focus-visible .slice-wheel__shape {
-  stroke: var(--heading);
-  stroke-width: 2.5;
+.slice-wheel__overlock-shade {
+  fill: color-mix(in srgb, var(--wheel-line) 70%, #000);
+}
+.slice-wheel__stitch {
+  fill: none;
+  stroke: var(--wheel-thread);
+  stroke-width: 0.85;
+  stroke-dasharray: 2.5 1.6;
+}
+.slice-wheel__piece {
+  fill: var(--wheel-fill);
+  stroke: var(--wheel-line);
+  stroke-width: 2;
   stroke-linejoin: round;
 }
+.slice-wheel__hub {
+  fill: var(--wheel-line);
+  pointer-events: none;
+}
 .slice-wheel__label {
+  fill: var(--wheel-ink);
   font-family: var(--font-heading);
   font-weight: 500;
   text-anchor: middle;
@@ -3773,91 +3783,116 @@ a.inline-icon--link:focus-visible {
   pointer-events: none;
   user-select: none;
 }
-.slice-wheel__hub {
-  fill: var(--bg);
-  pointer-events: none;
+.slice-wheel__slice {
+  cursor: default;
+  outline: none;
 }
-
-/* Hovering or focusing a slice extends it outward past the rim: a wedge of
-   its own colour grows out of it (scaling from the hub, so it stays radial)
-   and its text fades in inside. It is inside the slice's group, so hover
-   holds while the pointer is over it. */
-.slice-wheel__extension {
+/* The only part of a slice that takes the pointer; see SliceWheelClient. */
+.slice-wheel__hit {
+  fill: transparent;
+}
+/* A slice's lifted copy: hidden until its slice is hovered or focused, then
+   grown out from the hub (SVG transforms scale about the viewBox origin,
+   which is the hub) and raised off the patch like a hovered pillar. Inside
+   the slice's group, so hover holds while the pointer is over it. */
+.slice-wheel__lifted {
   visibility: hidden;
   pointer-events: none;
-  transform: scale(0.8);
   opacity: 0;
+  transform: scale(0.9);
+  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.08)) drop-shadow(0 4px 4px rgb(0 40 40 / 0.35));
   /* Hold on briefly after the pointer leaves. */
   transition:
     transform 0.2s ease-in,
     opacity 0.15s ease,
     visibility 0s 0.2s;
 }
-.slice-wheel__slice:hover .slice-wheel__extension,
-.slice-wheel__slice:focus-within .slice-wheel__extension {
+.slice-wheel__slice:is(:hover, :focus-within) .slice-wheel__lifted {
   visibility: visible;
   pointer-events: auto;
-  transform: scale(1);
   opacity: 1;
+  transform: scale(1);
   transition:
-    transform 0.4s cubic-bezier(0.34, 1.3, 0.64, 1),
+    transform 0.3s cubic-bezier(0.34, 1.3, 0.64, 1),
     opacity 0.1s ease,
     visibility 0s;
 }
-.slice-wheel__extension-text {
+.slice-wheel__lifted-piece {
+  fill: var(--color-blush);
+  stroke: var(--color-crimson);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.slice-wheel__slice:focus-visible .slice-wheel__lifted-piece {
+  stroke-width: 3;
+}
+.slice-wheel__label--lifted {
+  fill: var(--color-crimson);
+}
+/* The title draws in toward the hub, scaling about it so curved lines stay
+   concentric, which frees the rest of the slice for the text. */
+.slice-wheel__lifted-title {
+  transition: transform 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+.slice-wheel__slice:is(:hover, :focus-within) .slice-wheel__lifted-title {
+  transform: scale(0.7);
+}
+.slice-wheel__text {
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.1s ease;
 }
-/* The title draws in toward the hub, scaling about it so curved lines stay
-   concentric, which frees the rest of the slice for the text. */
-.slice-wheel__title {
-  transform-origin: 0 0;
-  transition: transform 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
-}
-.slice-wheel__slice:hover .slice-wheel__title,
-.slice-wheel__slice:focus-within .slice-wheel__title {
-  transform: scale(0.7);
-}
-.slice-wheel__slice:hover .slice-wheel__extension-text,
-.slice-wheel__slice:focus-within .slice-wheel__extension-text {
+.slice-wheel__slice:is(:hover, :focus-within) .slice-wheel__text {
   opacity: 1;
   pointer-events: auto;
-  transition: opacity 0.2s ease 0.22s;
+  transition: opacity 0.2s ease 0.18s;
 }
 /* Sized in the wheel's own units (it's inside the SVG), so it scales with
-   the wheel. */
-.slice-wheel__extension-content {
+   the wheel. Its text wraps to the slice's shape around the floats below,
+   so it is a plain block, not a flex box (whose children can't float). */
+.slice-wheel__text-content {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: safe center;
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  /* Text on Blush is always Crimson, and so is its selection. */
+  --selection: var(--color-crimson);
+  color: var(--color-crimson);
   font-size: 6px;
   line-height: 1.35;
   text-align: center;
   scrollbar-width: none;
 }
-.slice-wheel__extension-content > :first-child {
+.slice-wheel__text-edge {
+  display: block;
+}
+.slice-wheel__text-edge--left {
+  float: left;
+  clear: left;
+}
+.slice-wheel__text-edge--right {
+  float: right;
+  clear: right;
+}
+/* The text's first block, which comes right after the floats. */
+.slice-wheel__text-edge + :not(.slice-wheel__text-edge) {
   margin-top: 0;
 }
-.slice-wheel__extension-content > :last-child {
+.slice-wheel__text-content > :last-child {
   margin-bottom: 0;
 }
-.slice-wheel__extension-content p,
-.slice-wheel__extension-content ul,
-.slice-wheel__extension-content ol {
+.slice-wheel__text-content p,
+.slice-wheel__text-content ul,
+.slice-wheel__text-content ol {
   margin: 0.4em 0 0;
   padding: 0;
   text-align: center;
   list-style-position: inside;
 }
-.slice-wheel__extension-content a,
-.page-layout article .slice-wheel__extension-content :is(p, li) :is(strong, b) {
-  color: inherit;
+.site .slice-wheel__text-content a,
+.page-layout article .slice-wheel__text-content :is(p, li) :is(strong, b) {
+  color: var(--color-crimson);
 }
 .slice-wheel__error {
   color: var(--error);
