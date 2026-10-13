@@ -4878,8 +4878,121 @@ article .layout__column p {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+/* Where an external link goes: a globe embroidered on a small round
+   fabric patch (the Badges component's .badge, which the element also
+   carries), popped up beside the link (placed by LinkArrow, in viewport
+   coordinates) just as the line reaches it. The line to it draws on
+   quicker than the others, since it only has a short way to go. */
+.link-arrow[data-external][data-shown] .link-arrow__reveal {
+  animation-duration: 0.22s;
+}
+.badge.link-arrow__globe {
+  position: fixed;
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  translate: -50% -50%;
+  rotate: -4deg;
+  scale: 0.4;
+  opacity: 0;
+  visibility: hidden;
+}
+/* Round, not the Badges' rectangle: the cloth torn into a rough circle
+   (jags in px, up to 3.5px deep, so they show at this small size),
+   the running stitch (the outline) following the border-radius, and the
+   loose fibres short spokes scattered unevenly round the edge. */
+.link-arrow__globe {
+  border-radius: 50%;
+  /* Clear of the deepest tears. */
+  outline-offset: -5.5px;
+}
+.badge.link-arrow__globe::before {
+  clip-path: polygon(
+    calc(50% + 1.000 * (50% - 1px)) calc(50% - 0.004 * (50% - 1px)),
+    calc(50% + 0.988 * (50% - 2.5px)) calc(50% + 0.152 * (50% - 2.5px)),
+    calc(50% + 0.960 * (50% - 1px)) calc(50% + 0.281 * (50% - 1px)),
+    calc(50% + 0.885 * (50% - 0.5px)) calc(50% + 0.465 * (50% - 0.5px)),
+    calc(50% + 0.831 * (50% - 0.5px)) calc(50% + 0.556 * (50% - 0.5px)),
+    calc(50% + 0.731 * (50% - 2.5px)) calc(50% + 0.683 * (50% - 2.5px)),
+    calc(50% + 0.564 * (50% - 0px)) calc(50% + 0.826 * (50% - 0px)),
+    calc(50% + 0.446 * (50% - 2px)) calc(50% + 0.895 * (50% - 2px)),
+    calc(50% + 0.267 * (50% - 0px)) calc(50% + 0.964 * (50% - 0px)),
+    calc(50% + 0.145 * (50% - 2.5px)) calc(50% + 0.989 * (50% - 2.5px)),
+    calc(50% + 0.041 * (50% - 0px)) calc(50% + 0.999 * (50% - 0px)),
+    calc(50% - 0.128 * (50% - 0.5px)) calc(50% + 0.992 * (50% - 0.5px)),
+    calc(50% - 0.318 * (50% - 1px)) calc(50% + 0.948 * (50% - 1px)),
+    calc(50% - 0.439 * (50% - 2.5px)) calc(50% + 0.898 * (50% - 2.5px)),
+    calc(50% - 0.614 * (50% - 0px)) calc(50% + 0.790 * (50% - 0px)),
+    calc(50% - 0.716 * (50% - 2px)) calc(50% + 0.698 * (50% - 2px)),
+    calc(50% - 0.781 * (50% - 0px)) calc(50% + 0.625 * (50% - 0px)),
+    calc(50% - 0.889 * (50% - 1px)) calc(50% + 0.458 * (50% - 1px)),
+    calc(50% - 0.948 * (50% - 0px)) calc(50% + 0.317 * (50% - 0px)),
+    calc(50% - 0.991 * (50% - 1px)) calc(50% + 0.137 * (50% - 1px)),
+    calc(50% - 1.000 * (50% - 0.5px)) calc(50% - 0.024 * (50% - 0.5px)),
+    calc(50% - 0.994 * (50% - 2.5px)) calc(50% - 0.113 * (50% - 2.5px)),
+    calc(50% - 0.943 * (50% - 1px)) calc(50% - 0.333 * (50% - 1px)),
+    calc(50% - 0.907 * (50% - 1px)) calc(50% - 0.421 * (50% - 1px)),
+    calc(50% - 0.815 * (50% - 0px)) calc(50% - 0.579 * (50% - 0px)),
+    calc(50% - 0.684 * (50% - 0px)) calc(50% - 0.730 * (50% - 0px)),
+    calc(50% - 0.609 * (50% - 0px)) calc(50% - 0.793 * (50% - 0px)),
+    calc(50% - 0.457 * (50% - 3.5px)) calc(50% - 0.890 * (50% - 3.5px)),
+    calc(50% - 0.318 * (50% - 0px)) calc(50% - 0.948 * (50% - 0px)),
+    calc(50% - 0.150 * (50% - 0.5px)) calc(50% - 0.989 * (50% - 0.5px)),
+    calc(50% + 0.026 * (50% - 0.5px)) calc(50% - 1.000 * (50% - 0.5px)),
+    calc(50% + 0.141 * (50% - 1px)) calc(50% - 0.990 * (50% - 1px)),
+    calc(50% + 0.294 * (50% - 1px)) calc(50% - 0.956 * (50% - 1px)),
+    calc(50% + 0.476 * (50% - 0px)) calc(50% - 0.880 * (50% - 0px)),
+    calc(50% + 0.560 * (50% - 0px)) calc(50% - 0.829 * (50% - 0px)),
+    calc(50% + 0.674 * (50% - 2px)) calc(50% - 0.739 * (50% - 2px)),
+    calc(50% + 0.825 * (50% - 0px)) calc(50% - 0.565 * (50% - 0px)),
+    calc(50% + 0.899 * (50% - 0.5px)) calc(50% - 0.439 * (50% - 0.5px)),
+    calc(50% + 0.950 * (50% - 0px)) calc(50% - 0.314 * (50% - 0px)),
+    calc(50% + 0.994 * (50% - 0.5px)) calc(50% - 0.111 * (50% - 0.5px))
+  );
+}
+.badge.link-arrow__globe::after {
+  inset: -2px;
+  border-radius: 50%;
+  background: conic-gradient(
+    transparent 9deg, var(--fray) 9deg 10.5deg, transparent 10.5deg,
+    transparent 27deg, var(--fray) 27deg 29.5deg, transparent 29.5deg,
+    transparent 63deg, var(--fray) 63deg 64.5deg, transparent 64.5deg,
+    transparent 90deg, var(--fray) 90deg 91.5deg, transparent 91.5deg,
+    transparent 99deg, var(--fray) 99deg 101.5deg, transparent 101.5deg,
+    transparent 108deg, var(--fray) 108deg 109.5deg, transparent 109.5deg,
+    transparent 135deg, var(--fray) 135deg 137deg, transparent 137deg,
+    transparent 144deg, var(--fray) 144deg 146deg, transparent 146deg,
+    transparent 153deg, var(--fray) 153deg 154.5deg, transparent 154.5deg,
+    transparent 198deg, var(--fray) 198deg 200deg, transparent 200deg,
+    transparent 243deg, var(--fray) 243deg 244.5deg, transparent 244.5deg,
+    transparent 261deg, var(--fray) 261deg 262.5deg, transparent 262.5deg,
+    transparent 288deg, var(--fray) 288deg 289.5deg, transparent 289.5deg,
+    transparent 297deg, var(--fray) 297deg 299.5deg, transparent 299.5deg,
+    transparent 324deg, var(--fray) 324deg 326.5deg, transparent 326.5deg,
+    transparent 351deg, var(--fray) 351deg 353deg, transparent 353deg
+  );
+  mask: radial-gradient(closest-side, transparent calc(100% - 4px), #000 calc(100% - 3.5px));
+}
+.link-arrow__globe svg {
+  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.25));
+}
+.badge.link-arrow__globe[data-shown] {
+  scale: 1;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.1s ease 0.12s,
+    scale 0.25s cubic-bezier(0.3, 1.6, 0.5, 1) 0.12s,
+    visibility 0s 0.12s;
+}
 @media print {
   .scroll-string,
+  .link-arrow__globe,
   .link-arrow {
     display: none !important;
   }

@@ -1,5 +1,6 @@
 'use client';
 
+import { Globe } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 
 // Gap left between the line's ends and the link and target it joins.
@@ -9,9 +10,14 @@ const END_GAP = 6;
 // .site__nav-sign in globals.css).
 const SETTLE_MS = 800;
 
+// Where the globe for an external link sits, from the end of the link:
+// this far across and up (or down, when there's no room above).
+const GLOBE_DX = 58;
+const GLOBE_DY = 38;
+
 const normalize = (path: string) => (path.length > 1 ? path.replace(/\/$/, '') : path);
 
-type Target = { el: HTMLElement; end: 'side' | 'bottom'; cleanup?: () => void };
+type Target = { el: HTMLElement; end: 'side' | 'bottom' | 'globe'; cleanup?: () => void };
 
 // While a link in the page content is hovered or focused, a dashed line
 // draws itself from the link to where the link goes:
@@ -20,19 +26,22 @@ type Target = { el: HTMLElement; end: 'side' | 'bottom'; cleanup?: () => void };
 //   and only for sections it lists);
 // - another page in the nav: a sign with that page's name dropped under
 //   its nav tag (the tag itself, or the group holding it), like the
-//   current page's sign (only above 48rem, where the nav is a bar).
-// Anything else (external links, pages not in the nav) gets no line. The
-// line is redrawn as the page scrolls, since its ends move.
+//   current page's sign (only above 48rem, where the nav is a bar);
+// - another site: a globe that pops up just beside the link.
+// Anything else (pages not in the nav) gets no line. The line is redrawn
+// as the page scrolls, since its ends move.
 export function LinkArrow() {
   const svgRef = useRef<SVGSVGElement>(null);
   const lineRef = useRef<SVGPathElement>(null);
   const revealRef = useRef<SVGPathElement>(null);
+  const globeRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const svg = svgRef.current;
     const line = lineRef.current;
     const reveal = revealRef.current;
-    if (!svg || !line || !reveal) return;
+    const globe = globeRef.current;
+    if (!svg || !line || !reveal || !globe) return;
     let link: HTMLAnchorElement | null = null;
     let target: Target | null = null;
     let frame = 0;
@@ -80,8 +89,43 @@ export function LinkArrow() {
       };
     }
 
+    function globeFor(): Target {
+      globe!.dataset.shown = '';
+      svg!.dataset.external = '';
+      return {
+        el: globe!,
+        end: 'globe',
+        cleanup: () => {
+          delete globe!.dataset.shown;
+          delete svg!.dataset.external;
+        },
+      };
+    }
+
+    // Puts the globe beside the end of the link (its last line, if it
+    // wraps): up and to the right, or below when the header is in the way,
+    // or to the left near the screen's right edge.
+    function placeGlobe(a: HTMLAnchorElement) {
+      const rects = a.getClientRects();
+      const last = rects[rects.length - 1] ?? a.getBoundingClientRect();
+      const r = globe!.offsetWidth / 2;
+      const header = document.querySelector('.site__header')?.getBoundingClientRect().bottom ?? 0;
+      const up = last.top - GLOBE_DY - r - 8 > header;
+      const right = last.right + GLOBE_DX + r + 8 < document.documentElement.clientWidth;
+      const x1 = right
+        ? Math.max(last.left, last.right - 10)
+        : Math.min(last.right, last.left + 10);
+      const y1 = up ? last.top - 2 : last.bottom + 2;
+      const cx = x1 + (right ? GLOBE_DX : -GLOBE_DX);
+      const cy = y1 + (up ? -GLOBE_DY : GLOBE_DY);
+      globe!.style.left = `${cx}px`;
+      globe!.style.top = `${cy}px`;
+      return { x1, y1, cx, cy, r, right };
+    }
+
     function targetFor(a: HTMLAnchorElement) {
-      if (a.closest('.scroll-string, .toc') || a.origin !== location.origin) return null;
+      if (a.closest('.scroll-string, .toc')) return null;
+      if (a.origin !== location.origin) return /^https?:$/.test(a.protocol) ? globeFor() : null;
       if (normalize(a.pathname) === normalize(location.pathname)) return a.hash ? knotFor(a) : null;
       return signFor(a);
     }
@@ -89,9 +133,19 @@ export function LinkArrow() {
     function draw() {
       frame = 0;
       if (!link || !target) return;
+      let d: string;
+      if (target.end === 'globe') {
+        // Up (or down) from the end of the link, then across into the
+        // globe's side, arriving horizontally.
+        const { x1, y1, cx, cy, r, right } = placeGlobe(link);
+        const x2 = cx + (right ? -1 : 1) * (r + END_GAP);
+        d = `M${x1} ${y1} C${x1} ${cy} ${x1} ${cy} ${x2} ${cy}`;
+        line!.setAttribute('d', d);
+        reveal!.setAttribute('d', d);
+        return;
+      }
       const from = link.getBoundingClientRect();
       const to = target.el.getBoundingClientRect();
-      let d: string;
       if (target.end === 'side') {
         // To the knot's right side (the string is always left of the
         // column), arriving horizontally like a thread pulled across.
@@ -171,33 +225,40 @@ export function LinkArrow() {
   }, []);
 
   return (
-    <svg ref={svgRef} className="link-arrow" aria-hidden="true" focusable="false">
-      <defs>
-        <marker
-          id="link-arrow-head"
-          viewBox="0 0 10 10"
-          refX="8"
-          refY="5"
-          markerWidth="7"
-          markerHeight="7"
-          orient="auto-start-reverse"
-        >
-          <path d="M1 1 L9 5 L1 9" />
-        </marker>
-        {/* The draw-on: a solid copy of the line, revealed from the link
-            to the target, masks the dashed one (dashes can't also be
-            animated with a dash offset). Wide enough to uncover the
-            arrowhead only as it arrives. */}
-        <mask id="link-arrow-reveal" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
-          <path ref={revealRef} className="link-arrow__reveal" pathLength={1} />
-        </mask>
-      </defs>
-      <path
-        ref={lineRef}
-        className="link-arrow__line"
-        markerEnd="url(#link-arrow-head)"
-        mask="url(#link-arrow-reveal)"
-      />
-    </svg>
+    <>
+      <svg ref={svgRef} className="link-arrow" aria-hidden="true" focusable="false">
+        <defs>
+          <marker
+            id="link-arrow-head"
+            viewBox="0 0 10 10"
+            refX="8"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
+            <path d="M1 1 L9 5 L1 9" />
+          </marker>
+          {/* The draw-on: a solid copy of the line, revealed from the link
+              to the target, masks the dashed one (dashes can't also be
+              animated with a dash offset). Wide enough to uncover the
+              arrowhead only as it arrives. */}
+          <mask id="link-arrow-reveal" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+            <path ref={revealRef} className="link-arrow__reveal" pathLength={1} />
+          </mask>
+        </defs>
+        <path
+          ref={lineRef}
+          className="link-arrow__line"
+          markerEnd="url(#link-arrow-head)"
+          mask="url(#link-arrow-reveal)"
+        />
+      </svg>
+      {/* Where an external link goes: off the wiki, out on the web. A
+          fabric patch like the Badges component's. */}
+      <span ref={globeRef} className="badge badge--crimson link-arrow__globe" aria-hidden="true">
+        <Globe size={18} strokeWidth={1.75} />
+      </span>
+    </>
   );
 }
