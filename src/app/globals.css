@@ -5361,15 +5361,3 @@ article .layout__column p {
     display: none !important;
   }
 }
-
-
-/* Biosafety summary highlight */
-.biosafety-highlight {
-  background: rgba(42, 163, 163, 0.08);
-  border: 2px solid var(--pin-teal);
-  border-radius: 12px;
-  padding: 16px 24px;
-  margin: 20px 0;
-  color: var(--heading);
-  font-weight: 500;
-}
