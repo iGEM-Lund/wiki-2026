@@ -283,8 +283,8 @@ export function ScrollString() {
     function update() {
       frame = 0;
       // The string starts below the header and, while the page's title banner
-      // is on screen, below that too (it scrolls and collapses, so this is
-      // re-read every frame). Its bottom edge is --string-bottom in
+      // is on screen, below that too (it scrolls, so this is re-read
+      // every frame). Its bottom edge is --string-bottom in
       // globals.css above the viewport's (read from there, it's in rem, and
       // clears the back-to-top button).
       const banner = document.querySelector<HTMLElement>('.page-title');

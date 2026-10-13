@@ -31,13 +31,9 @@
      but until then this is what the page's top offset uses, so a wrong
      value here makes everything below shift once the page hydrates). */
   --header-height: 3.75rem;
-  /* The page title banner once collapsed into a bar: its whole height, and
-     the striped edge's share of it. */
-  --page-title-collapsed: 6.5rem;
-  --page-title-collapsed-edge: 1.75rem;
-  /* The top wave's squashed height over its full one (5rem): the collapsed
-     edge height divided by 5rem. */
-  --page-title-top-scale: 0.35;
+  /* How far below the top bar the floating page outline starts, so the
+     title banner passes over it while the page is scrolled to the top. */
+  --outline-clearance: 6.5rem;
 
   --font-heading: 'Fredoka', system-ui, sans-serif;
   --font-body: 'Poppins', system-ui, sans-serif;
@@ -263,8 +259,7 @@ body {
    the padding adds that space back so the title stays centered in what's
    visible. */
 .site .page-title {
-  /* Bottom padding clears the 3.5rem striped edge. Named for the collapse
-     below, which has to know where the title sits. */
+  /* Bottom padding clears the 3.5rem striped edge. */
   --title-pad-top: 6.5rem;
   --title-pad-bottom: clamp(4rem, 9vh, 5.5rem);
   position: relative;
@@ -296,11 +291,8 @@ body {
   fill: var(--bg);
 }
 /* The top wave: a separate element before the banner that overlaps its
-   top, in the same full-bleed box. Pinned under the header (sticky, below)
-   it stays put while the banner scrolls up beneath it, so the wave is never
-   cut off by the header, and it squashes with a scale (compositor-only, so
-   no jitter against the sticky banner). A pixel taller than its box
-   at the top, so no hairline of banner shows between it and the header. */
+   top, in the same full-bleed box. A pixel taller than its box at the top,
+   so no hairline of banner shows between it and the header. */
 .page-title-top {
   position: relative;
   z-index: 2;
@@ -319,93 +311,6 @@ body {
   transform: scaleY(-1);
 }
 
-/* Collapse: as the page scrolls, the banner scrolls away until only its
-   bottom --page-title-collapsed is left under the top of the viewport, and
-   pins there as a slim bar, its title shrinking into the solid part of it
-   and its striped edge squashing to --page-title-collapsed-edge. Pinning
-   is a sticky offset the size of the rest of the banner, so the banner
-   never changes height and the page below it never jumps; the title and
-   edge animate over that same stretch of scroll. --page-title-height (the
-   banner's height, which depends on how the title wraps) and the
-   data-collapsible gate come from PageTitleSync. Reduced motion keeps the
-   banner scrolling away as a whole (either way it's asked for): the global
-   override above would otherwise snap the title straight to its collapsed
-   state. Registered so it computes to px: PageTitleSync reads it back in
-   browsers without scroll-driven animations (see below). */
-@property --collapse-distance {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 0px;
-}
-@media (prefers-reduced-motion: no-preference) {
-  :root:not([data-motion='reduce']):has(.page-title[data-collapsible]) {
-    /* In-page jumps land below the bar too, not under it. */
-    scroll-padding-top: calc(var(--header-height) + var(--page-title-collapsed) + 1rem);
-  }
-  :root:not([data-motion='reduce']) .site .page-title[data-collapsible] {
-    --collapse-distance: calc(var(--page-title-height) - var(--page-title-collapsed));
-    position: sticky;
-    top: calc(var(--pane-top) - var(--collapse-distance));
-    /* Over the page content scrolling under the bar, under the floating
-       buttons (50) and the drawers (60, 90). */
-    z-index: 40;
-  }
-  :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__edge {
-    animation: page-title-edge-collapse linear both;
-  }
-  /* The heading also plays its arrival (see the intro below, same
-     timing), which has to stay in the list or the collapsible flag would cut it short. */
-  :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__heading {
-    animation-name: page-title-text-in, page-title-heading-collapse;
-    animation-delay: 0.4s, 0s;
-    animation-timing-function: ease-out, linear;
-    animation-fill-mode: backwards, both;
-  }
-  /* The top wave pins under the header and squashes to the bottom
-     edge's height as the banner collapses. */
-  :root:not([data-motion='reduce']) .page-title-top:has(+ .page-title[data-collapsible]) {
-    /* A sibling of the banner, so it doesn't inherit the banner's. */
-    --collapse-distance: calc(var(--page-title-height) - var(--page-title-collapsed));
-    position: sticky;
-    top: calc(var(--pane-top) - 2px);
-    z-index: 41;
-    animation: page-title-top-collapse linear both;
-  }
-}
-/* The collapse itself runs on the page's scroll, */
-@supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
-    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__edge,
-    :root:not([data-motion='reduce']) .page-title-top:has(+ .page-title[data-collapsible]) {
-      animation-timeline: scroll(root);
-      animation-range: 0 var(--collapse-distance);
-    }
-    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__heading {
-      animation-duration: 0.4s, auto;
-      animation-timeline: auto, scroll(root);
-      animation-range: normal, 0 var(--collapse-distance);
-    }
-  }
-}
-/* or, where there are no scroll-driven animations (Firefox), is held
-   paused and scrubbed through by a negative delay: 1s of animation per
-   collapse, and PageTitleSync sets --collapse-p (0 to 1, how far it has
-   got) on the banner and the top wave as the page scrolls. */
-@supports not (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
-    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__edge,
-    :root:not([data-motion='reduce']) .page-title-top:has(+ .page-title[data-collapsible]) {
-      animation-duration: 1s;
-      animation-delay: calc(var(--collapse-p, 0) * -1s);
-      animation-play-state: paused;
-    }
-    :root:not([data-motion='reduce']) .page-title[data-collapsible] .page-title__heading {
-      animation-duration: 0.4s, 1s;
-      animation-delay: 0.4s, calc(var(--collapse-p, 0) * -1s);
-      animation-play-state: running, paused;
-    }
-  }
-}
 /* Arrival: the banner is drawn on from the left like a brush stroke, a
    solid fill with a rough, bristly leading edge. Then the title appears. The stroke is a page-colored cover sitting over the
    banner whose jagged left edge slides off to the right; it only moves with
@@ -451,31 +356,6 @@ body {
     opacity: 0;
   }
 }
-/* Moves the title's centre from where it sits in the full banner,
-   (height + pad top - pad bottom) / 2, to the middle of the bar's solid
-   part, which runs between the two squashed edges of the bar, the top one
-   having ridden down to --collapse-distance. */
-@keyframes page-title-heading-collapse {
-  to {
-    translate: 0
-      calc(
-        var(--collapse-distance) + var(--page-title-collapsed) / 2 -
-          (var(--page-title-height) + var(--title-pad-top) - var(--title-pad-bottom)) / 2
-      );
-    scale: 0.55;
-  }
-}
-@keyframes page-title-top-collapse {
-  to {
-    scale: 1 var(--page-title-top-scale);
-  }
-}
-@keyframes page-title-edge-collapse {
-  to {
-    height: var(--page-title-collapsed-edge);
-  }
-}
-
 /* h2: centered text flanked on each side by one continuous stroke that
    tapers in, loops into the PMOS awareness ribbon and tapers out toward
    the edge.
@@ -899,7 +779,8 @@ body {
    group's dropdown hangs below its tag on a short string and swings into
    place as it opens. It all hangs inside the bar's own height, so
    --header-height doesn't change. */
-.site__nav-string {
+.site__nav-string,
+.site__nav-sign {
   display: none;
 }
 .site__header {
@@ -939,7 +820,7 @@ body {
     vector-effect: non-scaling-stroke;
   }
   /* The tag's hole (0.5rem down its face) sits on the string. */
-  .site__nav > :not(.site__nav-string) {
+  .site__nav > :not(.site__nav-string, .site__nav-sign) {
     margin-top: calc(var(--sag-at, 0) * var(--string-depth) - var(--header-pad-y) - 0.5rem);
   }
   .site__nav .site__nav-item {
@@ -1026,6 +907,62 @@ body {
   .site__nav-group:hover > .site__nav-group-links,
   .site__nav-group:focus-within > .site__nav-group-links {
     rotate: 0deg;
+  }
+  /* The current page's sign (CurrentPageSign): a paper card on a short
+     string under the current tag, like a dropdown, that drops and swings
+     into place once the page's title banner has scrolled out of view, and
+     is pulled back up when it returns. Under an open dropdown (3), and
+     never in the way of the pointer. */
+  .site__nav-sign {
+    display: block;
+    position: absolute;
+    z-index: 2;
+    width: max-content;
+    max-width: 16rem;
+    margin-top: 0.9rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 3px;
+    /* Dark, like the current page's tag it hangs from. */
+    background: var(--heading);
+    box-shadow: var(--lift-high);
+    color: var(--bg);
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 0.95rem;
+    line-height: 1.25;
+    text-align: center;
+    text-wrap: balance;
+    pointer-events: none;
+    translate: -50% -1.5rem;
+    rotate: -8deg;
+    transform-origin: 50% -0.9rem;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.15s ease,
+      translate 0.25s ease-in,
+      rotate 0.25s ease-in,
+      visibility 0s linear 0.25s;
+  }
+  .site__nav-sign::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    height: 0.9rem;
+    border-left: 2px solid var(--pin-string);
+    translate: -1px 0;
+  }
+  .site__nav-sign[data-shown='true'] {
+    translate: -50% 0;
+    rotate: 2deg;
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.15s ease,
+      translate 0.35s cubic-bezier(0.3, 1.5, 0.5, 1),
+      rotate 0.7s cubic-bezier(0.3, 1.7, 0.5, 1),
+      visibility 0s;
   }
 }
 @media (min-width: 64.0625rem) {
@@ -3579,14 +3516,14 @@ article .layout__column p {
      place for the whole scroll instead of unsticking near the bottom.
      From 75rem up it floats, with no surface of its own, in the empty
      gutter right of the centred reading column (the width is whatever the
-     gutter has, up to 13rem), starting below the collapsed title bar so
+     gutter has, up to 13rem), starting --outline-clearance below the top bar so
      the banner passes over it while the page is scrolled to the top;
      below 75rem it turns into a corner button. */
   position: fixed;
-  top: calc(var(--header-height) + var(--page-title-collapsed) + 1.5rem);
+  top: calc(var(--header-height) + var(--outline-clearance) + 1.5rem);
   right: 1rem;
   width: min(13rem, calc((100vw - 50rem) / 2 - 5.5rem));
-  max-height: calc(100vh - var(--header-height) - var(--page-title-collapsed) - 3rem);
+  max-height: calc(100vh - var(--header-height) - var(--outline-clearance) - 3rem);
   overflow-y: auto;
   font-size: 0.9rem;
 }
@@ -3709,9 +3646,6 @@ article .layout__column p {
 @media (max-width: 48rem) {
   :root {
     --header-height: 4.25rem;
-    --page-title-collapsed: 6rem;
-    --page-title-collapsed-edge: 1.75rem;
-    --page-title-top-scale: 0.35;
   }
 
   .site__header {

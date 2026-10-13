@@ -18,6 +18,7 @@ import { getNav } from '@/lib/nav';
 import { AntigoneLogoMark } from '@/components/antigone-logo';
 import { NavIcon } from '@/components/nav-icon';
 import { NavLink } from '@/components/nav-link';
+import { CurrentPageSign } from '@/components/current-page-sign';
 import { MobileNav } from '@/components/mobile-nav';
 import { AccessibilityMenu } from '@/components/accessibility-menu';
 import { SiteSearch } from '@/components/site-search';
@@ -95,6 +96,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
                 </div>
               ),
             )}
+            <CurrentPageSign />
           </nav>
         </MobileNav>
         <div className="site__tools">

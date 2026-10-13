@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { PageTitleSync } from '@/components/page-title-sync';
 
 // The banner's bottom edge: one gentle wave across the full width, in a
 // 100 x 56 viewBox that stretches sideways only (1 vertical unit = 1/16 rem).
@@ -58,15 +57,15 @@ const TOP_EDGE_PATH = edgeCutout(TOP_EDGE, TOP_EDGE_HEIGHT);
 
 // The page's h1: a banner spanning the whole content pane whose top and
 // bottom edges are waves that break up into thinner and thinner stripes of
-// themselves. As the page scrolls it collapses into a slim bar pinned under
-// the header. The page's sections are listed by the scroll string (or the
-// outline button on narrow screens), not here.
+// themselves. Once it has scrolled out of view, CurrentPageSign drops a
+// sign with the title under the current page's nav tag. The page's sections
+// are listed by the scroll string (or the outline button on narrow
+// screens), not here.
 export function PageTitle({ children }: { children: ReactNode }) {
   return (
     <>
-      {/* Its own element, before the banner and overlapping it, so it can
-          pin under the header on its own while the banner scrolls beneath
-          it (see .page-title-top in globals.css). */}
+      {/* Its own element, before the banner and overlapping it (see
+          .page-title-top in globals.css). */}
       <div className="page-title-top" aria-hidden="true">
         <svg viewBox={`0 0 100 ${TOP_EDGE_HEIGHT}`} preserveAspectRatio="none">
           <path d={TOP_EDGE_PATH} />
@@ -82,7 +81,6 @@ export function PageTitle({ children }: { children: ReactNode }) {
         >
           <path d={EDGE_PATH} />
         </svg>
-        <PageTitleSync />
       </div>
     </>
   );
