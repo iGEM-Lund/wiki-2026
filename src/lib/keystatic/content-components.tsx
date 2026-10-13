@@ -38,6 +38,18 @@ export const contentComponents = {
         defaultValue: 100,
         validation: { min: 10, max: 100 },
       }),
+      plain: fields.checkbox({
+        label: 'Plain (no frame)',
+        description:
+          'Shows the image as it is, straight on the page: no white frame, tape, tilt or shadow. Use it for diagrams, logos or images that already have their own background.',
+        defaultValue: false,
+      }),
+      noZoom: fields.checkbox({
+        label: 'No enlarge on click',
+        description:
+          'Turns off the slight zoom on hover and the full-screen view on click. A figure with a link never enlarges anyway.',
+        defaultValue: false,
+      }),
     },
     ContentView: (props) => <div>[Figure: {props.value.caption ?? ''}]</div>,
   }),

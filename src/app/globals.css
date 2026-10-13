@@ -1886,8 +1886,10 @@ body {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+/* A non-enlargeable image takes its cursor from around it: the pointer
+   of a figure's link, or the plain arrow of a "No enlarge" figure. */
 .zoomable-image.zoomable-image--static {
-  cursor: pointer;
+  cursor: inherit;
 }
 /* The link's own hover feedback is the icon; the image itself stays put. */
 .zoomable-image--static:hover img {
@@ -1919,6 +1921,30 @@ body {
   font-size: 0.8125rem;
   font-weight: 300;
   line-height: 1.45;
+}
+/* Plain figure (the Figure block's "Plain" option): no polaroid. The image
+   and caption sit straight on the page with no card, tape, shadow, tilt or
+   hover lift; it still centres and scales. */
+.figure-with-caption--plain,
+.figure-with-caption--plain:not(:has(figcaption)) {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  rotate: none;
+}
+.figure-with-caption--plain::before,
+.figure-with-caption--plain::after {
+  display: none;
+}
+.figure-with-caption--plain:hover,
+.figure-with-caption--plain:has(:focus-visible) {
+  transform: none;
+}
+.figure-with-caption--plain img {
+  border-radius: 0;
+}
+.figure-with-caption--plain figcaption {
+  padding: 0.5rem 0 0;
 }
 
 .figure-carousel {
