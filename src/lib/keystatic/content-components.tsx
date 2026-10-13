@@ -348,6 +348,52 @@ export const contentComponents = {
     },
   }),
 
+  // Colour is a select rather than free text so every badge stays on the
+  // site's palette. A block, not an inline component; see
+  // src/components/content/Badges.tsx for why.
+  Badges: block({
+    label: 'Badges',
+    description:
+      'A row of small coloured tags, e.g. the committees on a team member card or the pillars an education event belongs to.',
+    schema: {
+      label: fields.text({
+        label: 'Lead-in (optional)',
+        description: 'Bold text before the badges, e.g. "Pillar(s):". Leave empty for just the badges.',
+      }),
+      badges: fields.array(
+        fields.object({
+          text: fields.text({
+            label: 'Text',
+            description:
+              'Keep it short, e.g. "Wet Lab" or "PMOS Awareness". Spell it the same way everywhere so automatic colours match.',
+            validation: { isRequired: true },
+          }),
+          color: fields.select({
+            label: 'Colour',
+            description:
+              'Automatic picks a colour from the text, so the same committee or pillar always gets the same colour. Choose one yourself only if two different badges clash.',
+            options: [
+              { label: 'Automatic', value: 'auto' },
+              { label: 'Teal', value: 'teal' },
+              { label: 'Crimson', value: 'crimson' },
+              { label: 'Rose', value: 'rose' },
+              { label: 'Dark teal', value: 'depths' },
+              { label: 'Kraft', value: 'kraft' },
+            ],
+            defaultValue: 'auto',
+          }),
+        }),
+        { label: 'Badges', itemLabel: (props) => props.fields.text.value || 'Badge' },
+      ),
+    },
+    ContentView: (props) => (
+      <div>
+        [Badges: {props.value.label ? `${props.value.label} ` : ''}
+        {(props.value.badges ?? []).map((badge) => badge.text).join(' / ') || 'no badges'}]
+      </div>
+    ),
+  }),
+
   Formula: inline({
     label: 'Formula (inline)',
     schema: {

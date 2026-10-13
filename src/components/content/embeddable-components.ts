@@ -10,6 +10,7 @@ import { Expandable } from './Expandable';
 import { Citation } from './Citation';
 import { Tooltip } from './Tooltip';
 import { InlineIcon } from './InlineIcon';
+import { Badges } from './Badges';
 import { Quote } from './Quote';
 import { Formula } from './Formula';
 import { FormulaBlock } from './FormulaBlock';
@@ -44,6 +45,7 @@ export const embeddableComponents = {
   Citation,
   Tooltip,
   InlineIcon,
+  Badges,
   Quote,
   Pillars,
   Formula,

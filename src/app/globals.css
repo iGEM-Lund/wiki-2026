@@ -2264,6 +2264,221 @@ a.inline-icon--link:focus-visible {
   color: var(--accent, currentColor);
 }
 
+/* Badges content component: small fabric patches sewn onto the page, a
+   tight woven cloth in one of the brand colours with a running stitch
+   inset from its edge in the thread colour, each sewn on a little crooked.
+   The cloth is cut roughly: its edges are torn and frayed (a jagged
+   clip-path, in two shapes so neighbours don't match), with short loose
+   fibres poking out all round. The cloth keeps its colours in dark mode, like
+   the pins and tape: it is an object on the board, not part of the page.
+   Short enough to sit on one line of a card's ruling, so a row of them
+   wraps like words. */
+.badges__label {
+  margin-inline-end: 0.25em;
+}
+.badge {
+  --badge: #008080;
+  --thread: var(--color-pearl);
+  position: relative;
+  /* Keeps the cloth (z-index -1 below) behind the text but above the card. */
+  isolation: isolate;
+  display: inline-block;
+  margin: 0.15em 0.25em;
+  padding: 0.1em 0.75em;
+  /* The patch's lift off the page. A drop-shadow rather than a box-shadow,
+     so it follows the torn outline of the cloth. */
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.35));
+  /* The running stitch: a dashed outline drawn inside the edge. */
+  outline: 1.5px dashed color-mix(in srgb, var(--thread) 75%, transparent);
+  outline-offset: -4px;
+  color: var(--thread);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgb(0 0 0 / 0.25);
+  rotate: -1deg;
+}
+/* The cloth. Its own layer so the clip-path tears only the fabric, not the
+   stitch or the text. Jags are in px along the edges, so they stay the
+   same size however long the badge's text is. */
+.badge::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    repeating-linear-gradient(45deg, rgb(255 255 255 / 0.07) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(-45deg, rgb(0 0 0 / 0.08) 0 1px, transparent 1px 3px),
+    var(--badge);
+  clip-path: polygon(
+    2px 1px, 7% 0, 12% 1.5px, 19% 0.5px, 26% 2px, 33% 0, 41% 1px, 48% 0, 55% 1.5px,
+    63% 0.5px, 70% 2px, 77% 0, 84% 1px, 91% 0, calc(100% - 3px) 1.5px,
+    100% 4px, calc(100% - 1.5px) 30%, 100% 52%, calc(100% - 2px) 74%, calc(100% - 0.5px) calc(100% - 3px),
+    calc(100% - 4px) 100%, 92% calc(100% - 1.5px), 85% 100%, 78% calc(100% - 2px), 71% calc(100% - 0.5px),
+    64% 100%, 57% calc(100% - 1.5px), 49% 100%, 42% calc(100% - 2px), 35% calc(100% - 0.5px),
+    27% 100%, 20% calc(100% - 1.5px), 13% 100%, 6% calc(100% - 2px), 1.5px calc(100% - 1px),
+    0 calc(100% - 5px), 1.5px 70%, 0 47%, 2px 25%, 0 5px
+  );
+}
+.badge:nth-child(even)::before {
+  clip-path: polygon(
+    0 3px, 5% 1px, 11% 0, 17% 2px, 24% 0.5px, 30% 0, 37% 1.5px, 45% 0, 52% 2px,
+    59% 0, 66% 1px, 74% 0, 80% 1.5px, 88% 0.5px, 95% 0, calc(100% - 1px) 2px,
+    calc(100% - 2px) 22%, 100% 45%, calc(100% - 1px) 68%, 100% calc(100% - 4px),
+    96% calc(100% - 1px), 89% 100%, 82% calc(100% - 2px), 75% 100%, 68% calc(100% - 1px),
+    60% calc(100% - 2px), 53% 100%, 46% calc(100% - 1.5px), 38% 100%, 31% calc(100% - 2px),
+    23% calc(100% - 0.5px), 16% 100%, 9% calc(100% - 1.5px), 3px 100%,
+    0 calc(100% - 3px), 2px 76%, 0.5px 54%, 2px 31%, 0 12%
+  );
+}
+/* Frayed fibres: many tiny threads of the cloth poking out all round its
+   torn edge, each a 1px stroke reaching a couple of pixels past the edge (and a
+   little under the cloth, so none float loose where the tear dips in), drawn as
+   background layers on a box just bigger than the cloth. Two scatterings,
+   alternating like the tear shapes. */
+.badge::after {
+  --fray: color-mix(in srgb, var(--badge) 80%, #000);
+  content: '';
+  position: absolute;
+  z-index: -2;
+  inset: -2px;
+  background-image:
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray));
+  background-position:
+    6% 0,
+    19% 0,
+    34% 0,
+    52% 0,
+    68% 0,
+    87% 0,
+    9% 100%,
+    27% 100%,
+    44% 100%,
+    61% 100%,
+    79% 100%,
+    95% 100%,
+    0 30%,
+    0 72%,
+    100% 22%,
+    100% 64%;
+  background-size:
+    1px 3.5px,
+    1px 3px,
+    1px 4px,
+    1px 3px,
+    1px 3.5px,
+    1px 4px,
+    1px 4px,
+    1px 3px,
+    1px 3.5px,
+    1px 4px,
+    1px 3px,
+    1px 3.5px,
+    3.5px 1px,
+    3px 1px,
+    3px 1px,
+    4px 1px;
+  background-repeat: no-repeat;
+}
+.badge:nth-child(even)::after {
+  background-image:
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray)),
+    linear-gradient(var(--fray), var(--fray));
+  background-position:
+    3% 0,
+    15% 0,
+    29% 0,
+    47% 0,
+    63% 0,
+    81% 0,
+    96% 0,
+    12% 100%,
+    31% 100%,
+    50% 100%,
+    70% 100%,
+    90% 100%,
+    0 18%,
+    0 58%,
+    100% 40%,
+    100% 80%;
+  background-size:
+    1px 3px,
+    1px 4px,
+    1px 3.5px,
+    1px 3px,
+    1px 4px,
+    1px 3.5px,
+    1px 3px,
+    1px 3.5px,
+    1px 4px,
+    1px 3px,
+    1px 3.5px,
+    1px 4px,
+    3px 1px,
+    4px 1px,
+    3.5px 1px,
+    3px 1px;
+}
+.badge:nth-child(even) {
+  rotate: 0.8deg;
+}
+.badge:nth-child(3n) {
+  rotate: -0.4deg;
+}
+.badge--teal {
+  --badge: #008080;
+}
+.badge--crimson {
+  --badge: var(--color-crimson);
+}
+.badge--rose {
+  --badge: var(--color-rose);
+  --thread: #5a0a1e;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.3);
+}
+.badge--depths {
+  --badge: var(--color-depths);
+}
+.badge--kraft {
+  --badge: #8a6a43;
+}
+@media (forced-colors: active) {
+  .badge {
+    border: 1px solid CanvasText;
+  }
+}
+
 /* Tooltip content component: a term with a hover/focus explanation. The
    bubble is pure CSS; the term is focusable so touch and keyboard readers
    get it too. */
