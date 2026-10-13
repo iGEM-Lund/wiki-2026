@@ -953,6 +953,17 @@ body {
     border-left: 2px solid var(--pin-string);
     translate: -1px 0;
   }
+  /* The page a hovered content link goes to (LinkArrow): a plain paper
+     sign, like the other tags, not the current page's dark one, which
+     steps aside while it shows. */
+  .site__nav-sign[data-preview] {
+    background: var(--mat);
+    color: var(--heading);
+  }
+  .site__nav[data-previewing] .site__nav-sign:not([data-preview]) {
+    opacity: 0;
+    visibility: hidden;
+  }
   .site__nav-sign[data-shown='true'] {
     translate: -50% 0;
     rotate: 2deg;
@@ -4556,8 +4567,68 @@ article .layout__column p {
     display: none;
   }
 }
+/* The knot an in-page link points at (LinkArrow) lights up like the
+   heading being read. */
+.scroll-string__notch[data-pointed] {
+  color: var(--heading-minor);
+}
+.scroll-string__notch[data-pointed] .scroll-string__label {
+  color: var(--heading-minor);
+  text-decoration: underline;
+}
+/* The dashed line from a hovered content link to where it goes, its knot on
+   the scroll string or a sign under its nav tag
+   (src/components/link-arrow.tsx): a full-screen overlay in viewport
+   coordinates, over the string (38) and the page, under the header (100),
+   never in the pointer's way. It draws itself on from the link (a solid
+   copy of it, masking it, is revealed along its length). */
+.link-arrow {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  color: var(--heading-minor);
+  visibility: hidden;
+}
+.link-arrow[data-shown] {
+  visibility: visible;
+}
+.link-arrow__reveal {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 16;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.link-arrow[data-shown] .link-arrow__reveal {
+  animation: link-arrow-draw 0.45s cubic-bezier(0.45, 0, 0.25, 1) forwards;
+}
+@keyframes link-arrow-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.link-arrow__line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+  stroke-linecap: round;
+}
+.link-arrow marker path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 @media print {
-  .scroll-string {
+  .scroll-string,
+  .link-arrow {
     display: none !important;
   }
 }

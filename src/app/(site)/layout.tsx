@@ -25,6 +25,7 @@ import { SiteSearch } from '@/components/site-search';
 import { HeaderHeightSync } from '@/components/header-height-sync';
 import { BackToTop } from '@/components/back-to-top';
 import { ScrollString } from '@/components/scroll-string';
+import { LinkArrow } from '@/components/link-arrow';
 import { SiteFooter } from '@/components/site-footer';
 
 // Where each top-level nav entry hangs on the string sagging across the
@@ -97,6 +98,9 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
               ),
             )}
             <CurrentPageSign />
+            {/* The page a hovered content link goes to, filled in and
+                dropped by LinkArrow. */}
+            <div className="site__nav-sign" data-preview="" aria-hidden="true" />
           </nav>
         </MobileNav>
         <div className="site__tools">
@@ -110,6 +114,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       <SiteFooter />
       <BackToTop />
       <ScrollString />
+      <LinkArrow />
     </div>
   );
 }
