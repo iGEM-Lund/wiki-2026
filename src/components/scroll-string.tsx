@@ -426,6 +426,8 @@ export function ScrollString() {
       onPointerDown={(e) => {
         // A heading's knot is a link: let it be one.
         if ((e.target as HTMLElement).closest('.scroll-string__notches')) return;
+        // No text selection starts from the drag, on the labels or the page.
+        e.preventDefault();
         draggingRef.current = true;
         e.currentTarget.setPointerCapture(e.pointerId);
         // Grabbing the knot should not jump it; clicking bare string should.

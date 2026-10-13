@@ -4952,6 +4952,9 @@ article .layout__column p {
   -webkit-mask-image: linear-gradient(
     to bottom,
     #000 calc(var(--knot-top) + 1px),
+  /* Dragging the knot past the heading labels would otherwise select them. */
+  user-select: none;
+  -webkit-user-select: none;
     transparent calc(var(--knot-top) + 1px),
     transparent calc(var(--knot-top) + var(--knot) - 1px),
     #000 calc(var(--knot-top) + var(--knot) - 1px)
