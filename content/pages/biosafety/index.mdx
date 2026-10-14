@@ -31,7 +31,7 @@ For each strategy, we researched multiple possible approaches, compared them aga
 
 ### In-Host Control
 
-#### Gut Gate
+#### **Gut Gate**
 
 Our effector should only be active when our engineered probiotic is in the gut. The distinct physicochemical signals in the gut vary from both the outside environment and between different compartments within the gut itself, and these signals can be used to build a location-based switch. We compared three strategies from the literature and chose hypoxia sensing for our proof-of-concept.
 
@@ -47,7 +47,7 @@ Hypoxia sensing was chosen as our gate. In principle, the oxygen gap between the
 
 We therefore treat hypoxia gating as a partial restriction that works together with the feedback loop and auxotrophy, not as strict gating on its own.
 
-#### Feedback-Responsive Expression
+#### **Feedback-Responsive Expression**
 
 Our effector should be expressed only when testosterone levels exceed a threshold. To ensure the enzyme is produced only to lower elevated testosterone, we propose combining our gut gate with a testosterone-responsive transcription factor to form an AND gate, building directly on feedback from the Malaga iGEM meet-up, where judges recommended an AND gate combining our biosensor with a feedback loop.
 
@@ -64,7 +64,7 @@ Our effector should be expressed only when testosterone levels exceed a threshol
 
 Our effector enzyme ci2350 is a 5β-reductase that reduced progesterone, cortisone and hydrocortisone in the study that identified it; testosterone was not assayed there (Arp et al., 2025), so its activity on testosterone must be tested directly. A related gut-bacterial reductase pathway (OsrB) was functional when expressed in anaerobically grown *E. coli*, and colonization by the donor bacterium lowered prednisolone 2–10-fold in mouse cecum, colon and feces (Jacoby et al., 2025). This shows that a gut bacterium can remove a steroid in vivo, but it is not a sense-and-degrade circuit, and no study has built one for testosterone.
 
-#### Colonization Control
+#### **Colonization Control**
 
 Colonization control is the decision about how long our probiotic should remain in the gut after dosing. It can either be transient (not colonizing the gut, cleared between doses and requiring redosing) or engineered to be self-limiting. Residence time matters because shedding continues for as long as the bacterium stays in the gut, and a gut gate does not shorten that.
 
@@ -74,7 +74,7 @@ Wild-type *E. coli* Nissle 1917 (EcN) is not reliably transient in humans. In a 
 
 In conclusion, AnTigone is intended to be transient by design, with persistence limited by Δ*dapA* auxotrophy and the effect maintained by repeat dosing. We will test this by measuring clearance of our own strain.
 
-#### Resident Gut Communities
+#### **Resident Gut Communities**
 
 Resident gut communities are the native bacterial communities present in the gut. A living biotherapeutic is not alone in the gut, so we considered how it might affect this community.
 
@@ -130,7 +130,7 @@ How it works
   </LayoutColumn>
 </Layout3>
 
-Options compared
+#### Options compared
 
 We compared six auxotrophy options before selecting this one. Each row states what the option does, where it falls short, and what the cited study showed.
 
@@ -143,7 +143,7 @@ We compared six auxotrophy options before selecting this one. Each row states wh
 | Double / multiplexed auxotrophy                | Combine two independent essential dependencies                       | Reduces escape frequency; double insurance                                      | More complex to build; repeated editing can make the strain more fragile            | Chien et al. (2022): the lowest escape rate, about 10⁻⁸, came from combining hypoxia and lactate sensing in an AND gate in *S.* Typhimurium (Chien et al.).                                                                                                                                                            |
 | Synthetic auxotrophy (non-standard amino acid) | Recode essential proteins/codons to require a non-natural amino acid | Strongest theoretical containment; stable long-term                             | Too complex for current project scope                                               | Described as the strongest containment option, but needs extensive genome recoding ([Kunjapur et al., 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC11060021/)).                                                                                                                                                      |
 
-Stability considerations
+#### Stability considerations
 
 Δ*dapA* creates selective pressure, so any compensatory mutation restoring DHDPS activity or acquisition of *dapA* (or an equivalent gene) via HGT could let the bacteria escape containment; cross-feeding of *meso*-DAP in the gut is a further, though less likely, risk. To improve stability, we are considering combining DAP auxotrophy with a second, independent essential dependency, and a CRISPR-based system (following Hayashi et al.'s approach for *thyA*) that targets and disrupts any exogenous *dapA* acquired via HGT. Synthetic auxotrophy is not being pursued now, given the genome-editing complexity involved, but remains a candidate for a future therapeutic-grade strain. We also plan to periodically measure escape frequency and characterize any escape variants to monitor long-term stability. Given the direct link between *dapA* and cell-wall synthesis, its precedent in engineered bacteria, and its relatively simple construction, we selected Δ*dapA*-mediated DAP auxotrophy as our biocontainment strategy.
 
