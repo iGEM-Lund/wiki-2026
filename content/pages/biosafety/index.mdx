@@ -175,13 +175,13 @@ CRISPR is a gene-editing strategy naturally present in bacteria as phage defense
 
 Quorum sensing (QS) is a bacterial communication system using signaling molecules to sense population density and regulate gene expression. In the LuxI/LuxR system, bacteria produce AHL, which accumulates with population size; once a threshold is reached, AHL binds LuxR and activates downstream genes. We looked at QS as a population-dependent safety layer based on precedent from other iGEM teams: Utrecht 2025 used high AHL to activate MazF and inhibit growth at high density; GEMS-Taiwan 2023 used low AHL to trigger toxin-mediated death of isolated bacteria, preventing escape; and KU Leuven 2024 combined QS with temperature sensing for more specific containment. For AnTigone, we could adapt the Utrecht strategy to limit excessive EcN accumulation, relevant since EcN is known to preferentially colonize colorectal neoplastic tissue (Gurbatri et al., 2024), or combine QS with our hypoxia-based gate, so survival requires both low oxygen and an appropriate population density.
 
-#### Genetic Firewalling: Amber-Suppression Semantic Firewall
+#### **Genetic Firewalling: Amber-Suppression Semantic Firewall**
 
 **Principle.** Amber suppression uses the amber stop codon UAG as a genetic lock: a TAG codon is inserted into the engineered gene, and normally the ribosome stops there, producing only an incomplete protein. A matching suppressor tRNA, provided in the intended host, recognizes UAG and inserts an amino acid instead, allowing translation to continue and producing a full-length, functional protein. If the gene is transferred to a bacterium lacking that suppressor tRNA, translation stops early and the protein is non-functional, making the engineered gene depend on a matching suppressor present only in the intended host.
 
 **Why we considered it.** In the gut, engineered DNA could potentially transfer to other bacteria. Amber suppression would not stop that transfer, but could make the transferred gene less likely to work in a new host, without relying on a dedicated toxin, an attractive additional safety layer.
 
-Main limitations
+**Main limitations**
 
 * It does not control bacterial survival: the engineered *E. coli* can still survive and spread, and DNA transfer can still occur; amber suppression only reduces the chance a transferred gene stays functional.
 * It can interfere with normal translation: in *E. coli*, RF1 also recognizes UAG as a stop codon, so RF1 and the suppressor tRNA compete for the same site, and strong suppression may cause read-through of natural UAG stops in other genes.
