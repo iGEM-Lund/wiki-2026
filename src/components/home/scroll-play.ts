@@ -15,7 +15,7 @@ const SKIP_EVENT = 'home-scenes-skip';
 let skippingUntil = 0;
 const skipping = () => performance.now() < skippingUntil;
 export function skipScenes() {
-  skippingUntil = performance.now() + 800;
+  skippingUntil = performance.now() + 2500;
   window.dispatchEvent(new Event(SKIP_EVENT));
 }
 

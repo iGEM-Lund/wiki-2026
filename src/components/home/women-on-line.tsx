@@ -149,7 +149,7 @@ const ROOM_AT = at(760);
 // bubble's own box (0 to 100 each way, see the bubble's edge below), as
 // seen stretched to the screen's shape. Till her head is found on the
 // screen, a guess at it.
-const TAIL_GAP = 8;
+const TAIL_GAP = 12;
 const TAIL_GUESS = { x: 46, y: 142 };
 function bubbleTail(tip: { x: number; y: number }) {
   // Its foot, 7 wide, on the bottom of the round, leaning her way.

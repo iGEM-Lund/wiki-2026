@@ -36,7 +36,14 @@ const PEACOCK: readonly [number, number] = [NAME[1] - 500, NAME[1] + 400];
 // the mark and the name settle in the middle of the page's space.
 const DETACH: readonly [number, number] = [NAME[1] - 200, NAME[1] + 700];
 const SETTLE: readonly [number, number] = [NAME[1] + 200, NAME[1] + 1300];
-const PLAY_MS = SETTLE[1];
+// Then the way in: "Start here", written up by the nav, pointing to the
+// first page in it, whose sign drops down ready to click (see LinkArrow).
+const START: readonly [number, number] = [SETTLE[1] - 300, SETTLE[1] + 300];
+const PLAY_MS = START[1];
+const START_HREF = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/project_background`;
+// Where it is written, from that page's tag in the nav, in px: to its
+// left, and below the sign that drops from it.
+const START_FROM_TAG = { x: -260, y: 95 };
 // Where the mark sits, in vh: its top, and how tall it is.
 const LOGO_TOP = 12;
 const LOGO_H = 34;
@@ -146,12 +153,37 @@ export function AntigoneReveal() {
   const peacock = smooth(phase(penMs, PEACOCK));
   const detach = smooth(phase(penMs, DETACH));
   const settle = smooth(phase(penMs, SETTLE));
+  const start = smooth(phase(penMs, START));
+  // Once it has all settled, the header loses its shadow, sitting flat on
+  // the page with the mark (see :root[data-home-end] in globals.css), and
+  // the way in points up to where it goes.
+  const ended = settle > 0.5;
+  useEffect(() => {
+    const root = document.documentElement;
+    if (ended) root.dataset.homeEnd = '';
+    else delete root.dataset.homeEnd;
+    return () => {
+      delete root.dataset.homeEnd;
+    };
+  }, [ended]);
+  const startRef = useRef<HTMLSpanElement>(null);
+  const pointing = start === 1;
+  useEffect(() => {
+    const link = startRef.current;
+    if (!pointing || !link) return;
+    window.dispatchEvent(new CustomEvent('link-arrow:pin', { detail: link }));
+    return () => {
+      window.dispatchEvent(new CustomEvent('link-arrow:unpin', { detail: link }));
+    };
+  }, [pointing]);
 
   // The screen's size, and each folding piece's width at full size, in px.
   const stageRef = useRef<HTMLDivElement>(null);
   // The screen's size, how far down it the site's header comes, and the
   // words' size, in px.
-  const [size, setSize] = useState({ w: 1200, h: 800, header: 60, font: 60 });
+  // And where the nav's tag for the first page is (its middle across, and
+  // its bottom), for "Start here".
+  const [size, setSize] = useState({ w: 1200, h: 800, header: 60, font: 60, tagX: 600, tagY: 40 });
   const [widths, setWidths] = useState<number[]>([]);
   useLayoutEffect(() => {
     const stage = stageRef.current;
@@ -159,15 +191,23 @@ export function AntigoneReveal() {
     const next = [...stage.querySelectorAll<HTMLElement>('.antigone-reveal__measure')].map((el) => el.offsetWidth);
     if (next.some((w, i) => Math.abs(w - (widths[i] ?? -1)) > 0.5)) setWidths(next);
     const words = stage.querySelector('.antigone-reveal__words');
+    const headerBox = document.querySelector('.site__header')?.getBoundingClientRect();
+    const tag = document
+      .querySelector(`.site__nav a[href="${START_HREF}"]`)
+      ?.closest('.site__nav > *')
+      ?.getBoundingClientRect();
     const next2 = {
       w: stage.clientWidth,
       h: window.innerHeight,
-      header: Math.max(0, document.querySelector('.site__header')?.getBoundingClientRect().bottom ?? 0),
+      header: Math.max(0, (headerBox?.bottom ?? 0) - Math.min(0, headerBox?.top ?? 0)),
       font: words ? parseFloat(getComputedStyle(words).fontSize) : size.font,
+      tagX: tag ? tag.left + tag.width / 2 : size.tagX,
+      // As it is with the header in place, which may still be sliding in.
+      tagY: tag ? tag.bottom - Math.min(0, headerBox?.top ?? 0) : size.tagY,
     };
     if ((Object.keys(next2) as (keyof typeof next2)[]).some((k) => Math.abs(next2[k] - size[k]) > 0.5)) setSize(next2);
   });
-  const { w, h, header, font } = size;
+  const { w, h, header, font, tagX, tagY } = size;
 
   // The mark, scaled to LOGO_H, centred; the thread as thick as the scene's.
   const scale = ((LOGO_H / 100) * h) / MARK.h;
@@ -347,6 +387,20 @@ export function AntigoneReveal() {
           </span>
           <span style={pieceStyle(3)}>one</span>
         </p>
+        <span
+          ref={startRef}
+          className="antigone-reveal__start"
+          data-arrow-href={START_HREF}
+          data-arrow-from="right"
+          style={{
+            left: `${(tagX + START_FROM_TAG.x).toFixed(1)}px`,
+            top: `${(tagY + START_FROM_TAG.y).toFixed(1)}px`,
+            opacity: start,
+            visibility: start ? undefined : 'hidden',
+          }}
+        >
+          Start here
+        </span>
       </div>
     </section>
   );

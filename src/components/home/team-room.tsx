@@ -136,13 +136,14 @@ export function TeamRoom({ shown, papers }: { shown: number; papers: number }) {
       <LayerArt layer={presenter.behind} transform={presenterAt} />
       <LayerArt layer={presenter.main} transform={presenterAt} />
       <LayerArt layer={presenter.over} transform={presenterAt} />
-      {/* Her head, unseen, for the speech bubble's tail to point at. */}
+      {/* Her head, unseen, for the speech bubble's tail to point at: with
+          her hair (a bun on top) and her outline round it. */}
       <g transform={presenterAt}>
         <circle
           className="team-room__speaker"
           cx={presenter.head[0]}
           cy={presenter.head[1]}
-          r={presenter.headRadius}
+          r={presenter.headRadius + 9}
           fill="none"
         />
       </g>

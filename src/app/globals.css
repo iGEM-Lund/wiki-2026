@@ -990,6 +990,12 @@ body {
     background: var(--mat);
     color: var(--heading);
   }
+  /* Pointed to by a pinned link (the home page's "Start here"), and
+     clickable through to its page. */
+  .site__nav-sign[data-clickable] {
+    pointer-events: auto;
+    cursor: pointer;
+  }
   .site__nav[data-previewing] .site__nav-sign:not([data-preview]) {
     opacity: 0;
     visibility: hidden;
@@ -1757,6 +1763,7 @@ body {
 .site__nav-toggle::before,
 .back-to-top::before,
 .toc__toggle::before,
+.tag-button::before,
 .next-page__link::before {
   content: '';
   position: absolute;
@@ -4321,7 +4328,8 @@ article .layout__column p {
    drops in swinging when it appears, and swings the other way under the
    pointer. --tilt is how it rests. */
 .back-to-top,
-.toc__toggle {
+.toc__toggle,
+.tag-button {
   --pin: var(--pin-teal);
   --tilt: -4deg;
   flex-direction: column;
@@ -4340,13 +4348,15 @@ article .layout__column p {
   filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.18)) drop-shadow(0 4px 6px rgb(0 0 0 / 0.16));
 }
 .back-to-top::before,
-.toc__toggle::before {
+.toc__toggle::before,
+.tag-button::before {
   left: 50%;
   top: 8px;
 }
 /* The string, from the pin down through the tag's hole. */
 .back-to-top::after,
-.toc__toggle::after {
+.toc__toggle::after,
+.tag-button::after {
   content: '';
   position: absolute;
   left: 50%;
@@ -4356,7 +4366,8 @@ article .layout__column p {
   translate: -1px 0;
 }
 .back-to-top:focus-visible,
-.toc__toggle:focus-visible {
+.toc__toggle:focus-visible,
+.tag-button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -4417,7 +4428,8 @@ article .layout__column p {
   text-transform: uppercase;
 }
 .back-to-top:hover .float-tag,
-.toc__toggle:hover .float-tag {
+.toc__toggle:hover .float-tag,
+.tag-button:hover .float-tag {
   rotate: calc(var(--tilt) * -1.4);
   background: color-mix(in srgb, var(--accent) 12%, var(--mat));
 }
@@ -4429,13 +4441,16 @@ article .layout__column p {
 /* Back to top tears its tag off the pin: a tug that rips the paper from
    the top edge down into the hole, then it drops away off the screen,
    tumbling, while the freed string sways. */
-.back-to-top[data-ripped] {
+.back-to-top[data-ripped],
+.tag-button[data-ripped] {
   pointer-events: none;
 }
-.back-to-top[data-ripped] .float-tag {
+.back-to-top[data-ripped] .float-tag,
+.tag-button[data-ripped] .float-tag {
   animation: float-tag-rip 1s forwards;
 }
-.back-to-top[data-ripped]::after {
+.back-to-top[data-ripped]::after,
+.tag-button[data-ripped]::after {
   transform-origin: top;
   animation: float-string-sway 1s ease-out;
 }
@@ -5457,7 +5472,14 @@ article .layout__column p {
   transform: none;
   visibility: visible;
   box-shadow: var(--lift);
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.4s ease;
+}
+/* At the end of the story (src/components/home/antigone-reveal.tsx), flat
+   on the page with the mark under it: no shadow, no edge. */
+:root[data-home-end] .site:has(.home) .site__header {
+  box-shadow: none;
 }
 
 /* The opening scene (src/components/home/women-on-line.tsx). The scroll
@@ -5612,7 +5634,10 @@ article .layout__column p {
 .women-line-scene__bubble-edge path {
   fill: none;
   stroke: var(--heading);
-  stroke-width: 3.4;
+  /* As thick as the people's outlines round the table: LINE at
+     FIGURE_SCALE (src/lib/women-on-line.ts), in a drawing 1200 wide
+     across the stage. */
+  stroke-width: calc(2.5 * 1.35 * 100cqw / 1200);
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
 }
@@ -5890,29 +5915,41 @@ article .layout__column p {
   fill: var(--her-tint);
 }
 
-/* Under the home page's title, skipping the story to its end
-   (src/components/home/skip-to-end.tsx): a quiet outlined pill. */
-.skip-to-end {
+/* A paper tag on a pin, like back-to-top's but in the flow of the page
+   and wide enough for its words: the home page's "Skip introduction"
+   (src/components/home/skip-to-end.tsx) and "Start here" (antigone-
+   reveal.tsx). Torn off its pin when clicked, like back-to-top's. */
+.tag-button {
+  position: relative;
   display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin-top: clamp(1rem, 2.5vw, 2rem);
-  padding: 0.45rem 1rem 0.45rem 1.15rem;
-  border: 2px solid var(--title);
-  border-radius: 999px;
-  background: none;
-  color: var(--title);
+  width: auto;
+  text-decoration: none;
+}
+.site .tag-button {
+  color: var(--heading);
+}
+.tag-button .float-tag {
+  width: auto;
+  padding-inline: 1.1rem;
+}
+.tag-button .float-tag__label {
+  font-size: 0.72rem;
+}
+.skip-to-end {
+  --tilt: 3deg;
+  margin-top: clamp(0.75rem, 2vw, 1.75rem);
+}
+
+/* The way in, at the end of the story: written up by the nav, pointing
+   to the first page's sign (see the script). Words, not a button: the
+   sign is what is clicked. */
+.antigone-reveal__start {
+  position: absolute;
   font-family: var(--font-heading);
-  font-size: 1rem;
-  cursor: pointer;
-  pointer-events: auto;
-  transition: background-color 0.15s, color 0.15s;
-}
-.skip-to-end:hover {
-  background: var(--title);
-  color: var(--bg);
-}
-.skip-to-end:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  font-size: 1.4rem;
+  /* Crimson, like the arrow it sends to the sign. */
+  color: var(--heading-minor);
+  rotate: -4deg;
+  white-space: nowrap;
+  pointer-events: none;
 }

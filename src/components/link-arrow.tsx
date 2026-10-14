@@ -39,6 +39,16 @@ type Origin = { left: number; right: number; top: number; bottom: number; inset:
 // - another site: a globe that pops up just beside the link.
 // Anything else (pages not in the nav) gets no line. The line is redrawn
 // as the page scrolls, since its ends move.
+//
+// Something can also be pointed from without hovering it, until told
+// otherwise (the home page's "Start here"): a `link-arrow:pin` event on
+// the window with the element as its detail, and `link-arrow:unpin` to
+// stop. It need not be a link: anything else says where it points with
+// data-arrow-href. Its line comes back whenever another link's goes, and
+// the nav sign it points to can be clicked. One marked
+// data-arrow-from="left" sends its line out from its left side, round
+// what is above it, rather than straight up; "right", out of its right
+// end, bending up into the sign.
 export function LinkArrow() {
   const svgRef = useRef<SVGSVGElement>(null);
   const lineRef = useRef<SVGPathElement>(null);
@@ -51,10 +61,11 @@ export function LinkArrow() {
     const reveal = revealRef.current;
     const globe = globeRef.current;
     if (!svg || !line || !reveal || !globe) return;
-    let link: HTMLAnchorElement | null = null;
+    let link: HTMLElement | null = null;
     let target: Target | null = null;
     let frame = 0;
     let settleUntil = 0;
+    let pinned: HTMLElement | null = null;
 
     function knotFor(a: HTMLAnchorElement): Target | null {
       const track = document.querySelector<HTMLElement>('.scroll-string');
@@ -71,7 +82,7 @@ export function LinkArrow() {
       return { el: notch, end: 'side', cleanup: () => delete notch.dataset.pointed };
     }
 
-    function signFor(a: HTMLAnchorElement): Target | null {
+    function signFor(a: HTMLAnchorElement, from: HTMLElement): Target | null {
       const nav = document.querySelector<HTMLElement>('.site__nav');
       const sign = nav?.querySelector<HTMLElement>('.site__nav-sign[data-preview]');
       if (!nav || !sign || getComputedStyle(sign).display === 'none') return null;
@@ -88,12 +99,21 @@ export function LinkArrow() {
       sign.dataset.shown = 'true';
       // Only one sign at a time: the current page's steps aside.
       nav.dataset.previewing = '';
+      // A pinned pointer's sign stays up, so it is clickable through to
+      // where it goes, as its nav entry is.
+      const follow = () => entry.click();
+      if (from === pinned) {
+        sign.dataset.clickable = '';
+        sign.addEventListener('click', follow);
+      }
       return {
         el: sign,
         end: 'bottom',
         cleanup: () => {
           delete sign.dataset.shown;
           delete nav.dataset.previewing;
+          delete sign.dataset.clickable;
+          sign.removeEventListener('click', follow);
         },
       };
     }
@@ -115,7 +135,7 @@ export function LinkArrow() {
     // card, or a plain figure's image), or the end of a text link. A link
     // that wraps is left from its first line going up, its last going
     // down, so the line never crosses the link's own words.
-    function originOf(a: HTMLAnchorElement, up: boolean): Origin {
+    function originOf(a: HTMLElement, up: boolean): Origin {
       const figure = a.closest<HTMLElement>('.figure-with-caption');
       const img = figure && a.querySelector('img');
       if (figure && img) {
@@ -140,7 +160,7 @@ export function LinkArrow() {
     // Puts the globe beside where the line leaves from (see originOf): up
     // and to the right, or below when the header is in the way, or to the
     // left near the screen's right edge.
-    function placeGlobe(a: HTMLAnchorElement) {
+    function placeGlobe(a: HTMLElement) {
       const r = globe!.offsetWidth / 2;
       const header = document.querySelector('.site__header')?.getBoundingClientRect().bottom ?? 0;
       const above = originOf(a, true);
@@ -158,11 +178,20 @@ export function LinkArrow() {
       return { x1, y1, cx, cy, r, right };
     }
 
-    function targetFor(a: HTMLAnchorElement) {
-      if (a.closest('.scroll-string, .toc')) return null;
+    // What `el` points to: a link's own address, or, for something else
+    // pinned (see the top), its data-arrow-href.
+    function targetFor(el: HTMLElement) {
+      if (el.closest('.scroll-string, .toc')) return null;
+      const a =
+        el instanceof HTMLAnchorElement
+          ? el
+          : el.dataset.arrowHref
+            ? Object.assign(document.createElement('a'), { href: el.dataset.arrowHref })
+            : null;
+      if (!a) return null;
       if (a.origin !== location.origin) return /^https?:$/.test(a.protocol) ? globeFor() : null;
       if (normalize(a.pathname) === normalize(location.pathname)) return a.hash ? knotFor(a) : null;
-      return signFor(a);
+      return signFor(a, el);
     }
 
     function draw() {
@@ -196,13 +225,28 @@ export function LinkArrow() {
         d = `M${x1} ${y1} C${x1} ${y1 + drop} ${x2 + pull} ${y2} ${x2} ${y2}`;
       } else {
         // Up from over the link's middle to the sign's bottom edge,
-        // arriving vertically, as if the sign's string ran on down to it.
-        const x1 = from.left + from.width / 2;
-        const y1 = from.top - 2;
+        // arriving vertically, as if the sign's string ran on down to it;
+        // or out of the link's left side, swinging wide round what is
+        // above it.
         const x2 = to.left + to.width / 2;
         const y2 = to.bottom + END_GAP;
-        const rise = Math.max(40, (y1 - y2) / 2);
-        d = `M${x1} ${y1} C${x1} ${y1 - rise} ${x2} ${y2 + rise} ${x2} ${y2}`;
+        if (link.dataset.arrowFrom === 'right') {
+          // Out of the link's right end, sideways, bending up in one
+          // even curve into the sign.
+          const x1 = from.right + END_GAP;
+          const y1 = from.top + from.height / 2;
+          d = `M${x1} ${y1} C${x1 + (x2 - x1) * 0.55} ${y1} ${x2} ${y2 + (y1 - y2) * 0.55} ${x2} ${y2}`;
+        } else if (link.dataset.arrowFrom === 'left') {
+          const x1 = from.left - END_GAP;
+          const y1 = from.top + from.height / 2;
+          const reach = Math.max(380, x1 - x2 + 300);
+          d = `M${x1} ${y1} C${x1 - reach} ${y1} ${x2} ${y2 + (y1 - y2) * 0.7} ${x2} ${y2}`;
+        } else {
+          const x1 = from.left + from.width / 2;
+          const y1 = from.top - 2;
+          const rise = Math.max(40, (y1 - y2) / 2);
+          d = `M${x1} ${y1} C${x1} ${y1 - rise} ${x2} ${y2 + rise} ${x2} ${y2}`;
+        }
       }
       line!.setAttribute('d', d);
       reveal!.setAttribute('d', d);
@@ -213,7 +257,7 @@ export function LinkArrow() {
       if (!frame) frame = requestAnimationFrame(draw);
     }
 
-    function show(a: HTMLAnchorElement) {
+    function show(a: HTMLElement) {
       const next = targetFor(a);
       if (!next) return;
       hide();
@@ -227,6 +271,9 @@ export function LinkArrow() {
       svg!.dataset.shown = '';
       window.addEventListener('scroll', schedule, { passive: true });
       window.addEventListener('resize', schedule);
+      // And whenever something settles that may have moved its ends (the
+      // header sliding in under a pinned one, say).
+      document.addEventListener('transitionend', schedule);
     }
     function hide() {
       target?.cleanup?.();
@@ -236,6 +283,7 @@ export function LinkArrow() {
       frame = 0;
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
+      document.removeEventListener('transitionend', schedule);
     }
 
     const linkIn = (e: Event) => {
@@ -244,14 +292,34 @@ export function LinkArrow() {
     };
     const linkOut = (e: Event) => {
       const next = (e as PointerEvent | FocusEvent).relatedTarget as Node | null;
-      if (link && (!next || !link.contains(next))) hide();
+      if (link && link !== pinned && (!next || !link.contains(next))) {
+        hide();
+        if (pinned?.isConnected) show(pinned);
+      }
     };
+    const pin = (e: Event) => {
+      const a = (e as CustomEvent<HTMLElement>).detail;
+      pinned = a;
+      // Shown afresh even if hovered, so its sign is made clickable.
+      if (link === a) hide();
+      show(a);
+    };
+    const unpin = (e: Event) => {
+      const a = (e as CustomEvent<HTMLElement>).detail;
+      if (pinned !== a) return;
+      pinned = null;
+      if (link === a) hide();
+    };
+    window.addEventListener('link-arrow:pin', pin);
+    window.addEventListener('link-arrow:unpin', unpin);
     document.addEventListener('pointerover', linkIn);
     document.addEventListener('focusin', linkIn);
     document.addEventListener('pointerout', linkOut);
     document.addEventListener('focusout', linkOut);
     return () => {
       hide();
+      window.removeEventListener('link-arrow:pin', pin);
+      window.removeEventListener('link-arrow:unpin', unpin);
       document.removeEventListener('pointerover', linkIn);
       document.removeEventListener('focusin', linkIn);
       document.removeEventListener('pointerout', linkOut);
