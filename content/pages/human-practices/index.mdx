@@ -27,8 +27,6 @@ By mapping the path our product would have to travel from a construct in the lab
 
 Throughout the development of the project, we consulted researchers and experts across different fields to evaluate our assumptions and shape our decisions. We spoke with specialists in steroid-transforming enzymes, PMOS and hyperandrogenism research, microbiome containment, sustainability practice, clinical practice, and innovation management, just to name a few. Each conversation is summarized below, together with what we learned and how it shaped the project.
 
-<FigureCarousel images={[{"src":"https://static.igem.wiki/teams/6160/wiki/human-practices/interview-pictures/angelica-linden-interview-picture.avif","alt":"Interview picture from meeting with Angelica Linden Hirschberg"},{"src":"https://static.igem.wiki/teams/6160/wiki/human-practices/interview-pictures/anna-benrick-interview-picture.avif","alt":"Interview picture from meeting with Anna Benrick"},{"src":"https://static.igem.wiki/teams/6160/wiki/human-practices/interview-pictures/clement-chan-inteview-picture.avif","alt":"Interview picture from meeting with Clement Chan"},{"src":"https://static.igem.wiki/teams/6160/wiki/human-practices/interview-pictures/elisabet-stener-interview-picture.avif","alt":"Interview picture from meeting with Elisabet Stener-Victorin"},{"src":"https://static.igem.wiki/teams/6160/wiki/human-practices/interview-pictures/lars-interview-picture.avif","alt":"Interview picture from meeting with Lars Mattiasson"},{"src":"https://static.igem.wiki/teams/6160/wiki/human-practices/interview-pictures/lina-zabuliene-interview-picture.avif","alt":"Interview picture from meeting with Lina Zabuliene"},{"src":"https://static.igem.wiki/teams/6160/wiki/human-practices/interview-pictures/simon-ekstrom-interview-picture.avif","alt":"Interview picture from meeting with Simon Ekstrom"},{"src":"https://static.igem.wiki/teams/6160/wiki/human-practices/interview-pictures/suman-rice-interview-picture.avif","alt":"Interview picture from meeting with Suman Rice"},{"src":"https://static.igem.wiki/teams/6160/wiki/human-practices/interview-pictures/vati-of-sweden-interview-picture.avif","alt":"Interview picture from meeting with Magdalena Nour"}]} speedSeconds={25} still={false} />
-
 ## Academia
 
 <Card>
@@ -398,41 +396,31 @@ Division of Biotechnology and Applied Microbiology"
   Short text
 
   <Expandable defaultOpen={false}>
-    Savvina Leontakianakou is a doctoral student in enzyme technology and was a member of the 2019 iGEM Lund team that won the gold medal and has since also served as a judge for the iGEM competition. We contacted her to troubleshoot our NADPH-based enzyme assay when our empty-vector control showed activity, and to ask how to structure the Design-Build-Test-Learn cycle on the wiki. She told us how to handle the background activity, how to set up the controls, and how to keep the DBTL cycles connected.
+    Savvina Leontakianakou is a doctoral student in enzyme technology. She was a member of the 2019 iGEM Lund team that won a gold medal and has since served as an iGEM judge. We contacted her to troubleshoot our NADPH-based enzyme assay, after our empty-vector control showed activity, and to ask how to structure the Design-Build-Test-Learn (DBTL) cycle on the wiki. She advised us on handling the background activity, setting up the controls and keeping the DBTL cycles connected.
 
     ---
 
     Summary of interview:
 
-    We contacted her since our assay showed a clear absorbance shift in the control with pET11 and no insert, which suggested that native *E. coli* proteins in the purified fraction react with NADPH. We also wanted advice on a nested DBTL structure, on mass spectrometry, and on whether to add an ELISA or assay kit.
+    We contacted Savvina because our assay showed a clear absorbance shift in the control with pET11 and no insert, which suggested that native *E. coli* proteins in the purified fraction react with NADPH. We also wanted her advice on a nested DBTL structure, on mass spectrometry, and on whether to add an ELISA or assay kit.
 
-    We discussed how the control is purified and whether it matches the target protein on a gel; how to quantify and subtract the background; options for further purification and for measuring testosterone; and how to structure the DBTL cycles. We also met in person, where she shared her view as a former iGEM judge.
+    By email, she asked how the control is purified and advised us to run SDS-PAGE on it and compare it with the gel of the purified target, to measure protein concentration, and to subtract the background activity from the measured activity. She suggested size exclusion chromatography for further purification and mass spectrometry through a colleague at Kemicentrum, and advised us to establish our current assay before adding an ELISA or kit. For the DBTL cycles, she said that smaller nested cycles are fine as long as a thread connects them.
 
-    The overall advice and input she gave us over multiple email conversations and in-person meetings:
-
-    * Include the right negative controls: a construct without the enzyme with IPTG, and one without the enzyme and without IPTG.
-    * Run SDS-PAGE on the controls and compare it with the gel of the purified target. If similar bands appear, other proteins may cause the activity. The control may also contain more protein than the target, which could explain higher activity.
-    * Determine the protein concentration to relate it to the measured activity, subtract the background activity of the control from the activity of our protein, and see what remains.
-    * Run enzyme assays as soon as possible after purification, because storing the enzyme in the fridge for days affects its stability.
-    * Check the Vivaspin flow-through to see what we lose, as well as the retained fraction.
-    * Before adding the ELISA or the Thermo Fisher kit, establish what we have and avoid adding too many parameters when time is short.
-    * Smaller nested DBTL cycles are fine, but they need a thread that connects them into one story.
+    In a later in-person meeting, she gave more advice: include negative controls with and without IPTG for the construct without the enzyme, run assays soon after purification because stored enzyme loses stability, and check the Vivaspin flow-through to see what we lose.
 
     Integration:&#x20;
 
-    **Negative controls** - we added proper negative controls; empty-vector (pET11) controls, induced and uninduced.
+    **Negative controls -** we added proper negative controls: empty-vector (pET11) controls, induced and uninduced.
 
-    **Gel comparison -** we ran SDS-PAGE of the control and compared it with the target protein.&#x20;
+    **Background subtraction -** we use the control’s activity as the baseline and report only the activity above it. (CHECK ELEONORA)
 
-    **Background subtraction** - we use the control’s activity as the baseline and report only the activity above it. (ELEONORA CONFIRM)
+    **Scope -** given the very limited time left, we decided to finish and understand the current assay instead of adding the ELISA or the Thermo Fisher androgen receptor kit. We also did not run mass spectrometry, because there was no time to organise access across divisions.
 
-    **Assay timing -** from then on, we tried to ran the assays closer to the actual purification day, or if possible even on the same day (evenings). (DID WE SEE IMPROVED ACTIVITY??)
+    **DBTL structure -** we used several smaller DBTL cycles and kept a red thread running through them.
 
-    **Purification checks** - we kept and analysed the Vivaspin flow-through to check how much protein we are loosing with the cutoff of 30kDa.&#x20;
+    **Assay timing -** from then on, we ran the assays closer to the purification day, if possible on the same day (in the evenings). *(ELEONORA- DID ACTIVITY IMPROVE?)*
 
-    **Scope -** we decided to finish and understand the current assay instead of adding the ELISA or the Thermo Fisher androgen receptor kit, given very limited time left.&#x20;
-
-    **DBTL structure -** we decided to use multiple smaller DBTL cycles, but tried to keep a red threat.
+    **Purification checks -** we kept and analysed the Vivaspin flow-through to see how much protein we lose with the 30 kDa cutoff. (OUTCOME)
   </Expandable>
 </Card>
 
