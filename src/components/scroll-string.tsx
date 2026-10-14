@@ -159,7 +159,9 @@ export function ScrollString() {
   useEffect(() => {
     const root = document.documentElement;
     const track = trackRef.current;
-    if (!track) return;
+    // The home page is one full-width scene with no outline to follow, so
+    // the string stays hidden there (and the native scrollbar stays on).
+    if (!track || pathname === '/') return;
 
     const header = document.querySelector<HTMLElement>('.site__header');
     const footer = document.querySelector<HTMLElement>('.site__footer');

@@ -1,8 +1,13 @@
+import { AntigoneReveal } from '@/components/home/antigone-reveal';
+import { HomeHeaderReveal } from '@/components/home/home-header-reveal';
+import { WomenOnLine } from '@/components/home/women-on-line';
+
 export default function HomePage() {
   return (
-    <div>
-      <h1>iGEM Lund 2026</h1>
-      <p>Welcome to our team wiki.</p>
+    <div className="home">
+      <HomeHeaderReveal />
+      <WomenOnLine />
+      <AntigoneReveal />
     </div>
   );
 }

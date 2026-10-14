@@ -5427,3 +5427,492 @@ article .layout__column p {
     display: none !important;
   }
 }
+
+/* Home page (src/app/(site)/page.tsx): no title banner and no reading
+   column. The content runs the full width of the screen, and the top bar
+   stays out of the way until the reader scrolls past the opening scene
+   (HomeHeaderReveal sets the flag), so the first screen is the artwork.
+   The footer is off for now too.
+   Hidden by default rather than hidden by script, so it never flashes in
+   before the page hydrates. */
+.site__main:has(> .home) {
+  padding: 0;
+  margin-right: 0;
+}
+.site__main > .home {
+  max-width: none;
+}
+.site:has(.home) .site__footer {
+  display: none;
+}
+.site:has(.home) .site__header {
+  transform: translateY(-100%);
+  visibility: hidden;
+  box-shadow: none;
+  transition:
+    transform 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+:root[data-home-scrolled] .site:has(.home) .site__header {
+  transform: none;
+  visibility: visible;
+  box-shadow: var(--lift);
+  transition: transform 0.3s ease;
+}
+
+/* The opening scene (src/components/home/women-on-line.tsx). The scroll
+   drives the animation (her drop; her swing down to hang is set off by it)
+   over --play of scrolling, during which the stage is held (sticky) but
+   lifted by --lift (set from the script: fast, then slow), so the scene
+   keeps rising with the page instead of stopping, and the string is still
+   well on screen when she drops; after that it scrolls away as normal. The title fills the top half of the screen; the string runs
+   across the bottom half, at --string-at down the screen (the drawing is
+   1200 units wide with the string 120 down, so that is 10vw below the
+   drawing's top edge). */
+.women-line-scene {
+  --string-at: 80vh;
+  /* Keep in step with PLAY_VH in the script. */
+  --play: 960vh;
+  height: calc(100vh + var(--play));
+  /* Clipped here rather than on the stage: the stage is nudged up as it
+     plays, and she has to be able to fall below its bottom edge. clip, not
+     hidden, so the section isn't a scroll container and the stage still
+     sticks. */
+  overflow: clip;
+}
+.women-line-scene__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  translate: 0 calc(var(--lift, 0vh) * -1);
+  /* So the camera can move in units of the drawing's width (cqw). */
+  container-type: inline-size;
+}
+.women-line-scene__camera {
+  position: absolute;
+  inset: 0;
+}
+.women-line-scene__title {
+  position: absolute;
+  inset: 0 0 auto;
+  height: calc(var(--string-at) - 12vw);
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.25rem;
+  /* Its hgroup's title and subtitle, then the skip button. */
+  margin: 0;
+  padding: 0 16px;
+  text-align: center;
+}
+.site .women-line-scene__title h1 {
+  margin: 0;
+  font-size: clamp(3.5rem, 13vw, 11rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--title);
+}
+.women-line-scene__title p {
+  /* Set down a little way from the title, not tucked under it. */
+  margin: clamp(0.75rem, 2.2vw, 2rem) 0 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2.2vw, 1.75rem);
+  color: var(--heading);
+}
+.women-line-scene__art {
+  position: absolute;
+  inset: calc(var(--string-at) - 10vw) 0 auto;
+}
+/* The statistic, under the string just to the right of where she hangs
+   (she is at 740 of the drawing's 1200 units). */
+.women-line-scene__stat {
+  position: absolute;
+  left: 66%;
+  top: 46%;
+  width: min(28%, 24rem);
+  margin: 0;
+  color: var(--heading-minor);
+  font-family: var(--font-heading);
+  line-height: 1.15;
+}
+.women-line-scene__stat strong {
+  display: block;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-weight: 600;
+}
+.women-line-scene__next {
+  position: absolute;
+  left: 6%;
+  /* Held in place on the screen, whatever the stage has risen by. */
+  top: calc(34vh + var(--lift, 0vh));
+  width: min(32%, 28rem);
+  margin: 0;
+  color: var(--heading-minor);
+  font-family: var(--font-heading);
+  line-height: 1.15;
+}
+.women-line-scene__next strong {
+  display: block;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-weight: 600;
+}
+.women-line-scene__next--phrase strong {
+  font-size: clamp(1.75rem, 3.6vw, 3.25rem);
+  line-height: 1.05;
+  margin-bottom: 0.4rem;
+}
+.women-line-scene__next span,
+.women-line-scene__stat span {
+  display: block;
+  font-size: clamp(1rem, 1.8vw, 1.5rem);
+  color: var(--text);
+}
+
+/* Everything the scene has shown so far, which at the end pulls back
+   (--room, 0 to 1) into an oval speech bubble high in the middle of the
+   screen, over the team room (src/components/home/team-room.tsx). Until
+   then it is just the screen: the stage has risen by --lift, so the bubble
+   starts that far down it, and the world inside starts that far back up.
+   Shrunk, it is 26% of the screen each way, so it keeps the screen's
+   shape, its corners rounding off into the oval as it goes. Its edge is
+   drawn separately, with its tail (.women-line-scene__bubble-edge), over
+   the same box as it shrinks. */
+.women-line-scene {
+  --bubble-x: 37%;
+  --bubble-y: 14vh;
+  --bubble-scale: 0.26;
+}
+.women-line-scene__bubble,
+.women-line-scene__bubble-edge {
+  position: absolute;
+  left: calc(var(--room, 0) * var(--bubble-x));
+  top: calc(var(--lift, 0vh) + var(--room, 0) * var(--bubble-y));
+  width: calc(100% - var(--room, 0) * (100% - var(--bubble-scale) * 100%));
+  height: calc(100vh - var(--room, 0) * (100vh - var(--bubble-scale) * 100vh));
+}
+.women-line-scene__bubble {
+  overflow: hidden;
+  /* Fully round by the time its edge is drawn (from --room 0.8). */
+  border-radius: calc(min(1, var(--room, 0) * 1.25) * 50%);
+  background: var(--bg);
+}
+.women-line-scene__world {
+  position: absolute;
+  left: 0;
+  top: calc(var(--lift, 0vh) * -1);
+  width: 100cqw;
+  height: 100vh;
+  transform: scale(calc(1 - var(--room, 0) * (1 - var(--bubble-scale))));
+  transform-origin: 0 var(--lift, 0vh);
+}
+.women-line-scene__bubble-edge {
+  overflow: visible;
+}
+.women-line-scene__bubble-edge path {
+  fill: none;
+  stroke: var(--heading);
+  stroke-width: 3.4;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.women-line-scene__bubble-edge .women-line-scene__tail {
+  fill: var(--bg);
+  stroke: none;
+}
+/* The room, coming in round the bubble as the view pulls back. Its floor
+   on the bottom of the screen. */
+.team-room {
+  position: absolute;
+  left: 0;
+  bottom: calc(var(--lift, 0vh) * -1);
+  transform: scale(calc(1.25 - var(--room, 0) * 0.25));
+  transform-origin: 50% 0;
+}
+.team-room__table path {
+  fill: var(--bg);
+  stroke: var(--heading);
+  stroke-width: 3.4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.team-room__paper {
+  fill: #fff;
+  stroke: color-mix(in srgb, var(--heading) 25%, transparent);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.team-room__chair {
+  fill: none;
+  stroke: var(--heading);
+  stroke-width: 3.4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.team-room__table path:last-child {
+  fill: color-mix(in srgb, var(--heading) 12%, var(--bg));
+}
+
+/* The papers on the team's table, plain white sheets, and the solution
+   cards that fly in after them (src/components/home/solution-papers.tsx),
+   each placed and turned by the script. The cards are the site's own. */
+.solution-papers__paper {
+  position: absolute;
+  background: #fff;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--heading) 25%, transparent);
+}
+.solution-papers__card {
+  position: absolute;
+  z-index: 10;
+}
+.site .solution-papers__card .card {
+  margin: 0;
+  rotate: none;
+  /* All the same height, so a row of them lines up. */
+  min-height: 15rem;
+  /* Larger print than a card in a page, to read across the screen. */
+  --rule: 2.1rem;
+  font-size: 1.2rem;
+}
+.site .solution-papers__card .card__title {
+  font-size: 1.75rem;
+}
+/* The rest of the screen, darkened behind the papers, thread and cards. */
+.women-line-scene__dark {
+  position: absolute;
+  left: 0;
+  top: var(--lift, 0vh);
+  width: 100%;
+  height: 100vh;
+  background: rgb(12 18 20 / 0.72);
+  pointer-events: none;
+}
+/* Clipped to the thread rather than pinned. */
+.site .solution-papers__card .card::before {
+  display: none;
+}
+/* The thread the cards hang from, an S over the whole screen, in its
+   pixels. */
+.solution-papers__thread {
+  position: absolute;
+  left: 0;
+  top: var(--lift, 0vh);
+  width: 100%;
+  height: 100vh;
+  z-index: 9;
+  overflow: visible;
+  pointer-events: none;
+}
+.solution-papers__thread path {
+  fill: none;
+  stroke: var(--color-peacock);
+  stroke-linecap: round;
+}
+/* A clothes peg over the thread and the card's top edge, in the pins'
+   colour, its spring a dark band across the middle. */
+.solution-papers__clip {
+  position: absolute;
+  z-index: 11;
+  width: 10px;
+  height: 30px;
+  border-radius: 3px;
+  background:
+    linear-gradient(transparent 44%, color-mix(in srgb, var(--pin-rose) 45%, #000) 44% 56%, transparent 56%),
+    var(--pin-rose);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--pin-rose) 60%, #000),
+    2px 3px 4px -1px rgb(0 0 0 / 0.32);
+  pointer-events: none;
+}
+
+/* The last beat sits over her, centred, the symptoms ringed round her
+   below it (src/components/home/symptom-ring.tsx). */
+.women-line-scene__next--top {
+  left: 50%;
+  top: calc(5vh + var(--lift, 0vh));
+  width: min(80%, 40rem);
+  margin-left: calc(min(80%, 40rem) / -2);
+  text-align: center;
+}
+.symptom-ring__icon {
+  overflow: visible;
+  color: var(--text);
+}
+/* As wide a line as the women are drawn with (see SymptomRing). */
+.symptom-ring__icon :is(path, rect, circle) {
+  stroke-width: var(--icon-line);
+}
+.symptom-ring__label {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  text-anchor: middle;
+  fill: var(--text);
+}
+
+/* The women. Each is drawn as an ink pass then a page-colour pass on top,
+   which leaves only the outline of her shape (see src/lib/women-on-line.ts). */
+.women-line {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  --women-ink: var(--heading);
+}
+.women-line__her {
+  --women-ink: var(--heading-minor);
+}
+.women-line__string {
+  fill: none;
+  stroke: var(--heading);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+}
+.women-line__ink,
+.women-line__paper,
+.women-line__tint,
+.women-line__detail,
+.women-line__shine {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.women-line__ink {
+  stroke: var(--women-ink);
+}
+.women-line__paper {
+  stroke: var(--bg);
+}
+.women-line__ink-shape {
+  fill: var(--women-ink);
+  stroke: var(--women-ink);
+  stroke-linejoin: round;
+}
+.women-line__paper-shape {
+  fill: var(--bg);
+}
+.women-line__tint {
+  stroke: color-mix(in srgb, var(--women-ink) 22%, var(--bg));
+}
+.women-line__tint-shape {
+  fill: color-mix(in srgb, var(--women-ink) 22%, var(--bg));
+}
+.women-line__shine {
+  stroke: var(--bg);
+}
+.women-line__detail {
+  stroke: var(--women-ink);
+}
+
+/* After the home scene: the thread carries on down onto a blank page and
+   draws the AnTigone mark, and the words under it fold up into the name
+   (src/components/home/antigone-reveal.tsx). */
+.antigone-reveal {
+  /* Keep in step with PLAY_VH in the script. */
+  --play: 120vh;
+  height: calc(100vh + var(--play));
+}
+.antigone-reveal__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--title);
+}
+.antigone-reveal__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.antigone-reveal__thread {
+  fill: none;
+  stroke: var(--color-peacock);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.antigone-reveal__knot {
+  color: var(--color-peacock);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.antigone-reveal__words {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 58vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: min(4.2vw, 7vh);
+  line-height: 1;
+  white-space: pre;
+  color: var(--title);
+  transform-origin: 50% 0;
+}
+/* A piece that folds away: cut to its width as that closes, without
+   changing where its text sits on the line. */
+.antigone-reveal__fold,
+.antigone-reveal__g {
+  display: inline-block;
+  clip-path: inset(-1em 0);
+}
+.antigone-reveal__g {
+  position: relative;
+}
+.antigone-reveal__g > :last-child {
+  position: absolute;
+  left: 0;
+}
+.antigone-reveal__gap {
+  display: inline-block;
+}
+.antigone-reveal__her {
+  display: inline-block;
+  overflow: visible;
+  --women-ink: var(--heading-minor);
+}
+/* Painted with her fade (see the script) rather than one colour. */
+.antigone-reveal__her :is(.women-line__ink, .women-line__detail) {
+  stroke: var(--her-ink);
+}
+.antigone-reveal__her .women-line__ink-shape {
+  fill: var(--her-ink);
+  stroke: var(--her-ink);
+}
+.antigone-reveal__her .women-line__tint {
+  stroke: var(--her-tint);
+}
+.antigone-reveal__her .women-line__tint-shape {
+  fill: var(--her-tint);
+}
+
+/* Under the home page's title, skipping the story to its end
+   (src/components/home/skip-to-end.tsx): a quiet outlined pill. */
+.skip-to-end {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: clamp(1rem, 2.5vw, 2rem);
+  padding: 0.45rem 1rem 0.45rem 1.15rem;
+  border: 2px solid var(--title);
+  border-radius: 999px;
+  background: none;
+  color: var(--title);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background-color 0.15s, color 0.15s;
+}
+.skip-to-end:hover {
+  background: var(--title);
+  color: var(--bg);
+}
+.skip-to-end:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
