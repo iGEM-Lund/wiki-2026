@@ -11,9 +11,105 @@ Our modelling approach focused on two genes: ci2350 and AKR1D1. The AKR1D1 gene 
 
 To overcome this challenge, our team proposed an idea where the modeled 3D structure of this gene was used to perform point mutations which were suggested in literature, and see if the mutated sequences were more specific to testosterone instead. We also tried several combinations of these single mutations and were able to reach a consensus that few of the resulting mutations showed better specificity to testosterone than to progesterone.
 
-## Rational mutagenesis and specificity studies
+## Rational mutagenesis:
 
-Single mutation check:
+Rational mutagenesis is a protein engineering approach in which specific amino acid residues are deliberately changed based on information about a protein’s sequence, structure or function. The goal is to target positions that are likely to influence a desired property of the protein, such as its activity, stability or substrate specificity.
+
+In our project, we applied rational mutagenesis to investigate whether targeted amino acid substitutions could increase the substrate specificity of the enzymes AKR1D1 and ci2350 towards testosterone. We analysed the amino acid sequences and three-dimensional structures of AKR1D1 and ci2350 to identify residues that could influence how the enzymes interact with their steroid substrates, testosterone and progesterone. Based on these sequence and structural analyses, we selected specific amino acid positions as potential mutation sites and investigated whether these mutations could affect the enzymes’ specificity towards testosterone.
+
+## Modelling approach:
+
+Our team followed a step-by-step molecular modelling workflow to identify potential mutation sites in the enzymes and assess their effect on testosterone specificity. First, the protein structures of ci2350 and AKR1D1 were prepared using MGL Tools by adding hydrogens, assigning Gasteiger charges, and converting the structures into the PDBQT format required for docking.
+
+Next, Fpocket was used to identify the potential active sites of each enzyme and define the search grid for docking studies. The ligand structures of testosterone and progesterone were then prepared using Open Babel, including protonation at physiological pH and conversion to PDBQT format. 
+
+Following this, AutoDock Vina was used to dock both testosterone and progesterone into the identified active sites. The resulting docking results showed how testosterone and progesterone fit within the active site of each enzyme and which amino acid residues were involved in their interactions. These interactions were examined to determine which residues might affect how specifically the enzymes bind testosterone compared with progesterone. Residues that appeared to influence this substrate preference were then selected as potential mutation sites.
+
+The selected mutations were then introduced into the enzyme structures, and the resulting mutant proteins were subjected to the same docking workflow. The mutant docking results were compared with those of the original enzymes by examining the substrate-binding poses and predicted binding energies. PyMOL was used to visualise the protein structures and compare the interactions of testosterone and progesterone before and after mutation.
+
+### ci2350
+
+We engineered a gut-bacterial 5β-reductase to tell two steroid hormones apart. Starting from an enzyme that binds testosterone and progesterone almost equally, we designed 31 variants *in silico*, kept the 17 the fold tolerates, and found a double mutant with 4.31-fold testosterone preference.\
+
+
+<TableWithCaption>
+
+</TableWithCaption>
+
+#### **How the team started:**
+
+* ci2350 had no experimentally verified crystal structure, so the team worked by generating a predicted 3D model in an AlphaFold: a single 642-residue chain, no gaps, no bound ligands, and the catalytic OYE FMN domain (residues 6–331) predicted at high confidence.
+* The fpocket found 38 cavities in the protein and only one of them had resemblance to an active site: Pocket 1 held the catalytic tyrosine Y167, the adjacent N166, and 9 of the 12 residues that CD-Search annotates as the OYE active site.&#x20;
+* Our first docking box, built from the pocket's own dimensions, left five of its residues outside the search volume — including A107 and V263. We thus had to expand the box to 30 × 20 × 22 Å before all 37 pocket residues were enclosed. V263 turned out to be half of our best variant, so had we kept the smaller box we would have missed the result entirely.
+* We then proceeded to dock both hormones into the unmodified enzyme:
+
+- Progesterone: −9.1 kcal/mol
+- Testosterone: −9.2 kcal/mol
+- Selectivity: −0.1 kcal/mol
+
+It was visible that the wild-type ci2350 could not tell the two steroid hormones apart. A gap of **0.1 kcal/mol** is inside the scoring noise of the docking software. But the gap points the right way, and that direction is what made this enzyme worth engineering — we would be amplifying a tendency rather than fighting one.
+
+\[insert 3D model of just the ci]
+
+#### **The C17 handle**
+
+The reason for ci2350's inability to differentiate the two steroid hormones could be attributed to the fact that testosterone and progesterone are very identical in structure. They share the four-ring steroid scaffold and the 3-keto-Δ4 group the enzyme acts on. However, they differ at one position: **C17**, where the progesterone carries a two-carbon acetyl tail, whereas the testosterone carries a single hydroxyl group.
+
+This position was precisely the best candidate for discriminating the binding affinity between the steroid hormones. Therefore we compared the docked poses of both hormones and listed every residue within 4.0 Å of each ligand.
+
+
+
+| **Contact type**          | **Residues**                                      | **What it means**                                                 |
+| ------------------------- | ------------------------------------------------- | ----------------------------------------------------------------- |
+| Touches both hormones     | A24, M25, G26, M110, Y167, E262, Y347, F350, T351 | Core scaffold recognition, including catalysis — **do not touch** |
+| Touches progesterone only | A107, R215, V263                                  | These surround the acetyl tail                                    |
+| Touches testosterone only | V59, F71, Q100, M254, L259                        | These surround the 17β-hydroxyl                                   |
+
+
+
+The split landed exactly where the chemistry predicted, which gave us two independent levers:
+
+1. **Strategy 1 — push progesterone out.** Add bulk or charge at A107, R215 or V263 so the acetyl tail no longer fits. 12 designs.
+2. **Strategy 2 — pull testosterone in.** Add hydroxyl-friendly polarity at F71, Q100 or V59 so the 17β-OH is better accommodated. 5 designs.
+
+As the two strategies act on opposite sides of the same discrimination, we also built 14 combinations of them, for 31 designs in total.
+
+### **Can the protein take it?**
+
+A design that improves binding is not credible if the protein folding is affected. We therefore scored all 31 designs in PyRosetta (ref2015, local repacking within 5.0 Å) and worked with those below +5 REU. 17 passed. The failures were not spread evenly and each possible design gave us more insights such as:
+
+* **A107 is a trap -** All three substitutions failed badly (+18 to +57 REU), and every combination containing A107 failed with them. The residue is an alanine sitting in a pocket contact, so it looks like free space; it is not. It is buried tightly enough that any larger side chain collides with its neighbours. A third of Strategy 1 was gone before we docked anything.
+* **R215 is generous -** All three substitutions passed, and R215A was mildly stabilising (−3.54 REU). The arginine is partly solvent-exposed, so removing it costs the fold nothing.
+* **V263 is picky, but not about size -** V263F was stabilising (−2.45) while the smaller V263L failed (+9.46). That rules out a simple volume limit and suggests the position sits strained in the model, with an aromatic ring relieving it. Charged substitutions (D, E, K) were all accepted.
+* **Q100 fixes itself — and its neighbour -**  Q100T (−9.43) and Q100S (−7.66) were the most stabilising mutations we found, which suggests the wild-type glutamine sits in a poor rotamer in the AlphaFold model. More interestingly, F71Y failed on its own (+6.83) but passed when paired with Q100T (−2.61). The two mutations repack the site cooperatively — one rescues the other.
+
+On the enhancement side, V59S passed comfortably (−2.36 REU) while V59T failed (+9.27), and F71Y survived only in combination. That left a working panel built mostly on R215 and V263, with Q100 and V59S contributing from the enhancement side.
+
+### Our chosen candidates:
+
+|                           | Combo8                               | Combo13                     | V236K                           |
+| ------------------------- | ------------------------------------ | --------------------------- | ------------------------------- |
+| Mutations                 | R215A + V263I                        | R215A + V263I + Q100T       | V263K                           |
+| Selectivity               | -0.9                                 | -0.5                        | -0.5                            |
+| Fold preference           | 4.31 x                               | 2.25×                       | 2.25×                           |
+| Stability ΔΔG (REU)       | +1.42, neutral                       | −7.19, strongly stabilising | +2.21, mildly destabilising     |
+| Progesterone/Testosterone | −8.5 / −9.4                          | −8.0 / −8.5                 | −6.9 / −7.4                     |
+| Reasons for consideration | Best selectivity, affinity preserved | Most robust construct       | Simplest to build and interpret |
+
+
+
+* **Combo8 is our lead.** It is the only variant that works in both directions at once. Deleting the arginine at 215 removes a side chain that contacts the acetyl tail, costing progesterone 0.6 kcal/mol. Swapping valine 263 for the bulkier, branched isoleucine crowds that same tail further — while giving testosterone's small hydroxyl a better hydrophobic fit, worth 0.2 kcal/mol in its favour. Two mutations, one mechanism, acting on the same C17 feature from two sides.
+* **Combo13 is our insurance.** Adding Q100T to Combo8 did not improve selectivity because the repacking partly rescued progesterone binding (−8.5 → −8.0). What it buys was a ΔΔG of **−7.19 REU** — by far the most stable construct we designed. If Combo8 gives us expression or solubility trouble at the bench, this is where we go next.
+* **V263K is our probe.** A single lysine puts a long positive charge where the acetyl tail wants to sit, and repels it. The mechanism is blunt: binding weakens for both hormones (by over 2 kcal/mol), and selectivity comes from harming progesterone more. But as a one-residue change it is the cleanest way to separate the electrostatic contribution from the steric one when compared against V263I and Combo8.
+* V263D and V59S are our low-risk controls. Both give −0.2 kcal/mol selectivity while keeping full wild-type affinity, which makes them useful for checking that the assay itself behaves.
+
+\
+
+
+\
+
+
+**Check**:
 
 <MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/arg-to-ala.glb" format="pdb" style="cartoon" highlightLabel="Alanine (Ala): the mutated residue, replacing arginine" caption="Image 1: Mutation of Arg to Ala" />
 
