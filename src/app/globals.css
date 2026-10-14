@@ -3857,19 +3857,21 @@ a.inline-icon--link:focus-visible {
 }
 /* Sized in the wheel's own units (it's inside the SVG), so it scales with
    the wheel. Its text wraps to the slice's shape around the floats below,
-   so it is a plain block, not a flex box (whose children can't float). */
+   so it is a plain block, not a flex box (whose children can't float).
+   Never a scroll container: WebKit gives one inside a foreignObject its own
+   layer, which drops the SVG's scaling and offset, so in Safari the text
+   drew tiny at the wheel's top-left corner instead of in its slice. The
+   foreignObject clips anything that overflows. */
 .slice-wheel__text-content {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  overflow-y: auto;
   /* Text on Blush is always Crimson, and so is its selection. */
   --selection: var(--color-crimson);
   color: var(--color-crimson);
   font-size: 6px;
   line-height: 1.35;
   text-align: center;
-  scrollbar-width: none;
 }
 .slice-wheel__text-edge {
   display: block;
