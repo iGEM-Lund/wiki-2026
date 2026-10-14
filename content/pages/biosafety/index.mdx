@@ -92,15 +92,18 @@ Auxotrophy is a biocontainment strategy that makes an organism unable to synthes
 
 How it works
 
-
-
 <Layout3 centerFilled={false}>
   <LayoutColumn>
     <Card>
       <CardTitle>
-        ```dapA encodes
-        🧬 Step 1: Gene deletion
-        ```
+        🧬 Gene deletion
+
+        <Expandable defaultOpen={false}>
+          ```
+          Deletion of dapA blocks the DAP biosynthesis pathway.
+          Without external DAP supplementation, normal cell wall synthesis cannot proceed.
+          ```
+        </Expandable>
       </CardTitle>
     </Card>
   </LayoutColumn>
@@ -108,9 +111,14 @@ How it works
   <LayoutColumn>
     <Card>
       <CardTitle>
-        ```Without dapA,
-        ⚗️ Step 2: Pathway blockage
-        ```
+        ⚙️ Pathway blockage
+
+        <Expandable defaultOpen={false}>
+          ```
+          dapA encodes DHDPS, an enzyme involved in the early DAP pathway.
+          Removing dapA prevents formation of downstream DAP intermediates required for peptidoglycan synthesis.
+          ```
+        </Expandable>
       </CardTitle>
     </Card>
   </LayoutColumn>
@@ -118,9 +126,11 @@ How it works
   <LayoutColumn>
     <Card>
       <CardTitle>
-        ```Without external
-        🧱 Step 3: Growth control
-        ```
+        🧱 Growth restriction
+
+        <Expandable defaultOpen={false}>
+          The strain can be rescued by adding DAP in laboratory conditions, but cannot proliferate in environments lacking DAP.
+        </Expandable>
       </CardTitle>
     </Card>
   </LayoutColumn>
