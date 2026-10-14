@@ -92,7 +92,39 @@ Auxotrophy is a biocontainment strategy that makes an organism unable to synthes
 
 How it works
 
-*dapA* encodes dihydrodipicolinate synthase (DHDPS), which catalyzes the condensation of pyruvate with L-aspartate-β-semialdehyde to form an early intermediate of the DAP pathway; downstream enzymes convert this into *meso*-DAP, which *Enterobacteriaceae* incorporate into peptidoglycan for cell-wall cross-linking. Deleting *dapA* blocks this pathway, preventing normal cell-wall synthesis and division unless DAP is supplied externally. In *E. coli* K-12, exogenous DAP enters via the FliY–YecSC ABC transport system and bypasses the block, so a Δ*dapA* strain can be rescued in the lab by adding DAP but cannot proliferate where DAP is absent, and free DAP has been reported undetectable in mouse intestinal effluent. Our *E. coli* TG1 strain is K-12-derived and does not carry deletions in *fliY*, *yecS*, or *yecC*, so this strategy is theoretically applicable to it.
+
+
+<Layout3 centerFilled={false}>
+  <LayoutColumn>
+    <Card>
+      <CardTitle>
+        ```dapA encodes
+        🧬 Step 1: Gene deletion
+        ```
+      </CardTitle>
+    </Card>
+  </LayoutColumn>
+
+  <LayoutColumn>
+    <Card>
+      <CardTitle>
+        ```Without dapA,
+        ⚗️ Step 2: Pathway blockage
+        ```
+      </CardTitle>
+    </Card>
+  </LayoutColumn>
+
+  <LayoutColumn>
+    <Card>
+      <CardTitle>
+        ```Without external
+        🧱 Step 3: Growth control
+        ```
+      </CardTitle>
+    </Card>
+  </LayoutColumn>
+</Layout3>
 
 Options compared
 
