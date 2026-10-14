@@ -387,7 +387,7 @@ Division of Applied Microbiology and Microbiology, Lund University
 <Card>
   <CardTitle
     image="https://static.igem.wiki/teams/6160/wiki/human-practices/savvina-leontakianakou.avif"
-    subtitle="Doctoral student in Enzyme Technology
+    subtitle="Doctoral student in Enzyme Technology, former iGEM judge
 Division of Biotechnology and Applied Microbiology"
   >
     Savvina Leontakianakou (not finished)
@@ -396,12 +396,44 @@ Division of Biotechnology and Applied Microbiology"
   Short text
 
   <Expandable defaultOpen={false}>
-    Summary of interview:
+    Savvina Leontakianakou is a doctoral student in enzyme technology and was a member of the 2019 iGEM Lund team that won the gold medal and has since also served as a judge for the iGEM competition. We contacted her to troubleshoot our NADPH-based enzyme assay when our empty-vector control showed activity, and to ask how to structure the Design-Build-Test-Learn cycle on the wiki. She told us how to handle the background activity, how to set up the controls, and how to keep the DBTL cycles connected.
 
     ---
 
-    Long text
+    Summary of interview:
+
+    We contacted her since our assay showed a clear absorbance shift in the control with pET11 and no insert, which suggested that native *E. coli* proteins in the purified fraction react with NADPH. We also wanted advice on a nested DBTL structure, on mass spectrometry, and on whether to add an ELISA or assay kit.
+
+    We discussed how the control is purified and whether it matches the target protein on a gel; how to quantify and subtract the background; options for further purification and for measuring testosterone; and how to structure the DBTL cycles. We also met in person, where she shared her view as a former iGEM judge.
+
+    The overall advice and input she gave us over multiple email conversations and in-person meetings:
+
+    * Include the right negative controls: a construct without the enzyme with IPTG, and one without the enzyme and without IPTG.
+    * Run SDS-PAGE on the controls and compare it with the gel of the purified target. If similar bands appear, other proteins may cause the activity. The control may also contain more protein than the target, which could explain higher activity.
+    * Determine the protein concentration to relate it to the measured activity, subtract the background activity of the control from the activity of our protein, and see what remains.
+    * Run enzyme assays as soon as possible after purification, because storing the enzyme in the fridge for days affects its stability.
+    * Check the Vivaspin flow-through to see what we lose, as well as the retained fraction.
+    * Before adding the ELISA or the Thermo Fisher kit, establish what we have and avoid adding too many parameters when time is short.
+    * Smaller nested DBTL cycles are fine, but they need a thread that connects them into one story.
+
+    Integration:&#x20;
+
+    **Negative controls** - we added proper negative controls; empty-vector (pET11) controls, induced and uninduced.
+
+    **Gel comparison -** we ran SDS-PAGE of the control and compared it with the target protein.&#x20;
+
+    **Background subtraction** - we use the control’s activity as the baseline and report only the activity above it. (ELEONORA CONFIRM)
+
+    **Assay timing -** from then on, we tried to ran the assays closer to the actual purification day, or if possible even on the same day (evenings). (DID WE SEE IMPROVED ACTIVITY??)
+
+    **Purification checks** - we kept and analysed the Vivaspin flow-through to check how much protein we are loosing with the cutoff of 30kDa.&#x20;
+
+    **Scope -** we decided to finish and understand the current assay instead of adding the ELISA or the Thermo Fisher androgen receptor kit, given very limited time left.&#x20;
+
+    **DBTL structure -** we decided to use multiple smaller DBTL cycles, but tried to keep a red threat.
   </Expandable>
+
+
 </Card>
 
 <Card>
