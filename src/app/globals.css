@@ -2175,6 +2175,8 @@ html:has(dialog.lightbox[open]) {
 }
 .lightbox::backdrop {
   background: rgba(0, 0, 0, 0.85);
+  /* Safari before 18 only knows the prefixed name. */
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 .lightbox__figure {
