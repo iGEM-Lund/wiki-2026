@@ -79,7 +79,7 @@ export type Sleeve = 'short' | 'long';
  * as she rolls (a hand on the string stays on the string); `world` ones are
  * fixed to the scene (arms dangling straight down whichever way up she is).
  */
-export type Arm = { to: V3; frame?: 'body' | 'world'; elbow?: 'out' | 'down' };
+export type Arm = { to: V3; frame?: 'body' | 'world'; elbow?: 'out' | 'down' | 'folded' };
 
 export interface Pose {
   // Sideways lean of her body and tilt of her head, degrees, + to the right.
@@ -97,7 +97,7 @@ export interface Pose {
   // and all) back about her knees; the second straightens her at the hips.
   roll: number;
   // 0 hands where `arms` puts them (on the string, which she holds on to
-  // as she rolls over), 1 let go and dangling straight down.
+  // as she rolls over), 1 let go and folded in front of her.
   letGo: number;
   // 0 none; 1 her hair streaming straight up, as she falls.
   hairUp?: number;
@@ -488,7 +488,8 @@ export function drawWoman(pose: Pose, look: Look): Figure {
     // Each hand from her shoulder. Body-frame hands are relative to the
     // shoulder before the roll.
     const held = sub(spec.frame === 'world' ? add(shoulder, spec.to) : upper(add(spec.to, rest)), shoulder);
-    const dangling: V3 = [isLeft ? -9 : 9, 44, 0];
+    // Let go, arms folded in front of her, moving with her as she rolls.
+    const folded = sub(upper(add(FOLDED[isLeft ? 0 : 1].to, rest)), shoulder);
     // Sinking on her back, head to the left: floating up off her, nearly
     // straight, leaning towards her feet, the nearer more so, clear of
     // her face.
@@ -500,7 +501,7 @@ export function drawWoman(pose: Pose, look: Look): Figure {
     // the viewer, rather than flung straight out sideways.
     const via = unit(add(out, [0, 0, -0.7]));
     const hand = swing(
-      swing(swing(held, dangling, clamp01(pose.letGo), via), trailing, sinkBend, via),
+      swing(swing(held, folded, clamp01(pose.letGo), via), trailing, sinkBend, via),
       floating,
       floats,
       via,
@@ -511,10 +512,14 @@ export function drawWoman(pose: Pose, look: Look): Figure {
     // hands, or out, posed. Blended, so it never flips.
     const standBend = add(out, [0, 0.3, 0]);
     const floatBend: V3 = pose.floatArms ? add(out, [0, 0.6, 0]) : [0, -1, 0];
+    // Folded, down her side towards her waist and a little in front of
+    // her, whichever way up she is.
     const bendTowards =
       spec.elbow === 'down'
         ? ([0, 1, 0] as V3)
-        : add(add(mul(standBend, (1 - sinkBend) * (1 - floats)), mul([1, 0, 0], sinkBend * (1 - floats))), mul(floatBend, floats));
+        : spec.elbow === 'folded'
+          ? add(add(mul(out, 0.5), mul(upNow, -1)), mul(frontNow, 0.25))
+          : add(add(mul(standBend, (1 - sinkBend) * (1 - floats)), mul([1, 0, 0], sinkBend * (1 - floats))), mul(floatBend, floats));
     const elbow = elbowFor(shoulder, wrist, bendTowards);
     const parts = armParts(shoulder, elbow, wrist);
     // An arm going on round behind her back, from how far it is behind
@@ -739,6 +744,13 @@ const STILL: [V3, V3] = [
 // Hands resting on the string either side of her seat.
 // Nearly straight, a little out from her sides, as when sitting on a wall.
 const HANDS_ON_STRING: [Arm, Arm] = [{ to: [-3, 44, 4] }, { to: [3, 44, 4] }];
+// Arms folded: upper arms down her sides, elbows at her waist bent square,
+// forearms across her front, crossing over her belly. One a little lower
+// so they lie over each other rather than meeting.
+const FOLDED: [Arm, Arm] = [
+  { to: [19, 16, 15], elbow: 'folded' },
+  { to: [-19, 25, 13], elbow: 'folded' },
+];
 
 const sitting = (overrides: Partial<Pose> = {}): Pose => ({
   lean: 0,
@@ -764,6 +776,8 @@ export const POSES = {
   lap: sitting({ arms: [{ to: [8, 32, 18] }, { to: [-8, 32, 18] }], headTilt: 4 }),
   // Propped on her hands behind her, feet swung out.
   propped: sitting({ arms: [{ to: [-7, 42, -12] }, { to: [7, 42, -12] }], ankles: [swung(28), swung(36)] }),
+  // Arms folded (out of sight in front of her), looking down.
+  folded: sitting({ arms: FOLDED, headTilt: 4 }),
   // Pointing at something far off.
   pointing: sitting({ arms: [HANDS_ON_STRING[0], { to: [26, -30, 10] }], lean: -3, headTilt: 8 }),
   // An arm round the neighbour on her right (screen right): elbow low across
@@ -774,11 +788,11 @@ export const POSES = {
   // Leaning her head on the neighbour to her left, or right.
   restingLeft: sitting({ lean: -9, headTilt: -14 }),
   restingRight: sitting({ lean: 9, headTilt: 14 }),
-  // Upside down, hanging from the string by her knees, arms dangling. Her
-  // knees are bent over the top of the string, her shins folded back down
-  // behind it and splayed a little, so from the front they show either side
-  // of her thighs with the string crossing in front of them: the leg wraps
-  // round the string instead of just touching it.
+  // Upside down, hanging from the string by her knees, arms folded,
+  // deliberately. Her knees are bent over the top of the string, her
+  // shins folded back down behind it and splayed a little, so from the front
+  // they show either side of her thighs with the string crossing in front
+  // of them: the leg wraps round the string instead of just touching it.
   hanging: sitting({
     shuffle: 1,
     roll: 1,
@@ -796,7 +810,7 @@ const mix = (a: number, b: number, t: number) => a + (b - a) * t;
  * Part way from pose `a` to pose `b`. Each of `t`'s fields is how far along
  * that part of the movement is (0 at `a`, 1 at `b`), so the shuffle, the
  * roll and letting go can each run on their own stretch of the scroll.
- * Her arms keep `a`'s holds; `letGo` takes them from there to dangling.
+ * Her arms keep `a`'s holds; `letGo` takes them from there to folded.
  */
 export function blendPose(a: Pose, b: Pose, t: { shuffle: number; roll: number; letGo: number }): Pose {
   return {

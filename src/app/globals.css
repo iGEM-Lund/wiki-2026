@@ -5596,9 +5596,21 @@ article .layout__column p {
    keeps rising with the page instead of stopping, and the string is still
    well on screen when she drops; after that it scrolls away as normal. The title fills the top half of the screen; the string runs
    across the bottom half, at --string-at down the screen (the drawing is
-   1200 units wide with the string 120 down, so that is 10vw below the
-   drawing's top edge). */
+   1200 units wide with the string 120 down, so that is 10cqw below the
+   drawing's top edge).
+
+   The stage, and the drawing across it, is --scene-w wide: the screen's
+   width, but on a short, wide screen no more than 1.95 times its height,
+   in the middle of it, so all of it fits on the screen top to bottom; and
+   on a tall, narrow one wider than the screen (up to 0.9 times its
+   height, or twice its width), cropped either side, so the women aren't
+   tiny. Inside it, text is sized in --u, 1% of the screen's width or the
+   stage's, whichever is less, and kept within the screen --edge in from
+   the stage's sides. */
 .women-line-scene {
+  --scene-w: min(195vh, max(100%, min(90vh, 200%)));
+  --u: min(1vw, 1cqw);
+  --edge: max(0px, (100cqw - 100vw) / 2);
   --string-at: 80vh;
   /* Keep in step with PLAY_VH in the script. */
   --play: 960vh;
@@ -5612,6 +5624,8 @@ article .layout__column p {
 .women-line-scene__stage {
   position: sticky;
   top: 0;
+  width: var(--scene-w);
+  margin-left: calc((100% - var(--scene-w)) / 2);
   height: 100vh;
   translate: 0 calc(var(--lift, 0vh) * -1);
   /* So the camera can move in units of the drawing's width (cqw). */
@@ -5624,19 +5638,19 @@ article .layout__column p {
 .women-line-scene__title {
   position: absolute;
   inset: 0 0 auto;
-  height: calc(var(--string-at) - 12vw);
+  height: calc(var(--string-at) - 12cqw);
   display: grid;
   place-content: center;
   justify-items: center;
   gap: 0.25rem;
   /* Its hgroup's title and subtitle, then the skip button. */
   margin: 0;
-  padding: 0 16px;
+  padding: 0 calc(var(--edge) + 16px);
   text-align: center;
 }
 .site .women-line-scene__title h1 {
   margin: 0;
-  font-size: clamp(3.5rem, 13vw, 11rem);
+  font-size: clamp(3.5rem, 13 * var(--u), 11rem);
   font-weight: 500;
   line-height: 1;
   letter-spacing: 0.01em;
@@ -5644,14 +5658,14 @@ article .layout__column p {
 }
 .women-line-scene__title p {
   /* Set down a little way from the title, not tucked under it. */
-  margin: clamp(0.75rem, 2.2vw, 2rem) 0 0;
+  margin: clamp(0.75rem, 2.2 * var(--u), 2rem) 0 0;
   font-family: var(--font-heading);
-  font-size: clamp(1rem, 2.2vw, 1.75rem);
+  font-size: clamp(1rem, 2.2 * var(--u), 1.75rem);
   color: var(--heading);
 }
 .women-line-scene__art {
   position: absolute;
-  inset: calc(var(--string-at) - 10vw) 0 auto;
+  inset: calc(var(--string-at) - 10cqw) 0 auto;
 }
 /* The statistic, under the string just to the right of where she hangs
    (she is at 740 of the drawing's 1200 units). */
@@ -5667,7 +5681,9 @@ article .layout__column p {
 }
 .women-line-scene__stat strong {
   display: block;
-  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  /* A figure, never broken across lines. */
+  white-space: nowrap;
+  font-size: clamp(2.5rem, 7 * var(--u), 5.5rem);
   font-weight: 600;
 }
 .women-line-scene__next {
@@ -5683,18 +5699,26 @@ article .layout__column p {
 }
 .women-line-scene__next strong {
   display: block;
-  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-size: clamp(2.5rem, 7 * var(--u), 5.5rem);
   font-weight: 600;
 }
+.women-line-scene__next:not(.women-line-scene__next--phrase) strong {
+  white-space: nowrap;
+}
+/* The longer beats, beside her as she floats right of the middle: in
+   from the left edge, ending a little short of the middle. */
+.women-line-scene__next--phrase {
+  left: max(6%, calc(50% - min(32%, 28rem)));
+}
 .women-line-scene__next--phrase strong {
-  font-size: clamp(1.75rem, 3.6vw, 3.25rem);
+  font-size: clamp(1.75rem, 3.6 * var(--u), 3.25rem);
   line-height: 1.05;
   margin-bottom: 0.4rem;
 }
 .women-line-scene__next span,
 .women-line-scene__stat span {
   display: block;
-  font-size: clamp(1rem, 1.8vw, 1.5rem);
+  font-size: clamp(1rem, 1.8 * var(--u), 1.5rem);
   color: var(--text);
 }
 
@@ -5709,8 +5733,17 @@ article .layout__column p {
    the same box as it shrinks. */
 .women-line-scene {
   --bubble-x: 37%;
-  --bubble-y: 14vh;
   --bubble-scale: 0.26;
+  /* Up and down, the bubble and the room are placed by the presenter's
+     head: its top is 24.86cqw above the room's floor (the room drawn 1200
+     wide across the stage, its floor 520 down, her head 221.7 down), and
+     the bubble's bottom 4.5vh above that, for its tail. --room-raise lifts
+     the floor off the bottom of the screen so that the lot, from the
+     question over the bubble (1.5vh and about 2.6cqw high) down to the
+     floor, sits in the middle of the screen; --bubble-y is the bubble's
+     top. */
+  --room-raise: calc(34vh - 13.73cqw);
+  --bubble-y: calc(69.5vh - var(--room-raise) - 24.86cqw);
 }
 .women-line-scene__bubble,
 .women-line-scene__bubble-edge {
@@ -5752,12 +5785,32 @@ article .layout__column p {
   fill: var(--bg);
   stroke: none;
 }
+/* The question over the bubble, once it has its edge: centred over it,
+   set just above its top. */
+.women-line-scene__ask {
+  position: absolute;
+  left: var(--bubble-x);
+  width: calc(var(--bubble-scale) * 100%);
+  top: calc(var(--lift, 0vh) + var(--bubble-y));
+  margin: 0;
+  transform: translateY(calc(-100% - 1.5vh));
+  font-family: var(--font-heading);
+  /* Drawn with the scene's pen: Fredoka's stems at 500 are 0.12em, so
+     at this size they are as thick as the bubble's edge and the people
+     (2.5 * 1.35 * 100cqw / 1200, about 0.28cqw), at any width. */
+  font-weight: 500;
+  font-size: 2.34cqw;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--heading);
+  pointer-events: none;
+}
 /* The room, coming in round the bubble as the view pulls back. Its floor
-   on the bottom of the screen. */
+   --room-raise up from the bottom of the screen. */
 .team-room {
   position: absolute;
   left: 0;
-  bottom: calc(var(--lift, 0vh) * -1);
+  bottom: calc(var(--lift, 0vh) * -1 + var(--room-raise));
   transform: scale(calc(1.25 - var(--room, 0) * 0.25));
   transform-origin: 50% 0;
 }
@@ -5809,12 +5862,13 @@ article .layout__column p {
 .site .solution-papers__card .card__title {
   font-size: 1.75rem;
 }
-/* The rest of the screen, darkened behind the papers, thread and cards. */
+/* The rest of the screen, darkened behind the papers, thread and cards:
+   all of it, however wide the stage. */
 .women-line-scene__dark {
   position: absolute;
-  left: 0;
+  left: calc(50% - 50vw);
   top: var(--lift, 0vh);
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   background: rgb(12 18 20 / 0.72);
   pointer-events: none;
@@ -5862,8 +5916,8 @@ article .layout__column p {
 .women-line-scene__next--top {
   left: 50%;
   top: calc(5vh + var(--lift, 0vh));
-  width: min(80%, 40rem);
-  margin-left: calc(min(80%, 40rem) / -2);
+  width: min(80%, 40rem, 100vw - 32px);
+  margin-left: calc(min(80%, 40rem, 100vw - 32px) / -2);
   text-align: center;
 }
 .symptom-ring__icon {
@@ -5876,9 +5930,31 @@ article .layout__column p {
 }
 .symptom-ring__label {
   font-family: var(--font-heading);
-  font-size: 16px;
+  font-size: calc(16px * var(--label-scale, 1));
   text-anchor: middle;
   fill: var(--text);
+}
+
+/* On a tall, narrow screen, where the scene is cropped either side and
+   slides to keep her in the middle (see WomenOnLine): the statistic under
+   her as she hangs, and the story's beats across the bottom of the screen
+   below her as she floats. */
+@media (orientation: portrait) {
+  .women-line-scene__stat {
+    left: 61.67%;
+    top: 84%;
+    width: min(100vw - 32px, 24rem);
+    transform: translateX(-50%);
+    text-align: center;
+  }
+  .women-line-scene__next:not(.women-line-scene__next--top) {
+    left: calc(var(--edge) + 16px);
+    /* Clear of the back-to-top tag in the corner: above it, and short of
+       it on the right. */
+    top: calc(86vh + var(--lift, 0vh));
+    width: calc(100vw - 32px - 3.5rem);
+    transform: translateY(-100%);
+  }
 }
 
 /* The women. Each is drawn as an ink pass then a page-colour pass on top,

@@ -16,8 +16,13 @@ const SYMPTOMS = [
 
 // The ring: its radii, and where on it each goes, in degrees clockwise from
 // her right, leaving the space over her head (and floating hair) clear.
+// Where less of the scene's width is on the screen (`span`, see
+// WomenOnLine), narrower, to keep each icon and its label FIT_EDGE in from
+// the screen's sides, and taller to make up for it, with labels larger to
+// stay legible as the scene's units shrink.
 const RX = 300;
 const RY = 205;
+const FIT_EDGE = 95;
 const ANGLES = [-30, 25, 90, 155, 210];
 const ICON = 96;
 const LABEL_LINE = 18;
@@ -36,18 +41,21 @@ const fitted = ({ box: [x, y, w, h], weight = 1 }: SymptomIcon) => {
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
 const smooth = (t: number) => t * t * (3 - 2 * t);
 
-export function SymptomRing({ cx, cy, shown }: { cx: number; cy: number; shown: number }) {
+export function SymptomRing({ cx, cy, span, shown }: { cx: number; cy: number; span: number; shown: number }) {
   if (!shown) return null;
+  const rx = Math.min(RX, span / 2 - FIT_EDGE);
+  const ry = RY + (RX - rx) * 0.8;
+  const labels = Math.max(1, 0.75 * (1200 / span));
   return (
-    <g className="symptom-ring">
+    <g className="symptom-ring" style={{ '--label-scale': labels.toFixed(3) } as CSSProperties}>
       {SYMPTOMS.map(({ icon, label }, i) => {
         const t = smooth(clamp01(shown * SYMPTOMS.length - i));
         if (!t) return null;
         const a = (ANGLES[i] * Math.PI) / 180;
         // Each drifts in a little way out from her as it comes.
         const out = 1 + (1 - t) * 0.12;
-        const x = cx + Math.cos(a) * RX * out;
-        const y = cy + Math.sin(a) * RY * out;
+        const x = cx + Math.cos(a) * rx * out;
+        const y = cy + Math.sin(a) * ry * out;
         const lines = Array.isArray(label) ? label : [label];
         const { viewBox, line } = fitted(icon);
         return (
@@ -64,7 +72,7 @@ export function SymptomRing({ cx, cy, shown }: { cx: number; cy: number; shown: 
             />
             <text className="symptom-ring__label" x={x} y={y + ICON / 2 + 6}>
               {lines.map((line, j) => (
-                <tspan key={j} x={x} dy={j ? LABEL_LINE : 0}>
+                <tspan key={j} x={x} dy={j ? LABEL_LINE * labels : 0}>
                   {line}
                 </tspan>
               ))}

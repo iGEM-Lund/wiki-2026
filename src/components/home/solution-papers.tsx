@@ -58,60 +58,62 @@ export const PAPER_H = 31;
 const TABLE_TIP = 62;
 export const TABLE_SQUASH = Math.cos((TABLE_TIP * Math.PI) / 180);
 
-// The cards: CARD_W of the screen wide, two by two in the middle of the
-// screen, CARD_GAP (% of its width) between them across, room for the
-// thread between the columns, and ROW_GAP (vh) down; each flying in from
+// The cards, two by two in the middle of the screen: each laid out
+// `design` px wide and scaled to `width` (% of the screen's width), with
+// `gap` (% of it) between them across, room for the thread between the
+// columns, and ROW_GAP (vh) down; on a tall, narrow screen in narrower
+// columns, wider for it. Smaller still if two rows of them that size
+// wouldn't fit the screen's height (ROWS_FIT of it). Each flies in from
 // `from` (% across, vh down), off the screen, turning `spin` degrees on
 // the way.
-const CARD_W = 27;
-const CARD_GAP = 12;
+const WIDE = { width: 27, gap: 12, design: 408 };
+const NARROW = { width: 44, gap: 5, design: 280 };
 const ROW_GAP = 6;
+const ROWS_FIT = 86;
 const CARD_FROM: { from: [number, number]; spin: number }[] = [
   { from: [-30, 20], spin: -40 },
   { from: [130, 20], spin: 40 },
   { from: [-30, 110], spin: 35 },
   { from: [130, 110], spin: -35 },
 ];
-// Card `i`'s centre across.
-const cardX = (i: number) => 50 + ((i % 2 ? 1 : -1) * (CARD_W + CARD_GAP)) / 2;
-// Before its height is measured, a card's guess at it, in vh.
-const CARD_H = 30;
+// Before its height is measured, a card's guess at it, in px as laid out.
+const CARD_H = 300;
 // The order the thread reaches the cards in: down the first column, then
 // down the second.
 const CLIP_ORDER = [0, 2, 1, 3];
 
 type P2 = [number, number];
 // Where the thread leaves the bottom of the screen, % across.
-export const THREAD_EXIT = 60;
-// The points the thread passes through, in % across and vh down: an S on
-// its side over the screen. In from off the top, down the first column
-// through the top of each card in it, round under the cards, up between
-// the columns, round over them, and down the second column through the
-// top of each card in it and out of the bottom, swaying from side to side
-// between. `tops` are the two rows' top edges, `under` just below the
-// cards.
-function threadPoints([one, two]: [number, number], under: number): P2[] {
-  const [a, b] = [cardX(0), cardX(1)];
-  const over = one - 7;
+export const THREAD_EXIT = 50;
+// The points the thread passes through, in % across and vh down, over the
+// cards in two columns centred at `a` and `b`, `half` wide each side of
+// that, their rows' top edges at `tops`, `under` just below them. In from
+// the top in the middle, down through the top left card's clip, round in a
+// curl out to the left, then in one diagonal up through the bottom left
+// card's clip and the top right one's, round in the same curl out to the
+// right, and down through the bottom right card's clip and out of the
+// bottom in the middle. The last three are where it leaves, which keeps
+// to THREAD_EXIT across the whole screen (see `exit`).
+function threadPoints([one, two]: [number, number], under: number, [a, b]: P2, half: number): P2[] {
+  // The curl on the right, from the top right clip round to the bottom
+  // right one; the one on the left is the same turned half round, from the
+  // top left clip to the bottom left.
+  const curl: P2[] = [
+    [b + (b - a) * 0.25, Math.max(3, one - 8)],
+    [b + half + 6, (one + two) / 2],
+    [b + half * 0.6, two - 6],
+  ];
+  const turned = ([x, y]: P2): P2 => [100 - x, one + two - y];
   return [
-    [a + 4, -10],
+    [50, -10],
+    [(50 + a) / 2 + 2, one / 2],
     [a, one],
-    [a - 4, (one + two) / 2 + 4],
+    ...curl.map(turned).reverse(),
     [a, two],
-    [a + 3, under],
-    [(a + 50) / 2, under + 9],
-    [50, under - 1],
-    [53, 50],
-    [50, over + 1],
-    [(50 + b) / 2, over - 9],
-    [b - 3, over],
     [b, one],
-    [b + 4, (one + two) / 2 + 4],
+    ...curl,
     [b, two],
-    [b + 3, under],
-    // Out of the bottom of the screen straight down at THREAD_EXIT, where
-    // the section below picks it up (see AntigoneReveal).
-    [THREAD_EXIT, under + 11],
+    [THREAD_EXIT, under + 12],
     [THREAD_EXIT, 100],
     [THREAD_EXIT, 115],
   ];
@@ -162,22 +164,42 @@ export const paperFlight = (shown: number, i: number) => {
 };
 
 export function SolutionPapers({ shown }: { shown: number }) {
-  // The screen's size in px, and the tallest card's height in vh, to lay
-  // the thread and the rows out by.
+  // The stage's width, the screen's size, in px, and the tallest card's
+  // height as laid out, to lay the thread and the rows out by.
   const ref = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState({ w: 1200, h: 800, card: CARD_H });
+  const [size, setSize] = useState({ w: 1200, vw: 1200, h: 800, card: CARD_H });
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
     const tallest = Math.max(...[...el.querySelectorAll<HTMLElement>('.solution-papers__card')].map((c) => c.offsetHeight));
-    const next = { w: el.clientWidth, h: window.innerHeight, card: (tallest / window.innerHeight) * 100 };
-    if (Math.abs(next.w - size.w) > 0.5 || Math.abs(next.h - size.h) > 0.5 || Math.abs(next.card - size.card) > 0.1) setSize(next);
+    const next = { w: el.clientWidth, vw: document.documentElement.clientWidth, h: window.innerHeight, card: tallest };
+    if (
+      Math.abs(next.w - size.w) > 0.5 ||
+      Math.abs(next.vw - size.vw) > 0.5 ||
+      Math.abs(next.h - size.h) > 0.5 ||
+      Math.abs(next.card - size.card) > 0.5
+    )
+      setSize(next);
   });
-  const { w, h, card } = size;
+  const { w, vw, h } = size;
+  // Laid out across the part of the stage on the screen (`seen` px wide,
+  // in its middle): `across` (% of it) to px on the stage.
+  const seen = Math.min(w, vw);
+  const across = (x: number) => w / 2 + ((x - 50) / 100) * seen;
+  const layout = seen < h ? NARROW : WIDE;
+  const scale = Math.min(((layout.width / 100) * seen) / layout.design, (((ROWS_FIT - ROW_GAP) / 200) * h) / size.card);
+  const cardW = (layout.design * scale * 100) / seen;
+  const card = ((size.card * scale) / h) * 100;
+  // Card `i`'s centre across, % of what's seen.
+  const cardX = (i: number) => 50 + ((i % 2 ? 1 : -1) * (cardW + layout.gap)) / 2;
   // The cards' two rows, in the middle of the screen.
   const tops: [number, number] = [50 - card - ROW_GAP / 2, 50 + ROW_GAP / 2];
+  // Out of the bottom at THREAD_EXIT of the whole screen's width, where
+  // the section below, as wide as the screen, picks it up.
+  const exit = w / 2 + ((THREAD_EXIT - 50) / 100) * vw;
+  const points = threadPoints(tops, 50 + card + ROW_GAP / 2 + 4, [cardX(0), cardX(1)], cardW / 2);
   const d = through(
-    threadPoints(tops, 50 + card + ROW_GAP / 2 + 4).map(([x, y]) => [(x / 100) * w, (y / 100) * h]),
+    points.map(([x, y], i): P2 => [i >= points.length - 3 ? exit : across(x), (y / 100) * h]),
   );
   const drawn = share(shown, THREAD);
   return (
@@ -207,13 +229,14 @@ export function SolutionPapers({ shown }: { shown: number }) {
       })}
       {drawn > 0 && (
         <svg className="solution-papers__thread" viewBox={`0 0 ${w} ${h}`} aria-hidden="true">
-          {/* As thick as the string the women sat on, drawn 1200 wide. */}
+          {/* As thick as the string the women sat on, drawn 1200 wide across
+              the screen, the same as the section below carries it on. */}
           <path
             d={d}
             pathLength={1}
             strokeDasharray="1 1"
             strokeDashoffset={1 - drawn}
-            strokeWidth={(3.4 * w) / ROOM_WIDTH}
+            strokeWidth={(3.4 * vw) / ROOM_WIDTH}
           />
         </svg>
       )}
@@ -230,12 +253,12 @@ export function SolutionPapers({ shown }: { shown: number }) {
         const y = tops[i < 2 ? 0 : 1];
         const turn = spin * (1 - e) + (t < 1 ? SWING.from * (i % 2 ? -1 : 1) * e : sway);
         const style = {
-          left: `${mix(from[0], x, e).toFixed(3)}%`,
+          left: `${across(mix(from[0], x, e)).toFixed(2)}px`,
           top: `calc(var(--lift, 0vh) + ${mix(from[1], y, e).toFixed(3)}vh)`,
-          width: `${CARD_W}cqw`,
-          // Turning about the clip it hangs from.
+          width: `${layout.design}px`,
+          // Turning about the clip it hangs from, and scaled from it.
           transformOrigin: '50% 0',
-          transform: `translateX(-50%) rotate(${turn.toFixed(2)}deg)`,
+          transform: `translateX(-50%) rotate(${turn.toFixed(2)}deg) scale(${scale.toFixed(4)})`,
           visibility: t > 0 ? undefined : 'hidden',
         } as CSSProperties;
         // The clip snaps on as it lands, and swings with it.
@@ -252,7 +275,7 @@ export function SolutionPapers({ shown }: { shown: number }) {
               <span
                 className="solution-papers__clip"
                 style={{
-                  left: `${x}%`,
+                  left: `${across(x).toFixed(2)}px`,
                   top: `calc(var(--lift, 0vh) + ${y}vh)`,
                   opacity: clipped,
                   transform: `translate(-50%, -35%) rotate(${sway.toFixed(2)}deg) scale(${(1.5 - 0.5 * clipped).toFixed(3)})`,

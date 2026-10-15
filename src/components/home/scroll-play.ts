@@ -126,7 +126,11 @@ export function useScrollProgress(ref: RefObject<HTMLElement | null>, holds: rea
         const from = last;
         const hold = holds.find(({ at }) => from < at && at <= p);
         if (hold) {
-          heldAt = Math.ceil(top + hold.at * span);
+          // A pixel past it: at a fractional pixel ratio the page can only
+          // stop on device pixels, and one landing just short of the hold
+          // would read as not there yet, and be held again on the next
+          // scroll, for ever.
+          heldAt = Math.ceil(top + hold.at * span) + 1;
           heldUntil = performance.now() + hold.ms;
           keep(heldAt);
           p = clamp01((heldAt - top) / span);

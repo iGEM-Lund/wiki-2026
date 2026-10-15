@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useClock, useScrollProgress, useTimedToggle, useTimedToggles, type Hold } from './scroll-play';
 import { SymptomRing } from './symptom-ring';
 import { dimmed, SolutionPapers } from './solution-papers';
@@ -19,20 +19,24 @@ import {
 
 // The home page's opening scene: the AnTigone title over nine women sitting
 // along a string, seen from behind. A little way into the scroll, one of
-// them (`HER`) shuffles forward, rolls back over the string holding on, lets go to hang
-// by her knees, upside down and facing the viewer, turning crimson as the
-// statistic comes in; then she straightens her legs off the string and
-// drops, and the string springs back. The scene never stops the page: while
+// them (`HER`), arms folded, shuffles forward and rolls back over the
+// string to hang by her knees, upside down and facing the viewer, turning
+// crimson as the statistic comes in; then she straightens her legs off the
+// string and drops, and the string springs back. The scene never stops the page: while
 // it plays it keeps rising, slower than the scroll (see .women-line-scene
 // in globals.css), then scrolls away as normal.
 
 const WIDTH = 1200;
 const HEIGHT = 440;
-// The string: sagging between two points just off either side of the box.
+// The string: sagging between two points just off either side of the box,
+// and on from them straight up and out, on past the screen's edges where
+// the screen is wider than the drawing (see --scene-w in globals.css).
 const STRING_Y = 120;
 const SAG = 24;
 const baseY = (x: number) => {
   const u = x / WIDTH;
+  if (u < 0) return STRING_Y + SAG * 4 * u;
+  if (u > 1) return STRING_Y + SAG * 4 * (1 - u);
   return STRING_Y + SAG * 4 * u * (1 - u);
 };
 // Her weight pulls the string down locally while she hangs from it.
@@ -49,7 +53,7 @@ const SEATS: Seat[] = [
   { x: 346, pose: POSES.restingLeft, look: { hair: 'curly', bottom: 'shorts', sleeve: 'short' } },
   { x: 490, pose: POSES.swinging, look: { hair: 'ponytail', bottom: 'trousers', sleeve: 'short' } },
   { x: 615, pose: POSES.lap, look: { hair: 'scarf', bottom: 'skirt', sleeve: 'long' } },
-  { x: 740, pose: POSES.sitting, look: { hair: 'long', bottom: 'trousers', sleeve: 'short', hairLength: 42 } },
+  { x: 740, pose: POSES.folded, look: { hair: 'long', bottom: 'trousers', sleeve: 'short', hairLength: 42 } },
   { x: 870, pose: POSES.pointing, look: { hair: 'bob', bottom: 'trousers', sleeve: 'long' } },
   { x: 1000, pose: POSES.restingRight, look: { hair: 'braid', bottom: 'skirt', sleeve: 'long', hairLength: 44 } },
   { x: 1082, pose: POSES.restingLeft, look: { hair: 'buns', bottom: 'trousers', sleeve: 'short' } },
@@ -111,7 +115,7 @@ const BEATS: Beat[] = [
   {
     big: 'Hyperandrogenism',
     small:
-      'is the excessive production or activity of androgens, particularly testosterone and dihydrotestosterone (DHT). It is one of the key pathological drivers of PMOS and contributes to both reproductive and metabolic dysfunction.',
+      'is the excessive production or activity of androgens, particularly testosterone and dihydrotestosterone. It is one of the key pathological drivers of PMOS.',
     from: at(460),
     to: at(600),
     phrase: true,
@@ -136,10 +140,12 @@ const BEAT_MS = 1000;
 const beatOpacity = (t: number) => smooth(phase(t, [0.5, 1]));
 // The women round her come in with the first beat, and go with it.
 const SINKERS_MS = 1400;
-// Then she drifts to the middle, turning upright, and floats there.
+// Then she turns upright where she is, and floats there, beside the words.
 const FLOAT_MS = 1800;
+// Last, she drifts to the middle (over the first part of RING_MS), and the
+// symptoms come in round her, one by one (see SymptomRing).
 const CENTRE_X = WIDTH / 2;
-// Last, the symptoms come in round her, one by one (see SymptomRing).
+const TO_CENTRE: [number, number] = [0, 0.35];
 const RING_MS = 2600;
 // Then the whole scene pulls back into a speech bubble over one of the
 // team, in a room full of them (see TeamRoom).
@@ -264,6 +270,20 @@ const SINKING: Pose = { ...POSES.hanging, ankles: STRAIGHT, hairUp: 1, sink: 1 }
 export function WomenOnLine() {
   const sectionRef = useRef<HTMLElement>(null);
   const p = useScrollProgress(sectionRef, HOLDS);
+  // How much of the drawing's width is on the screen, in its units: all of
+  // it, unless the stage is wider than the screen (on a tall, narrow one,
+  // see --scene-w in globals.css), cropped either side.
+  const [span, setSpan] = useState(WIDTH);
+  useEffect(() => {
+    const measure = () => {
+      const stage = sectionRef.current?.querySelector<HTMLElement>('.women-line-scene__stage');
+      if (!stage?.clientWidth) return;
+      setSpan(Math.min(WIDTH, (document.documentElement.clientWidth / stage.clientWidth) * WIDTH));
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
 
   // The drop waits for the hang to finish, and the hang only reverses once
   // the drop has, so a fast scroll still plays them one after the other.
@@ -277,8 +297,10 @@ export function WomenOnLine() {
   const roll = smooth(phase(hang, H.roll));
   const letGo = smooth(phase(hang, H.letGo));
   const colour = smooth(phase(hang, H.colour));
-  const stat = smooth(phase(hang, H.stat));
   const straighten = smooth(phase(dropped, D.straighten));
+  // The statistic, in as she hangs, out as she lets go of the string (where
+  // the screen is tall enough that the fall wouldn't take it off the top).
+  const stat = smooth(phase(hang, H.stat)) * (1 - straighten);
   const drop = phase(dropped, D.fall);
   const sink = phase(p, [DROP_AT, 1]) * dropped;
   const fall = FALL * easeInOut(drop) + SINK * sink;
@@ -291,6 +313,8 @@ export function WomenOnLine() {
   const sinkersIn = useTimedToggle(landed && p >= BEATS[0].from && p < BEATS[0].to, SINKERS_MS);
   const float = smooth(useTimedToggle(landed && p >= BEATS[1].from, FLOAT_MS));
   const ring = useTimedToggle(landed && p >= BEATS[3].from, RING_MS);
+  const centred = smooth(phase(ring, TO_CENTRE));
+  const symptoms = phase(ring, [TO_CENTRE[1] - 0.05, 1]);
   const room = smooth(useTimedToggle(landed && p >= ROOM_AT, ROOM_MS));
   // Where the tail points: her head, found on the screen, in the
   // bubble's box, as the room settles round the bubble.
@@ -308,8 +332,7 @@ export function WomenOnLine() {
   });
   const tail = bubbleTail(tip);
   // As the scene pulls back into the bubble, its words and symbols go, and
-  // the women round her come back, in the others' teal now, all solid: in
-  // the bubble, just her among them.
+  // the women round her come back, all solid, crimson like her.
   const solution = useTimedToggle(landed && p >= SOLUTION_AT, SOLUTION_MS);
   // The rest of the screen darkens as the papers fly away, behind them,
   // the thread and the cards.
@@ -352,8 +375,13 @@ export function WomenOnLine() {
   // Once her legs are mostly up off the string, all of her is drawn in
   // front of it, so it doesn't cut across her knees as she goes.
   const herInFront = straighten > 0.5;
+  const herNowX = herX + (CENTRE_X - herX) * centred;
+  // Cropped, the drawing slides across to keep her in the middle of the
+  // screen, as far as it can without showing past its ends: none once she
+  // has drifted to the middle herself.
+  const panRoom = (WIDTH - span) / 2;
+  const pan = Math.max(-panRoom, Math.min(panRoom, CENTRE_X - herNowX));
   const herY = stringY(herX, dip, herX) + fall + 5 * Math.sin(time * 1.3) * float;
-  const herNowX = herX + (CENTRE_X - herX) * float;
   const herTurn = 3 * Math.sin(time * 0.7) * float;
   const women = others.map((other, i) =>
     i === HER
@@ -379,7 +407,7 @@ export function WomenOnLine() {
   // The string, sampled so its dip under her shows.
   const stringPath = useMemo(() => {
     const points: string[] = [];
-    for (let x = -20; x <= WIDTH + 20; x += 10) points.push(`${x} ${stringY(x, dip, herX).toFixed(2)}`);
+    for (let x = -WIDTH; x <= 2 * WIDTH; x += 10) points.push(`${x} ${stringY(x, dip, herX).toFixed(2)}`);
     return `M${points.join('L')}`;
   }, [dip, herX]);
 
@@ -405,7 +433,9 @@ export function WomenOnLine() {
       >
         <TeamRoom shown={room} papers={solution} />
         {/* Everything so far, which pulls back into a speech bubble. */}
-        <div className="women-line-scene__bubble">
+        {/* Clipped to its oval only once it starts to shrink into it, so the
+            string runs on past the stage's sides where the screen is wider. */}
+        <div className="women-line-scene__bubble" style={room > 0 ? undefined : { overflow: 'visible' }}>
         <div className="women-line-scene__world">
         {/* The view following her fall, in drawing units (1200 to the
             stage's width). */}
@@ -420,7 +450,7 @@ export function WomenOnLine() {
           </hgroup>
           <SkipToEnd />
         </div>
-        <div className="women-line-scene__art">
+        <div className="women-line-scene__art" style={pan ? { translate: `${(pan / 12).toFixed(3)}cqw 0` } : undefined}>
           <svg
             className="women-line"
             viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
@@ -453,11 +483,7 @@ export function WomenOnLine() {
                     key={i}
                     opacity={shown}
                     transform={`translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${turn.toFixed(2)}) scale(${flip ? -s : s} ${s})`}
-                    style={
-                      {
-                        '--women-ink': `color-mix(in oklch longer hue, var(--heading-minor) ${((1 - crowd) * 100).toFixed(1)}%, var(--heading))`,
-                      } as CSSProperties
-                    }
+                    style={{ '--women-ink': 'var(--heading-minor)' } as CSSProperties}
                   >
                     <LayerArt layer={figure.behind} transform="" />
                     <LayerArt layer={figure.main} transform="" />
@@ -466,7 +492,7 @@ export function WomenOnLine() {
                 );
               })}
             <g opacity={wordsOut}>
-              <SymptomRing cx={herNowX} cy={herY + HER_MIDDLE} shown={wordsOut ? ring : 0} />
+              <SymptomRing cx={herNowX} cy={herY + HER_MIDDLE} span={span} shown={wordsOut ? symptoms : 0} />
             </g>
           </svg>
           <p className="women-line-scene__stat" style={{ opacity: stat, translate: `0 ${((1 - stat) * 1).toFixed(3)}rem` }}>
@@ -504,8 +530,15 @@ export function WomenOnLine() {
             style={{ opacity: smooth(phase(room, [0.8, 1])) }}
           >
             <path className="women-line-scene__tail" d={`M${tail.to}${tail.tail}Z`} />
-            <path d={`M${tail.from}A50 50 0 1 1 ${tail.to}${tail.tail}`} />
+            {/* Closed: it ends where it started, at the tail's left foot,
+                so the two ends join there rather than meeting as a notch. */}
+            <path d={`M${tail.from}A50 50 0 1 1 ${tail.to}${tail.tail}Z`} />
           </svg>
+        )}
+        {room > 0.8 && (
+          <p className="women-line-scene__ask" style={{ opacity: smooth(phase(room, [0.85, 1])) }}>
+            Our solution?
+          </p>
         )}
         {dark > 0 && <div className="women-line-scene__dark" style={{ opacity: dark }} />}
         {room > 0 && (
