@@ -347,7 +347,26 @@ Table 13. Mutant docking results for AKR1D1 (top-ranked variants).
 | **Combo 1: V309T + L311S**        | −9.9                       | −9.4                       | +0.5                         | Favoured progesterone |
 | **Combo 6: V309T + L311S + I57S** | −10.4                      | −9.8                       | +0.6                         | Favoured progesterone |
 
-The detailed analysis of  variant specificity towards testosterone is presented on the [Results](https://wiki.igemlund.org/technical_modeling#results) page.
+
+
+No AKR1D1 variant shifted selectivity meaningfully. The three best mutants, V309S, V309E and I57Y moved the score by just 0.1 kcal/mol, well within the noise threshold, and every variant kept a positive score, so progesterone remained preferred throughout. None of the substitutions tested was able to redirect AKR1D1 towards testosterone.
+
+#### **For ci2350:**
+
+Table 14. Mutant docking results for ci2350 (top-ranked variants).
+
+| **Variant**                         | **Progesterone(kcal/mol)** | **Testosterone(kcal/mol)** | **Selectivity(Test − Prog)** | **Outcome**                                 |
+| ----------------------------------- | -------------------------- | -------------------------- | ---------------------------- | ------------------------------------------- |
+| **Wild-type**                       | −9.1                       | −9.2                       | −0.1                         | Reference                                   |
+| **Combo 8: R215A + V263I**          | −8.5                       | −9.4                       | −0.9                         | Highly favoured testosterone                |
+| **V263K**                           | −6.9                       | −7.4                       | −0.5                         | Favoured testosterone, but affinity reduced |
+| **Combo 13: R215A + V263I + Q100T** | −8.0                       | −8.5                       | −0.5                         | Favoured testosterone, but affinity reduced |
+| **Combo 9: R215E + V263I**          | −7.4                       | −7.7                       | −0.3                         | Favoured testosterone, but affinity reduced |
+| **V263D**                           | −9.1                       | −9.3                       | −0.2                         | Favoured testosterone                       |
+
+
+
+The combination mutation of **R215A + V263I** is the clear leading candidate, with a selectivity score of **−0.9 kcal/mol** and a shift of **−0.8** against the wild-type, and the only variant to exceed the noise threshold. It is also the only one where testosterone binding improved in absolute terms while progesterone binding weakened, so the gain comes from both directions at once. The other candidates gained selectivity by losing affinity. R215A + V263I was therefore selected as one of the candidates for experimental characterisation. The detailed analysis of  variant specificity towards testosterone is presented on the [Results](https://wiki.igemlund.org/technical_modeling#results) page.
 
 **The complete implementation of the pipeline for enzyme specificity analysis is available on GitLab (Link)**
 
