@@ -34,19 +34,19 @@ Together, these form a connected predictive layer: the first narrows a large des
 
 ### Protein stcructure acquisition
 
-Three-dimensional structures for the two candidate enzymes were obtained through different routes, reflecting the availability of experimental data for each. The human AKR1D1 structure was retrieved from the RCSB Protein Data Bank (Berman et al., 2000) (PDB entry 3CAV), resolved at 1.90 Å in complex with NADPH (Faucher et al., 2008).
+Three-dimensional structures for the two candidate enzymes were obtained through different routes, reflecting the availability of experimental data for each. The human AKR1D1 structure was retrieved from the RCSB Protein Data Bank (<Citation />Berman et al., 2000) (PDB entry 3CAV), resolved at 1.90 Å in complex with NADPH (<Citation />Faucher et al., 2008).
 
 <MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-chaina-clean.glb" format="glb" style="cartoon" caption="Crystal structure of human AKR1D1 (PDB 3CAV, chain A) in complex with NADPH. NADPH is highlighted in cornflower blue" refId="mod-s2bgl" />
 
-No experimentally determined structure was available for ci2350. A three-dimensional model was generated using AlphaFold v2.2.0 (Jumper et al., 2021), with the input sequence taken from Arp et al., 2025. Per-residue confidence scores (pLDDT) exceeded 90 (pLDDT > 90, very high) across the model, confirming that the predicted structure met the threshold for structure-based analysis.
+No experimentally determined structure was available for ci2350. A three-dimensional model was generated using AlphaFold v2.2.0 (<Citation />Jumper et al., 2021), with the input sequence taken from Arp et al., 2025. Per-residue confidence scores (pLDDT) exceeded 90 (pLDDT > 90, very high) across the model, confirming that the predicted structure met the threshold for structure-based analysis.
 
 <MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/c12350.glb" format="glb" style="cartoon" caption="AlphaFold v2.2.0 model of ci2350 from Clostridium innocuum. Per-residue confidence exceeded 90 (very high) across the model." refId="mod-iwdp3" />
 
 ### Structure preparation
 
-All structures were prepared following the standard AutoDock receptor preparation protocol (Eberhardt et al., 2021; Morris et al., 2009). Water molecules and non-essential heteroatoms were removed. NADPH was present in the PDB structure of AKR1D1 and was retained to preserve the biologically relevant binding geometry. For ci2350, no cofactor present, since it is a predicted structure.&#x20;
+All structures were prepared following the standard AutoDock receptor preparation protocol (<Citation />,<Citation />Eberhardt et al., 2021; Morris et al., 2009). Water molecules and non-essential heteroatoms were removed. NADPH was present in the PDB structure of AKR1D1 and was retained to preserve the biologically relevant binding geometry. For ci2350, no cofactor present, since it is a predicted structure.&#x20;
 
-Hydrogen atoms were added, and protonation states were assigned at physiological pH (7.4), consistent with standard receptor preparation for molecular docking (Morris et al., 2009). Structures were then converted to PDBQT format using MGLTools (prepare\_receptor4.py) (Morris et al., 2009), which assigns Gasteiger partial charges and defines rotatable bonds for the docking software.
+Hydrogen atoms were added, and protonation states were assigned at physiological pH (7.4), consistent with standard receptor preparation for molecular docking (<Citation />Morris et al., 2009). Structures were then converted to PDBQT format using MGLTools (prepare\_receptor4.py) (<Citation reference="morris-et-al-2009" />), which assigns Gasteiger partial charges and defines rotatable bonds for the docking software.
 
 ### Ligand preparation
 
