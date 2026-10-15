@@ -167,9 +167,23 @@ Quorum sensing (QS) is a bacterial communication system using signaling molecule
 
 #### **Genetic Firewalling: Amber-Suppression Semantic Firewall**
 
-**Principle.** Amber suppression uses the amber stop codon UAG as a genetic lock: a TAG codon is inserted into the engineered gene, and normally the ribosome stops there, producing only an incomplete protein. A matching suppressor tRNA, provided in the intended host, recognizes UAG and inserts an amino acid instead, allowing translation to continue and producing a full-length, functional protein. If the gene is transferred to a bacterium lacking that suppressor tRNA, translation stops early and the protein is non-functional, making the engineered gene depend on a matching suppressor present only in the intended host.
+<Layout2>
+  <LayoutColumn>
+    <CardTitle>
+      **Principle**
+    </CardTitle>
 
-**Why we considered it.** In the gut, engineered DNA could potentially transfer to other bacteria. Amber suppression would not stop that transfer, but could make the transferred gene less likely to work in a new host, without relying on a dedicated toxin, an attractive additional safety layer.
+    Amber suppression works by introducing a premature stop codon (UAG) into an engineered gene. Normally, this would stop protein production before the protein is complete. However, a specially designed suppressor tRNA allows the intended host bacterium to bypass this stop signal and produce the full-length protein. If the gene is transferred to another bacterium without the matching suppressor tRNA, the protein is unlikely to be produced correctly, reducing the risk of the transferred gene remaining functional<Citation reference="bautista-et-al-2021" />.
+  </LayoutColumn>
+
+  <LayoutColumn>
+    <CardTitle>
+      **Why we considered it** &#x20;
+    </CardTitle>
+
+    In the gut, engineered genes could potentially be transferred to other bacteria through horizontal gene transfer (HGT). Although amber suppression cannot prevent this transfer, it could reduce the likelihood of these genes remaining functional in other bacterial hosts. As this approach does not require a toxin-based system, it could serve as an additional layer of genetic safety for AnTigone.
+  </LayoutColumn>
+</Layout2>
 
 **Main limitations**
 
