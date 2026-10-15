@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { reader } from '@/lib/keystatic/reader';
 import { renderMdx } from '@/lib/mdx/render';
@@ -10,6 +11,7 @@ import { ScrollReveal } from '@/components/scroll-reveal';
 import { NextPageLink } from '@/components/next-page-link';
 import { LinkifiedText } from '@/components/linkified-text';
 import { getNextPage } from '@/lib/nav';
+import { pageDescription } from '@/lib/page-description';
 
 // Every page on the site, including the mandatory iGEM Standard URL Pages,
 // is a `pages` collection entry, so one route serves all of them.
@@ -22,6 +24,16 @@ export async function generateStaticParams() {
 // No routes beyond the ones enumerated by generateStaticParams; required
 // for `output: 'export'`, which cannot serve routes on demand.
 export const dynamicParams = false;
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const entry = await reader.collections.pages.read(slug);
+  if (!entry) return {};
+  // Left out (not undefined) when the page has no usable paragraph, so the
+  // site-wide description from the root layout applies instead.
+  const description = pageDescription(await entry.content());
+  return { title: entry.title.trim(), ...(description ? { description } : {}) };
+}
 
 export default async function ContentPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

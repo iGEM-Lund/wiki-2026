@@ -1,9 +1,23 @@
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import 'katex/dist/katex.min.css';
 import './globals.css';
 
-export const metadata = {
-  title: 'iGEM Lund 2026 Wiki',
+export const metadata: Metadata = {
+  // Content pages set their own title (src/app/(site)/[slug]/page.tsx), which
+  // the template suffixes; the home page gets the default.
+  title: {
+    default: 'iGEM Lund 2026 Wiki',
+    template: '%s | iGEM Lund 2026',
+  },
+  description:
+    'The iGEM Lund 2026 team wiki for AnTigone, a synthetic biology approach to hyperandrogenism in Polyendocrine Metabolic Ovarian Syndrome (PMOS).',
+  // The AnTigone mark (as in src/components/antigone-logo.tsx), hosted on
+  // static.igem.wiki like every other image. It switches to a pale colour on
+  // dark browser chrome via a media query inside the SVG.
+  icons: {
+    icon: { url: 'https://static.igem.wiki/teams/6160/wiki/logos/antigone-favicon.svg', type: 'image/svg+xml' },
+  },
 };
 
 // Blocking script so stored accessibility choices (theme, dyslexia-friendly
