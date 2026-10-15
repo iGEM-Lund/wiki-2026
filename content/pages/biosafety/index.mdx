@@ -177,17 +177,19 @@ Quorum sensing (QS) is a bacterial communication system using signaling molecule
   </LayoutColumn>
 
   <LayoutColumn>
-    <CardTitle>
-      **Why we considered it** &#x20;
-    </CardTitle>
-
-    In the gut, engineered genes could potentially be transferred to other bacteria through horizontal gene transfer (HGT). Although amber suppression cannot prevent this transfer, it could reduce the likelihood of these genes remaining functional in other bacterial hosts. As this approach does not require a toxin-based system, it could serve as an additional layer of genetic safety for AnTigone.
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/collaborations/collaborations/amber-figer.avif" alt="Diagram illustrating the mechanism of amber suppression. In the intended bacterial host, a suppressor tRNA recognizes the UAG stop codon, allowing translation to continue and producing a full-length protein. In bacteria lacking the matching suppressor tRNA, translation stops prematurely, resulting in a truncated protein." caption="Principle of the amber-suppression genetic firewall" numbered refId="fig-j4qmb" scale={100} plain={false} noZoom={false} />
   </LayoutColumn>
 </Layout2>
 
+<CardTitle>
+  **Why we considered it** &#x20;
+</CardTitle>
+
+In the gut, engineered genes could potentially be transferred to other bacteria through horizontal gene transfer (HGT). Although amber suppression cannot prevent this transfer, it could reduce the likelihood of these genes remaining functional in other bacterial hosts. As this approach does not require a toxin-based system, it could serve as an additional layer of genetic safety for AnTigone.
+
 **Main limitations**
 
-* It does not control bacterial survival: the engineered *E. coli* can still survive and spread, and DNA transfer can still occur; amber suppression only reduces the chance a transferred gene stays functional.
+* It does not control bacterial survival: the engineered *E. coli* can still survive and spread, and DNA transfer can still occur, amber suppression only reduces the chance a transferred gene stays functional.
 * It can interfere with normal translation: in *E. coli*, RF1 also recognizes UAG as a stop codon, so RF1 and the suppressor tRNA compete for the same site, and strong suppression may cause read-through of natural UAG stops in other genes.
 * The system can become unstable over time: long-term amber suppression creates selective pressure, and in one study *E. coli* adapted over roughly 500 generations by inactivating parts of the orthogonal translation system and promoting plasmid loss.
 * Gut evidence is limited: amber suppression has been demonstrated in engineered *E. coli* inside the mouse gastrointestinal tract, but for bacterial tracking rather than biocontainment. We did not find direct validation of an amber-suppression firewall as a containment system in the human gut.
