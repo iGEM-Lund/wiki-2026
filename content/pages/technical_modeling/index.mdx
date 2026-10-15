@@ -3,7 +3,13 @@ title: Modeling
 ---
 ## Overview&#x20;
 
-Our modelling approach focused on two genes: ci2350 and AKR1D1. The AKR1D1 gene is found in humans and other mammals, such as mice or rats. This gene has been known to produce 5β-reductase, a vital liver enzyme helping in changing the cholesterol to bile acids. A secondary known function of this is to recycle or clean up steroid hormones, especially cortisol and testosterone, by deactivating them. The ci2350 is a gene from the bacteria *Clostridium innocuum*, a bacterium commonly found among the human gut microbiome. Our team focused on modelling the 3d structure for the ci2350 gene using the AlphaFold tool, from sequences obtained from professors (insert credit to the professors who shared the sequence with us). It was well known that the enzyme from this sequence, the 5β-reductase, was well known to biotransform steroid hormones into a less active form. However, it was found to be more favoured towards the reduction of progesterone hormone, instead of our targeted testosterone hormone.
+**AnTigone** targets hyperandrogenism driven by the gut-androgen axis, a pathway in which colonic bacteria convert steroid precursors into bioactive androgens, particularly testosterone, which are then reabsorbed into circulation. Our dry-lab work asks which engineered enzyme variants are worth building to reduce testosterone, and how those variants would be expected to behave once placed in a living bacterial system.&#x20;
+
+Two enzymes are central to this axis. **AKR1D1** is the human hepatic **Δ4-3-ketosteroid 5β-reductase**, a member of the aldo-keto reductase superfamily, which inactivates androgens and glucocorticoids in the liver and initiates bile acid synthesis (Chen & Penning, 2014; Faucher et al., 2008).
+
+**ci2350** is a bacterial Δ4-3-ketosteroid 5β-reductase from *Clostridium innocuum*, identified by Arp et al. (2025) as a member of the **Old Yellow Enzyme family (COG1902)**, a flavin-dependent ene-reductase that couples steroid reduction to NADH oxidation under the anaerobic conditions of the gut. It has been shown to reduce progesterone, cortisone and hydrocortisone directly, and *C. innocuum* extracts have been reported to reduce testosterone (Arp et al., 2025; Stokes & Hylemon, 1985).
+
+The two enzymes are not homologous: they belong to unrelated families and have converged independently on the same 5β-reduction chemistry, with AKR1D1 acting on Δ4-3-ketosteroids spanning across **C18** to **C21 classes** (Chen et al., 2011), while ci2350 has been shown to reduce **C21 steroids** (Arp et al., 2025).
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/whatsapp-image-2026-10-14-at-13-50-08-1.avif" alt="Workflow overview" caption="Engineering specificity towards steroid hormones " scale={100} plain noZoom={false} />
 
@@ -33,8 +39,6 @@ The selected mutations were then introduced into the enzyme structures, and the 
 
 .....
 
-
-
 2. ### **ci2350 steroid selectivity - Results**
 
 ...
@@ -51,13 +55,9 @@ The selected mutations were then introduced into the enzyme structures, and the 
 
 ...
 
-
-
-#### **Did selectivity move?** 
+#### **Did selectivity move?**
 
 ...
-
-
 
 ## AKR1D1
 
@@ -65,41 +65,25 @@ The selected mutations were then introduced into the enzyme structures, and the 
 
 ...
 
-
-
 2. ### **Contact analysis places the difference at C17**
 
 ...
-
-
 
 3. ### **Contact differences define the mutagenesis library**
 
 ...
 
-
-
 4. ### **Stability screening narrows the library to 13 variants**
 
 ...
-
-
 
 5. ### **Docking the stable variants does not reverse selectivity**
 
 ...
 
-
-
 6. ### **What the results indicate**
 
 ...
-
-
-
-
-
-
 
 **Check**:
 
