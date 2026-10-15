@@ -61,5 +61,7 @@ items:
       value:
         - label: Team
           target: people_team
+        - label: Use of AI
+          target: use-of-ai
         - label: Sponsors
           target: people_sponsors
