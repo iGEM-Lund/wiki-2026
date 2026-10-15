@@ -18,13 +18,14 @@ const CAPTION_HINT = 'Put *asterisks* around a word to set it in italics, e.g. *
 const ALT_TEXT_DESCRIPTION =
   'Always fill this in. What the image shows, for readers who cannot see it (screen readers read this aloud). One or two plain sentences: say what matters about it, not "image of". Do not just repeat the caption.';
 
-// Shared by Badges and Badge, so a badge in a table cell picks from the same
-// palette, and gets the same automatic colour, as one on a card.
+// Shared by Badges, Badge and Pillars, so a badge in a table cell picks from
+// the same palette, and gets the same automatic colour, as one on a card or
+// the pillar it names.
 function badgeColorField() {
   return fields.select({
     label: 'Colour',
     description:
-      'Automatic picks a colour from the text, so the same committee or pillar always gets the same colour. Choose one yourself only if two different badges clash.',
+      'Automatic picks a colour from the text, so the same committee or pillar always gets the same colour (a pillar matches badges with the same text). Choose one yourself only if two clash.',
     options: [
       { label: 'Automatic', value: 'auto' },
       { label: 'Teal', value: 'teal' },
@@ -639,6 +640,7 @@ export const contentComponents = {
             description:
               'Only needed when the heading on the page is worded differently from the title. Type its text exactly as it appears.',
           }),
+          color: badgeColorField(),
         }),
         { label: 'Pillars', itemLabel: (props) => props.fields.title.value || 'Pillar' },
       ),

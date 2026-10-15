@@ -24,8 +24,10 @@ export type Badge = { text?: string | null; color?: BadgeColor | 'auto' | null }
 // separate blocks, so a row of inline badges would come apart into one
 // paragraph each the next time Keystatic saved the page. It still renders
 // as a paragraph, so on a card the row sits on the ruling like text.
-function badgeTone(badge: Badge): BadgeColor {
-  return badge.color && badge.color !== 'auto' ? badge.color : colorFor(badge.text as string);
+// Also used by the Pillars, so a pillar and the badges naming it in an
+// events table come out the same colour.
+export function badgeTone(badge: Badge): BadgeColor {
+  return badge.color && badge.color !== 'auto' ? badge.color : colorFor(badge.text ?? '');
 }
 
 export function Badges({ label, badges = [] }: { label?: string | null; badges?: Badge[] }) {

@@ -3823,9 +3823,9 @@ a.inline-icon--link:focus-visible {
    (server: geometry, compiles slice bodies) and SliceWheelClient.tsx
    (markup). The wheel is a round patch made like the pillars' (see
    .pillars__link): twill cloth with an overlocked edge, a crimson running
-   stitch just inside it, and the slices sewn on in the pillars' Shallows
+   stitch just inside it, and the slices sewn on in the default pillar's Shallows
    fill and Peacock line, their shared sides one seam. A hovered slice
-   lights up the way a hovered pillar does, Crimson on Blush, lifted off the
+   lights up in Crimson on Blush (the crimson pillar's colours), lifted off the
    patch and stretched out past its edge to hold the slice's text. Like the
    pillars, the patch keeps its light cloth in dark mode. */
 .slice-wheel {
@@ -4829,46 +4829,69 @@ article .layout__column p {
   --selection: var(--color-depths);
   --selection-text: var(--color-pearl);
   /* The patch's own cloth, a shade darker than the column's fill thread so
-     the embroidered column stands out on it, and the thread it's sewn on
-     with, contrasting with the edge. */
+     the embroidered column stands out on it. */
   --patch-cloth: color-mix(in srgb, var(--pillar-fill) 72%, var(--pillar-line));
-  --patch-thread: var(--color-crimson);
+  /* The title's colour, a deep shade of the line, which is also the thread
+     the patch is sewn on with. */
+  --pillar-ink: var(--color-depths);
+  --patch-thread: var(--pillar-ink);
   position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
   color: inherit;
   text-decoration: none;
-  transition: transform 0.15s ease;
+  /* A little overshoot, so the patch springs up rather than slides. */
+  transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
-.pillars__link:hover,
-.pillars__link:focus-visible {
-  transform: translateY(-3px);
+/* The writer-picked colours, the badges' palette (see Badges.tsx): the line
+   in the badge's cloth colour, a pale fill of it, and a deep shade of it for
+   the title and the sewing thread. Rose is too pale for a line, so its line is a
+   deeper rose. */
+.pillars__link--crimson {
+  --pillar-line: var(--color-crimson);
+  --pillar-fill: var(--color-blush);
+  --pillar-ink: var(--color-crimson);
+  --selection: var(--color-crimson);
+}
+.pillars__link--rose {
+  --pillar-line: color-mix(in srgb, var(--color-rose) 65%, var(--color-crimson));
+  --pillar-fill: color-mix(in srgb, var(--color-rose) 30%, var(--color-pearl));
+  --pillar-ink: #5a0a1e;
+  --selection: #5a0a1e;
+}
+.pillars__link--depths {
+  --pillar-line: var(--color-depths);
+  --pillar-fill: color-mix(in srgb, var(--color-depths) 14%, var(--color-pearl));
+  --pillar-ink: var(--color-depths);
+}
+.pillars__link--kraft {
+  --pillar-line: #8a6a43;
+  --pillar-fill: color-mix(in srgb, #8a6a43 18%, var(--color-pearl));
+  --pillar-ink: #4f3b22;
+  --selection: #4f3b22;
+}
+/* Hovered or focused, the patch grows a little and tips further the way it
+   already leans, as if lifted off the page by one corner. */
+.pillars__link[href]:is(:hover, :focus-visible) {
+  transform: scale(1.05) rotate(-2.5deg);
+}
+.pillars__item:nth-child(even) .pillars__link[href]:is(:hover, :focus-visible) {
+  transform: scale(1.05) rotate(2.5deg);
 }
 /* Beats the site-wide `.site a:hover` accent colour, so a hovered pillar's
-   text stays the same colour as an unhovered one. Depths in both themes,
-   not --heading: the patches keep their light cloth in dark mode too, where
-   --heading turns pale. */
+   text stays the same colour as an unhovered one. Its own ink in both
+   themes, not --heading: the patches keep their light cloth in dark mode
+   too, where --heading turns pale. */
 .site .pillars__link,
 .site .pillars__link:hover,
 .site .pillars__link:focus-visible {
-  color: var(--color-depths);
+  color: var(--pillar-ink);
 }
 .pillars__link:focus-visible {
   outline: 2px solid var(--pillar-line);
   outline-offset: 4px;
   border-radius: 20px;
-}
-/* The hovered or focused pillar lights up in crimson with a blush fill, in
-   the plain row of equal pillars as well as in a section heading's row. */
-.pillars__link[href]:is(:hover, :focus-visible) {
-  --pillar-line: var(--color-crimson);
-  --pillar-fill: var(--color-blush);
-  --patch-thread: var(--color-peacock);
-  --selection: var(--color-crimson);
-}
-.site .pillars__link[href]:is(:hover, :focus-visible) .pillars__title {
-  color: var(--color-crimson);
 }
 .pillars__capital,
 .pillars__base {
@@ -4983,8 +5006,7 @@ article .layout__column p {
   transition: border-color 0.15s ease;
 }
 /* In a section heading's place: the same row, the section's pillar larger
-   and accented in crimson with a blush shaft, not a link, and the rest
-   smaller. */
+   and not a link, and the rest smaller. */
 .pillars-section {
   margin: 9rem 0 3.5rem;
 }
@@ -5041,35 +5063,7 @@ article .layout__column p {
   transform: scale(var(--pillar-big));
 }
 .pillars__item--active .pillars__link {
-  --pillar-line: var(--color-crimson);
-  --pillar-fill: var(--color-blush);
-  --patch-thread: var(--color-peacock);
-  --selection: var(--color-crimson);
   cursor: default;
-}
-.site .pillars__item--active .pillars__title {
-  color: var(--color-crimson);
-}
-/* Hovering or focusing another pillar: that one takes the active look
-   (crimson lines and text, blush fill) and the active one steps back to the
-   default look, peacock lines with a shallows fill. Only sizes stay put. */
-.pillars-section .pillars__item:not(.pillars__item--active):is(:hover, :focus-within) .pillars__link {
-  --pillar-line: var(--color-crimson);
-  --pillar-fill: var(--color-blush);
-  --patch-thread: var(--color-peacock);
-  --selection: var(--color-crimson);
-}
-.site .pillars-section .pillars__item:not(.pillars__item--active):is(:hover, :focus-within) .pillars__title {
-  color: var(--color-crimson);
-}
-.pillars-section .pillars__list:has(.pillars__item:not(.pillars__item--active):is(:hover, :focus-within)) .pillars__item--active .pillars__link {
-  --pillar-line: var(--color-peacock);
-  --pillar-fill: var(--color-shallows);
-  --patch-thread: var(--color-crimson);
-  --selection: var(--color-depths);
-}
-.site .pillars-section .pillars__list:has(.pillars__item:not(.pillars__item--active):is(:hover, :focus-within)) .pillars__item--active .pillars__title {
-  color: var(--color-depths);
 }
 /* Sewing on: once the row has scrolled in (ScrollReveal sets data-reveal
    on .pillars-section, the same trigger and the same reduced-motion
@@ -5096,7 +5090,7 @@ article .layout__column p {
       opacity 0.2s ease-out var(--pillar-delay),
       scale 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) var(--pillar-delay),
       translate 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) var(--pillar-delay),
-      transform 0.15s ease;
+      transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
   }
   :root:not([data-motion='reduce']) .pillars-section[data-reveal] .pillars__link {
     opacity: 1;

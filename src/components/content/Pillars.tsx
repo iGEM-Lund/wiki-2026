@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 import GithubSlugger from 'github-slugger';
+import { badgeTone, type BadgeColor } from './Badges';
 
 // Each pillar is drawn as an Ionic column, outlined and filled: a rounded top slab, a
 // tapering echinus, and a scroll band with a curled volute at either end, then
@@ -29,7 +30,7 @@ function Base() {
   );
 }
 
-export type Pillar = { title: string; heading?: string };
+export type Pillar = { title: string; heading?: string; color?: BadgeColor | 'auto' | null };
 
 // The id rehype-slug gives the heading a pillar points at (see
 // src/lib/mdx/render.ts), computed with the same github-slugger so the two
@@ -49,8 +50,10 @@ function longestWord(pillars: Pillar[]): number {
 // page. No client JS; the browser's own anchor scroll does the work (see
 // scroll-padding-top in globals.css for the fixed header). With
 // `activeIndex` set the row is the one that replaces that pillar's heading
-// (see PillarsSectionHeading): that pillar is enlarged and accented, and no
-// longer a link, since it is where the reader already is.
+// (see PillarsSectionHeading): that pillar is enlarged, and no longer a
+// link, since it is where the reader already is. Each pillar is sewn in one
+// of the badge colours (see .pillars__link--* in globals.css), picked the
+// same way as a badge's, so "Automatic" matches a badge with the same text.
 export function PillarRow({ pillars, activeIndex }: { pillars: Pillar[]; activeIndex?: number }) {
   if (pillars.length === 0) return null;
 
@@ -68,6 +71,7 @@ export function PillarRow({ pillars, activeIndex }: { pillars: Pillar[]; activeI
               : index < activeIndex
                 ? 'pillars__item pillars__item--before'
                 : 'pillars__item pillars__item--after';
+          const linkClass = `pillars__link pillars__link--${badgeTone({ text: pillar.title, color: pillar.color })}`;
           const body = (
             <>
               <Capital />
@@ -89,11 +93,11 @@ export function PillarRow({ pillars, activeIndex }: { pillars: Pillar[]; activeI
               }
             >
               {active ? (
-                <span className="pillars__link" aria-current="true">
+                <span className={linkClass} aria-current="true">
                   {body}
                 </span>
               ) : (
-                <a className="pillars__link" href={`#${pillarTarget(pillar)}`}>
+                <a className={linkClass} href={`#${pillarTarget(pillar)}`}>
                   {body}
                 </a>
               )}
