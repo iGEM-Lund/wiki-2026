@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { captionPlainText, renderCaption } from '@/lib/caption-text';
+import { labelledCaptionPlainText, renderLabelledCaption } from '@/lib/caption-text';
 
 type MoleculeViewerFormat = 'pdb' | 'cif' | 'sdf' | 'mol2' | 'xyz' | 'glb';
 type MoleculeViewerStyle = 'cartoon' | 'stick' | 'sphere' | 'line';
@@ -40,6 +40,10 @@ type MoleculeViewerProps = {
   // hovering any region colored differently from the rest of the model
   // (e.g. a highlighted mutation site) shows this text as a tooltip instead.
   highlightLabel?: string;
+  // Reference code (the anchor a Ref links to) and the automatic "Model N"
+  // number, from src/lib/numbering.ts.
+  refId?: string;
+  number?: string;
 };
 
 // Interactive 3D structure viewer (proteins, ligands, small molecules).
@@ -68,6 +72,8 @@ export function MoleculeViewer({
   style = 'cartoon',
   caption,
   highlightLabel,
+  refId,
+  number,
 }: MoleculeViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -213,7 +219,7 @@ export function MoleculeViewer({
   }, [popped, closePopOut]);
 
   return (
-    <figure className="molecule-viewer">
+    <figure className="molecule-viewer" id={refId || undefined}>
       {!modelUrl ? (
         <div className="molecule-viewer__error">No model file provided</div>
       ) : error ? (
@@ -243,7 +249,7 @@ export function MoleculeViewer({
                 : 'molecule-viewer__frame'
             }
             {...(popped
-              ? { role: 'dialog', 'aria-modal': true, 'aria-label': (caption && captionPlainText(caption)) || '3D molecule viewer' }
+              ? { role: 'dialog', 'aria-modal': true, 'aria-label': labelledCaptionPlainText('model', number, caption) || '3D molecule viewer' }
               : {})}
           >
             <div className="molecule-viewer__canvas" ref={containerRef} />
@@ -289,7 +295,7 @@ export function MoleculeViewer({
           </div>
         </div>
       )}
-      {caption ? <figcaption>{renderCaption(caption)}</figcaption> : null}
+      {caption || number ? <figcaption>{renderLabelledCaption('model', number, caption)}</figcaption> : null}
     </figure>
   );
 }

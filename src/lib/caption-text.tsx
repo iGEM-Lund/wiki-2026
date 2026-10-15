@@ -24,3 +24,41 @@ export function renderCaption(text: string): ReactNode {
 export function captionPlainText(text: string): string {
   return text.replace(ITALIC, '$1');
 }
+
+// The automatically numbered kinds (see src/lib/numbering.ts), and how each
+// reads in a caption or a reference.
+export type NumberedKind = 'figure' | 'table' | 'model';
+
+export const KIND_LABELS: Record<NumberedKind, string> = {
+  figure: 'Figure',
+  table: 'Table',
+  model: 'Model',
+};
+
+// A caption with its automatic "Figure 3." in front, when the object was
+// numbered. A numbered object with no caption still shows its number.
+export function renderLabelledCaption(
+  kind: NumberedKind,
+  number: string | number | null | undefined,
+  caption: string | undefined,
+): ReactNode {
+  if (!number) return caption ? renderCaption(caption) : null;
+  return (
+    <>
+      <span className="caption-label">
+        {KIND_LABELS[kind]} {number}.
+      </span>
+      {caption ? <> {renderCaption(caption)}</> : null}
+    </>
+  );
+}
+
+// The same, as plain text (an aria-label, an image's lightbox label).
+export function labelledCaptionPlainText(
+  kind: NumberedKind,
+  number: string | number | null | undefined,
+  caption: string | undefined,
+): string {
+  const text = caption ? captionPlainText(caption) : '';
+  return number ? `${KIND_LABELS[kind]} ${number}.${text ? ` ${text}` : ''}` : text;
+}

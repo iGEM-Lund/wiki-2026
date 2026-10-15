@@ -19,6 +19,7 @@ import {
   type HeadingItem,
 } from '@/lib/headings';
 import type { ReferenceLookup } from '@/lib/references';
+import { remarkNumberObjects } from '@/lib/numbering';
 
 // fields.mdx() stores raw MDX source text; unlike the older fields.document,
 // there's no pre-parsed document tree to walk, so rendering requires actually
@@ -33,7 +34,9 @@ export async function renderMdx(
     baseUrl: import.meta.url,
     // Keystatic's editor writes GFM (pipe tables, strikethrough); plain MDX
     // doesn't parse those, so without this tables render as literal pipes.
-    remarkPlugins: [remarkGfm],
+    // remarkNumberObjects then numbers figures, tables and 3D models and
+    // resolves each <Ref> to its object (see src/lib/numbering.ts).
+    remarkPlugins: [remarkGfm, remarkNumberObjects],
     // h5/h6 become h4 first (the site stops at h4); rehype-slug then gives
     // every heading a stable `id` (so the outline's links and the
     // References section's anchors both resolve); the collector runs after

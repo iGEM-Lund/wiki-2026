@@ -2,6 +2,7 @@
 
 import { Globe } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { isOnScreen, NUMBERED_OBJECT } from '@/lib/on-screen';
 
 // Gap left between the line's ends and the link and target it joins.
 const END_GAP = 6;
@@ -15,13 +16,17 @@ const SETTLE_MS = 800;
 const GLOBE_DX = 58;
 const GLOBE_DY = 38;
 
+// How far a Ref's arrowhead reaches onto its object, past the edge it
+// arrives at, so it plainly touches it.
+const ONTO = 8;
+
 // A figure's line leaves from its top edge this far in from the corner
 // (of its width), clear of a rounded corner.
 const FIGURE_INSET = 0.2;
 
 const normalize = (path: string) => (path.length > 1 ? path.replace(/\/$/, '') : path);
 
-type Target = { el: HTMLElement; end: 'side' | 'bottom' | 'globe'; cleanup?: () => void };
+type Target = { el: HTMLElement; end: 'side' | 'bottom' | 'globe' | 'object'; cleanup?: () => void };
 
 // What the globe's line leaves from: a box, how far in from its corner,
 // and where its top and bottom edges are (a tilted card's sit a little
@@ -36,7 +41,10 @@ type Origin = { left: number; right: number; top: number; bottom: number; inset:
 // - another page in the nav: a sign with that page's name dropped under
 //   its nav tag (the tag itself, or the group holding it), like the
 //   current page's sign (only above 48rem, where the nav is a bar);
-// - another site: a globe that pops up just beside the link.
+// - another site: a globe that pops up just beside the link;
+// - a figure, table or 3D model of the same page that is on screen (a
+//   Ref's target; see src/lib/numbering.ts): the object itself, the
+//   arrowhead drawn just over its nearest edge.
 // Anything else (pages not in the nav) gets no line. The line is redrawn
 // as the page scrolls, since its ends move.
 //
@@ -49,6 +57,35 @@ type Origin = { left: number; right: number; top: number; bottom: number; inset:
 // data-arrow-from="left" sends its line out from its left side, round
 // what is above it, rather than straight up; "right", out of its right
 // end, bending up into the sign.
+// From a Ref to the nearest edge of its object: out of the link's bottom
+// (top, if the object is higher up) into the object's top (bottom) edge
+// above or below it, or out of its facing end into the side of one beside
+// it, in one gentle curve arriving square to the edge and on over it a
+// little.
+function objectPath(from: DOMRect, to: DOMRect): string {
+  const header = document.querySelector('.site__header')?.getBoundingClientRect().bottom ?? 0;
+  const top = Math.max(to.top, header);
+  const bottom = Math.min(to.bottom, window.innerHeight);
+  const clamp = (v: number, min: number, max: number) =>
+    min > max ? (min + max) / 2 : Math.min(Math.max(v, min), max);
+  const x1 = from.left + from.width / 2;
+  if (top >= from.bottom || bottom <= from.top) {
+    const down = top >= from.bottom;
+    const y1 = down ? from.bottom + 2 : from.top - 2;
+    const x2 = clamp(x1, to.left + 16, to.right - 16);
+    const y2 = down ? to.top + ONTO : to.bottom - ONTO;
+    const bend = Math.max(24, Math.abs(y2 - y1) / 2) * (down ? 1 : -1);
+    return `M${x1} ${y1} C${x1} ${y1 + bend} ${x2} ${y2 - bend} ${x2} ${y2}`;
+  }
+  const right = to.left >= from.right;
+  const sx = right ? from.right + END_GAP : from.left - END_GAP;
+  const y1 = from.top + from.height / 2;
+  const x2 = right ? to.left + ONTO : to.right - ONTO;
+  const y2 = clamp(y1, top + 16, bottom - 16);
+  const pull = Math.max(24, Math.abs(x2 - sx) / 2) * (right ? 1 : -1);
+  return `M${sx} ${y1} C${sx + pull} ${y1} ${x2 - pull} ${y2} ${x2} ${y2}`;
+}
+
 export function LinkArrow() {
   const svgRef = useRef<SVGSVGElement>(null);
   const lineRef = useRef<SVGPathElement>(null);
@@ -116,6 +153,15 @@ export function LinkArrow() {
           sign.removeEventListener('click', follow);
         },
       };
+    }
+
+    // A Ref's object, while it is on screen (CitationLink hangs no sign
+    // then). A table is pointed at by its frame, not its caption above.
+    function objectFor(a: HTMLAnchorElement): Target | null {
+      const el = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+      if (!el?.matches(NUMBERED_OBJECT) || !isOnScreen(el)) return null;
+      const frame = el.querySelector<HTMLElement>(':scope > .table-frame, :scope > .table-collapse');
+      return { el: frame ?? el, end: 'object' };
     }
 
     function globeFor(): Target {
@@ -190,7 +236,7 @@ export function LinkArrow() {
             : null;
       if (!a) return null;
       if (a.origin !== location.origin) return /^https?:$/.test(a.protocol) ? globeFor() : null;
-      if (normalize(a.pathname) === normalize(location.pathname)) return a.hash ? knotFor(a) : null;
+      if (normalize(a.pathname) === normalize(location.pathname)) return a.hash ? (objectFor(a) ?? knotFor(a)) : null;
       return signFor(a, el);
     }
 
@@ -210,7 +256,9 @@ export function LinkArrow() {
       }
       const from = link.getBoundingClientRect();
       const to = target.el.getBoundingClientRect();
-      if (target.end === 'side') {
+      if (target.end === 'object') {
+        d = objectPath(from, to);
+      } else if (target.end === 'side') {
         // To the knot's right side (the string is always left of the
         // column), arriving horizontally like a thread pulled across.
         // It leaves from under the link's middle (over it when the knot

@@ -8,6 +8,7 @@ import { Card } from './Card';
 import { CardTitle } from './CardTitle';
 import { Expandable } from './Expandable';
 import { Citation } from './Citation';
+import { Ref } from './Ref';
 import { Tooltip } from './Tooltip';
 import { InlineIcon } from './InlineIcon';
 import { Badge, Badges } from './Badges';
@@ -43,6 +44,7 @@ export const embeddableComponents = {
   CardTitle,
   Expandable,
   Citation,
+  Ref,
   Tooltip,
   InlineIcon,
   Badges,

@@ -5,6 +5,7 @@ import { ICON_NAMES } from '@/lib/icon-names';
 import { renderLatexToHtml } from '@/lib/katex';
 import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/chemistry';
 import { renderCaption } from '@/lib/caption-text';
+import { refIdField } from './ref-id-field';
 
 // Editor-side registration only: these govern what writers can insert in the
 // MDX field's toolbar and how each component previews inside the Keystatic
@@ -14,6 +15,9 @@ import { renderCaption } from '@/lib/caption-text';
 // correctly when rendered on the live site.
 // Captions are plain text with one bit of Markdown (src/lib/caption-text.tsx).
 const CAPTION_HINT = 'Put *asterisks* around a word to set it in italics, e.g. *E. coli*.';
+// Figures (when numbered), tables and 3D models get their "Figure 3." added
+// in front of the caption at render time (src/lib/numbering.ts).
+const NUMBERED_CAPTION_HINT = `Do not type "Figure 3." or "Table 3." yourself: the number is added in front automatically. ${CAPTION_HINT}`;
 
 const ALT_TEXT_DESCRIPTION =
   'Always fill this in. What the image shows, for readers who cannot see it (screen readers read this aloud). One or two plain sentences: say what matters about it, not "image of". Do not just repeat the caption.';
@@ -47,7 +51,14 @@ export const contentComponents = {
         description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
       }),
       alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION }),
-      caption: fields.text({ label: 'Caption', description: CAPTION_HINT, multiline: true }),
+      caption: fields.text({ label: 'Caption', description: NUMBERED_CAPTION_HINT, multiline: true }),
+      numbered: fields.checkbox({
+        label: 'Numbered (Figure N)',
+        description:
+          'Puts "Figure 1.", "Figure 2." and so on in front of the caption, counting only the numbered figures on this page, so it can be mentioned in the text with a Reference.',
+        defaultValue: false,
+      }),
+      refId: refIdField('fig'),
       link: fields.url({
         label: 'Link (optional)',
         description: 'Makes the whole figure a link that opens in a new tab, hinted by a small icon in the lower left corner. The image no longer enlarges on click.',
@@ -71,7 +82,11 @@ export const contentComponents = {
         defaultValue: false,
       }),
     },
-    ContentView: (props) => <div>[Figure: {props.value.caption ?? ''}]</div>,
+    ContentView: (props) => (
+      <div>
+        [{props.value.numbered ? 'Numbered figure' : 'Figure'}: {props.value.caption ?? ''}]
+      </div>
+    ),
   }),
 
   FigureCarousel: block({
@@ -134,9 +149,11 @@ export const contentComponents = {
   // with the editor's own table tools, rather than a grid of form fields.
   TableWithCaption: wrapper({
     label: 'Table with caption',
-    description: 'Insert this, then put a table inside it. The caption is shown above the table.',
+    description:
+      'Insert this, then put a table inside it. The caption is shown above the table, after an automatic "Table N." number.',
     schema: {
-      caption: fields.text({ label: 'Caption', description: CAPTION_HINT, multiline: true }),
+      caption: fields.text({ label: 'Caption', description: NUMBERED_CAPTION_HINT, multiline: true }),
+      refId: refIdField('tab'),
     },
     ContentView: ({ children, value }) => (
       <div>
@@ -308,6 +325,23 @@ export const contentComponents = {
   // from the toolbar's component menu, type the explanation. Serialized as
   // <Tooltip text="...">term</Tooltip>. Dotted underline matches the site's
   // `.term-tip` so the editor preview signals "hoverable" the same way.
+  // A mention of a numbered figure, table or 3D model on the same page,
+  // rendered as its current label ("Table 3"). It names the object by its
+  // reference code, never its number, so it survives renumbering (see
+  // src/lib/numbering.ts).
+  Ref: inline({
+    label: 'Reference (to a figure, table or 3D model)',
+    description: 'Shows as "Figure 3", "Table 2" or "Model 1", always with the current number.',
+    schema: {
+      target: fields.text({
+        label: 'Reference code',
+        description:
+          'Paste the code from the "Reference code" field of the figure, table or 3D model on this page you are mentioning.',
+      }),
+    },
+    ContentView: (props) => <span>[→ {props.value.target || 'no code yet'}]</span>,
+  }),
+
   Tooltip: mark({
     label: 'Tooltip',
     icon: helpCircleIcon,
@@ -517,7 +551,11 @@ export const contentComponents = {
         description:
           'Shown when hovering any region colored differently from the rest of the model (e.g. a mutated residue). When set, the text labels baked into the GLB are hidden, so this replaces them.',
       }),
-      caption: fields.text({ label: 'Caption (optional)', description: CAPTION_HINT }),
+      caption: fields.text({
+        label: 'Caption (optional)',
+        description: `Shown after an automatic "Model N." number. ${NUMBERED_CAPTION_HINT}`,
+      }),
+      refId: refIdField('mod'),
     },
     ContentView: (props) => (
       <div>

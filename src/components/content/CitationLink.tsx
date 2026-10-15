@@ -1,11 +1,16 @@
 'use client';
 
-import type { MouseEvent, ReactNode } from 'react';
+import { type FocusEvent, type MouseEvent, type PointerEvent, type ReactNode } from 'react';
 import { useHangingPopover } from '@/lib/use-hanging-popover';
+import { isOnScreen } from '@/lib/on-screen';
 
 type CitationLinkProps = {
   href: string;
   children: ReactNode;
+  // A Ref's target id: when that object is on screen as the link is
+  // hovered or focused, no sign is hung; the content links' dashed line
+  // points to it instead (src/components/link-arrow.tsx).
+  pointTo?: string;
 };
 
 // The tug and tear at the start of citation-sign-rip (its first 30%, of 1s
@@ -29,11 +34,25 @@ function reducedMotion(): boolean {
 // of it (see .citation__sign--falling in globals.css). The original stays
 // hidden until the pointer leaves the link or it's focused again, so the
 // sign isn't hanging there again the instant it fell.
-export function CitationLink({ href, children }: CitationLinkProps) {
+export function CitationLink({ href, children, pointTo }: CitationLinkProps) {
   const hanging = useHangingPopover('.citation__sign', ':hover, :focus-visible');
+
+  function open(event: PointerEvent<HTMLAnchorElement> | FocusEvent<HTMLAnchorElement>) {
+    const link = event.currentTarget;
+    const target = pointTo ? document.getElementById(pointTo) : null;
+    if (target && isOnScreen(target)) {
+      link.dataset.pointing = '';
+      return;
+    }
+    delete link.dataset.pointing;
+    if (event.type === 'focus') hanging.onFocus(event as FocusEvent<HTMLAnchorElement>);
+    else hanging.onPointerEnter(event as PointerEvent<HTMLAnchorElement>);
+  }
 
   function onClick(event: MouseEvent<HTMLAnchorElement>) {
     const link = event.currentTarget;
+    // Pointing at an object on screen: no sign to tear, just the jump.
+    if (link.dataset.pointing !== undefined) return;
     const sign = link.querySelector<HTMLElement>('.citation__sign');
     if (!sign || Number(getComputedStyle(sign).opacity) < 0.5) return;
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
@@ -84,7 +103,10 @@ export function CitationLink({ href, children }: CitationLinkProps) {
       className="citation"
       href={href}
       onClick={onClick}
-      {...hanging}
+      onPointerEnter={open}
+      onPointerLeave={hanging.onPointerLeave}
+      onFocus={open}
+      onBlur={hanging.onBlur}
     >
       {children}
     </a>

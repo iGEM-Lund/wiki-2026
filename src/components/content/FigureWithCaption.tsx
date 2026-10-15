@@ -3,7 +3,7 @@ import { ExternalLink } from 'lucide-react';
 import { ZoomableImage } from './ZoomableImage';
 import { SmallFigureWatcher } from './SmallFigureWatcher';
 import { tiltFor } from '@/lib/tilt';
-import { renderCaption } from '@/lib/caption-text';
+import { KIND_LABELS, renderLabelledCaption } from '@/lib/caption-text';
 
 type FigureWithCaptionProps = {
   src?: string;
@@ -19,6 +19,10 @@ type FigureWithCaptionProps = {
   plain?: boolean | null;
   // No hover zoom and no click-to-enlarge lightbox.
   noZoom?: boolean | null;
+  // Reference code (the anchor a Ref links to) and the automatic number,
+  // set by src/lib/numbering.ts when `numbered` is ticked.
+  refId?: string;
+  number?: string;
 };
 
 // Plain <img>, not next/image: content images are always external
@@ -27,23 +31,27 @@ type FigureWithCaptionProps = {
 // ZoomableImage adds the hover zoom and click-to-enlarge lightbox; with a
 // link the whole figure (image and caption) is that link instead, and with
 // noZoom the image is just an image.
-export function FigureWithCaption({ src, alt = '', caption, link, scale, plain, noZoom }: FigureWithCaptionProps) {
+export function FigureWithCaption({ src, alt = '', caption, link, scale, plain, noZoom, refId, number }: FigureWithCaptionProps) {
   // A Figure block inserted but never filled in: nothing to show.
   if (!src && !caption) return null;
+  // The enlarged view's caption takes the number too, as plain caption text.
+  const lightboxCaption = number ? `${KIND_LABELS.figure} ${number}.${caption ? ` ${caption}` : ''}` : caption;
   const pct = scale != null && scale > 0 && scale < 100 ? scale : null;
   const media = src ? (
     <div className="figure-with-caption__media">
-      <ZoomableImage src={src} alt={alt} caption={caption} enlargeable={!link && !noZoom} />
+      <ZoomableImage src={src} alt={alt} caption={lightboxCaption} enlargeable={!link && !noZoom} />
       {link ? <ExternalLink className="figure-with-caption__link-icon" aria-hidden size={18} /> : null}
     </div>
   ) : null;
-  const captionElement = caption ? <figcaption>{renderCaption(caption)}</figcaption> : null;
+  const captionElement =
+    caption || number ? <figcaption>{renderLabelledCaption('figure', number, caption)}</figcaption> : null;
   return (
     // A polaroid taped to the page at a slight tilt (see .figure-with-caption
     // in globals.css), seeded by the image URL (or caption) so the angle is
     // stable across renders and neighbouring figures lean different ways.
     // A plain figure skips all of that (.figure-with-caption--plain).
     <figure
+      id={refId || undefined}
       className={plain ? 'figure-with-caption figure-with-caption--plain' : 'figure-with-caption'}
       style={{
         ...(plain ? {} : { '--tilt': tiltFor(src || caption || '') }),

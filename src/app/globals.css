@@ -2655,6 +2655,9 @@ a.inline-icon--link:focus-visible {
 /* Followed, the sign tears off its string and falls away (CitationLink),
    as back to top's tag does: a copy at a fixed spot on the screen does the
    falling, and the one on the link stays hidden until the pointer leaves. */
+.citation[data-pointing] > .citation__sign {
+  visibility: hidden;
+}
 .citation[data-ripped] > .citation__sign {
   visibility: hidden;
   transition: none;
@@ -4813,6 +4816,12 @@ article .layout__column p {
   font-weight: 200;
   white-space: pre-line;
 }
+/* The automatic "Figure 3." / "Table 3." / "Model 3." in front of a
+   caption (src/lib/numbering.ts), set off from the light caption text. */
+.caption-label {
+  font-weight: 600;
+}
+
 .table-with-caption .table-frame,
 .table-with-caption .table-collapse {
   margin: 0;
