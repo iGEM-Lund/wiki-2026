@@ -4059,6 +4059,10 @@ a.inline-icon--link:focus-visible {
 .references li {
   margin: 0.5rem 0;
 }
+/* Long DOIs and URLs break anywhere rather than overflowing the column. */
+.references a {
+  overflow-wrap: anywhere;
+}
 /* The reference a citation jumps to is gone over with a pink highlighter,
    stroke by stroke along each of its lines, uneven at the ends like the
    search's matches. */

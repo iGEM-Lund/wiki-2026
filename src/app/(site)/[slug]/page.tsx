@@ -8,6 +8,7 @@ import { SectionHeading } from '@/components/section-heading';
 import { PageTitle } from '@/components/page-title';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { NextPageLink } from '@/components/next-page-link';
+import { LinkifiedText } from '@/components/linkified-text';
 import { getNextPage } from '@/lib/nav';
 
 // Every page on the site, including the mandatory iGEM Standard URL Pages,
@@ -46,7 +47,9 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
             <ol>
               {citedReferences.map((ref) => (
                 <li key={ref.slug} id={`ref-${ref.slug}`}>
-                  <span className="references__text">{ref.longForm}</span>
+                  <span className="references__text">
+                    <LinkifiedText text={ref.longForm} />
+                  </span>
                 </li>
               ))}
             </ol>
