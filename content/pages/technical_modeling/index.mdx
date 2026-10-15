@@ -66,7 +66,7 @@ Both ligands were retrieved from PubChem (CID 6013 and CID 5994, respectively) (
 
 ### Conserved domain analysis
 
-The sequence of each candidate enzyme was submitted to the NCBI Conserved Domain Search (CD Search) (Marchler-Bauer et al., 2017), which compares a query sequence against the Conserved Domain Database (CDD) to identify evolutionarily conserved functional domains and their annotated residue positions. These annotations cover substrate binding, cofactor coordination and catalytic function, and are inferred from structurally and biochemically characterised members of the same protein family. They provided a sequence-level map of the expected functional site and served as the reference for interpreting and validating the predicted active site pockets.
+The sequence of each candidate enzyme was submitted to the NCBI Conserved Domain Search (CD Search) (<Citation reference="marchler-bauer-et-al-2017" />), which compares a query sequence against the Conserved Domain Database (CDD) to identify evolutionarily conserved functional domains and their annotated residue positions. These annotations cover substrate binding, cofactor coordination and catalytic function, and are inferred from structurally and biochemically characterised members of the same protein family. They provided a sequence-level map of the expected functional site and served as the reference for interpreting and validating the predicted active site pockets.
 
 #### **For AKR1D1:**&#x20;
 
@@ -74,7 +74,7 @@ CD Search assigned the query sequence (NP\_005980.1) to the AKR\_AKR1D1-3 family
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/cdsearch-akr1d1.avif" alt="CD search image" caption="NCBI CD Search result for AKR1D1 (NP_005980.1), assigning the sequence to the AKR_AKR1D1-3 family within the aldo-keto reductase superfamily." numbered refId="fig-7ogyu" scale={100} plain={false} noZoom={false} />
 
-The enzyme uses NADPH and a conserved catalytic tetrad of D53, Y58, K87 and E120 to deliver a hydride to the Δ4 double bond on the steroid A-ring. Y58 acts as the general acid, with K87 and D53 tuning its acidity. E120 is what distinguishes AKR1D1 from the rest of the superfamily: it replaces the histidine conserved in all other AKRs and acts as a superacid, polarising the C3 ketone (Di Costanzo et al., 2008).
+The enzyme uses NADPH and a conserved catalytic tetrad of D53, Y58, K87 and E120 to deliver a hydride to the Δ4 double bond on the steroid A-ring. Y58 acts as the general acid, with K87 and D53 tuning its acidity. E120 is what distinguishes AKR1D1 from the rest of the superfamily: it replaces the histidine conserved in all other AKRs and acts as a superacid, polarising the C3 ketone (<Citation reference="di-costanzo-et-al-2008" />).
 
 <TableWithCaption caption="Conserved domain features of AKR1D1 (NP_005980.1) from NCBI CD Search. The four tetrad residues are a subset of the active site set." refId="tab-vkjtr">
   | **Active site**                                                                                                                                                                         | **Catalytic tetrad** |
@@ -88,7 +88,7 @@ For ci2350, CD Search assigned the query sequence to the OYE\_like\_FMN\_family 
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/cdsearch-ci2350.avif" alt="CD search image" caption="NCBI CD Search result for ci2350, assigning the sequence to the OYE_like_FMN_family within the TIM barrel superfamily." numbered refId="fig-f2bmm" scale={100} plain={false} noZoom={false} />
 
-The domain covers the N-terminal half of the 642-residue protein, and all annotated functional positions fall within it. These active site residues were combined with those of Arp et al. (2025), who identified Y167 as the structural counterpart of the catalytic tyrosine in *E. coli* 2,4-dienoyl-CoA reductase (PDB 1PS9), w ith N166, S171 and N253 in the surrounding region. This combined set served as the reference for validating the fpocket predictions.
+The domain covers the N-terminal half of the 642-residue protein, and all annotated functional positions fall within it. These active site residues were combined with those of <Citation reference="arp-et-al-2025" />, who identified Y167 as the structural counterpart of the catalytic tyrosine in *E. coli* 2,4-dienoyl-CoA reductase (PDB 1PS9), w ith N166, S171 and N253 in the surrounding region. This combined set served as the reference for validating the fpocket predictions.
 
 <TableWithCaption caption="Conserved domain features of ci2350 from the NCBI CD Search with the active site residues reported by Arp et al. (2025)." refId="tab-co4yj">
   | **Active site**                                                     | **Catalytic / substrate-binding residues** |
@@ -98,7 +98,7 @@ The domain covers the N-terminal half of the 642-residue protein, and all annota
 
 ### Active site identification
 
-Binding pockets were identified computationally using fpocket v4.0 (Le Guilloux et al., 2009), which detects cavities through Voronoi tessellation and alpha-sphere clustering and returns a ranked list of candidate pockets, each described by geometric and physicochemical descriptors. These predicted pockets were then cross-referenced against residue annotations from NCBI CD Search to identify which pocket best corresponded to the known catalytic and substrate-binding residues of each enzyme family. The pocket showing the greatest agreement with the annotated functional site was selected.
+Binding pockets were identified computationally using fpocket v4.0 (<Citation reference="le-guilloux-et-al-2009" />), which detects cavities through Voronoi tessellation and alpha-sphere clustering and returns a ranked list of candidate pockets, each described by geometric and physicochemical descriptors. These predicted pockets were then cross-referenced against residue annotations from NCBI CD Search to identify which pocket best corresponded to the known catalytic and substrate-binding residues of each enzyme family. The pocket showing the greatest agreement with the annotated functional site was selected.
 
 #### **For AKR1D1:**
 
