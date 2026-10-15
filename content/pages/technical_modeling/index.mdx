@@ -148,6 +148,14 @@ Table 5. Docking search box parameters.
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/ci2350-active-site.avif" alt="Image of active site pocket of ci2350" caption="Figure 8. Active site pockets selected for docking in ci2350, corresponding to Pocket 1 as identified by fpocket and validated against CD Search annotations." scale={100} plain={false} noZoom={false} />
 
+### Molecular docking&#x20;
+
+Docking was performed using AutoDock Vina 1.2 (Eberhardt et al., 2021) with an exhaustiveness setting of 32 and an energy range of 4 kcal/mol. Vina combines a stochastic global search for scoring, which samples ligand position, orientation and torsion angles, with local gradient-based optimisation that refines promising candidates into nearby energy minima.
+
+Each ligand was docked independently into each prepared enzyme structure, and the top-ranked pose was recorded along with its predicted binding affinity in kcal/mol. To establish a selectivity baseline, we defined a selectivity score as the difference in predicted affinity between testosterone and progesterone, ΔG(testosterone) – ΔG(progesterone). A negative value indicates that testosterone is preferred by the enzyme. The inherent stochastic variability of the Vina scoring function, approximately ±0.5 kcal/mol, was treated as the noise threshold (Eberhardt et al., 2021), and selectivity differences below this value were not considered meaningful.
+
+After docking, the two enzymes gave comparable absolute affinities but opposite directions of preference.
+
 ### Results
 
 ### AKR1D1
