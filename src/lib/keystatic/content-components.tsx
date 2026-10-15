@@ -653,6 +653,10 @@ export const contentComponents = {
         }),
         { label: 'Slices', itemLabel: (props) => props.fields.title.value || 'Slice' },
       ),
+      cycle: fields.checkbox({
+        label: 'Cycle',
+        description: 'Draw an arrow in each slice pointing clockwise to the next one, for a cycle like Design, Build, Test, Learn. Needs at least 3 slices.',
+      }),
     },
     ContentView: (props) => (
       <div>[Slice Wheel: {(props.value.slices ?? []).map((slice) => slice.title).join(' / ') || 'no slices'}]</div>

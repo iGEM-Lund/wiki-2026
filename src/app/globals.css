@@ -3948,6 +3948,18 @@ a.inline-icon--link:focus-visible {
   stroke-width: 2;
   stroke-linejoin: round;
 }
+.slice-wheel__arrow-shaft {
+  fill: none;
+  stroke: var(--wheel-line);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.slice-wheel__arrow-head {
+  fill: var(--wheel-line);
+  stroke: var(--wheel-line);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
 .slice-wheel__hub {
   fill: var(--wheel-line);
   pointer-events: none;

@@ -5,6 +5,9 @@ import type { ReferenceLookup } from '@/lib/references';
 type SliceWheelSlice = { title: string; body: string };
 type SliceWheelProps = {
   slices?: SliceWheelSlice[];
+  // Draws an arrow in every slice pointing clockwise into the next, for
+  // cycles (Design, Build, Test, Learn).
+  cycle?: boolean;
   // Injected by src/lib/mdx/render.ts, same as WorldMap: slice bodies are
   // raw MDX and may embed <Citation>.
   referenceLookup?: ReferenceLookup;
@@ -38,6 +41,34 @@ function sectorPath(start: number, end: number, radius: number, whole: boolean):
   const [x1, y1] = point(end, radius);
   const largeArc = end - start > Math.PI ? 1 : 0;
   return `M 0 0 L ${round(x0)} ${round(y0)} A ${r} ${r} 0 ${largeArc} 1 ${round(x1)} ${round(y1)} Z`;
+}
+
+// A cycle's arrows: one per slice, a curved shaft round the empty ring
+// between the hub and the labels, its head pointing clockwise at the next
+// slice. ARROW_GAP keeps each arrow off the seams on either side, and the
+// head is ARROW_HEAD long and twice ARROW_HALF_WIDTH wide.
+const ARROW_GAP = 0.14;
+const ARROW_HEAD = 7;
+const ARROW_HALF_WIDTH = 4.5;
+
+function cycleArrow(start: number, end: number, radius: number): { shaft: string; head: string } {
+  const gap = Math.min(ARROW_GAP, (end - start) * 0.15);
+  const from = start + gap;
+  const to = end - gap;
+  // The shaft stops where the head's base begins, so the round cap never
+  // pokes out past the head's point.
+  const headAngle = ARROW_HEAD / radius;
+  const [x0, y0] = point(from, radius);
+  const [x1, y1] = point(to - headAngle, radius);
+  const r = round(radius);
+  const largeArc = to - headAngle - from > Math.PI ? 1 : 0;
+  const tip = point(to, radius);
+  const outer = point(to - headAngle, radius + ARROW_HALF_WIDTH);
+  const inner = point(to - headAngle, radius - ARROW_HALF_WIDTH);
+  return {
+    shaft: `M ${round(x0)} ${round(y0)} A ${r} ${r} 0 ${largeArc} 1 ${round(x1)} ${round(y1)}`,
+    head: `M ${[tip, outer, inner].map(([x, y]) => `${round(x)} ${round(y)}`).join(' L ')} Z`,
+  };
 }
 
 // SVG text doesn't wrap, so titles are broken into lines here, greedily by
@@ -206,7 +237,7 @@ const TITLE_SCALE = 0.7;
 const MAX_LINES = 3;
 const MIN_FONT_SIZE = 4;
 
-export async function SliceWheel({ slices = [], referenceLookup = {} }: SliceWheelProps) {
+export async function SliceWheel({ slices = [], cycle = false, referenceLookup = {} }: SliceWheelProps) {
   const count = slices.length;
   if (count === 0) return null;
 
@@ -253,6 +284,18 @@ export async function SliceWheel({ slices = [], referenceLookup = {} }: SliceWhe
     wrapped = slices.map((slice) => wrapAt(slice.title ?? '', fontSize));
   }
 
+  // One ring for every slice's arrow: halfway out, or further in if a long
+  // label reaches down that far. Only with curved labels: one or two
+  // slices' straight, centred labels sit right where the ring would be.
+  const deepestLabel = Math.max(...wrapped.map((lines) => lines?.length ?? MAX_LINES));
+  const arrowRadius =
+    cycle && curved
+      ? Math.min(
+          SLICE_RADIUS * 0.45,
+          outerLineRadius(fontSize) - (deepestLabel - 1) * LINE_HEIGHT * fontSize - fontSize / 2 - ARROW_HALF_WIDTH - 2,
+        )
+      : 0;
+
   const rendered: SliceWheelClientSlice[] = [];
   for (const [index, slice] of slices.entries()) {
     // Start at 12 o'clock and go clockwise, the way a clock (and most
@@ -286,6 +329,7 @@ export async function SliceWheel({ slices = [], referenceLookup = {} }: SliceWhe
       path: sectorPath(start, start + step, SLICE_RADIUS, count === 1),
       hitPath: sectorPath(start, start + step, RADIUS + 10, count === 1),
       liftedPath: sectorPath(start, start + step, RADIUS + extension, count === 1),
+      arrow: arrowRadius > 0 ? cycleArrow(start, start + step, arrowRadius) : null,
       label: { x: round(labelX), y: round(labelY), lines, arcs, fontSize },
       text,
       body: <Body />,

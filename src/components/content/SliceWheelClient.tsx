@@ -13,6 +13,8 @@ export type SliceWheelClientSlice = {
   liftedPath: string;
   // `arcs` holds one path per line for curved labels; null for straight
   // ones, which are centred on (x, y) instead.
+  // A cycle's arrow round the inner ring, pointing at the next slice.
+  arrow: { shaft: string; head: string } | null;
   label: { x: number; y: number; lines: string[]; arcs: string[] | null; fontSize: number };
   // The box inside the lifted slice that holds its text, and how much of
   // each `row`-high strip of it, from either side, is outside the slice.
@@ -115,6 +117,14 @@ export function SliceWheelClient({ radius, overlockWidth, stitchRadius, slices }
           {slices.map((slice) => (
             <path key={slice.id} className="slice-wheel__piece" d={slice.path} />
           ))}
+          {slices.map((slice) =>
+            slice.arrow ? (
+              <g key={slice.id} className="slice-wheel__arrow">
+                <path className="slice-wheel__arrow-shaft" d={slice.arrow.shaft} />
+                <path className="slice-wheel__arrow-head" d={slice.arrow.head} />
+              </g>
+            ) : null,
+          )}
           {slices.map((slice) => (
             <Label key={slice.id} slice={slice} arcIds={arcIds(slice)} className="slice-wheel__label" />
           ))}
