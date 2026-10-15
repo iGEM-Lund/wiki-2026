@@ -1,8 +1,6 @@
 ---
 title: Modeling
 ---
-
-
 ## Overview&#x20;
 
 **AnTigone** targets hyperandrogenism driven by the gut-androgen axis, a pathway in which colonic bacteria convert steroid precursors into bioactive androgens, particularly testosterone, which are then reabsorbed into circulation. Our dry-lab work asks which engineered enzyme variants are worth building to reduce testosterone, and how those variants would be expected to behave once placed in a living bacterial system.&#x20;
@@ -34,7 +32,7 @@ Together, these form a connected predictive layer: the first narrows a large des
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/specificity-modelling.avif" alt="Pipeline showing how to increase specificity towards testosterone" caption="Figure 1. Computational pipeline for engineering steroid substrate specificity. Structures from the PDB (AKR1D1, 3CAV) or AlphaFold (ci2350) were prepared for docking; the functional pocket was confirmed with fpocket v4.0 and CD Search; testosterone and progesterone were docked in AutoDock Vina 1.2 to identify residues within 4 Å of C17; mutants there were screened in PyRosetta (ΔΔG > +5 REU excluded) and re-docked for selectivity." scale={100} plain={false} noZoom={false} />
 
-### Protein slbv cructure acquisition
+### Protein stcructure acquisition
 
 Three-dimensional structures for the two candidate enzymes were obtained through different routes, reflecting the availability of experimental data for each. The human AKR1D1 structure was retrieved from the RCSB Protein Data Bank (Berman et al., 2000) (PDB entry 3CAV), resolved at 1.90 Å in complex with NADPH (Faucher et al., 2008).
 
