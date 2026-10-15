@@ -96,9 +96,25 @@ The domain covers the N-terminal half of the 642-residue protein, and all annota
 
 Table 2. Conserved domain features of ci2350 from the NCBI CD Search with the active site residues reported by Arp et al. (2025).
 
+### Active site identification
+
+Binding pockets were identified computationally using fpocket v4.0 (Le Guilloux et al., 2009), which detects cavities through Voronoi tessellation and alpha-sphere clustering and returns a ranked list of candidate pockets, each described by geometric and physicochemical descriptors. These predicted pockets were then cross-referenced against residue annotations from NCBI CD Search to identify which pocket best corresponded to the known catalytic and substrate-binding residues of each enzyme family. The pocket showing the greatest agreement with the annotated functional site was selected.
+
+#### **For AKR1D1:**
+
+fpocket identified 22 candidate pockets in the AKR1D1 structure. Cross-referencing against the CD Search annotations showed a single dominant match: Pocket 1 contained 29 of the 32 annotated active site residues and all four members of the catalytic tetrad (Table 3). The remaining pockets carried five or fewer annotated residues each, and twelve contained none. Pocket 1 was therefore selected as the functional active site.
 
 
 
+| **Pocket** | **Annotated residues found**                                                                                                                                                  | **Catalytic tetrad**      |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| Pocket 1   | 29/32 – G24, T25, Y26, D53, Y58, K87, W89, E120, Y132, S169, N170, Q193, Y219, S220, P221, L222, T224, S225, W230, L239, A256, I271, P272, K273, S274, R279, E282, N283, W314 | 4/4 – D53, Y58, K87, E120 |
+| Pocket 20  | 5/32 – L222, G223, T224, S225, L239                                                                                                                                           | 0/4                       |
+| Pocket 13  | 4/32 – Y26, S225, W230, K273                                                                                                                                                  | 0/4                       |
+| Pocket 15  | 2/32 – Y58, F275                                                                                                                                                              | 1/4 – Y58                 |
+| Pocket 21  | 2/32 – Y26, Y132                                                                                                                                                              | 0/4                       |
+| Pocket 2   | 1/32 – N170                                                                                                                                                                   | 0/4                       |
+| Pocket 18  | 1/32 – W230                                                                                                                                                                   | 0/4                       |
 
 
 
