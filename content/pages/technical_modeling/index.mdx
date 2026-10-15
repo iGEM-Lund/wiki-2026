@@ -247,9 +247,9 @@ For testosterone, F71Y adds a hydroxyl to an aromatic ring already in contact wi
 
 Structural stability was evaluated using PyRosetta (<Citation reference="chaudhury-et-al-2010" />) with the ref2015 scoring function (<Citation reference="alford-et-al-2017" />). The ref2015 function returns a single score summing van der Waals packing, hydrogen bonding, electrostatics, implicit solvation and backbone and sidechain torsional strain, with lower, more negative values corresponding to a better-packed and more stable structure.
 
-Local sidechain repacking was performed within a 5.0 Å radius of the mutated position, capturing the first layer of residues most likely to be directly affected by the substitution (Chaudhury et al., 2010). Stability was expressed as the difference between mutant and wild-type (ΔΔG = E(mutant) − E(wild-type)), cancelling the common baseline and isolating the effect of the substitution. A high positive ΔΔG indicates that the mutation destabilises the structure (Alford et al., 2017).
+Local sidechain repacking was performed within a 5.0 Å radius of the mutated position, capturing the first layer of residues most likely to be directly affected by the substitution (Chaudhury et al., 2010). Stability was expressed as the difference between mutant and wild-type (ΔΔG = E(mutant) − E(wild-type)), cancelling the common baseline and isolating the effect of the substitution. A high positive ΔΔG indicates that the mutation destabilises the structure (<Citation reference="alford-et-al-2017" />).
 
-Variants with ΔΔG above +5 REU were excluded; those below this threshold were considered structurally acceptable and advanced to docking (Alford et al., 2017; Kellogg et al., 2011). The threshold is deliberately permissive. It is set to reject severely destabilised variants, such as unresolvable steric clashes or lost buried hydrogen bonds.
+Variants with ΔΔG above +5 REU were excluded; those below this threshold were considered structurally acceptable and advanced to docking (<Citation reference="alford-et-al-2017" />, <Citation reference="kellogg-et-al-2011" />). The threshold is deliberately permissive. It is set to reject severely destabilised variants, such as unresolvable steric clashes or lost buried hydrogen bonds.
 
 #### **For AKR1D1:**
 
