@@ -167,7 +167,7 @@ AKR1D1 bound progesterone 0.5 kcal/mol more tightly than testosterone. Convertin
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-testosterone-view.avif" alt="Image of AKR1D1-t=estosterone" caption="Figure 9. Top-ranked docking pose of testosterone in the AKR1D1 active site (−9.3 kcal/mol), with NADPH and the catalytic tetrad Y58 labelled." scale={100} plain={false} noZoom={false} />
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-progesterone.glb" alt="Image of AKR1D1-progesterone" caption="Figure 10. Top-ranked docking pose of progesterone in the AKR1D1 active site (−9.8 kcal/mol), with NADPH and the catalytic tetrad Y58 labelled." scale={100} plain={false} noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-progesterone-view.avif" alt="Image of AKR1D1-progesterone" caption="Figure 10. Top-ranked docking pose of progesterone in the AKR1D1 active site (−9.8 kcal/mol), with NADPH and the catalytic tetrad Y58 labelled." scale={100} plain={false} noZoom={false} />
 
 ci2350 showed a marginal preference for testosterone (−0.1 kcal/mol, \~1.2-fold), well within the noise floor and cannot be read as meaningful selectivity. The useful conclusion is negative, which makes ci2350 a workable starting point for engineering a preference in the required direction, since selectivity must be increased rather than reversed.
 
@@ -192,6 +192,12 @@ Progesterone contacts two hydrophobic residues, **V309** and **L311**, which can
 | **Shared (both steroids)** | Y26, Y58, E120, W230, M313, W314 | A/B/C ring contacts – conserved Δ4-3-ketosteroid recognition, including Y58, E120; exclude from mutations |
 | **Progesterone only**      | V309, L311                       | C17 acetyl contacts – primary mutagenesis targets                                                         |
 | **Testosterone only**      | I57                              | 17β-hydroxyl contacts – targeted to favour testosterone                                                   |
+
+#### **For ci2350:**
+
+As in AKR1D1, the shared contacts cluster around the conserved Δ4-3-keto end of the molecule and include the catalytic residue, indicating that both ligands adopt a productive orientation. Y167 was excluded from mutagenesis, since altering it would be expected to compromise catalysis rather than selectivity.
+
+**A107, R215** and **V263** appear to line the space progesterone’s acetyl group occupies (Table 8). R215 is the most interesting of the three: the other two are small hydrophobic residues, but arginine can donate hydrogen bonds, so its contact may be a specific polar interaction rather than a shape fit, which would make it the cleanest target, along with **V59, F71, Q100, M254** and **L259** to increase the specificity towards testosterone.
 
 ### Results
 
