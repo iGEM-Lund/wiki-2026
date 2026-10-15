@@ -6,11 +6,18 @@ type Logo = { name: string; logoUrl: string; websiteUrl?: string };
 const MAX_STATIC = 5;
 const SECONDS_PER_LOGO = 3;
 
-function Logos({ logos, hidden }: { logos: Logo[]; hidden?: boolean }) {
+// Logos in a scrolling line load up front (at low priority): lazy images
+// inside its clipped, moving track only start fetching once they are already
+// in the visible strip, so each one would pop in late.
+function Logos({ logos, hidden, eager }: { logos: Logo[]; hidden?: boolean; eager?: boolean }) {
   return (
     <ul className="sponsor-rotator__list" aria-hidden={hidden || undefined}>
       {logos.map((logo, index) => {
-        const img = <img src={logo.logoUrl} alt={hidden ? '' : logo.name} loading="lazy" />;
+        const img = eager ? (
+          <img src={logo.logoUrl} alt={hidden ? '' : logo.name} fetchPriority="low" />
+        ) : (
+          <img src={logo.logoUrl} alt={hidden ? '' : logo.name} loading="lazy" />
+        );
         return (
           <li key={index} className="sponsor-rotator__slide">
             {logo.websiteUrl ? (
@@ -53,8 +60,8 @@ export function SponsorRotator({ sponsors }: { sponsors: Logo[] }) {
   return (
     <div className="sponsor-rotator sponsor-rotator--scrolling">
       <div className="sponsor-rotator__track" style={{ animationDuration: `${sponsors.length * SECONDS_PER_LOGO}s` }}>
-        <Logos logos={sponsors} />
-        <Logos logos={sponsors} hidden />
+        <Logos logos={sponsors} eager />
+        <Logos logos={sponsors} hidden eager />
       </div>
     </div>
   );
