@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Lightbox } from './Lightbox';
-import { MissingAltBanner } from './MissingAltBanner';
+import { MissingAltBanner, readAlt, type AltProp } from './MissingAltBanner';
 
-type FigureCarouselImage = { src: string; alt?: string };
+type FigureCarouselImage = { src: string; alt?: AltProp };
 
 type FigureCarouselProps = {
   images?: FigureCarouselImage[];
@@ -518,9 +518,9 @@ export function FigureCarousel({ images = [], speedSeconds = 25, still = false }
                 type="button"
                 className="figure-carousel__card"
                 style={cardStyle}
-                aria-label={image.alt ? undefined : `Enlarge figure ${index + 1}`}
+                aria-label={readAlt(image.alt).alt ? undefined : `Enlarge figure ${index + 1}`}
               >
-                <img src={image.src} alt={image.alt ?? ''} />
+                <img src={image.src} alt={readAlt(image.alt).alt} />
                 <MissingAltBanner alt={image.alt} />
               </button>
             </div>
@@ -528,7 +528,7 @@ export function FigureCarousel({ images = [], speedSeconds = 25, still = false }
         })}
       </div>
       {openIndex !== null ? (
-        <Lightbox src={images[openIndex].src} alt={images[openIndex].alt} onClose={() => setOpenIndex(null)} />
+        <Lightbox src={images[openIndex].src} alt={readAlt(images[openIndex].alt).alt} onClose={() => setOpenIndex(null)} />
       ) : null}
     </div>
   );

@@ -2,13 +2,13 @@ import type { CSSProperties } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { ZoomableImage } from './ZoomableImage';
 import { SmallFigureWatcher } from './SmallFigureWatcher';
-import { MissingAltBanner } from './MissingAltBanner';
+import { MissingAltBanner, readAlt, type AltProp } from './MissingAltBanner';
 import { tiltFor } from '@/lib/tilt';
 import { KIND_LABELS, renderLabelledCaption } from '@/lib/caption-text';
 
 type FigureWithCaptionProps = {
   src?: string;
-  alt?: string;
+  alt?: AltProp;
   caption?: string;
   // Optional external URL: makes the whole figure a link, hinted by a small
   // icon in the image's lower left corner.
@@ -32,7 +32,7 @@ type FigureWithCaptionProps = {
 // ZoomableImage adds the hover zoom and click-to-enlarge lightbox; with a
 // link the whole figure (image and caption) is that link instead, and with
 // noZoom the image is just an image.
-export function FigureWithCaption({ src, alt = '', caption, link, scale, plain, noZoom, refId, number }: FigureWithCaptionProps) {
+export function FigureWithCaption({ src, alt, caption, link, scale, plain, noZoom, refId, number }: FigureWithCaptionProps) {
   // A Figure block inserted but never filled in: nothing to show.
   if (!src && !caption) return null;
   // The enlarged view's caption takes the number too, as plain caption text.
@@ -40,7 +40,7 @@ export function FigureWithCaption({ src, alt = '', caption, link, scale, plain, 
   const pct = scale != null && scale > 0 && scale < 100 ? scale : null;
   const media = src ? (
     <div className="figure-with-caption__media">
-      <ZoomableImage src={src} alt={alt} caption={lightboxCaption} enlargeable={!link && !noZoom} />
+      <ZoomableImage src={src} alt={readAlt(alt).alt} caption={lightboxCaption} enlargeable={!link && !noZoom} />
       <MissingAltBanner alt={alt} />
       {link ? <ExternalLink className="figure-with-caption__link-icon" aria-hidden size={18} /> : null}
     </div>

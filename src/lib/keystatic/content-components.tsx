@@ -6,6 +6,7 @@ import { renderLatexToHtml } from '@/lib/katex';
 import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/chemistry';
 import { renderCaption } from '@/lib/caption-text';
 import { refIdField } from './ref-id-field';
+import { altTextField } from './alt-text-field';
 
 // Editor-side registration only: these govern what writers can insert in the
 // MDX field's toolbar and how each component previews inside the Keystatic
@@ -20,7 +21,7 @@ const CAPTION_HINT = 'Put *asterisks* around a word to set it in italics, e.g. *
 const NUMBERED_CAPTION_HINT = `Do not type "Figure 3." or "Table 3." yourself: the number is added in front automatically. ${CAPTION_HINT}`;
 
 const ALT_TEXT_DESCRIPTION =
-  'Required. What the image shows, for readers who cannot see it (screen readers read this aloud). One or two plain sentences: say what matters about it, not "image of". Do not just repeat the caption. If you really cannot write it yet, put MISSING: the figure then shows "MISSING ALT TEXT" across it until someone does.';
+  'Required unless the figure is decorative. What the image shows, for readers who cannot see it (screen readers read this aloud). One or two plain sentences: say what matters about it, not "image of". Do not just repeat the caption. If you really cannot write it yet, put MISSING: the figure then shows "MISSING ALT TEXT" across it until someone does.';
 
 // Shared by Badges, Badge and Pillars, so a badge in a table cell picks from
 // the same palette, and gets the same automatic colour, as one on a card or
@@ -50,7 +51,7 @@ export const contentComponents = {
         label: 'Image URL',
         description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
       }),
-      alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION, validation: { isRequired: true } }),
+      alt: altTextField(ALT_TEXT_DESCRIPTION),
       caption: fields.text({ label: 'Caption', description: NUMBERED_CAPTION_HINT, multiline: true }),
       numbered: fields.checkbox({
         label: 'Numbered (Figure N)',
@@ -98,9 +99,9 @@ export const contentComponents = {
             label: 'Image URL',
             description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
           }),
-          alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION, validation: { isRequired: true } }),
+          alt: altTextField(ALT_TEXT_DESCRIPTION),
         }),
-        { label: 'Figures', itemLabel: (props) => props.fields.alt.value || props.fields.src.value || 'Figure' },
+        { label: 'Figures', itemLabel: (props) => props.fields.alt.value.text || props.fields.src.value || 'Figure' },
       ),
       speedSeconds: fields.number({
         label: 'Seconds to cross the string',
