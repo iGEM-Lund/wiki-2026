@@ -2899,6 +2899,31 @@ a.inline-icon--link:focus-visible {
 .card p:not(.card__header *):last-child {
   padding-bottom: 0;
 }
+/* A separator (Markdown ---) is one line of the ruling drawn over in a
+   darker ink, rather than a line of its own between two ruled ones. Like
+   a paragraph it's followed by one blank ruled line, so the text after it
+   starts the same distance below as the text before it ended. */
+.card hr {
+  height: calc(2 * var(--rule));
+  margin: 0;
+  border: none;
+  background-image:
+    linear-gradient(
+      to bottom,
+      transparent 0 calc(var(--rule) - 1px),
+      color-mix(in srgb, var(--index-rule) 40%, var(--heading)) calc(var(--rule) - 1px) var(--rule),
+      transparent var(--rule)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 calc(var(--rule) - 1px),
+      var(--index-rule) calc(var(--rule) - 1px) var(--rule)
+    );
+  background-position-y: -0.2rem;
+}
+.card hr:last-child {
+  height: var(--rule);
+}
 /* The header: the title (and optional portrait and subtitle) written above
    the card's red rule, which spans the card edge to edge. With a portrait
    it takes the same shape as .quote-block--with-figure: a narrow figure
@@ -2990,6 +3015,11 @@ a.inline-icon--link:focus-visible {
 }
 .expandable[data-open='true'] .expandable__body-inner {
   padding-top: 1rem;
+}
+/* On a card the paragraph above already leaves a blank ruled line, and an
+   extra gap would knock the ruling below it off its spacing. */
+.card > .expandable[data-open='true'] .expandable__body-inner {
+  padding-top: 0;
 }
 /* A paper roll: the hidden part of a card (Expandable) or of a long table
    (CollapsibleTable) drawn as the sheet's bottom edge rolled up, a paper
