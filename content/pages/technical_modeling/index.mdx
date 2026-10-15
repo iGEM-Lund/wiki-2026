@@ -30,82 +30,28 @@ Our dry lab work addresses both challenges through two integrated strands.
 
 Together, these form a connected predictive layer: the first narrows a large design space to a small set of structurally plausible candidates, and the second takes those candidates and asks whether their effect would actually show up in a real bacterial system.
 
-## Rational mutagenesis:
+## **Enzyme specificity engineering towards testosterone**
 
-Rational mutagenesis is a protein engineering approach in which specific amino acid residues are deliberately changed based on information about a protein’s sequence, structure or function. The goal is to target positions that are likely to influence a desired property of the protein, such as its activity, stability or substrate specificity.
+(specificity modelling image)
 
-In our project, we applied rational mutagenesis to investigate whether targeted amino acid substitutions could increase the substrate specificity of the enzymes AKR1D1 and ci2350 towards testosterone. We analysed the amino acid sequences and three-dimensional structures of AKR1D1 and ci2350 to identify residues that could influence how the enzymes interact with their steroid substrates, testosterone and progesterone. Based on these sequence and structural analyses, we selected specific amino acid positions as potential mutation sites and investigated whether these mutations could affect the enzymes’ specificity towards testosterone.
 
-## Modelling approach:
 
-Our team followed a step-by-step molecular modelling workflow to identify potential mutation sites in the enzymes and assess their effect on testosterone specificity. First, the protein structures of ci2350 and AKR1D1 were prepared using MGL Tools by adding hydrogens, assigning Gasteiger charges, and converting the structures into the PDBQT format required for docking.
+### Protein structure acquisition
 
-Next, Fpocket was used to identify the potential active sites of each enzyme and define the search grid for docking studies. The ligand structures of testosterone and progesterone were then prepared using Open Babel, including protonation at physiological pH and conversion to PDBQT format. 
+Three-dimensional structures for the two candidate enzymes were obtained through different routes, reflecting the availability of experimental data for each. The human AKR1D1 structure was retrieved from the RCSB Protein Data Bank (Berman et al., 2000) (PDB entry 3CAV), resolved at 1.90 Å in complex with NADPH (Faucher et al., 2008).
 
-Following this, AutoDock Vina was used to dock both testosterone and progesterone into the identified active sites. The resulting docking results showed how testosterone and progesterone fit within the active site of each enzyme and which amino acid residues were involved in their interactions. These interactions were examined to determine which residues might affect how specifically the enzymes bind testosterone compared with progesterone. Residues that appeared to influence this substrate preference were then selected as potential mutation sites.
 
-The selected mutations were then introduced into the enzyme structures, and the resulting mutant proteins were subjected to the same docking workflow. The mutant docking results were compared with those of the original enzymes by examining the substrate-binding poses and predicted binding energies. PyMOL was used to visualise the protein structures and compare the interactions of testosterone and progesterone before and after mutation.
 
-## ci2350
+(3D struc of AKR1D1\_NADPH)
 
-1. ### **Introduction and Biological Background**
 
-.....
 
-2. ### **ci2350 steroid selectivity - Results**
+No experimentally determined structure was available for ci2350. A three-dimensional model was generated using AlphaFold v2.2.0 (Jumper et al., 2021), with the input sequence taken from Arp et al., 2025. Per-residue confidence scores (pLDDT) exceeded 90 (pLDDT > 90, very high) across the model, confirming that the predicted structure met the threshold for structure-based analysis.
 
-...
 
-#### **Where we started**
 
-...
+(3D structure of ci2350)
 
-#### **The C17 position** 
 
-...
 
-#### **Which mutations the fold tolerates**
-
-...
-
-#### **Did selectivity move?**
-
-...
-
-## AKR1D1
-
-1. ###  **Wild-type AKR1D1 favors progesterone by 0.5 kcal/mol**
-
-...
-
-2. ### **Contact analysis places the difference at C17**
-
-...
-
-3. ### **Contact differences define the mutagenesis library**
-
-...
-
-4. ### **Stability screening narrows the library to 13 variants**
-
-...
-
-5. ### **Docking the stable variants does not reverse selectivity**
-
-...
-
-6. ### **What the results indicate**
-
-...
-
-**Check**:
-
-<MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/arg-to-ala.glb" format="pdb" style="cartoon" highlightLabel="Alanine (Ala): the mutated residue, replacing arginine" caption="Image 1: Mutation of Arg to Ala" />
-
-<MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-progesterone-complex.glb" format="pdb" style="cartoon" caption="AKR1D1-Progesterone Complex (Cofactor, NADPH in cornflourblue and Progesterone in Forest Green, PDB)" />
-
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-progesterone-view.avif" alt="AKR1D1 Progesterone View" caption="3D view of AKR1D1 with progesterone and NADPH" scale={75} plain noZoom={false} />
-
-## Gut Feasibility and Kinetic Modelling
-
-...
+### Structure preparation
