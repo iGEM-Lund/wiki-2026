@@ -104,8 +104,6 @@ Binding pockets were identified computationally using fpocket v4.0 (Le Guilloux 
 
 fpocket identified 22 candidate pockets in the AKR1D1 structure. Cross-referencing against the CD Search annotations showed a single dominant match: Pocket 1 contained 29 of the 32 annotated active site residues and all four members of the catalytic tetrad (**Table 3**). The remaining pockets carried five or fewer annotated residues each, and twelve contained none. Pocket 1 was therefore selected as the functional active site.
 
-
-
 Table 3. fpocket results for AKR1D1 cross-referenced against CD Search annotations.
 
 | **Pocket** | **Annotated residues found**                                                                                                                                                  | **Catalytic tetrad**      |
@@ -146,8 +144,6 @@ Table 5. Docking search box parameters.
 | Size y (Å)    | 29.0       | 20.0       |
 | Size z (Å)    | 20.0       | 22.0       |
 
-
-
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-active-site.avif" alt="Image of active site pocket of AKR1D1" caption="Figure 7. Active site pockets selected for docking in AKR1D1-NADPH, corresponding to Pocket 1 as identified by fpocket and validated against CD Search annotations." scale={100} plain={false} noZoom={false} />
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/ci2350-active-site.avif" alt="Image of active site pocket of ci2350" caption="Figure 8. Active site pockets selected for docking in ci2350, corresponding to Pocket 1 as identified by fpocket and validated against CD Search annotations." scale={100} plain={false} noZoom={false} />
@@ -166,8 +162,6 @@ Table 6. Docking affinities and selectivity scores.
 | ---------- | -------------------------- | -------------------------- | ---------------------------- | -------------- |
 | **AKR1D1** | −9.8                       | −9.3                       | +0.5                         | Progesterone   |
 | **ci2350** | −9.1                       | −9.2                       | −0.1                         | Testosterone   |
-
-
 
 AKR1D1 bound progesterone 0.5 kcal/mol more tightly than testosterone. Converting this through ΔΔG (|ΔGT – ΔGP|) = RT ln(ratio), with RT = 0.616 kcal/mol at 310 K, gives approximately 2.3-fold selectivity for progesterone. This is consistent with AKR1D1's biological role, where progesterone intermediates are the primary physiological substrates.
 
@@ -193,8 +187,6 @@ Both substrates share an identical Δ4-3-keto motif on the A ring, so the residu
 
 Progesterone contacts two hydrophobic residues, **V309** and **L311**, which can form a nonpolar surface that accommodates its acetyl group, while testosterone contacts **I57**, which could offer a hydrogen bond for the 17β-hydroxyl. V309 and L311 were targeted against progesterone, while I57 favours testosterone to increase affinity. All four were mutated singly and in combination.
 
-
-
 Table 7. Contact residues within 4 Å of the docked ligands in AKR1D1.
 
 | **Contact category**       | **Residues**                     | **Role**                                                                                                  |
@@ -208,8 +200,6 @@ Table 7. Contact residues within 4 Å of the docked ligands in AKR1D1.
 As in AKR1D1, the shared contacts cluster around the conserved Δ4-3-keto end of the molecule and include the catalytic residue, indicating that both ligands adopt a productive orientation. Y167 was excluded from mutagenesis, since altering it would be expected to compromise catalysis rather than selectivity.
 
 **A107, R215** and **V263** appear to line the space progesterone’s acetyl group occupies (Table 8). R215 is the most interesting of the three: the other two are small hydrophobic residues, but arginine can donate hydrogen bonds, so its contact may be a specific polar interaction rather than a shape fit, which would make it the cleanest target, along with **V59, F71, Q100, M254** and **L259** to increase the specificity towards testosterone.
-
-
 
 Table 8. Contact residues within 4 Å of the docked ligands in ci2350.
 
@@ -230,8 +220,6 @@ The residues in **Tables 7 and 8** were substituted on physicochemical grounds, 
 At V309 and L311, the substitutions cover three different mechanisms: serine (S) and threonine (T) shrink the side chain and add polarity to pocket; tyrosine (Y), phenylalanine (F) and tryptophan (W) fill the cavity so the acetyl group has less room; and glutamate (E) and lysine (K) place a charge against a neutral substituent. Comparing them should indicate which property actually governs discrimination towards progesterone.
 
 At I57, all five substitutions replace an aliphatic side chain with one capable of hydrogen bonding, any of which could pair with testosterone’s 17β-hydroxyl. Combinations test whether the two mutation effects are independent. If they are, the selectivity shifts should roughly sum.
-
-
 
 Table 9. Mutagenesis design for AKR1D1
 
@@ -254,8 +242,6 @@ Table 10. Mutagenesis design for ci2350.
 | **Disrupt progesterone C17 contacts**       | A107, R215, V263   | A107V/L/F,R215A/G/E,V263E/K/D/I/L/F | Add bulk to crowd the acetyl group (A107, V263), or remove the R side chain and its possible hydrogen bond (R215) |
 | **Enhance testosterone 17β-OH recognition** | V59, F71, Q100     | V59S/T, F71Y,Q100S/T                | Introduce or reposition a hydrogen-bonding for the 17β-hydroxyl                                                   |
 | **Combinations**                            | Multiple positions | Various combination                 | Test additive effects across both strategies                                                                      |
-
-
 
 ### Stability screening
 
@@ -297,8 +283,6 @@ Table 11. Stability screening results for AKR1D1 calculated using ΔΔG = E(muta
 | **Combo 4: V309Y + L311E + I57N** | +36.74        | Excluded    |
 | **Combo 7: V309Y + L311S + I57T** | +43.97        | Excluded    |
 | **Combo 3: I57S + V309Y**         | +797.40       | Excluded    |
-
-
 
 V309 is tightly packed and rejected every aromatic substitution, with tyrosine and phenylalanine returning values above +770 REU, resulting in clashes. L311 tolerated every substitution, including tyrosine and phenylalanine, making it the better position for adding bulkier ones. At I57, only short polar side chains passed, threonine failing where serine succeeded. Combinations containing V309Y or V309W were excluded regardless of their partner.&#x20;
 
@@ -342,13 +326,27 @@ Table 12. Stability screening results for ci2350 calculated using ΔΔG = E(muta
 | **Combo 10: A107V + V263I**         | +61.52        | Excluded          |
 | **Combo 5: A107V + F71Y**           | +63.41        | Excluded          |
 
-
-
 A107 failed at every substitution, with values from +18 to +57 REU, so the alanine cannot absorb any added bulk, and even every combination containing A107 failed, regardless of its partner. R215 was the opposite: all three substitutions passed, and R215A was mildly stabilising, meaning the arginine can be removed without structural cost. Among the testosterone-directed designs, Q100S, Q100T and V59S were clearly stabilising, while F71Y and V59T fell just outside the threshold. The combinations that survived are those built on R215 and V263.
 
 ### Mutant docking and candidate prioritisation
 
-All variants passing the stability threshold were subjected to the same docking protocol as the wild-type enzyme, with testosterone and progesterone docked independently and selectivity scores calculated as before. Variants demonstrating a consistent selectivity shift beyond the noise threshold were identified as priority candidates for experimental characterisation. The detailed analysis of  variant specificity towards testosterone is presented on the [Results](https://wiki.igemlund.org/technical_modeling#results) page.
+All variants passing the stability threshold were subjected to the same docking protocol as the wild-type enzyme, with testosterone and progesterone docked independently and selectivity scores calculated as before. Variants demonstrating a consistent selectivity shift beyond the noise threshold were identified as priority candidates for experimental characterisation.
+
+&#x20;
+
+For AKR1D1:
+
+Table 13. Mutant docking results for AKR1D1 (top-ranked variants).
+
+
+
+
+
+
+
+
+
+The detailed analysis of  variant specificity towards testosterone is presented on the [Results](https://wiki.igemlund.org/technical_modeling#results) page.
 
 **The complete implementation of the pipeline for enzyme specificity analysis is available on GitLab (Link)**
 
