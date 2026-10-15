@@ -52,18 +52,32 @@ export function AccessibilityMenu() {
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
+  // Also re-applies each stored choice to <html>: the blocking script in
+  // layout.tsx sets them before paint, but if hydration fails React
+  // re-renders the document from scratch and strips them again.
   useEffect(() => {
+    const root = document.documentElement;
     const storedTheme = localStorage.getItem('theme');
     if (storedTheme === 'light' || storedTheme === 'dark') {
       setTheme(storedTheme);
+      applyTheme(storedTheme);
+    } else {
+      applyTheme('system');
     }
-    setDyslexicFont(localStorage.getItem('a11y-font') === 'dyslexic');
+    const dyslexic = localStorage.getItem('a11y-font') === 'dyslexic';
+    setDyslexicFont(dyslexic);
+    if (dyslexic) root.setAttribute('data-font', 'dyslexic');
     const storedSize = localStorage.getItem('a11y-font-size');
     if (storedSize === 'large' || storedSize === 'larger') {
       setFontSize(storedSize);
+      root.setAttribute('data-font-size', storedSize);
     }
-    setReduceMotion(localStorage.getItem('a11y-motion') === 'reduce');
-    setWideSpacing(localStorage.getItem('a11y-spacing') === 'wide');
+    const reduce = localStorage.getItem('a11y-motion') === 'reduce';
+    setReduceMotion(reduce);
+    if (reduce) root.setAttribute('data-motion', 'reduce');
+    const wide = localStorage.getItem('a11y-spacing') === 'wide';
+    setWideSpacing(wide);
+    if (wide) root.setAttribute('data-spacing', 'wide');
   }, []);
 
   // While following the system, track OS changes live (e.g. an automatic

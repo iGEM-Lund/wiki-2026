@@ -176,6 +176,14 @@ body {
 :root[data-font='dyslexic'] .site {
   --font-heading: 'OpenDyslexic', system-ui, sans-serif;
   --font-body: 'OpenDyslexic', system-ui, sans-serif;
+  /* OpenDyslexic's regular letters run up to about 0.76em wide, against
+     Fredoka's 0.5em (see .pillars__title). */
+  --pillar-glyph: 0.8;
+}
+/* Long italic runs are harder to read for dyslexic readers; OpenDyslexic
+   sets quotes apart well enough by size and weight alone. */
+:root[data-font='dyslexic'] .site blockquote {
+  font-style: normal;
 }
 
 /* Comfortable spacing (the accessibility menu's data-spacing attribute):
@@ -192,6 +200,25 @@ body {
 }
 :root[data-spacing='wide'] .site .card {
   --rule: 2.2rem;
+}
+:root[data-spacing='wide'] .site .pillars__title {
+  /* A one- or two-word label, not running text: the extra letter spacing
+     would only shrink it further to fit the shaft. */
+  letter-spacing: normal;
+}
+
+/* Justified text opens uneven gaps between words, which make lines harder
+   to track; dyslexia style guides ask for left-aligned text. OpenDyslexic's
+   wide letters and the extra letter spacing both widen those gaps further. */
+:root:is([data-font='dyslexic'], [data-spacing='wide']) .site :is(article p, .table-scroll [data-justify]) {
+  text-align: left;
+}
+/* A wider font, more spacing or larger text can make a badge longer than
+   its card or cell; it then wraps inside its patch rather than spilling
+   out. Shrink-to-fit, so a badge that fits still sits on one line. */
+:root:is([data-font='dyslexic'], [data-spacing='wide'], [data-font-size='large'], [data-font-size='larger']) .site .badge {
+  max-width: 100%;
+  white-space: normal;
 }
 
 /* Reduced motion is honored both automatically (OS-level preference) and
@@ -1334,6 +1361,7 @@ body {
   background: var(--mat);
   font-family: inherit;
   font-size: 0.75rem;
+  white-space: nowrap;
 }
 
 /* A larger top bar from 64rem up: bigger brand, nav labels and tools.
@@ -5001,9 +5029,10 @@ article .layout__column p {
   font-family: var(--font-heading);
   /* Small enough that the row's longest word (--pillar-word letters, set
      in Pillars.tsx) fits the shaft whole rather than breaking mid-word.
-     0.55em is a little over Fredoka's average letter width, to be safe;
-     the same size across the row, so the pillars match. */
-  font-size: min(1.3rem, 100cqi / (var(--pillar-word, 10) * 0.55));
+     --pillar-glyph (0.55em) is a little over Fredoka's average letter
+     width, to be safe, raised for the dyslexia-friendly font. The same
+     size across the row, so the pillars match. */
+  font-size: min(1.3rem, 100cqi / (var(--pillar-word, 10) * var(--pillar-glyph, 0.55)));
   font-weight: 500;
   line-height: 1.2;
 }
