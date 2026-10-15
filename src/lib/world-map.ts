@@ -1,14 +1,12 @@
 import { feature } from 'topojson-client';
 import { presimplify, quantile, simplify, filter, filterAttachedWeight } from 'topojson-simplify';
-import { geoEqualEarth, geoPath } from 'd3-geo';
+import { geoBounds, geoEqualEarth, geoPath } from 'd3-geo';
 import type { Topology, GeometryCollection } from 'topojson-specification';
 import land from 'world-atlas/land-110m.json';
 
 // Shared by src/components/content/WorldMap.tsx (site render) and, if ever
 // needed, the Keystatic editor preview; same "compute once at module
 // scope, pure math, no DOM" pattern as src/lib/chemistry.ts / katex.ts.
-
-export const WORLD_MAP_VIEWBOX = { width: 960, height: 500 };
 
 const rawTopology = land as unknown as Topology<{ land: GeometryCollection }>;
 
@@ -29,13 +27,55 @@ const topology = filter(simplified, filterAttachedWeight(simplified, 0.04)) as T
   land: GeometryCollection;
 }>;
 
-const landFeature = feature(topology, topology.objects.land);
+const fullLand = feature(topology, topology.objects.land);
+
+// Antarctica and the open Pacific only take space away from the places the
+// map is for. Drop every polygon lying wholly south of 60°S (Antarctica and
+// the ice shelves/islands around it) and the scraps of land near the date
+// line (Fiji) that would otherwise stretch the map's right edge out over
+// empty ocean, so the fitted bounds below hug the inhabited continents.
+const landFeature: GeoJSON.Feature<GeoJSON.MultiPolygon> = {
+  type: 'Feature',
+  properties: {},
+  geometry: {
+    type: 'MultiPolygon',
+    coordinates: fullLand.features.flatMap((landmass) => {
+      const geometry = landmass.geometry;
+      const polygons =
+        geometry.type === 'MultiPolygon' ? geometry.coordinates : geometry.type === 'Polygon' ? [geometry.coordinates] : [];
+      return polygons.filter((polygon) => {
+        const [[west, south], [east, north]] = geoBounds({ type: 'Polygon', coordinates: polygon });
+        if (north < -60) return false;
+        // A polygon whose bounds cross the date line has west > east.
+        if (west > east && north - south < 10) return false;
+        return true;
+      });
+    }),
+  },
+};
 
 // geoEqualEarth is a balanced whole-world projection (not optimized for
 // local accuracy), a good default for a stylized global view rather than a
-// projection meant for navigation or regional precision.
-const projection = geoEqualEarth().fitSize(
-  [WORLD_MAP_VIEWBOX.width, WORLD_MAP_VIEWBOX.height],
+// projection meant for navigation or regional precision. Rotated to centre
+// on 11°E so its seam falls in the Bering Strait, between Chukotka and
+// Alaska, instead of cutting the tip of Russia off onto the far left; with
+// that and the trimming above, the Pacific is left only as a margin at both
+// edges.
+const WIDTH = 960;
+// Room for the patch's stitched edge (WorldMapClient's STITCH_INSET) plus
+// a little cloth, so no coastline runs under the stitching.
+const PADDING = 30;
+const projection = geoEqualEarth().rotate([-11, 0]).fitWidth(WIDTH - 2 * PADDING, landFeature);
+const [[, top], [, bottom]] = geoPath(projection).bounds(landFeature);
+
+// The height follows from the trimmed land's own shape rather than being
+// fixed, so no empty band is left above or below it.
+export const WORLD_MAP_VIEWBOX = { width: WIDTH, height: Math.ceil(bottom - top) + 2 * PADDING };
+projection.fitExtent(
+  [
+    [PADDING, PADDING],
+    [WIDTH - PADDING, WORLD_MAP_VIEWBOX.height - PADDING],
+  ],
   landFeature,
 );
 const pathGenerator = geoPath(projection);
