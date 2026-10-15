@@ -1,31 +1,49 @@
 sponsors:
-  - name: Placeholder Sponsor 1
-    logoUrl: https://static.igem.wiki/teams/6160/placeholder-sponsor-1.svg
-    websiteUrl: https://example.org/sponsor-1
-  - name: Placeholder Sponsor 2
-    logoUrl: https://static.igem.wiki/teams/6160/placeholder-sponsor-2.svg
-    websiteUrl: https://example.org/sponsor-2
-  - name: Placeholder Sponsor 3
-    logoUrl: https://static.igem.wiki/teams/6160/placeholder-sponsor-3.svg
-    websiteUrl: https://example.org/sponsor-3
-  - name: Placeholder Sponsor 4
-    logoUrl: https://static.igem.wiki/teams/6160/placeholder-sponsor-4.svg
-    websiteUrl: https://example.org/sponsor-4
-  - name: Placeholder Sponsor 5
-    logoUrl: https://static.igem.wiki/teams/6160/placeholder-sponsor-5.svg
-    websiteUrl: https://example.org/sponsor-5
-  - name: Placeholder Sponsor 6
-    logoUrl: https://static.igem.wiki/teams/6160/placeholder-sponsor-6.svg
-    websiteUrl: https://example.org/sponsor-6
-  - name: Placeholder Sponsor 7
-    logoUrl: https://static.igem.wiki/teams/6160/placeholder-sponsor-7.svg
-    websiteUrl: https://example.org/sponsor-7
-  - name: Placeholder Sponsor 8
-    logoUrl: https://static.igem.wiki/teams/6160/placeholder-sponsor-8.svg
-    websiteUrl: https://example.org/sponsor-8
-  - name: Placeholder Sponsor 9
-    logoUrl: https://static.igem.wiki/teams/6160/placeholder-sponsor-9.svg
-    websiteUrl: https://example.org/sponsor-9
+  - name: LMK Stiftelsen
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/lmk.avif
+    websiteUrl: https://lmkstiftelsen.se/
+  - name: LTH
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/lth-lu-logo.avif
+    websiteUrl: https://www.lth.se/
+  - name: Ampliqon
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/ampliqon.avif
+    websiteUrl: https://ampliqon.com/
+  - name: Cytiva
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/cytiva.avif
+    websiteUrl: https://www.cytivalifesciences.com/en/se
+  - name: IDT (Integrated DNA Technologies)
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/idt.avif
+    websiteUrl: https://eu.idtdna.com/page
+  - name: Jena Bioscience
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/jena-bioscience.avif
+    websiteUrl: https://www.jenabioscience.com/
+  - name: Microsynth
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/microsynth.avif
+    websiteUrl: https://www.microsynth.com/home-ch.html
+  - name: Socorex
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/socorrex.avif
+    websiteUrl: https://socorex.com/en/
+  - name: Twist Bioscience
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/twist-bioscience.avif
+    websiteUrl: https://www.twistbioscience.com/
+  - name: VACUUBRAND (BRAND)
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/vaccu-brand.avif
+    websiteUrl: https://www.vacuubrand.com/
+  - name: Anthropic
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/anthropic-logo-svg.webp
+    websiteUrl: https://www.anthropic.com/
+  - name: Cultivarium
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/cultivarium.avif
+    websiteUrl: https://www.cultivarium.org/
+  - name: Labguru
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/labguru.avif
+    websiteUrl: https://www.labguru.com/
+  - name: SnapGene
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/snap-gene.avif
+    websiteUrl: https://www.snapgene.com/
+  - name: Syn Biotechnology
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/synbio-technologies.avif
+    websiteUrl: https://www.synbiotech.net/
 socials:
   - label: Instagram (placeholder)
     icon:
