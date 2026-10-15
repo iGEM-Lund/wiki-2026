@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Lightbox } from './Lightbox';
+import { MissingAltBanner } from './MissingAltBanner';
 
 type FigureCarouselImage = { src: string; alt?: string };
 
@@ -520,6 +521,7 @@ export function FigureCarousel({ images = [], speedSeconds = 25, still = false }
                 aria-label={image.alt ? undefined : `Enlarge figure ${index + 1}`}
               >
                 <img src={image.src} alt={image.alt ?? ''} />
+                <MissingAltBanner alt={image.alt} />
               </button>
             </div>
           );

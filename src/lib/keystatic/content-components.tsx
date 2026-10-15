@@ -20,7 +20,7 @@ const CAPTION_HINT = 'Put *asterisks* around a word to set it in italics, e.g. *
 const NUMBERED_CAPTION_HINT = `Do not type "Figure 3." or "Table 3." yourself: the number is added in front automatically. ${CAPTION_HINT}`;
 
 const ALT_TEXT_DESCRIPTION =
-  'Always fill this in. What the image shows, for readers who cannot see it (screen readers read this aloud). One or two plain sentences: say what matters about it, not "image of". Do not just repeat the caption.';
+  'Required. What the image shows, for readers who cannot see it (screen readers read this aloud). One or two plain sentences: say what matters about it, not "image of". Do not just repeat the caption. If you really cannot write it yet, put MISSING: the figure then shows "MISSING ALT TEXT" across it until someone does.';
 
 // Shared by Badges, Badge and Pillars, so a badge in a table cell picks from
 // the same palette, and gets the same automatic colour, as one on a card or
@@ -50,7 +50,7 @@ export const contentComponents = {
         label: 'Image URL',
         description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
       }),
-      alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION }),
+      alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION, validation: { isRequired: true } }),
       caption: fields.text({ label: 'Caption', description: NUMBERED_CAPTION_HINT, multiline: true }),
       numbered: fields.checkbox({
         label: 'Numbered (Figure N)',
@@ -98,7 +98,7 @@ export const contentComponents = {
             label: 'Image URL',
             description: 'Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
           }),
-          alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION }),
+          alt: fields.text({ label: 'Alt text', description: ALT_TEXT_DESCRIPTION, validation: { isRequired: true } }),
         }),
         { label: 'Figures', itemLabel: (props) => props.fields.alt.value || props.fields.src.value || 'Figure' },
       ),

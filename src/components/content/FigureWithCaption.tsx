@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { ZoomableImage } from './ZoomableImage';
 import { SmallFigureWatcher } from './SmallFigureWatcher';
+import { MissingAltBanner } from './MissingAltBanner';
 import { tiltFor } from '@/lib/tilt';
 import { KIND_LABELS, renderLabelledCaption } from '@/lib/caption-text';
 
@@ -40,6 +41,7 @@ export function FigureWithCaption({ src, alt = '', caption, link, scale, plain, 
   const media = src ? (
     <div className="figure-with-caption__media">
       <ZoomableImage src={src} alt={alt} caption={lightboxCaption} enlargeable={!link && !noZoom} />
+      <MissingAltBanner alt={alt} />
       {link ? <ExternalLink className="figure-with-caption__link-icon" aria-hidden size={18} /> : null}
     </div>
   ) : null;
