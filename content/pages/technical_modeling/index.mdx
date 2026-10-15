@@ -70,7 +70,7 @@ The sequence of each candidate enzyme was submitted to the NCBI Conserved Domain
 
 #### **For AKR1D1:**&#x20;
 
-CD Search assigned the query sequence (NP\_005980.1) to the AKR\_AKR1D1-3 family within the aldo-keto reductase superfamily, returning 32 annotated active site positions and a separately annotated catalytic tetrad (Table 1).
+CD Search assigned the query sequence (NP\_005980.1) to the AKR\_AKR1D1-3 family within the aldo-keto reductase superfamily, returning 32 annotated active site positions and a separately annotated catalytic tetrad (**Table 1**).
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/cdsearch-akr1d1.avif" alt="CD search image" caption="Figure 5. NCBI CD Search result for AKR1D1 (NP_005980.1), assigning the sequence to the AKR_AKR1D1-3 family within the aldo-keto reductase superfamily." scale={100} plain={false} noZoom={false} />
 
@@ -102,7 +102,7 @@ Binding pockets were identified computationally using fpocket v4.0 (Le Guilloux 
 
 #### **For AKR1D1:**
 
-fpocket identified 22 candidate pockets in the AKR1D1 structure. Cross-referencing against the CD Search annotations showed a single dominant match: Pocket 1 contained 29 of the 32 annotated active site residues and all four members of the catalytic tetrad (Table 3). The remaining pockets carried five or fewer annotated residues each, and twelve contained none. Pocket 1 was therefore selected as the functional active site.
+fpocket identified 22 candidate pockets in the AKR1D1 structure. Cross-referencing against the CD Search annotations showed a single dominant match: Pocket 1 contained 29 of the 32 annotated active site residues and all four members of the catalytic tetrad (**Table 3**). The remaining pockets carried five or fewer annotated residues each, and twelve contained none. Pocket 1 was therefore selected as the functional active site.
 
 | **Pocket** | **Annotated residues found**                                                                                                                                                  | **Catalytic tetrad**      |
 | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
@@ -118,7 +118,7 @@ Table 3. fpocket results for AKR1D1 cross-referenced against CD Search annotatio
 
 #### **For ci2350:**
 
-Similarly, fpocket identified 38 candidate pockets in the predicted ci2350 model. Pocket 1 was the clearest match, containing 9 of the 12 annotated residues, including H165 and Y167. Two further pockets carried catalytic residues: Pocket 5 contained N166 and S171, and Pocket 37 contained Y167 (Table 4).
+Similarly, fpocket identified 38 candidate pockets in the predicted ci2350 model. Pocket 1 was the clearest match, containing 9 of the 12 annotated residues, including H165 and Y167. Two further pockets carried catalytic residues: Pocket 5 contained N166 and S171, and Pocket 37 contained Y167 (**Table 4**).
 
 | **Pocket** | **Annotated residues found**                             | **Catalytic residues** |
 | ---------- | -------------------------------------------------------- | ---------------------- |
@@ -131,7 +131,22 @@ Table 4. fpocket results for ci2350 cross-referenced against CD Search and Arp e
 
 In both enzymes Pocket 1 covered the majority of the annotated active site residues and was therefore used to define the docking search space. The box centre was taken as the mean x, y and z coordinates of the pocket’s alpha spheres, and each dimension was set from the span of those coordinates along that axis (maximum – minimum) plus a 4 Å margin to ensure sufficient room for the ligand to sample orientations within a tightly enclosed pocket.
 
-Because Pocket 1 did not capture every annotated residue in either enzyme, the box was then expanded as required so that all CD Search positions fell within the search space. After expanding, the pocket grid for both AKR1D1 and ci2350 the final search box parameters for both enzymes are given in Table 5.
+Because Pocket 1 did not capture every annotated residue in either enzyme, the box was then expanded as required so that all CD Search positions fell within the search space. After expanding, the pocket grid for both AKR1D1 and ci2350 the final search box parameters for both enzymes are given in **Table 5**.
+
+| **Parameter** | **AKR1D1** | **ci2350** |
+| ------------- | ---------- | ---------- |
+| Centre x (Å)  | 5.182      | 3.793      |
+| Centre y (Å)  | 27.798     | 4.007      |
+| Centre z (Å)  | −35.527    | 3.619      |
+| Size x (Å)    | 22.0       | 30.0       |
+| Size y (Å)    | 29.0       | 20.0       |
+| Size z (Å)    | 20.0       | 22.0       |
+
+Table 5. Docking search box parameters.
+
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-active-site.avif" alt="Image of active site pocket of AKR1D1" caption="Figure 7. Active site pockets selected for docking in AKR1D1-NADPH, corresponding to Pocket 1 as identified by fpocket and validated against CD Search annotations." scale={100} plain={false} noZoom={false} />
+
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/ci2350-active-site.avif" alt="Image of active site pocket of ci2350" caption="Figure 8. Active site pockets selected for docking in ci2350, corresponding to Pocket 1 as identified by fpocket and validated against CD Search annotations." scale={100} plain={false} noZoom={false} />
 
 ### Results
 
