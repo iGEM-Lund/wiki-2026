@@ -54,14 +54,12 @@ Hydrogen atoms were added, and protonation states were assigned at physiological
 
 Testosterone and progesterone share the four-ring steroid scaffold, with rings labelled A to D from the end bearing the C3 ketone (“The Nomenclature of Steroids,” 1989). They are identical across rings A to C, including the Δ4-3-keto motif on the A ring that is the site of reduction, and differ only at the C17 substituent on the D ring, with 17β-hydroxyl in testosterone and an acetyl group in progesterone (Figure 4 - below, link it too?).
 
-
-
 (3D structure of testosterone and progesterone - side by side)
-
-
 
 Both ligands were retrieved from PubChem (CID 6013 and CID 5994, respectively) (Kim et al., 2025) as three-dimensional SDF structures. Each ligand was processed using MGLTools (prepare\_ligand4.py) (Morris et al., 2009) to assign partial charges and define rotatable bonds, generating PDBQT files for docking input. No additional energy minimisation was performed prior to docking, as AutoDock Vina performs internal conformational sampling through multiple independent search runs during the docking process (Eberhardt et al., 2021).
 
 ### Conserved domain analysis (sub headings)
 
 The sequence of each candidate enzyme was submitted to the NCBI Conserved Domain Search (CD Search) (Marchler-Bauer et al., 2017), which compares a query sequence against the Conserved Domain Database (CDD) to identify evolutionarily conserved functional domains and their annotated residue positions. These annotations cover substrate binding, cofactor coordination and catalytic function, and are inferred from structurally and biochemically characterised members of the same protein family. They provided a sequence-level map of the expected functional site and served as the reference for interpreting and validating the predicted active site pockets.
+
+## AKR1D1
