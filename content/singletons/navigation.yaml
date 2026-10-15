@@ -52,16 +52,14 @@ items:
           target: collaborations
         - label: Contribution
           target: contribution
-  - name: People
+  - name: Attributions
     icon:
       discriminant: library
-      value: person-standing
+      value: heart
     linkMode:
       discriminant: dropdown
       value:
         - label: Team
           target: people_team
-        - label: Attributions
-          target: Attributions
         - label: Sponsors
           target: people_sponsors
