@@ -11,11 +11,24 @@ Two enzymes are central to this axis. **AKR1D1** is the human hepatic **Δ4-3-ke
 
 The two enzymes are not homologous: they belong to unrelated families and have converged independently on the same 5β-reduction chemistry, with AKR1D1 acting on Δ4-3-ketosteroids spanning across **C18** to **C21 classes** (Chen et al., 2011), while ci2350 has been shown to reduce **C21 steroids** (Arp et al., 2025).
 
+### **The selectivity problem**
+
+The capacity of both enzymes to accept testosterone as a substrate makes it a candidate for engineering, but wild-type activity alone is insufficient. Effective therapeutic application requires that the enzyme preferentially reduces testosterone over structurally similar steroids, and progesterone is the most demanding comparison. The two molecules share the same core steroid scaffold and differ critically at a single position: testosterone carries a **17β-hydroxyl group**, whereas progesterone bears a **C17 acetyl substituent** (Chen & Penning, 2014). Any engineered selectivity must therefore be achieved by discriminating between these two chemically subtle substituents on an otherwise identical molecule.
+
+This problem cannot be addressed experimentally without first knowing which variants are structurally worth testing. The sequence space of possible active site mutations is far larger than can be screened at the bench, so a computational filter is needed to narrow it to a tractable set.
+
+Binding affinity alone, however, does not predict how a variant would behave in a bacterial system. Cell growth, enzyme expression levels, and competition between substrates all shape the outcome, and a variant that binds testosterone well in isolation may still perform poorly when those factors are considered.
+
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/whatsapp-image-2026-10-14-at-13-50-08-1.avif" alt="Workflow overview" caption="Engineering specificity towards steroid hormones " scale={100} plain noZoom={false} />
 
 ## Our approach
 
-To overcome this challenge, our team proposed an idea where the modeled 3D structure of this gene was used to perform point mutations which were suggested in literature, and see if the mutated sequences were more specific to testosterone instead. We also tried several combinations of these single mutations and were able to reach a consensus that few of the resulting mutations showed better specificity to testosterone than to progesterone.
+Our dry lab work addresses both challenges through two integrated strands.
+
+1. **Enzyme specificity:** Perform rational mutagenesis on ci2350 and AKR1D1 that make the enzyme prefer testosterone over progesterone, using molecular docking to guide which residues to change.
+2. **Mathematical modelling:** Build a mechanistic model of bacterial growth, enzyme expression and competitive kinetics that uses the docking results to predict how each variant would perform in practice and which parameters most affect the prediction.
+
+Together, these form a connected predictive layer: the first narrows a large design space to a small set of structurally plausible candidates, and the second takes those candidates and asks whether their effect would actually show up in a real bacterial system.
 
 ## Rational mutagenesis:
 
