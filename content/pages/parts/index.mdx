@@ -40,8 +40,6 @@ NADPH-dependent steroid-5β-reductase of human origin, primarily expressed in th
 | BBa\_  | ci2350\_NoAAAAAA     | CDS      | Multi-adenine (AAAAAA) regions of BBa\_ZZZ  were replaced with other codons, without changing amino acids, to help prevent protein truncation.                                                                                                                                                        | 1929            |
 | BBa\_  | AKR1D1               | CDS      | Human origin steroid-5β-reductase, catalyses the reduction of Δ⁴-3-ketosteroids. Codon harmonization tool (Horst Lechner, to be published) was used to redesign gene sequence from *Homo sapiens* to *Escherichia coli.* N-terminal 6xHis-tag was added for purification via affinity chromatography. | 981             |
 
-&#x20;
-
 ### **Tags**
 
 | **ID**                                                        | **Name**  | **Type**       | **Functional Description**                                                                                                                                                                                                                                   | **Length** |
@@ -51,31 +49,19 @@ NADPH-dependent steroid-5β-reductase of human origin, primarily expressed in th
 | BBa\_                                                         | Trx-tag   | Engineered Tag | Thioredoxin (Trx-tag) is a small (12 kDa), soluble oxidoreductase protein, derived from *Escherichia coli* thioredoxin-1 (trxA) that is often fused to other recombinant proteins to improve their solubility and prevent aggregation into inclusion bodies. | 327        |
 | BBa\_                                                         | MBP-tag   | Engineered Tag | Maltose Binding Protein (MBP) is a medium sized protein (40 kDa) from *E. coli*, that is often fused to other recombinant proteins to improve their solubility and prevent aggregation into inclusion bodies.                                                | 1101       |
 
-### Promoters
+### Regulatory components
 
-| **ID**                                                        | **Name** | **Type** | **Functional Description**                                                                         | **Length** |
-| ------------------------------------------------------------- | -------- | -------- | -------------------------------------------------------------------------------------------------- | ---------- |
-| [BBa\_25DMNRIB](https://registry.igem.org/parts/bba-25dmnrib) | PFnrS    | Promoter | Promoter that activates under hypoxic condition to initiate the transcription of downstream genes. | 95         |
+| **ID**                                                        | **Name**    | **Type**            | **Functional Description**                                                                         | **Length** |
+| ------------------------------------------------------------- | ----------- | ------------------- | -------------------------------------------------------------------------------------------------- | ---------- |
+| [BBa\_25DMNRIB](https://registry.igem.org/parts/bba-25dmnrib) | PFnrS       | Promoter            | Promoter that activates under hypoxic condition to initiate the transcription of downstream genes. | 95         |
+| [BBa\_K4634001](https://registry.igem.org/parts/bba-k4634001) | RBS         | Ribosome Entry Site | Efficient ribosome binding site from bacteriophage T7 gene 10 (Olins and Rangwala, 1989)           | 23         |
+| BBa\_                                                         | Lambda\_ter | Terminator          | Lambda t0 terminator                                                                               | 95         |
 
 ### **Linkers**
 
 | **ID** | **Name** | **Type** | **Functional Description**             | **Length** |
 | ------ | -------- | -------- | -------------------------------------- | ---------- |
 | BBa\_  | GSG      | Linker   | Glycine-serine-glycine flexible linker | 9          |
-
-### Ribosome binding site
-
-| **ID**                                                        | **Name** | **Type**            | **Functional Description**                                                               | **Length** |
-| ------------------------------------------------------------- | -------- | ------------------- | ---------------------------------------------------------------------------------------- | ---------- |
-| [BBa\_K4634001](https://registry.igem.org/parts/bba-k4634001) | RBS      | Ribosome Entry Site | Efficient ribosome binding site from bacteriophage T7 gene 10 (Olins and Rangwala, 1989) | 23         |
-
-### Terminators&#x20;
-
-| **ID** | **Name**    | **Type**   | **Functional Description** | **Length** |
-| ------ | ----------- | ---------- | -------------------------- | ---------- |
-| BBa\_  | Lambda\_ter | Terminator | Lambda t0 terminator       | 95         |
-
-&#x20;
 
 ## New Composite Parts
 
