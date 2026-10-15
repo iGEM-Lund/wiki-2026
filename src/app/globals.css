@@ -2538,7 +2538,8 @@ a.inline-icon--link:focus-visible {
   text-underline-offset: 0.2em;
 }
 .term-tip__bubble,
-.citation__sign {
+.citation__sign,
+.world-map__sign {
   /* A paper tag hanging from the term on a short string (::before), with
      a punched hole (::after) where the string is tied on. It swings in
      from a tilt around that knot, overshoots and comes to rest hanging a
@@ -2573,7 +2574,8 @@ a.inline-icon--link:focus-visible {
     rotate 0.6s cubic-bezier(0.3, 1.7, 0.5, 1);
 }
 .term-tip__bubble::before,
-.citation__sign::before {
+.citation__sign::before,
+.world-map__sign::before {
   content: '';
   position: absolute;
   left: 50%;
@@ -2583,7 +2585,8 @@ a.inline-icon--link:focus-visible {
   translate: -1px 0;
 }
 .term-tip__bubble::after,
-.citation__sign::after {
+.citation__sign::after,
+.world-map__sign::after {
   content: '';
   position: absolute;
   left: 50%;
@@ -2599,14 +2602,16 @@ a.inline-icon--link:focus-visible {
 .term-tip:focus > .term-tip__bubble,
 .term-tip:focus-visible > .term-tip__bubble,
 .citation:hover > .citation__sign,
-.citation:focus-visible > .citation__sign {
+.citation:focus-visible > .citation__sign,
+.world-map__sign {
   opacity: 1;
   visibility: visible;
   rotate: 1.5deg;
 }
 @media (prefers-reduced-motion: reduce) {
   .term-tip__bubble,
-  .citation__sign {
+  .citation__sign,
+  .world-map__sign {
     transition: none;
   }
 }
@@ -2627,7 +2632,8 @@ a.inline-icon--link:focus-visible {
    here. */
 @starting-style {
   .term-tip:is(:hover, :focus, :focus-visible) > .term-tip__bubble:popover-open,
-  .citation:is(:hover, :focus-visible) > .citation__sign:popover-open {
+  .citation:is(:hover, :focus-visible) > .citation__sign:popover-open,
+  .world-map__sign {
     opacity: 0;
     rotate: -6deg;
   }
@@ -3582,97 +3588,195 @@ a.inline-icon--link:focus-visible {
 }
 /* Stylized world map with pins; see src/components/content/WorldMap.tsx
    (server: compiles pin bodies, projects lat/lng) and WorldMapClient.tsx
-   ('use client': hand-rolled pan/zoom, hover tooltip, click-sticky popup). */
+   ('use client': hand-rolled pan/zoom, hover tooltip, click-sticky popup).
+   The map is a patch made like the pillars and the slice wheel (see
+   .pillars__link, .slice-wheel): the sea is their twill cloth with an
+   overlocked edge and a crimson running stitch just inside it, the land
+   sewn on in their Shallows fill and Peacock line. Pushpins stuck into it
+   mark the places, and a clicked one holds up an index card. Like the
+   pillars, the patch keeps its light cloth in dark mode. */
 .world-map {
+  --map-line: var(--color-peacock);
+  --map-fill: var(--color-shallows);
+  --map-cloth: color-mix(in srgb, var(--map-fill) 72%, var(--map-line));
+  --map-thread: var(--color-crimson);
   position: relative;
-  margin: 1rem 0;
-}
-.world-map__frame {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
+  margin: 2rem 0;
 }
 .world-map__viewport {
   display: block;
   width: 100%;
-  aspect-ratio: 960 / 500;
+  height: auto;
   touch-action: none;
   cursor: grab;
+  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.08)) drop-shadow(0 2px 2px rgb(0 40 40 / 0.3));
 }
 .world-map--dragging .world-map__viewport {
   cursor: grabbing;
 }
 .world-map__sea {
-  fill: var(--bg-alt);
+  fill: var(--map-cloth);
+}
+.world-map__weave-light {
+  fill: rgb(255 255 255 / 0.22);
+}
+.world-map__weave-dark {
+  fill: rgb(0 0 0 / 0.05);
+}
+.world-map__overlock {
+  fill: none;
+}
+.world-map__overlock-stitch {
+  fill: var(--map-line);
+}
+.world-map__overlock-shade {
+  fill: color-mix(in srgb, var(--map-line) 70%, #000);
+}
+.world-map__stitch {
+  fill: none;
+  stroke: var(--map-thread);
+  stroke-width: 2.6;
+  stroke-dasharray: 8 5;
 }
 .world-map__land {
-  fill: var(--color-shallows);
-  stroke: var(--color-peacock);
-  stroke-width: 3;
+  fill: var(--map-fill);
+  stroke: var(--map-line);
+  /* In screen pixels, not map units, so the coastline stays the same
+     weight however far in the map is zoomed. */
+  vector-effect: non-scaling-stroke;
+  stroke-width: 2;
   stroke-linejoin: round;
   stroke-linecap: round;
-}
-:root[data-theme='dark'] .site .world-map__land {
-  fill: var(--color-truffle);
-  stroke: var(--color-peacock);
 }
 .world-map__pin {
   cursor: pointer;
 }
 .world-map__pin-needle {
-  stroke: var(--color-crimson);
-  stroke-width: 1.8;
+  stroke: color-mix(in srgb, var(--muted) 70%, var(--heading));
+  stroke-width: 1.6;
+  stroke-linecap: round;
 }
-.world-map__pin-dot {
-  fill: var(--color-crimson);
-  stroke: var(--color-pearl);
-  stroke-width: 1.5;
+.world-map__pin-stop {
+  stop-color: var(--pin-red);
 }
-:root[data-theme='dark'] .site .world-map__pin-needle {
-  stroke: var(--color-rose);
+.world-map__pin-stop--edge {
+  stop-color: color-mix(in srgb, var(--pin-red) 60%, #000);
 }
-:root[data-theme='dark'] .site .world-map__pin-dot {
-  /* Crimson fails contrast on the dark-mode Noir background; same rule
-     already governing --error and .quote-block. */
-  fill: var(--color-rose);
-  stroke: var(--color-noir);
+.world-map__pin-shine {
+  fill: rgb(255 255 255 / 0.85);
+}
+.world-map__pin-count {
+  fill: #fff;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+.world-map__pin-head {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.15s ease;
+}
+.world-map__pin:hover .world-map__pin-head,
+.world-map__pin:focus-visible .world-map__pin-head,
+.world-map__pin[aria-expanded='true'] .world-map__pin-head {
+  transform: scale(1.2);
 }
 :root[data-theme='dark'] .site .figure-carousel__string path {
-  /* Same Crimson-fails-contrast-on-Noir swap as world-map__pin above. */
+  /* Crimson fails contrast on the dark-mode Noir background; same rule
+     already governing --error and .quote-block. */
   stroke: var(--color-rose);
 }
-.world-map__pin:focus-visible .world-map__pin-dot {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+.world-map__pin:focus-visible {
+  outline: none;
 }
-.world-map__tooltip {
+.world-map__pin:focus-visible .world-map__pin-head circle:first-child {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+/* The hover sign is the Tooltip's paper tag (see .term-tip__bubble),
+   hung from the pin's head: WorldMapClient puts its top at the bottom of
+   the head, and this drops it a string's length below that. */
+.world-map__sign {
+  margin-top: 1.15rem;
+}
+/* The overlay the sign, open card and thread are drawn on, laid over the
+   map (see WorldMapClient's layer effect). Undoes the popover's defaults:
+   centred in the viewport, boxed, its own scroll box. Only its contents
+   take the pointer, so the map under it still pans and its pins hover. */
+.world-map__layer {
   position: absolute;
-  z-index: 2;
-  transform: translate(-50%, -140%);
-  padding: 0.3rem 0.6rem;
-  border-radius: 999px;
-  background: var(--heading);
-  color: var(--bg);
-  font-size: 0.8125rem;
-  white-space: nowrap;
+  inset: 0;
+  z-index: 40;
+  overflow: visible;
   pointer-events: none;
+}
+.world-map__layer[popover] {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+.world-map__layer:popover-open {
+  position: fixed;
+  inset: auto;
 }
 .world-map__popup {
   position: absolute;
-  z-index: 3;
-  transform: translate(-50%, -100%) translateY(-0.75rem);
-  width: min(20rem, calc(100% - 2rem));
-  max-height: 16rem;
-  overflow-y: auto;
-  padding: 1rem;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--bg-alt);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+  z-index: 6;
+  width: min(20rem, calc(100vw - 2rem));
+  margin-top: 1.15rem;
+  padding: 1.5rem 1.25rem 1.1rem;
+  rotate: 1deg;
+  transform-origin: var(--string-x, 50%) -1.15rem;
+  transition: rotate 0.6s cubic-bezier(0.3, 1.7, 0.5, 1);
+  background: var(--index);
+  box-shadow: var(--lift), 0 12px 24px -12px rgb(0 0 0 / 0.3);
+  pointer-events: auto;
+}
+/* Rendered unseen first so WorldMapClient can measure it; it swings in
+   from this tilt once placed. */
+.world-map__popup:not([data-placed]) {
+  visibility: hidden;
+  rotate: -6deg;
+  transition: none;
+}
+/* The card hangs from its pin on the same string and eyelet as the hover
+   sign (.term-tip__bubble), tied on at --string-x (WorldMapClient slides
+   the card sideways to keep it in the window, the string staying over the
+   pin), and swings in from a tilt around that knot the same way. */
+.world-map__popup::before {
+  content: '';
+  position: absolute;
+  left: var(--string-x, 50%);
+  bottom: calc(100% - 0.75rem);
+  height: calc(1.15rem + 0.75rem);
+  border-left: 2px solid var(--pin-string);
+  translate: -1px 0;
+}
+.world-map__popup::after {
+  content: '';
+  position: absolute;
+  left: var(--string-x, 50%);
+  top: 0.45rem;
+  width: 7px;
+  height: 7px;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--eyelet);
+  box-shadow: var(--eyelet-shadow);
+}
+@media (prefers-reduced-motion: reduce) {
+  .world-map__popup {
+    transition: none;
+  }
 }
 .world-map__popup-close {
   position: absolute;
-  top: 0.5rem;
+  top: 0.35rem;
   right: 0.5rem;
   width: 1.75rem;
   height: 1.75rem;
@@ -3699,6 +3803,11 @@ a.inline-icon--link:focus-visible {
 }
 .world-map__popup-body {
   font-size: 0.9rem;
+}
+.world-map__popup-entry + .world-map__popup-entry {
+  margin-top: 0.875rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--border);
 }
 .world-map__popup-body > :first-child {
   margin-top: 0;
