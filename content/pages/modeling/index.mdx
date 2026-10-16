@@ -400,7 +400,7 @@ From our experimental data, the cells **double** **every 28 minutes** (µmax = 1
   | Starting density (**X₀)**               | 0.05 (OD600) | Starting value used in the simulation |
 </TableWithCaption>
 
-<FigureWithCaption alt="Image of growth curve" caption="Logistic growth curve of the culture with µmax = 1.48 per hour and K = 15. The plateau is reached after about 7 h." numbered refId="fig-pllb8" scale={100} plain={false} noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/growth-curve.avif" alt="Image of growth curve" caption="Logistic growth curve of the culture with µmax = 1.48 per hour and K = 15. The plateau is reached after about 7 h." numbered refId="fig-pllb8" scale={100} plain={false} noZoom={false} />
 
 #### Expression model
 
@@ -577,86 +577,3 @@ Thirteen stable AKR1D1 variants were docked with both steroids. Selectivity is r
   | Combo 1: V309T + L311S        | −9.9                        | −9.4                        | +0.5                          | −3.44     |
   | Combo 6: V309T + L311S + I57S | −10.4                       | −9.8                        | +0.6                          | +0.80     |
 </TableWithCaption>
-
-No variant shifted the preference. The largest gain was 0.1 kcal/mol, far below the ±0.5 kcal/mol noise of the scoring function, so V309S, V309E and I57Y cannot be called improvements. The only changes large enough to read as real went the wrong way: I57N moved the preference 0.4 kcal/mol further towards progesterone.
-
-The mutations are altering how well the pocket holds a steroid, not which steroid it holds. Testosterone and progesterone differ only at C17, and if a substitution cannot distinguish that one group, it will always move both ligands together.
-
-Two substitutions were examined in detail: V309T, which replaces a valine methyl group with the hydroxyl of threonine, and L311S, which trims a leucine side chain down to serine. Both were intended to introduce polarity near the steroid and make the pocket less comfortable for progesterone’s acetyl group. Both sit above the plane of the progesterone, over the B and C rings, while the C17 substituent extends past them into the open end of the pocket (Figure 1a and 1b).
-
-Since neither mutated side chain reaches the C17 group, there is no direct contact. So, an acetyl group and a hydroxyl look the same to the enzyme, which matches the docking scores: every substitution at these positions moved both substrates by the same amount, leaving the selectivity gap at +0.5 kcal/mol.
-
-AKR1D1 was therefore not carried forward. Engineering specificity here would need side chains long enough to reach C17 from these positions, or a different set of positions closer to it.
-
-**ADD FIGURES (AKR1D1\_V309T\_progesterone\_view\.png   (Side by side)**
-
-**Figure 1a. Progesterone (orange) docked into AKR1D1 V309T. The A ring and 3-keto group face Y58 (green) and the nicotinamide ring of NADP(H) (purple); the wild-type valine (grey) and mutant threonine (pink) lie opposite to the B-ring of progesterone.**
-
-**AKR1D1\_V309T\_testosterone\_view\.png (Side by side )**
-
-**Figure 1b. Testosterone (cyan) in AkR1D1 V309T, in the same orientation, with the 17β-hydroxyl occupying the space.**
-
-**AKR1D1\_V309T\_L311S\_progesterone\_view\.png  (Side by side)**
-
-**Figure 2a. Progesterone in the V309T + L311S double mutant (pink) , with the C17 acetyl group extending into the open region beyond V309 and L311.**
-
-**AKR1D1\_V309T\_L311S\_testosterone\_view\.png  (Side by side)**
-
-**Figure 2b. Testosterone in the V309T + L311S double mutant. Both mutated side chains (pink) sit on the same loop far from testosterone.)**
-
-AKR1D1 was therefore not carried forward. Engineering specificity here would need positions that contact C17 directly, and the residues identified by contact analysis do not.
-
-#### For ci2350
-
-Seventeen stable ci2350 variants were docked with both steroids. Selectivity is again ΔG(testosterone) − ΔG(progesterone), so a negative value means testosterone is bound more tightly. The wild type sits at −0.1 kcal/mol, a marginal preference that is within scoring noise.
-
-<TableWithCaption caption="Docking of stable ci2350 variants with progesterone and testosterone" refId="tab-k12yo">
-  | **Mutation**                    | **Progesterone (kcal/mol)** | **Testosterone (kcal/mol)** | **Selectivity (test − prog)** | ΔΔG (REU) | Recommendation                                                                |
-  | ------------------------------- | --------------------------- | --------------------------- | ----------------------------- | --------- | ----------------------------------------------------------------------------- |
-  | Wild type (reference)           | −9.1                        | −9.2                        | −0.1                          | Baseline  | Reference                                                                     |
-  | Combo 8: R215A + V263I          | −8.5                        | −9.4                        | −0.9                          | +1.42     | TOP PRIORITY – highest selectivity, enhanced test affinity, neutral stability |
-  | Combo 13: R215A + V263I + Q100T | −8.0                        | −8.5                        | −0.5                          | −7.19     | HIGH PRIORITY – strong selectivity, strongly stabilising                      |
-  | V263K                           | −6.9                        | −7.4                        | −0.5                          | +2.21     | HIGH PRIORITY – strong selectivity, single-point mutation                     |
-  | Combo 9: R215E + V263I          | −7.4                        | −7.7                        | −0.3                          | +4.84     | Good selectivity, borderline stability                                        |
-  | V263D                           | −9.1                        | −9.3                        | −0.2                          | +1.36     | Conservative – full affinity maintained, neutral stability                    |
-  | V59S                            | −9.0                        | −9.2                        | −0.2                          | −2.36     | Conservative – full affinity maintained, stabilising                          |
-  | V263E                           | −7.4                        | −7.6                        | −0.2                          | +2.36     | Good selectivity, mild instability                                            |
-  | V263I                           | −7.4                        | −7.6                        | −0.2                          | +4.96     | Good selectivity, borderline stability                                        |
-  | Combo 7: R215E + V263E          | −7.4                        | −7.6                        | −0.2                          | +2.28     | Good combo, mild instability                                                  |
-</TableWithCaption>
-
-**Combo 8 (R215A + V263I)** is the only variant that moved the preference by more than the **±0.5 kcal/mol** noise, shifting it **0.8 kcal/mol** from the wild type, and the combination is structurally well tolerated (**ΔΔG = +1.42 REU**). It is also the only one that does so without giving up affinity (Table 2): **progesterone at −8.5** and **testosterone at −9.4** are close to the wild-type values, so the gap comes from holding testosterone more tightly rather than from binding everything more weakly.
-
-**R215** makes a **direct contact** with the **C17 acetyl tail** of progesterone, so replacing it with alanine removes a stabilising interaction that only progesterone uses. **V263I** works on the same region from the other side: isoleucine is bulkier than valine and appears to **crowd the acetyl tail**, while testosterone, which carries only a compact 17β-hydroxyl at that position, fits the branched side chain more comfortably and binds slightly better.
-
-**ADD FIGURES (ci2350\_R215A\_V263I\_progesterone\_view\.png**
-
-**Figure 3a. Progesterone (orange) docked into the same Combo 8 variant, showing the C17 acetyl group alongside R215, with the wild-type arginine and valine in grey and the substituted alanine and isoleucine in pink.**
-
-**ci2350\_R215A\_V263I\_testosterone\_view\.png**
-
-**Figure 3b. Testosterone (cyan) docked into the ci2350 Combo 8 variant (R215A + V263I), with the wild-type arginine and valine in grey and the substituted alanine and isoleucine in pink.)**
-
-The two mutations behave very differently on their own. V263I shifts the preference by only −0.2 selectivity and weakens progesterone binding to −7.4 kcal/mol, so the gain in Combo 8 has to come from removing the arginine at 215 (Table 20).
-
-**Combo 13 (R215A + V263I + Q100T)** adds Q100T to the Combo 8 backbone. **Q100** contacts the **17β-hydroxyl** of testosterone, and threonine offers the same hydrogen-bonding capacity from a shorter side chain, which may suit the compact hydroxyl better. In combination the variant reaches **ΔΔG = −7.19 REU**, the most stable candidate in the set, helps in getting enough soluble protein to characterise. The cost is selectivity: the preference falls to −0.5 kcal/mol, within the noise floor. Combo 13 is therefore the safer choice if stability proves limiting, rather than the better one on specificity.
-
-**ADD FIGURES (ci2350\_Combo13\_progesterone\_view\.png**
-
-**Figure 4a. Progesterone (orange) docked into the ci2350 Combo 13 variant (R215A + V263I + Q100T). Wild-type side chains are shown in grey and the substituted ones in pink; the catalytic Y167 is in green.**
-
-**ci2350\_Combo13\_testosterone\_view\.png**
-
-**Figure 4b. Testosterone (cyan) docked into the ci2350 Combo 13 variant (R215A + V263I + Q100T). Wild-type side chains are shown in grey and the substituted ones in pink; the catalytic Y167 is in green.)**
-
-V263K also reaches −0.5 kcal/mol selectivity, but by a different route. The long lysine side chain is poorly suited to the hydrophobic end of the pocket and weakens binding of both steroids substantially, progesterone from −9.1 to −6.9 and testosterone from −9.2 to −7.4, with progesterone penalised more. The preference comes from making the pocket worse for everything rather than from distinguishing the two substituents. As a single substitution, it is simple to make and characterise, which keeps it on the list, but the affinity loss limits its usefulness.
-
-**ADD FIGURES (ci2350\_V263K\_progesterone\_view\.png**
-
-**Figure 5a Progesterone (orange) docked into the same V263K variant, with the wild-type valine in grey, the substituted lysine in pink, and Y167 in green.**
-
-**ci2350\_V263K\_testosterone\_view\.png**
-
-**Figure 5b. Testosterone (cyan) docked into the ci2350 V263K variant, with the wild-type valine in grey, the substituted lysine in pink, and Y167 in green.)**
-
-Position 263 is clearly the main lever, it appears in eight of the nine top-ranked variants, but on its own it never produces a meaningful preference. Only when paired with R215A does it give a shift large enough to act on, so **Combo 8** was carried forward into the activity model [(Modeling)](https://wiki.igemlund.org/technical_modeling#mathematical-modelling-of-enzyme-production-and-activity).&#x20;
