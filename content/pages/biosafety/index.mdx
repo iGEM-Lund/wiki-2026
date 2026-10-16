@@ -34,14 +34,14 @@ For each strategy, we researched multiple possible approaches, compared them aga
 
 #### **Gut Gate**
 
-Our effector should only be active when our engineered probiotic is in the gut. The distinct physicochemical signals in the gut vary from both the outside environment and between different compartments within the gut itself, and these signals can be used to build a location-based switch. <Citation reference="chien-et-al-2022" narrative /> built oxygen, pH and lactate biosensors that control essential genes (*asd, glms) in E. coli* and S.Typhimurium, so that growth depends on the gut-like signal, and tested them in gut-mimicking media and in mice. The three sensing options are compared in tab-6t28q.  We chose hypoxia sensing for our proof of concept.
+Our effector should only be active when our engineered probiotic is in the gut. The distinct physicochemical signals in the gut vary from both the outside environment and between different compartments within the gut itself, and these signals can be used to build a location-based switch. <Citation reference="chien-et-al-2022" narrative /> built oxygen, pH and lactate biosensors that control essential genes (*asd, glms) in E. coli* and S.Typhimurium, so that growth depends on the gut-like signal, and tested them in gut-mimicking media and in mice. The three sensing options are compared in <Ref target="tab-nfs0k" />. We chose hypoxia sensing for our proof of concept.
 
 <TableWithCaption
   caption="
 Sensing options compared for the gut gate
 
 "
-  refId="tab-6t28q"
+  refId="tab-nfs0k"
 >
   &#x20;&#x20;
 
@@ -54,7 +54,7 @@ Sensing options compared for the gut gate
   &#x20;&#x20;
 </TableWithCaption>
 
-Why Hypoxia Sensing?&#x20;
+Why **Hypoxia Sensing**?&#x20;
 
 * The oxygen gap between the gut and outside conditions is wide and more consistent than the gut's pH gradient or bile-acid fluctuations, which vary with time of day and diet.
 * Hypoxia promoters are also well established in *E. coli ,* since they rely on the bacterium's native FNR-based anaerobic response rather than an engineered bile-acid receptor or pH sensor.&#x20;
@@ -68,11 +68,11 @@ Our effector should be expressed only when testosterone levels exceed a threshol
 
 The sensor is TeiR, a transcription factor from *Comamonas testosteroni*, a bacterium that uses testosterone as a carbon source <Citation reference="pruneda-paz-et-al-2004" narrative={false} />. TeiR is not specific tTo testosterone: it also responded to eight other steroids <Citation reference="goehler-et-al-2008" narrative={false} />. If we implement it, TeiR would therefore have to be engineered and tested so that it responds to testosterone and not to other steroids, including non-androgens. The binding region identified in that study (around residues 189 to 209) is the natural place to start. This is our plan and has not been tested yet.&#x20;
 
-fig-fistg shows how the gut gate and TeiR will be engineered to work together and the tab-dv9ax explains the steps followed.&#x20;
+<Ref target="fig-1x28d" />shows how the gut gate and TeiR will be engineered to work together and the <Ref target="tab-dh4yy" /> explains the steps followed.&#x20;
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/biosafety/gut-gate-and-feedback-loop.svg" alt="Flowchart of the gut gate and feedback loop: low oxygen switches on TeiR, testosterone-bound TeiR activates sip48, and the effector enzyme lowers testosterone." caption="Gut gate and feedback loop. Low oxygen switches on TeiR expression; testosterone-bound TeiR activates the sip48 promoter, which drives the effector enzyme that lowers testosterone and closes the loop." numbered refId="fig-fistg" scale={60} plain={false} noZoom={false} />
 
-<TableWithCaption caption="Steps of the Gut gate and Feedback loop." refId="tab-dv9ax">
+<TableWithCaption caption="Steps of the Gut gate and Feedback loop." refId="tab-dh4yy">
   &#x20;&#x20;
 
   | **Step**                                   | **What happens**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
