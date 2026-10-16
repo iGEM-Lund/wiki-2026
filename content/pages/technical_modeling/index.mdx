@@ -374,8 +374,6 @@ The specificity analysis found no AKR1D1 variant that shifted preference towards
 
 (add image of the workflow here)
 
-
-
 #### System definition
 
 The system modelled is ci2350 produced from a Twist pET vector in *E. coli* *BL21(DE3)*, with the gene under the T7 promoter and induced with 0.8 mM IPTG. The quantity of interest is the amount of enzyme per cell because it determines how much enzyme is available to act on the steroids. Described in Parts page. (add link to parts page)
@@ -402,11 +400,7 @@ From our experimental data, the cells **double** **every 28 minutes** (µmax = 1
   | Starting density (**X₀)**               | 0.05 (OD600) | Starting value used in the simulation |
 </TableWithCaption>
 
-
-
 Add Image of growth curve here with caption: Figure 2. Logistic growth curve of the culture with µmax = 1.48 per hour and K = 15. The plateau is reached after about 7 h. Refer properly in the above.
-
-
 
 #### Expression model
 
@@ -430,11 +424,12 @@ Five assumptions:
 
 Bacterial messages break down within minutes of being made (Bernstein et al., 2002). We used a half-life (3 to 8 mins) to predict the decay constants (δ = ln2 / t½) range and used their average of 9.53 h⁻¹. The transcription rate (α) and translation rate (β) are placeholders, as neither has been measured for ci2350.
 
-<TableWithCaption refId="tab-2pa7e">
-  |   |   |   |
-  | - | - | - |
-  |   |   |   |
-  |   |   |   |
+<TableWithCaption caption="Parameters of the expression model" refId="tab-2pa7e">
+  | **Parameter**            | **Value**              | **Source**                               |
+  | ------------------------ | ---------------------- | ---------------------------------------- |
+  | Transcription rate (α)   | 5 (relative units h⁻¹) | Placeholder                              |
+  | mRNA decay constant (δm) | 9.53 h⁻¹               | (ask Elenora) Literature range, midpoint |
+  | Translation rate (β)     | 3 h⁻¹                  | Placeholder                              |
 </TableWithCaption>
 
 ### Results
