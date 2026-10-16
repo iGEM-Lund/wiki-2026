@@ -1,0 +1,35 @@
+diff --git a/node_modules/@keystatic/core/dist/keystatic-core-ui.js b/node_modules/@keystatic/core/dist/keystatic-core-ui.js
+index 24d4713..3698d99 100644
+--- a/node_modules/@keystatic/core/dist/keystatic-core-ui.js
++++ b/node_modules/@keystatic/core/dist/keystatic-core-ui.js
+@@ -3331,8 +3331,14 @@ function LocalItemPage(props) {
+     initialFiles,
+     initialState,
+     localTreeKey,
+-    draft
++    draft: storedDraft
+   } = props;
++  // Only restore a draft that was made against the current version of this entry.
++  // Otherwise saving it would silently overwrite what others committed since.
++  const draft = storedDraft && storedDraft.treeKey === localTreeKey ? storedDraft : undefined;
++  if (storedDraft && !draft) {
++    console.warn('Ignored a stale local draft: this entry changed after the draft was saved.');
++  }
+   const {
+     collectionConfig,
+     schema
+@@ -6951,8 +6957,13 @@ function LocalSingletonPage(props) {
+     initialState,
+     localTreeKey,
+     config,
+-    draft
++    draft: storedDraft
+   } = props;
++  // Only restore a draft that was made against the current version of this singleton.
++  const draft = storedDraft && storedDraft.treeKey === localTreeKey ? storedDraft : undefined;
++  if (storedDraft && !draft) {
++    console.warn('Ignored a stale local draft: this singleton changed after the draft was saved.');
++  }
+   const {
+     schema,
+     singletonConfig
