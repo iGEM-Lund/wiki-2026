@@ -372,7 +372,7 @@ The specificity analysis found no AKR1D1 variant that shifted preference towards
 
 ### Integrated growth and expression model
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/integrated-model.avif" alt="Image of workflow" caption="Workflow of the integrated growth and expression model. Growth data and literature values define the parameters of two coupled layers, which are solved numerically and then tested by parameter sweeps and Monte Carlo sampling." numbered={false} refId="fig-ldjtv" scale={100} plain={false} noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/integrated-model.avif" alt="Image of workflow" caption="Workflow of the integrated growth and expression model. Growth data and literature values define the parameters of two coupled layers, which are solved numerically and then tested by parameter sweeps and Monte Carlo sampling." numbered refId="fig-ldjtv" scale={100} plain={false} noZoom={false} />
 
 #### System definition
 
@@ -434,9 +434,19 @@ Bacterial messages break down within minutes of being made (Bernstein et al., 20
   | Translation rate (β)     | 3 h⁻¹                  | Placeholder                              |
 </TableWithCaption>
 
-Add image of mRNA and enzyme time course
+<FigureWithCaption
+  src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/mrna-enzyme-timecourse.avif"
+  alt="Image of mRNA and enzyme time course"
+  caption="Baseline mRNA and enzyme time-course. mRNA reaches its steady state (0.525) within 0.48 hr. Enzyme keeps accumulating after growth saturates (6.96 hr), reaching 31.7 relative units at 24 hr, because dilution by growth stops. α and β are placeholders, so enzyme is in relative units.)
+"
+  numbered
+  refId="fig-ldjtv"
+  scale={100}
+  plain={false}
+  noZoom={false}
+/>
 
-Caption (Figure 3. Baseline mRNA and enzyme time-course. mRNA reaches its steady state (0.525) within 0.48 hr. Enzyme keeps accumulating after growth saturates (6.96 hr), reaching 31.7 relative units at 24 hr, because dilution by growth stops. α and β are placeholders, so enzyme is in relative units.)
+
 
 #### Mathematical simulation and sensitivity of the enzyme level
 
