@@ -68,8 +68,6 @@ Both ligands were retrieved from PubChem (CID 6013 and CID 5994, respectively) (
 
 The sequence of each candidate enzyme was submitted to the NCBI Conserved Domain Search (CD Search) (<Citation reference="marchler-bauer-et-al-2017" narrative={false} />), which compares a query sequence against the Conserved Domain Database (CDD) to identify evolutionarily <Tooltip text="Stretches of protein found across a family of related proteins, usually because they matter for function.">conserved functional domains</Tooltip> and their annotated residue positions. These annotations cover substrate binding, cofactor coordination and catalytic function, and are inferred from structurally and biochemically characterized members of the same protein family. They provided a sequence-level map of the expected functional site and served as the reference for interpreting and validating the predicted active site pockets.
 
-
-
 <Card>
   <CardTitle>
     For AKR1D1:
@@ -77,18 +75,12 @@ The sequence of each candidate enzyme was submitted to the NCBI Conserved Domain
 
   CD Search assigned the query sequence (NP\_005980.1) to the AKR\_AKR1D1-3 family within the aldo-keto reductase superfamily, returning 32 annotated active site positions and a separately annotated <Tooltip text="The four residues that together carry out the chemical reaction.">catalytic tetrad</Tooltip> (<Ref target="tab-vkjtr" />).
 
-  &#x20;&#x20;
-
   <Expandable defaultOpen={false}>
-    &#x20;&#x20;
+    &#x20;  &#x20;
 
     <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/cdsearch-akr1d1.avif" alt="CD search image" caption="NCBI CD Search result for AKR1D1 (NP_005980.1), assigning the sequence to the AKR_AKR1D1-3 family within the aldo-keto reductase superfamily." numbered refId="fig-7ogyu" scale={100} plain={false} noZoom={false} />
 
-    &#x20;  &#x20;
-
     The enzyme uses NADPH and a conserved catalytic tetrad of D53, Y58, K87 and E120 to deliver a <Tooltip text="A hydrogen atom carrying two electrons, which the enzyme passes to the steroid.">hydride</Tooltip> to the Δ4 double bond on the steroid A-ring. Y58 acts as the general acid, with K87 and D53 tuning its acidity. E120 is what distinguishes AKR1D1 from the rest of the superfamily: it replaces the histidine conserved in all other AKRs and acts as a superacid, polarizing the C3 ketone (<Citation reference="di-costanzo-et-al-2008" narrative={false} />).
-
-    &#x20; &#x20;
 
     <TableWithCaption caption="Conserved domain features of AKR1D1 (NP_005980.1) from NCBI CD Search. The four tetrad residues are a subset of the active site set." refId="tab-vkjtr">
       | **Active site**                                                                                                                                                                         | **Catalytic tetrad** |
@@ -97,6 +89,8 @@ The sequence of each candidate enzyme was submitted to the NCBI Conserved Domain
     </TableWithCaption>
 
     &#x20;&#x20;
+
+
   </Expandable>
 </Card>
 
