@@ -15,6 +15,10 @@ const PREFERRED_RESOLUTION = 720;
 
 export type ResolvedVideo = {
   src?: string;
+  // Set when no single file carries both picture and sound (PeerTube's HLS
+  // renditions keep the audio in a separate stream): the master playlist,
+  // which the feed plays through hls.js so the clip isn't silent.
+  hlsSrc?: string;
   poster?: string;
   // The page the video can be watched on, linked from the feed.
   href?: string;
@@ -30,7 +34,7 @@ export type ResolvedVideo = {
   error?: string;
 };
 
-type PeerTubeFile = { resolution: { id: number }; fileUrl: string };
+type PeerTubeFile = { resolution: { id: number }; fileUrl: string; hasAudio?: boolean };
 type PeerTubeVideo = {
   uuid: string;
   url?: string;
@@ -38,7 +42,7 @@ type PeerTubeVideo = {
   views?: number;
   previewPath?: string;
   files?: PeerTubeFile[];
-  streamingPlaylists?: { files?: PeerTubeFile[] }[];
+  streamingPlaylists?: { playlistUrl?: string; files?: PeerTubeFile[] }[];
 };
 
 // Accepts the share link (/w/<short id>), the watch URL and the embed URL.
@@ -77,10 +81,15 @@ export const resolveVideo = cache(async (raw: string): Promise<ResolvedVideo> =>
     const files = [...(video.files ?? []), ...(video.streamingPlaylists ?? []).flatMap((p) => p.files ?? [])]
       .filter((file) => file.resolution.id > 0)
       .sort((a, b) => a.resolution.id - b.resolution.id);
-    const file = files.find((f) => f.resolution.id >= PREFERRED_RESOLUTION) ?? files.at(-1);
+    // A file with its own sound plays as is; otherwise fall back to HLS.
+    const withSound = files.filter((f) => f.hasAudio !== false);
+    const pool = withSound.length > 0 ? withSound : files;
+    const file = pool.find((f) => f.resolution.id >= PREFERRED_RESOLUTION) ?? pool.at(-1);
     if (!file) throw new Error('it has no playable file yet (still processing?)');
+    const hlsSrc = withSound.length === 0 ? video.streamingPlaylists?.find((p) => p.playlistUrl)?.playlistUrl : undefined;
     return {
       src: file.fileUrl,
+      hlsSrc,
       poster: video.previewPath ? `https://${VIDEO_UNIVERSE}${video.previewPath}` : undefined,
       href: video.url ?? raw,
       videoUniverseId: video.uuid,

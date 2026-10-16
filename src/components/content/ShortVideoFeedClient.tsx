@@ -212,6 +212,33 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
     });
   }, [muted]);
 
+  // Clips whose files have no sound of their own play from the HLS master
+  // playlist instead (see resolveVideo). Safari plays HLS natively; every
+  // other browser goes through hls.js, loaded only when such a clip exists.
+  useEffect(() => {
+    let cancelled = false;
+    const players: { destroy: () => void }[] = [];
+    videos.forEach((clip, index) => {
+      const video = videoRefs.current[index];
+      if (!clip.hlsSrc || !video) return;
+      if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = clip.hlsSrc;
+        return;
+      }
+      import('hls.js').then(({ default: Hls }) => {
+        if (cancelled || !Hls.isSupported()) return;
+        const hls = new Hls();
+        hls.loadSource(clip.hlsSrc!);
+        hls.attachMedia(video);
+        players.push(hls);
+      });
+    });
+    return () => {
+      cancelled = true;
+      players.forEach((player) => player.destroy());
+    };
+  }, [videos]);
+
   // Progress bar, written straight to the DOM every frame while playing.
   useEffect(() => {
     const video = videoRefs.current[active];
@@ -425,7 +452,7 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
                     ref={(el) => {
                       videoRefs.current[index] = el;
                     }}
-                    src={video.src}
+                    src={video.hlsSrc ? undefined : video.src}
                     poster={video.poster}
                     // Only the clips next to the current one fetch anything
                     // beyond their metadata.
