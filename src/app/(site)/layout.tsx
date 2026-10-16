@@ -88,9 +88,9 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
                     {item.name}
                   </span>
                   <ul className="site__nav-group-links">
-                    {item.items.map((entry) => (
-                      <li key={entry.target.href}>
-                        <NavLink href={entry.target.href}>{entry.label}</NavLink>
+                    {item.items.map((target) => (
+                      <li key={target.href}>
+                        <NavLink href={target.href}>{target.title}</NavLink>
                       </li>
                     ))}
                   </ul>

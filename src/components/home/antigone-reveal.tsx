@@ -40,7 +40,7 @@ const SETTLE: readonly [number, number] = [NAME[1] + 200, NAME[1] + 1300];
 // first page in it, whose sign drops down ready to click (see LinkArrow).
 const START: readonly [number, number] = [SETTLE[1] - 300, SETTLE[1] + 300];
 const PLAY_MS = START[1];
-const START_HREF = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/project_background`;
+const START_HREF = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/background`;
 // Where it is written, from that page's tag in the nav, in px: to its
 // left, and below the sign that drops from it.
 const START_FROM_TAG = { x: -260, y: 95 };

@@ -58,16 +58,11 @@ const navItemSchema = fields.object({
     }),
     {
       link: linkTargetField,
-      dropdown: fields.array(
-        fields.object({
-          label: fields.text({ label: 'Label' }),
-          target: linkTargetField,
-        }),
-        {
-          label: 'Dropdown Items',
-          itemLabel: (props) => props.fields.label.value || 'Item',
-        },
-      ),
+      // Each item shows its page's title, so the menu can't drift from it.
+      dropdown: fields.array(linkTargetField, {
+        label: 'Dropdown Items',
+        itemLabel: (props) => props.value || 'Page',
+      }),
     },
   ),
 });

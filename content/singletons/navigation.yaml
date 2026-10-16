@@ -6,16 +6,11 @@ items:
     linkMode:
       discriminant: dropdown
       value:
-        - label: Background
-          target: project_background
-        - label: Project Design
-          target: project_solution-and-project-design
-        - label: Future Outlook
-          target: future_outlook
-        - label: Biosafety
-          target: biosafety
-        - label: Economic Assessment
-          target: economical-assessment
+        - background
+        - solution-and-project-design
+        - outlook
+        - biosafety
+        - economical-assessment
   - name: Technical
     icon:
       discriminant: library
@@ -23,18 +18,12 @@ items:
     linkMode:
       discriminant: dropdown
       value:
-        - label: 'Engineering '
-          target: engineering
-        - label: Modeling
-          target: technical_modeling
-        - label: Notebooks and Protocols
-          target: technical_notebooks-and-protocols
-        - label: Results
-          target: project_results
-        - label: Parts
-          target: parts
-        - label: Lab Safety
-          target: lab-safety
+        - engineering
+        - modeling
+        - notebooks-and-protocols
+        - experimental-results
+        - parts
+        - lab-safety
   - name: Engagement
     icon:
       discriminant: library
@@ -42,16 +31,11 @@ items:
     linkMode:
       discriminant: dropdown
       value:
-        - label: Human Practices
-          target: human-practices
-        - label: Sustainability
-          target: sustainability
-        - label: Education
-          target: education
-        - label: Collaborations
-          target: collaborations
-        - label: Contribution
-          target: contribution
+        - human-practices
+        - sustainability
+        - education
+        - collaborations
+        - contribution
   - name: Attributions
     icon:
       discriminant: library
@@ -59,9 +43,6 @@ items:
     linkMode:
       discriminant: dropdown
       value:
-        - label: Team
-          target: people_team
-        - label: Use of AI
-          target: use-of-ai
-        - label: Sponsors
-          target: people_sponsors
+        - team
+        - use-of-ai
+        - sponsors

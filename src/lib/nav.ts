@@ -6,7 +6,7 @@ export type NavTarget = { title: string; href: string };
 
 export type NavItem = { name: string; icon: NavIconValue } & (
   | { kind: 'link'; target: NavTarget }
-  | { kind: 'dropdown'; items: { label: string; target: NavTarget }[] }
+  | { kind: 'dropdown'; items: NavTarget[] }
 );
 
 export type RawIcon = { discriminant: 'library'; value: string } | { discriminant: 'custom'; value: string };
@@ -35,14 +35,9 @@ export async function getNav(): Promise<NavItem[]> {
       continue;
     }
 
-    const dropdownItems = (
-      await Promise.all(
-        item.linkMode.value.map(async (entry: { label: string; target: string | null }) => ({
-          label: entry.label,
-          target: await resolveTarget(entry.target),
-        })),
-      )
-    ).filter((entry): entry is { label: string; target: NavTarget } => entry.target !== null);
+    const dropdownItems = (await Promise.all(item.linkMode.value.map(resolveTarget))).filter(
+      (target): target is NavTarget => target !== null,
+    );
 
     if (dropdownItems.length > 0) items.push({ name: item.name, icon, kind: 'dropdown', items: dropdownItems });
   }
@@ -59,7 +54,7 @@ export async function getNextPage(slug: string): Promise<NextPage | null> {
   const order = (await getNav()).flatMap((item) =>
     item.kind === 'link'
       ? [{ label: item.name, section: item.name, href: item.target.href }]
-      : item.items.map((entry) => ({ label: entry.label.trim(), section: item.name, href: entry.target.href })),
+      : item.items.map((target) => ({ label: target.title.trim(), section: item.name, href: target.href })),
   );
   const index = order.findIndex((page) => page.href === `/${slug}`);
   return index === -1 ? null : (order[index + 1] ?? null);
