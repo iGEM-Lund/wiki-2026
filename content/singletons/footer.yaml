@@ -30,7 +30,8 @@ sponsors:
     logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/vaccu-brand.avif
     websiteUrl: https://www.vacuubrand.com/
   - name: Anthropic
-    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/anthropic-logo-svg.webp
+    logoUrl: >-
+      https://static.igem.wiki/teams/6160/wiki/sponsorship/anthropic-logo-svg.webp
     websiteUrl: https://www.anthropic.com/
   - name: Cultivarium
     logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/cultivarium.avif
@@ -42,7 +43,8 @@ sponsors:
     logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/snap-gene.avif
     websiteUrl: https://www.snapgene.com/
   - name: Syn Biotechnology
-    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/synbio-technologies.avif
+    logoUrl: >-
+      https://static.igem.wiki/teams/6160/wiki/sponsorship/synbio-technologies.avif
     websiteUrl: https://www.synbiotech.net/
 socials:
   - label: Instagram (placeholder)
@@ -61,10 +63,10 @@ socials:
       value: mail
     url: mailto:contact@example.org
 contact:
-  email: contact@example.org
+  email: information@igemlund.org
   address: |-
     iGEM Lund
-    Placeholder Street 1
+    Carin Boalts väg 11 
     223 62 Lund, Sweden
   note: Placeholder contact details, to be replaced.
 legal:
