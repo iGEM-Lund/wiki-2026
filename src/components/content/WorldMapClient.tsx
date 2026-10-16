@@ -1,5 +1,6 @@
 'use client';
 
+import { ArrowDown, ArrowUp } from 'lucide-react';
 import {
   useEffect,
   useId,
@@ -17,6 +18,9 @@ export type WorldMapClientPin = {
   title: string;
   x: number;
   y: number;
+  // A heading on this page ('#slug') the pin jumps to instead of opening
+  // a popup.
+  href?: string;
   body: ReactNode;
 };
 
@@ -107,6 +111,18 @@ function separatingScale(group: PinGroup): number {
     for (const b of group.members) spread = Math.max(spread, Math.hypot(a.x - b.x, a.y - b.y));
   }
   return spread === 0 ? Infinity : (GROUP_DISTANCE / spread) * 1.6;
+}
+
+// The heading a link pin points at, if it is on the page; a pin whose
+// heading was renamed or deleted falls back to its popup.
+function linkTarget(pin: WorldMapClientPin): HTMLElement | null {
+  return pin.href ? document.getElementById(decodeURIComponent(pin.href.slice(1))) : null;
+}
+
+// Which way the page runs from the map to a heading, for the sign's arrow.
+function directionTo(target: HTMLElement | null, map: HTMLElement | null): 'up' | 'down' {
+  if (!target || !map) return 'down';
+  return target.getBoundingClientRect().top < map.getBoundingClientRect().top ? 'up' : 'down';
 }
 
 const MIN_SCALE = 1;
@@ -334,6 +350,10 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
     window.scrollBy({ top: distance, behavior: reduceMotion ? 'auto' : 'smooth' });
   }, [cardPlaced, openAnchor]);
 
+  const hoveredPin = hoveredGroup?.members.length === 1 ? hoveredGroup.members[0] : null;
+  const hoveredTarget = hoveredPin && !isDragging ? linkTarget(hoveredPin) : null;
+  const hoveredLink = hoveredTarget !== null;
+  const hoveredDirection = directionTo(hoveredTarget, containerRef.current);
   const showSign = Boolean(hoveredGroup && hoverAnchor && !isDragging);
   const showCard = Boolean(openGroup && openAnchor);
   const layerShown = showSign || showCard;
@@ -438,6 +458,14 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
         zoomTo(group.x, group.y, Math.min(MAX_SCALE, Math.max(needed, transform.k * 2.5)));
         return;
       }
+    }
+    // A lone pin with a heading to go to jumps there, no popup. Setting the
+    // hash, as a link would, keeps the history entry and :target highlight.
+    if (group && group.members.length === 1 && linkTarget(group.members[0])) {
+      setOpenPinId(null);
+      setHoveredPinId(null);
+      window.location.hash = group.members[0].href!;
+      return;
     }
     setOpenAnchor(computeAnchor(element));
     setOpenPinId((current) => (current === id ? null : id));
@@ -582,9 +610,19 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
             role="tooltip"
             style={{ left: hoverAnchor.left, top: hoverAnchor.top + hoverAnchor.radius }}
           >
-            {hoveredGroup.members.length > 1
-              ? `${hoveredGroup.members.length} places, click to zoom in`
-              : hoveredGroup.members[0].title}
+            {hoveredGroup.members.length > 1 ? (
+              `${hoveredGroup.members.length} places, click to zoom in`
+            ) : (
+              <>
+                {hoveredGroup.members[0].title}
+                {hoveredLink ? (
+                  <span className="world-map__sign-go">
+                    {hoveredDirection === 'up' ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+                    Go to section
+                  </span>
+                ) : null}
+              </>
+            )}
           </div>
         ) : null}
 
@@ -609,12 +647,26 @@ export function WorldMapClient({ landPath, viewBox, pins }: WorldMapClientProps)
             <button type="button" className="world-map__popup-close" aria-label="Close" onClick={() => setOpenPinId(null)}>
               &times;
             </button>
-            {openGroup.members.map((member) => (
-              <section key={member.id} className="world-map__popup-entry">
-                <h3 className="world-map__popup-title">{member.title}</h3>
-                <div className="world-map__popup-body">{member.body}</div>
-              </section>
-            ))}
+            {openGroup.members.map((member) => {
+              const target = linkTarget(member);
+              return (
+                <section key={member.id} className="world-map__popup-entry">
+                  <h3 className="world-map__popup-title">{member.title}</h3>
+                  {target ? (
+                    <a className="world-map__popup-go" href={member.href} onClick={() => setOpenPinId(null)}>
+                      {directionTo(target, containerRef.current) === 'up' ? (
+                        <ArrowUp size={14} />
+                      ) : (
+                        <ArrowDown size={14} />
+                      )}
+                      Go to section
+                    </a>
+                  ) : (
+                    <div className="world-map__popup-body">{member.body}</div>
+                  )}
+                </section>
+              );
+            })}
           </div>
         ) : null}
       </div>

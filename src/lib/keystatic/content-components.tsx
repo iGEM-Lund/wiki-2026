@@ -622,11 +622,16 @@ export const contentComponents = {
             label: 'Longitude',
             description: 'A number from -180 to 180, e.g. -71.0589 for Boston.',
           }),
+          heading: fields.text({
+            label: 'Jump to heading (optional)',
+            description:
+              'The text of a heading further up or down this page. When set, clicking the pin jumps there (with a "Go to section" arrow on hover) instead of opening a popup. Where several pins share a place, the popup lists each as a link.',
+          }),
           body: fields.text({
             label: 'Popup body (MDX)',
             multiline: true,
             description:
-              'Raw MDX: plain formatting, or hand-embed other components, e.g. <Citation reference="slug" />.',
+              'Raw MDX: plain formatting, or hand-embed other components, e.g. <Citation reference="slug" />. Ignored when a heading to jump to is set.',
           }),
         }),
         { label: 'Pins', itemLabel: (props) => props.fields.title.value || 'Pin' },

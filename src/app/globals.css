@@ -3763,6 +3763,25 @@ a.inline-icon--link:focus-visible {
 .world-map__sign {
   margin-top: 1.15rem;
 }
+/* "Go to section" under a link pin's title, as on a Ref's sign
+   (.citation__sign-go). */
+.world-map__sign-go,
+.world-map__popup-go {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--heading);
+  font-family: var(--font-heading);
+  font-weight: 500;
+}
+.world-map__sign-go {
+  margin-top: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1px dashed var(--border);
+}
+.world-map__popup-go {
+  font-size: 0.9rem;
+}
 /* The overlay the sign, open card and thread are drawn on, laid over the
    map (see WorldMapClient's layer effect). Undoes the popover's defaults:
    centred in the viewport, boxed, its own scroll box. Only its contents

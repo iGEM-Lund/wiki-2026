@@ -1,3 +1,4 @@
+import GithubSlugger from 'github-slugger';
 import { compileMdxSnippet } from './compile-mdx-snippet';
 import { WorldMapClient, type WorldMapClientPin } from './WorldMapClient';
 import { WORLD_MAP_VIEWBOX, projectLatLng, worldLandPath } from '@/lib/world-map';
@@ -6,7 +7,7 @@ import type { ReferenceLookup } from '@/lib/references';
 // lat/lng arrive as strings, not numbers; see the WorldMap schema comment
 // in src/lib/keystatic/content-components.tsx for why (Keystatic's MDX
 // deserializer can't round-trip a negative fields.number value).
-type WorldMapPin = { title: string; lat: string; lng: string; body: string };
+type WorldMapPin = { title: string; lat: string; lng: string; heading?: string; body: string };
 type WorldMapProps = {
   pins?: WorldMapPin[];
   // Injected by src/lib/mdx/render.ts, the same way it injects Citation's
@@ -27,13 +28,19 @@ export async function WorldMap({ pins = [], referenceLookup = {} }: WorldMapProp
     if (Number.isNaN(lat) || Number.isNaN(lng)) continue;
     const point = projectLatLng(lat, lng);
     if (!point) continue;
-    const Body = await compileMdxSnippet(pin.body, referenceLookup, 'world-map__popup-error', 'pin');
+    // Same slug rehype-slug gives the heading (see Pillars' pillarTarget).
+    const heading = pin.heading?.trim();
+    const href = heading ? `#${new GithubSlugger().slug(heading)}` : undefined;
+    const Body = href
+      ? null
+      : await compileMdxSnippet(pin.body, referenceLookup, 'world-map__popup-error', 'pin');
     projected.push({
       id: `pin-${index}`,
       title: pin.title,
       x: point[0],
       y: point[1],
-      body: <Body />,
+      href,
+      body: Body ? <Body /> : null,
     });
   }
 
