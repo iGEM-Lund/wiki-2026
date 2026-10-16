@@ -386,7 +386,7 @@ dX/dt = µmax · X · (1 − X/K)
 
 X is the culture density (<Tooltip text="Light absorbance at 600 nm, used to measure how dense a bacterial culture is.">OD600</Tooltip>), µmax the maximum specific growth rate (per hour) and K the <Tooltip text="The maximum culture density the medium can support.">carrying capacity</Tooltip>, the OD600 at which growth stops. The factor (1 − X/K) falls from 1 to 0 as the culture fills, so it acts as the brake on growth (<Ref target="fig-8xckn" />). A <Tooltip text="The initial period before bacteria start growing.">lag phase</Tooltip> was not included, so the simulated culture starts to grow immediately from the starting density.
 
-From our experimental data, the cells **double** **every 28 minutes** (µmax = 1.48 h⁻¹). We did not measure the plateau, so K was set to OD600 15, a plausible density for a rich medium, and its influence is examined in the <Tooltip text="Changing one input at a time to see how much the result depends on it.">sensitivity analysis</Tooltip>. From these parameters, the growth saturates near to 7 h (<Ref target="fig-8xckn" />).
+From our experimental data, the cells **double** **every 28 minutes** (µmax = 1.48 h⁻¹). We did not measure the plateau, so K was set to OD600 15, a plausible density for a rich medium, and its influence is examined in the <Tooltip text="Changing one input at a time to see how much the result depends on it.">sensitivity analysis</Tooltip>. From these parameters, the growth saturates near 7 h (<Ref target="fig-8xckn" />).
 
 <TableWithCaption
   caption="Parameters of the growth model
