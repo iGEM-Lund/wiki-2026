@@ -74,8 +74,7 @@ Our effector enzyme ci2350 is a 5β-reductase that reduced progesterone, cortiso
 
 #### **Colonization Control**
 
-Colonization control is the decision about how long our probiotic should remain in the gut after dosing. It can either be transient (not colonizing the gut, cleared between doses and requiring redosing) or engineered to be self-limiting. Residence time matters because shedding continues for as long as the bacterium stays in the gut, and a gut gate does not shorten that. We assume that lowering gut testosterone is a continuous process hence a transient design fits better where the effect is maintained by redosing and the bacterium does not have to persist. \
-
+Colonization control is the decision about how long our probiotic should remain in the gut after dosing. It can either be transient (not colonizing the gut, cleared between doses and requiring redosing) or engineered to be self-limiting. Residence time matters because shedding continues for as long as the bacterium stays in the gut, and a gut gate does not shorten that. We assume that lowering gut testosterone is a continuous process hence a transient design fits better where the effect is maintained by redosing and the bacterium does not have to persist.
 
 <Layout2>
   <LayoutColumn>
@@ -103,25 +102,25 @@ Colonization control is the decision about how long our probiotic should remain 
       In a first-in-human study of a Δ*dapA* EcN strain, no stool sample was above the detection limit 4 days after the last dose.&#x20;
 
       <Expandable defaultOpen={false}>
-        The strain (SYNB1618) carries a *dapA* deletion and depends on exogenous DAP. <Citation />
+        The strain (SYNB1618) carries a *dapA* deletion and depends on exogenous DAP. <Citation reference="Isabella et al. (2018)" /> found that it was cleared from the mouse gut and faeces within 48h and was undetectable in cynomolgus monkey stool within 7 days.&#x20;
+
+        In human body , volunteers received repeated doses and no evidence of colonization was found <Citation />. These results come from different strains, doses and populations than the wild-type EcN study, so they are not a controlled comparison.
       </Expandable>
     </Card>
   </LayoutColumn>
 </Layout2>
 
-We compared two designs. A transient design relies on natural clearance, so the bacterium is cleared between doses and the effect is maintained by redosing. A self-limiting design uses engineering to control how long the bacterium stays. We assume that lowering gut testosterone is a continuous process rather than a one-time correction. Under this assumption, a transient design fits our therapeutic strategy better, because the effect is maintained by redosing and the bacterium does not have to persist for long.
+**Our Choice:** AnTigone is intended to be transient by design and the effect maintained by repeated dosing.
 
-Wild-type *E. coli* Nissle 1917 (EcN) is not reliably transient in humans. In a placebo-controlled study of 48 healthy volunteers dosed for 17 days, 45 of 48 tested positive for EcN during dosing. After dosing stopped, the share still testing positive fell only gradually, to 4 of 20 (placebo group) and 7 of 20 (mesalamine group) by week 12 (Joeres-Nguyen-Xuan et al., 2010). Natural clearance alone is therefore not dependable, and we need to limit persistence through engineering, as explained in our auxotrophy strategy. Engineering can achieve this: in a first-in-human study of a Δ*dapA* EcN strain, no stool sample was above the detection limit 4 days after the last dose (Puurunen et al., 2021).
 
-In conclusion, AnTigone is intended to be transient by design, with persistence limited by Δ*dapA* auxotrophy and the effect maintained by repeat dosing. We will test this by measuring clearance of our own strain.
 
-#### **Resident Gut Communities**
 
-Resident gut communities are the native bacterial communities present in the gut. A living biotherapeutic is not alone in the gut, so we considered how it might affect this community.
 
-We came across two possibilities that could fit our model. First, a study in a mouse model reported that after four weeks, wild-type *E. coli* Nissle 1917 (EcN) changed the community composition (Luo et al., 2023). This was an unengineered strain in a hormone-perturbed model and may not apply to healthy hosts, but it suggests that the bacterium itself may shift the community.
 
-Second, lowering gut testosterone levels may shift the resident gut community. In another mouse study, testosterone treatment altered composition in both sexes (Moadi et al., 2024), although the effect of lowering testosterone was not tested.
+
+
+
+
 
 In conclusion, we found no study that profiled the gut community in humans dosed with an engineered EcN, so we cannot say how large any effect would be. We therefore treat the effect on resident communities as an open question.
 
