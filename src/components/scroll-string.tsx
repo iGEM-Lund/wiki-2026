@@ -187,8 +187,7 @@ export function ScrollString() {
     // lists they sit inside, a depth 2 link belongs to the last depth 1.
     function scan() {
       const panel = document.querySelector('.toc__panel');
-      const found: Notch[] = [];
-      let lastTop = -1;
+      const links: { id: string; text: string; depth: number }[] = [];
       panel?.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
         let depth = 0;
         for (let el = a.parentElement; el && el !== panel; el = el.parentElement) {
@@ -198,9 +197,21 @@ export function ScrollString() {
         // A heading that isn't on the page has no place on the string, and
         // placing it at the end would push every later knot down after it.
         if (!id || !document.getElementById(id)) return;
-        if (depth === 1) lastTop = found.length;
-        found.push({ id, text: a.textContent ?? '', depth, parent: depth === 1 ? -1 : lastTop });
+        links.push({ id, text: a.textContent ?? '', depth });
       });
+      // The h3s (depth 2) are left out when the knots wouldn't all fit on
+      // the string, a knot to every BEAD_GAP of its longest length (the
+      // viewport below the header, less the string's gap at both ends).
+      const room =
+        window.innerHeight - (header ? header.getBoundingClientRect().bottom : 0) - 2 * endGap;
+      const crowded = links.length * BEAD_GAP > room;
+      const found: Notch[] = [];
+      let lastTop = -1;
+      for (const link of links) {
+        if (crowded && link.depth > 1) continue;
+        if (link.depth === 1) lastTop = found.length;
+        found.push({ ...link, parent: link.depth === 1 ? -1 : lastTop });
+      }
       const same = found.length === meta.length && found.every((n, i) => n.id === meta[i].id);
       if (!same) {
         meta = found;

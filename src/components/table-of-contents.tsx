@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { List, X } from 'lucide-react';
 import type { HeadingNode } from '@/lib/headings';
 
@@ -10,6 +10,10 @@ function flattenIds(nodes: HeadingNode[]): string[] {
 
 function containsId(node: HeadingNode, id: string | null): boolean {
   return id !== null && (node.id === id || node.children.some((child) => containsId(child, id)));
+}
+
+function hasDepth(nodes: HeadingNode[], depth: number): boolean {
+  return nodes.some((node) => node.depth === depth || hasDepth(node.children, depth));
 }
 
 function OutlineList({
@@ -27,7 +31,7 @@ function OutlineList({
   return (
     <ol data-open={nested ? open : undefined}>
       {nodes.map((node) => (
-        <li key={node.id}>
+        <li key={node.id} data-depth={node.depth}>
           <a href={`#${node.id}`} aria-current={node.id === activeId ? 'location' : undefined}>
             {node.text}
           </a>
@@ -57,6 +61,11 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   // reading width.
   const [open, setOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  // Whether the drawer leaves out the h3s because the outline wouldn't fit
+  // without scrolling. (On wide screens the scroll string is the outline,
+  // and judges the same for itself; see scroll-string.tsx.)
+  const [noSubheadings, setNoSubheadings] = useState(false);
 
   useEffect(() => {
     const header = document.querySelector<HTMLElement>('.site__header');
@@ -111,6 +120,20 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
     return () => observer.disconnect();
   }, [headings, coveredTop, viewportHeight]);
 
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    const panel = panelRef.current;
+    if (!nav || !panel || !hasDepth(headings, 3)) return;
+    // Hidden while the scroll string stands in for it: nothing to measure.
+    if (getComputedStyle(nav).display === 'none') return;
+    // Measured with the h3s in, as the panel scrolls in itself.
+    const had = nav.hasAttribute('data-no-sub');
+    nav.removeAttribute('data-no-sub');
+    const tooTall = panel.scrollHeight > panel.clientHeight + 1;
+    if (had) nav.setAttribute('data-no-sub', '');
+    setNoSubheadings(tooTall);
+  }, [headings, coveredTop, viewportHeight]);
+
   useEffect(() => {
     if (!open) return;
     function onPointerDown(event: PointerEvent) {
@@ -132,7 +155,13 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="toc" data-open={open} aria-label="Page outline" ref={navRef}>
+    <nav
+      className="toc"
+      data-open={open}
+      data-no-sub={noSubheadings ? '' : undefined}
+      aria-label="Page outline"
+      ref={navRef}
+    >
       <button
         type="button"
         className="toc__toggle"
@@ -149,6 +178,7 @@ export function TableOfContents({ headings }: { headings: HeadingNode[] }) {
       <div
         id="toc-panel"
         className="toc__panel"
+        ref={panelRef}
         // Close the drawer once a link is followed, so it doesn't stay open
         // over the heading the reader just jumped to.
         onClick={(event) => {

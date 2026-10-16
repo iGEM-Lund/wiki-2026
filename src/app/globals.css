@@ -4276,6 +4276,13 @@ article .layout__column p {
     display: none;
   }
 }
+/* The drawer leaves out the h3s when they'd make it scroll (judged in
+   TableOfContents). */
+@media (max-width: 75rem) {
+  .toc[data-no-sub] li[data-depth='3'] {
+    display: none;
+  }
+}
 .toc__title {
   font-family: var(--font-heading);
   font-weight: 500;
