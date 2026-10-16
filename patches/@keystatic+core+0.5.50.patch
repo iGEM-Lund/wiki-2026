@@ -33,3 +33,16 @@ index 24d4713..3698d99 100644
    const {
      schema,
      singletonConfig
+diff --git a/node_modules/@keystatic/core/dist/index-a8452c26.js b/node_modules/@keystatic/core/dist/index-a8452c26.js
+index 92ea45b..6a0245a 100644
+--- a/node_modules/@keystatic/core/dist/index-a8452c26.js
++++ b/node_modules/@keystatic/core/dist/index-a8452c26.js
+@@ -27124,7 +27124,7 @@ function markdocNodeToProseMirrorNode(node, parentType) {
+       if (!pmNode) {
+         error(`${node.type} has unexpected children`);
+       }
+-      if (componentConfig.kind === 'inline' && !(parentType !== null && parentType !== void 0 && parentType.isTextblock)) {
++      if (componentConfig.kind === 'inline' && !(parentType !== null && parentType !== void 0 && (parentType.isTextblock || parentType.name === 'table_cell' || parentType.name === 'table_header'))) {
+         return schema.nodes.paragraph.createAndFill({}, pmNode);
+       }
+       return pmNode;
