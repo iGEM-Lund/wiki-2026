@@ -8,12 +8,14 @@ on:
   push:
     branches: [main]
 
-# A burst of edits only needs the newest commit deployed. Cancelling an
-# in-flight build is safe because it builds into its own release directory
-# and never touches the one being served.
+# Never cancel a build that has started: with writers committing every
+# minute or two and a build taking a few minutes, cancelling meant no deploy
+# ever finished. GitHub keeps at most one run waiting behind the running
+# one, and a newer push replaces that waiting run, so a burst of edits costs
+# one finished build plus one build of the newest commit.
 concurrency:
   group: deploy-staging
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   RELEASES: /srv/igem-wiki/releases
