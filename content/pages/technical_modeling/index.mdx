@@ -384,9 +384,9 @@ A batch culture in a closed flask grows exponentially while nutrients are plenti
 
 dX/dt = µmax · X · (1 − X/K)
 
-X is the culture density (OD600), µmax the maximum specific growth rate (per hour) and K the carrying capacity, the OD600 at which growth stops. The factor (1 − X/K) falls from 1 to 0 as the culture fills, so it acts as the brake on growth (Figure 2). A lag phase was not included, so the simulated culture starts to grow immediately from the starting density.
+X is the culture density (OD600), µmax the maximum specific growth rate (per hour) and K the carrying capacity, the OD600 at which growth stops. The factor (1 − X/K) falls from 1 to 0 as the culture fills, so it acts as the brake on growth (<Ref target="fig-ldjtv" />). A lag phase was not included, so the simulated culture starts to grow immediately from the starting density.
 
-From our experimental data, the cells **double** **every 28 minutes** (µmax = 1.48 h⁻¹). We did not measure the plateau, so K was set to OD600 15, a plausible density for a rich medium, and its influence is examined in the sensitivity analysis. From these parameters, the growth saturates near to 7 h (Figure 2).
+From our experimental data, the cells **double** **every 28 minutes** (µmax = 1.48 h⁻¹). We did not measure the plateau, so K was set to OD600 15, a plausible density for a rich medium, and its influence is examined in the sensitivity analysis. From these parameters, the growth saturates near to 7 h (<Ref target="fig-ldjtv" />).
 
 <TableWithCaption
   caption="Parameters of the growth model
@@ -401,6 +401,8 @@ From our experimental data, the cells **double** **every 28 minutes** (µmax = 1
 </TableWithCaption>
 
 Add Image of growth curve here with caption: Figure 2. Logistic growth curve of the culture with µmax = 1.48 per hour and K = 15. The plateau is reached after about 7 h. Refer properly in the above.
+
+<FigureWithCaption alt="Image of growth curve" caption="Logistic growth curve of the culture with µmax = 1.48 per hour and K = 15. The plateau is reached after about 7 h." numbered refId="fig-ldjtv" scale={100} plain={false} noZoom={false} />
 
 #### Expression model
 
