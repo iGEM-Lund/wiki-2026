@@ -546,3 +546,14 @@ The results of activity modelling are presented on the Results page (Link to the
 ### **Enzyme specificity engineering**
 
 #### Overview
+
+Two Δ4-3-ketosteroid 5β-reductases were taken forward for engineering: human **AKR1D1** and the bacterial enzyme **ci2350** from *Clostridium innocuum*. The aim was to shift substrate preference towards testosterone and away from progesterone, two steroids that differ only at the **C17 substituent**.
+
+Structures were obtained from the PDB (AKR1D1, **3CAV**) and from **AlphaFold** (ci2350), and the functional pocket in each was located with **fpocket** and confirmed against **NCBI CD Search** annotations. Docking both substrates into the wild-type enzymes gave similar absolute affinities but opposite preferences: **AKR1D1 favoured progesterone by 0.5 kcal/mol,** while **ci2350 showed a marginal testosterone preference of 0.1 kcal/mol,** within the scoring noise.
+
+Residues within **4 Å** of each docked ligand were sorted by which substrate they contacted. This identified three specificity determinants in AKR1D1 (**V309, L311, I57**) and six in ci2350 (**A107, R215, V263, V59, F71, Q100**). Substitutions at these positions were designed to weaken progesterone binding or strengthen testosterone binding, then screened for structural stability in **PyRosetta**. Of 24 AKR1D1 variants, 13 passed the **+5 REU** threshold; of 31 ci2350 variants, 17 passed. These variants were then docked with both substrates to assess their specificity towards testosterone.
+
+The full workflow for both AKR1D1 and ci2350, from protein structure acquisition through to stability screening, is described on the [Modeling page](https://wiki.igemlund.org/technical_modeling#enzyme-specificity-engineering-towards-testosterone).&#x20;
+
+#### Docked poses of the AKR1D1 variants
+
