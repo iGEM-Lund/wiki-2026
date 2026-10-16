@@ -625,3 +625,38 @@ Seventeen stable ci2350 variants were docked with both steroids. Selectivity is 
   | Combo 7: R215E + V263E          | −7.4                        | −7.6                        | −0.2                          | +2.28     | Good combo, mild instability                                                  |
 </TableWithCaption>
 
+**Combo 8 (R215A + V263I)** is the only variant that moved the preference by more than the **±0.5 kcal/mol** noise, shifting it **0.8 kcal/mol** from the wild type, and the combination is structurally well tolerated (**ΔΔG = +1.42 REU**). It is also the only one that does so without giving up affinity (Table 2): **progesterone at −8.5** and **testosterone at −9.4** are close to the wild-type values, so the gap comes from holding testosterone more tightly rather than from binding everything more weakly.
+
+**R215** makes a **direct contact** with the **C17 acetyl tail** of progesterone, so replacing it with alanine removes a stabilising interaction that only progesterone uses. **V263I** works on the same region from the other side: isoleucine is bulkier than valine and appears to **crowd the acetyl tail**, while testosterone, which carries only a compact 17β-hydroxyl at that position, fits the branched side chain more comfortably and binds slightly better.
+
+**ADD FIGURES (ci2350\_R215A\_V263I\_progesterone\_view\.png**
+
+**Figure 3a. Progesterone (orange) docked into the same Combo 8 variant, showing the C17 acetyl group alongside R215, with the wild-type arginine and valine in grey and the substituted alanine and isoleucine in pink.**
+
+**ci2350\_R215A\_V263I\_testosterone\_view\.png**
+
+**Figure 3b. Testosterone (cyan) docked into the ci2350 Combo 8 variant (R215A + V263I), with the wild-type arginine and valine in grey and the substituted alanine and isoleucine in pink.)**
+
+The two mutations behave very differently on their own. V263I shifts the preference by only −0.2 selectivity and weakens progesterone binding to −7.4 kcal/mol, so the gain in Combo 8 has to come from removing the arginine at 215 (Table 20).
+
+**Combo 13 (R215A + V263I + Q100T)** adds Q100T to the Combo 8 backbone. **Q100** contacts the **17β-hydroxyl** of testosterone, and threonine offers the same hydrogen-bonding capacity from a shorter side chain, which may suit the compact hydroxyl better. In combination the variant reaches **ΔΔG = −7.19 REU**, the most stable candidate in the set, helps in getting enough soluble protein to characterise. The cost is selectivity: the preference falls to −0.5 kcal/mol, within the noise floor. Combo 13 is therefore the safer choice if stability proves limiting, rather than the better one on specificity.
+
+**ADD FIGURES (ci2350\_Combo13\_progesterone\_view\.png**
+
+**Figure 4a. Progesterone (orange) docked into the ci2350 Combo 13 variant (R215A + V263I + Q100T). Wild-type side chains are shown in grey and the substituted ones in pink; the catalytic Y167 is in green.**
+
+**ci2350\_Combo13\_testosterone\_view\.png**
+
+**Figure 4b. Testosterone (cyan) docked into the ci2350 Combo 13 variant (R215A + V263I + Q100T). Wild-type side chains are shown in grey and the substituted ones in pink; the catalytic Y167 is in green.)**
+
+V263K also reaches −0.5 kcal/mol selectivity, but by a different route. The long lysine side chain is poorly suited to the hydrophobic end of the pocket and weakens binding of both steroids substantially, progesterone from −9.1 to −6.9 and testosterone from −9.2 to −7.4, with progesterone penalised more. The preference comes from making the pocket worse for everything rather than from distinguishing the two substituents. As a single substitution, it is simple to make and characterise, which keeps it on the list, but the affinity loss limits its usefulness.
+
+**ADD FIGURES (ci2350\_V263K\_progesterone\_view\.png**
+
+**Figure 5a Progesterone (orange) docked into the same V263K variant, with the wild-type valine in grey, the substituted lysine in pink, and Y167 in green.**
+
+**ci2350\_V263K\_testosterone\_view\.png**
+
+**Figure 5b. Testosterone (cyan) docked into the ci2350 V263K variant, with the wild-type valine in grey, the substituted lysine in pink, and Y167 in green.)**
+
+Position 263 is clearly the main lever, it appears in eight of the nine top-ranked variants, but on its own it never produces a meaningful preference. Only when paired with R215A does it give a shift large enough to act on, so **Combo 8** was carried forward into the activity model [(Modeling)](https://wiki.igemlund.org/technical_modeling#mathematical-modelling-of-enzyme-production-and-activity).&#x20;
