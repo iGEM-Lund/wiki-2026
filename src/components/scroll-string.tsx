@@ -138,11 +138,58 @@ const BEAD_PATHS: Record<number, string> = {
   2: beadPath(0.45, 2),
 };
 
+// The knot doesn't ride the string in step with the scroll: each heading's
+// knot is spread out from its neighbours, so the big knot is moved to sit on
+// a heading's knot when the page is scrolled to that heading and eased
+// between them. `s` is a scroll position, `y` the knot's centre on the string,
+// both rising together.
+type Anchor = { s: number; y: number };
+
+function buildAnchors(points: Anchor[], max: number, trackHeight: number): Anchor[] {
+  const lo = KNOT_HEIGHT / 2;
+  const hi = trackHeight - KNOT_HEIGHT / 2;
+  const all = [{ s: 0, y: lo }, ...points, { s: max, y: hi }]
+    .map((a) => ({ s: Math.min(max, Math.max(0, a.s)), y: Math.min(hi, Math.max(lo, a.y)) }))
+    .sort((a, b) => a.s - b.s);
+  for (let i = 1; i < all.length; i++) all[i].y = Math.max(all[i].y, all[i - 1].y);
+  return all;
+}
+
+// Where the knot's centre sits when the page is scrolled to `scroll`.
+function centreFor(anchors: Anchor[], scroll: number, max: number, trackHeight: number) {
+  if (anchors.length < 2) {
+    const p = Math.min(1, Math.max(0, scroll / max));
+    return KNOT_HEIGHT / 2 + p * (trackHeight - KNOT_HEIGHT);
+  }
+  let k = 0;
+  while (k + 1 < anchors.length && anchors[k + 1].s <= scroll) k++;
+  const a = anchors[k];
+  const b = anchors[k + 1];
+  if (!b) return a.y;
+  return a.y + ((scroll - a.s) / (b.s - a.s)) * (b.y - a.y);
+}
+
+// The scroll position that puts the knot's centre at `y`.
+function scrollFor(anchors: Anchor[], y: number, max: number, trackHeight: number) {
+  if (anchors.length < 2) {
+    return Math.min(1, Math.max(0, (y - KNOT_HEIGHT / 2) / (trackHeight - KNOT_HEIGHT))) * max;
+  }
+  for (let k = 0; k + 1 < anchors.length; k++) {
+    const a = anchors[k];
+    const b = anchors[k + 1];
+    if (b.y > a.y && y <= b.y) {
+      return a.s + ((Math.max(y, a.y) - a.y) / (b.y - a.y)) * (b.s - a.s);
+    }
+  }
+  return anchors[anchors.length - 1].s;
+}
+
 type Notch = { id: string; text: string; depth: number; parent: number };
 
 export function ScrollString() {
   const trackRef = useRef<HTMLDivElement>(null);
   const notchesRef = useRef<HTMLElement>(null);
+  const anchorsRef = useRef<Anchor[]>([]);
   const draggingRef = useRef(false);
   const pathname = usePathname();
   const [notches, setNotches] = useState<Notch[]>([]);
@@ -248,10 +295,17 @@ export function ScrollString() {
     // Moves each heading's knot to where the big knot sits when the page is
     // scrolled to it, on the string's curve, and marks the heading being
     // read and its section's heading.
-    function layoutNotches(max: number) {
-      if (!nav || meta.length === 0) return;
+    // Returns false when the outline is mid-change (its notches not rendered
+    // yet, or the h3s just dropped), so the big knot waits for the next pass
+    // instead of falling back to a scroll-proportional spot that's nowhere
+    // near the headings' knots.
+    function layoutNotches(max: number): boolean {
+      if (!nav || meta.length === 0) {
+        anchorsRef.current = [];
+        return true;
+      }
       const els = Array.from(nav.children) as HTMLElement[];
-      if (els.length !== meta.length) return;
+      if (els.length !== meta.length) return false;
       const reading = window.scrollY + 2;
       let active = -1;
       meta.forEach((_, i) => {
@@ -286,7 +340,7 @@ export function ScrollString() {
         for (let k = 1; k < order.length; k++) fullNeed += gap(order[k - 1], order[k]);
         if (fullNeed > room()) {
           scan();
-          return;
+          return false;
         }
       }
       for (let k = 1; k < order.length; k++) {
@@ -298,6 +352,12 @@ export function ScrollString() {
           k === order.length - 1 ? limit : ys[order[k + 1]] - gap(order[k], order[k + 1]);
         ys[order[k]] = Math.min(ys[order[k]], ceil);
       }
+
+      anchorsRef.current = buildAnchors(
+        meta.map((_, i) => ({ s: offsets[i] - scrollPad, y: ys[i] })).filter((a) => isFinite(a.s)),
+        max,
+        trackHeight,
+      );
 
       els.forEach((el, i) => {
         el.hidden = false;
@@ -314,6 +374,7 @@ export function ScrollString() {
         if (i === active) el.dataset.active = '';
         else delete el.dataset.active;
       });
+      return true;
     }
     relayoutRef.current = () => {
       measure();
@@ -354,7 +415,11 @@ export function ScrollString() {
         return;
       }
       delete track!.dataset.hidden;
-      const p = Math.min(1, Math.max(0, window.scrollY / max));
+      // The headings' knots first: where they ended up places the big knot.
+      if (!layoutNotches(max)) return;
+      const knotTop =
+        centreFor(anchorsRef.current, window.scrollY, max, trackHeight) - KNOT_HEIGHT / 2;
+      const p = knotTop / (trackHeight - KNOT_HEIGHT);
       if (linePath && Math.abs(trackHeight - linePathHeight) > 0.5) {
         linePath.setAttribute('d', stringPath(trackHeight));
         linePathHeight = trackHeight;
@@ -363,7 +428,6 @@ export function ScrollString() {
       // moved sideways by the string's own sway at that height, so both ends
       // (and their direction) land exactly on the string however much it
       // curves across the knot's span. A rigid shift-and-tilt can't do that.
-      const knotTop = p * (trackHeight - KNOT_HEIGHT);
       const warped = KNOT.map((curve) =>
         curve.map(([x, y]) => [x + sway((knotTop + y) / trackHeight), y]),
       ) as Cubic[];
@@ -380,7 +444,6 @@ export function ScrollString() {
         lineGradient.setAttribute('y1', ((centre - KNOT_FADE) * unit).toFixed(1));
         lineGradient.setAttribute('y2', ((centre + KNOT_FADE) * unit).toFixed(1));
       }
-      layoutNotches(max);
     }
     function schedule() {
       if (!frame) frame = requestAnimationFrame(update);
@@ -447,10 +510,10 @@ export function ScrollString() {
     const rect = track.getBoundingClientRect();
     const travel = rect.height - KNOT_HEIGHT;
     if (travel <= 0) return;
-    const p = Math.min(1, Math.max(0, (clientY - rect.top - KNOT_HEIGHT / 2) / travel));
     const max = document.documentElement.scrollHeight - window.innerHeight;
+    const top = scrollFor(anchorsRef.current, clientY - rect.top, max, rect.height);
     window.scrollTo({
-      top: p * max,
+      top,
       left: 0,
       behavior: instant ? 'instant' : undefined,
     });
