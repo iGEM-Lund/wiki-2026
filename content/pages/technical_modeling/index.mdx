@@ -370,6 +370,73 @@ Biological systems combine processes that run at different speeds and affect one
 
 The specificity analysis found no AKR1D1 variant that shifted preference towards testosterone, while ci2350 produced several promising candidates, so the model was built around ci2350 alone. These findings are described on the Results page (addd link to the enzyme specificity result here)
 
+### Integrated growth and expression model
+
+(add image of the workflow here)
+
+
+
+#### System definition
+
+The system modelled is ci2350 produced from a Twist pET vector in *E. coli* *BL21(DE3)*, with the gene under the T7 promoter and induced with 0.8 mM IPTG. The quantity of interest is the amount of enzyme per cell because it determines how much enzyme is available to act on the steroids. Described in Parts page. (add link to parts page)
+
+#### Growth model
+
+A batch culture in a closed flask grows exponentially while nutrients are plentiful and then slows as they are consumed. The logistic equation is the simplest description of this behaviour (Verhulst, 1838).
+
+dX/dt = µmax · X · (1 − X/K)
+
+X is the culture density (OD600), µmax the maximum specific growth rate (per hour) and K the carrying capacity, the OD600 at which growth stops. The factor (1 − X/K) falls from 1 to 0 as the culture fills, so it acts as the brake on growth (Figure 2). A lag phase was not included, so the simulated culture starts to grow immediately from the starting density.
+
+From our experimental data, the cells **double** **every 28 minutes** (µmax = 1.48 h⁻¹). We did not measure the plateau, so K was set to OD600 15, a plausible density for a rich medium, and its influence is examined in the sensitivity analysis. From these parameters, the growth saturates near to 7 h (Figure 2).
+
+<TableWithCaption
+  caption="Parameters of the growth model
+"
+  refId="tab-2pa7e"
+>
+  | **Parameter**                           | **Value**    | **Source**                            |
+  | --------------------------------------- | ------------ | ------------------------------------- |
+  | Maximum specific growth rate (**µmax)** | 1.48 h⁻¹     | Fitted from our experimental data     |
+  | Carrying capacity (**K)**               | 15 (OD600)   | Assumption                            |
+  | Starting density (**X₀)**               | 0.05 (OD600) | Starting value used in the simulation |
+</TableWithCaption>
+
+
+
+Add Image of growth curve here with caption: Figure 2. Logistic growth curve of the culture with µmax = 1.48 per hour and K = 15. The plateau is reached after about 7 h. Refer properly in the above.
+
+
+
+#### Expression model
+
+Since mRNA and the enzyme behave differently inside the cell, we examined them separately. m is the mRNA level in the cell and E the enzyme level, both in relative units. mRNA is short-lived: messages are transcribed at rate α and degraded at rate δm, so the cell maintains a small working pool at a steady level (Figure 3), giving the ribosomes a constant supply to work from (Alon, 2006).
+
+dm/dt = α − δm · m  (Alon, 2006)
+
+m\* = α / δm (steady state maintainace)
+
+The enzyme is the opposite. It is built from those messages at rate β. We assume it is stable, so nothing degrades it, and the only loss is growth itself. At each division, the enzyme already made is shared between two daughter cells, so the faster the culture grows, the more it dilutes its own protein (Klumpp et al., 2009). This is where the two models are integrated: dilution takes the culture’s current growth rate, µ(t) = µmax · (1 − X/K), rather than a fixed value. Enzyme therefore stays low while the culture divides fast and accumulates as growth slows (Figure 3) (Klumpp et al., 2009).
+
+dE/dt = β · m − µ(t) · E = β · m − µmax · (1 − X/K) · E     (Alon, 2006)
+
+Five assumptions:
+
+* ci2350’s mRNA turns over like a typical E. coli transcript, since its half-life has not been measured.
+* The promoter is fully induced at 0.8 mM IPTG, so transcription runs at a constant rate.
+* The enzyme is stable, so dilution by growth is its only loss.
+* Expression does not burden the cell, so it does not slow growth.
+* mRNA and enzyme are in relative units, since absolute counts would require data we do not have.
+
+Bacterial messages break down within minutes of being made (Bernstein et al., 2002). We used a half-life (3 to 8 mins) to predict the decay constants (δ = ln2 / t½) range and used their average of 9.53 h⁻¹. The transcription rate (α) and translation rate (β) are placeholders, as neither has been measured for ci2350.
+
+<TableWithCaption refId="tab-2pa7e">
+  |   |   |   |
+  | - | - | - |
+  |   |   |   |
+  |   |   |   |
+</TableWithCaption>
+
 ### Results
 
 ### AKR1D1
