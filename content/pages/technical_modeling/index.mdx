@@ -432,8 +432,6 @@ Bacterial messages break down within minutes of being made (Bernstein et al., 20
   | Translation rate (β)     | 3 h⁻¹                  | Placeholder                              |
 </TableWithCaption>
 
-
-
 Add image of mRNA and enzyme time course
 
 Caption (Figure 3. Baseline mRNA and enzyme time-course. mRNA reaches its steady state (0.525) within 0.48 hr. Enzyme keeps accumulating after growth saturates (6.96 hr), reaching 31.7 relative units at 24 hr, because dilution by growth stops. α and β are placeholders, so enzyme is in relative units.)
@@ -499,7 +497,55 @@ Seven assumptions underlie these equations which are listed below:
   | Km,P (wild type) – Km of the wild type for progesterone | 0.432 µM            | (Arp et al., 2025)  (ITC Kₔ of the wild type)           |
 </TableWithCaption>
 
-### Results
+#### Linking docking to Km
+
+Add image of docking to Km.jpeg
+
+Caption (Figure 5. From docking score to Km. Each docking score (ΔG) is converted to a binding constant, Kd = exp(ΔG/RT), and Km is assumed to follow Kd. The wild-type progesterone score is anchored to its measured Kd (0.432 µM), and each variant’s Km shifts by its score difference from wild type. A variant with a lower Km for testosterone than for progesterone prefers testosterone. This link between Km and Kd is an assumption, and docking errors are larger than most differences between variants.)
+
+The activity model needs a Michaelis constant (Km) for testosterone and progesterone for every ci2350 variant, but none has been published. The only kinetic information on the enzyme is the wild-type dissociation constant (Kd) for progesterone, 0.432 µM, measured by isothermal titration calorimetry (Arp et al., 2025).
+
+We therefore **propose** to use our docking results to estimate the missing values. Docking gives a binding energy ΔG, which relates to Kd = exp(ΔG/RT) (Gilson & Zhou, 2007). Here R is the gas constant and RT = 0.616 kcal/mol at 37 °C, so a more **negative ΔG** means tighter binding and a **smaller Kd**. Docking scores are not reliable as absolute energies, since Vina can deviate from experiment by 1 to 2 kcal/mol (Eberhardt et al., 2021; Trott & Olson, 2010), so we used only the differences between scores calculated with the same protocol.
+
+We took the wild type with progesterone as the reference point and gave it the measured value, **0.432 µM**, as its Km. This treats **Km as proportional to Kd**, which is a **good approximation** when catalysis (kcat) is slower than the release of the steroid from the enzyme (Wilhelmová, 1996). Whether this holds for ci2350 is not known, because no kcat has been measured. From the reference, the Km values of all variants follow in two steps:
+
+1. Km for progesterone is scaled from the wild-type value by the difference between the progesterone scores of the variant and the wild type (Table 18).
+2. Testosterone has no measured value at all; its Km is calculated from the progesterone Km of the same variant, shifted by the difference between the two steroid scores of that variant (Table 18).
+
+Km,P(variant) = 0.432 µM · exp\[(ΔG\_P,variant − ΔG\_P,wild type) / RT]
+
+Km,T(variant) = Km,P(variant) · exp(ΔΔG\_T–P / RT);   ΔΔG\_T–P = ΔG\_T − ΔG\_P
+
+A negative ΔΔG\_T–P means that the variant binds testosterone more tightly than progesterone, which gives testosterone the lower Km. We assumed the same kcat for both steroids because docking describes binding and not catalysis. The Km values obtained this way are predictions that guide the experiments, not measured constants. The assumptions behind them (Km proportional to Kd, equal kcat) are tested in the sensitivity analysis and are the first targets of the planned kinetic measurements.
+
+<TableWithCaption caption="Docking scores of the wild type and top 5 variants of ci2350, with the Michaelis constants (Km) calculated from them" refId="tab-2pa7e">
+  | **Variant**           | **ΔG progesterone (kcal/mol)** | **ΔG testosterone (kcal/mol)** | **ΔΔG (kcal/mol)** | **\[ΔG\_T** − **ΔG \_P]** | **Km,P (µM)** |
+  | --------------------- | ------------------------------ | ------------------------------ | ------------------ | ------------------------- | ------------- |
+  | Wild type             | −9.1                           | −9.2                           | −0.1               | 0.43                      | 0.37          |
+  | R215A + V263I         | −8.5                           | −9.4                           | −0.9               | 1.14                      | 0.27          |
+  | V263K                 | −6.9                           | −7.4                           | −0.5               | 15.3                      | 6.8           |
+  | R215A + V263I + Q100T | −8.0                           | −8.5                           | −0.5               | 2.57                      | 1.14          |
+  | R215E + V263I         | −7.4                           | −7.7                           | −0.3               | 6.8                       | 4.2           |
+  | V263D                 | −9.1                           | −9.3                           | −0.2               | 0.43                      | 0.31          |
+</TableWithCaption>
+
+#### Sensitivity analysis of activity model
+
+The activity layer adds more uncertain values, such as kcat, E\_scale, the wild-type Km,P and the docking scores, on top of the uncertain expression parameters, so two checks were run.
+
+For the variant with the largest predicted preference, R215A + V263I (see Result page; link to the enzyme selectivity engineering), each parameter was varied by ±20% with the others held at baseline, and the progesterone docking score was shifted by ±0.3 kcal/mol to see how a small docking error changes the outcome. The expression settings were swept more widely: α from 0.25 to 4 times baseline, β from 0.4 to 12 times, and the induction point from OD600 0.3 to 1.0.
+
+#### Uncertainty analysis of activity
+
+Most of the values in the model are guesses, so running it once would only tell us what happens if every guess is right. The Monte Carlo analysis instead ran the model 200 times for each variant, picking a different random value for each uncertain input every time.
+
+Each variant was compared against a wild type given the same random expression and kcat values, so the only difference between the two was the docking scores. Every score was given a random error of about 1 kcal/mol, the typical accuracy of Vina, and the analysis was repeated with 0.5 kcal/mol as a more optimistic case. The other values were drawn over the ranges we consider plausible.
+
+What comes out is a percentage for each variant: how often testosterone is preferred, and how often the variant beats the wild type. The wild type was also compared against a second random copy of itself, which shows how often a difference appears purely by chance when there is no real one.
+
+The results of activity modelling are presented on the Results page (Link to the Results of mathematical modelling). The scripts for the integrated model are available on GitLab (Link).
+
+## Results
 
 ### AKR1D1
 
