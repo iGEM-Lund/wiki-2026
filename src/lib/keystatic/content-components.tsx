@@ -704,6 +704,44 @@ export const contentComponents = {
     ),
   }),
 
+  Quiz: block({
+    label: 'Quiz',
+    description: 'A short multiple-choice quiz. Readers answer one question at a time and see their score at the end.',
+    schema: {
+      title: fields.text({ label: 'Title (optional)', description: 'Shown at the top of the quiz.' }),
+      count: fields.number({
+        label: 'Questions per run',
+        description:
+          'Each time the quiz is taken, this many questions are picked at random from the list below (all of them if the list is shorter).',
+        defaultValue: 10,
+        validation: { min: 1 },
+      }),
+      questions: fields.array(
+        fields.object({
+          question: fields.text({ label: 'Question', validation: { isRequired: true } }),
+          options: fields.array(
+            fields.object({
+              text: fields.text({ label: 'Answer', validation: { isRequired: true } }),
+              correct: fields.checkbox({
+                label: 'Correct answer',
+                description: 'Tick exactly one per question.',
+                defaultValue: false,
+              }),
+            }),
+            { label: 'Answers', itemLabel: (props) => props.fields.text.value || 'Answer' },
+          ),
+          explanation: fields.text({
+            label: 'Explanation (optional)',
+            description: 'Shown after the reader answers, next to "Correct!" or "Not quite."',
+            multiline: true,
+          }),
+        }),
+        { label: 'Questions', itemLabel: (props) => props.fields.question.value || 'Question' },
+      ),
+    },
+    ContentView: (props) => <div>[Quiz: {(props.value.questions ?? []).length} question(s)]</div>,
+  }),
+
   // Generalized responsive layout system: Layout2/Layout3/LayoutSidebar are the
   // container shapes, LayoutColumn is the shared column marker. The count of
   // LayoutColumn children IS the column count (enforced by each container's

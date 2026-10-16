@@ -19,6 +19,7 @@ import { ChemStructure } from './ChemStructure';
 import { ChemReaction } from './ChemReaction';
 import { MoleculeViewer } from './MoleculeViewer';
 import { Pillars } from './Pillars';
+import { Quiz } from './Quiz';
 import { Layout2, Layout3 } from './Layout';
 import { LayoutSidebar } from './LayoutSidebar';
 import { LayoutColumn } from './LayoutColumn';
@@ -51,6 +52,7 @@ export const embeddableComponents = {
   Badge,
   Quote,
   Pillars,
+  Quiz,
   Formula,
   FormulaBlock,
   ChemStructure,
