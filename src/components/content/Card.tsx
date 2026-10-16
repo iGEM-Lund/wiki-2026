@@ -1,3 +1,4 @@
+import GithubSlugger from 'github-slugger';
 import { Children, isValidElement, type ReactNode } from 'react';
 import { CardTitle, type CardTitleProps } from './CardTitle';
 import { ZoomableImage } from './ZoomableImage';
@@ -17,6 +18,18 @@ function unwrapHeadings(node: ReactNode): ReactNode {
   );
 }
 
+// The plain text of a card title's children, for the anchor a card with a
+// plain-text title gets (links to a card, e.g. from a World Map pin, name
+// it by that text). Anything that isn't text (a Citation, ...) adds none.
+function plainText(node: ReactNode): string {
+  return Children.toArray(node)
+    .map((child) => {
+      if (typeof child === 'string' || typeof child === 'number') return String(child);
+      return isValidElement<{ children?: ReactNode }>(child) ? plainText(child.props.children) : '';
+    })
+    .join('');
+}
+
 // Everything inside a Card is visible. The optional title is authored as a
 // <CardTitle> child rather than a flat prop, so it can hold rich inline MDX
 // (emphasis, a <Citation>, ...); content that should stay hidden until the
@@ -28,8 +41,12 @@ export function Card({ children }: { children?: ReactNode }) {
   const titleElement = items.find(isTitle);
   const title = isValidElement<CardTitleProps>(titleElement) ? titleElement.props : null;
 
+  // Same slug rehype-slug would give the title as a heading.
+  const text = title ? plainText(title.children).trim() : '';
+  const id = title?.anchor ?? (text ? new GithubSlugger().slug(text) : undefined);
+
   return (
-    <section className="card" id={title?.anchor}>
+    <section className="card" id={id}>
       {title ? (
         <header className="card__header">
           {title.image ? (
