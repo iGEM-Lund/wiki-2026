@@ -172,10 +172,21 @@ export function ScrollString() {
     if (!knotPath) return;
     const nav = notchesRef.current;
     let meta: Notch[] = [];
-    // The string's length at its longest: the viewport below the header, less
-    // its gap at both ends.
-    const room = () =>
-      window.innerHeight - (header ? header.getBoundingClientRect().bottom : 0) - 2 * endGap;
+    // The string's shortest length: the page scrolled to the top, with the
+    // title banner on screen (see update()), so no knot is ever left over the
+    // banner and the h3s don't come and go as the banner scrolls away.
+    const room = () => {
+      const banner = document.querySelector<HTMLElement>('.page-title');
+      const bannerBottom = banner ? banner.getBoundingClientRect().bottom + window.scrollY : 0;
+      const top = Math.min(
+        window.innerHeight * 0.7,
+        Math.max(
+          (header ? header.getBoundingClientRect().bottom : 0) + endGap,
+          banner ? bannerBottom + BANNER_GAP : 0,
+        ),
+      );
+      return window.innerHeight - endGap - top;
+    };
     // The length that every heading's knot needs to be kept clear of its
     // neighbours', names included, measured while all of them are shown.
     let fullNeed = 0;
