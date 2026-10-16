@@ -1,49 +1,29 @@
 import { cache } from 'react';
 
 // iGEM's rules route every video through the iGEM Video Universe
-// (video.igem.org, a PeerTube instance), whose own player is an <iframe>
-// that can't be driven for a Reels-style feed. PeerTube's public API does
-// expose the plain MP4 renditions it serves from static.igem.org, though,
-// so a writer pastes the ordinary watch link and it's resolved here to a
-// file a bare <video> can play. This runs while rendering (at build time
-// for the production export), never in the visitor's browser, so the
-// published site makes no backend calls of its own.
+// (video.igem.org, a PeerTube instance). Its files on static.igem.org only
+// answer requests that come from video.igem.org itself (anything else gets
+// a 403 saying to use its player), so a bare <video> can't play them: the
+// clips are shown in Video Universe's own embedded player instead. A writer
+// pastes the ordinary watch link, and it's resolved here, while rendering
+// (at build time for the production export), to the video's id, poster and
+// watch page. The visitor's browser only ever talks to igem.org domains.
 const VIDEO_UNIVERSE = 'video.igem.org';
-// Smallest rendition at or above this is picked: sharp enough for a
-// phone-sized frame without pulling a 1080p file per clip.
-const PREFERRED_RESOLUTION = 720;
 
 export type ResolvedVideo = {
+  // The embedded player's address, for Video Universe videos.
+  embedSrc?: string;
+  // A direct video file, for links to anything that isn't Video Universe.
   src?: string;
-  // Set when no single file carries both picture and sound (PeerTube's HLS
-  // renditions keep the audio in a separate stream): the master playlist,
-  // which the feed plays through hls.js so the clip isn't silent.
-  hlsSrc?: string;
   poster?: string;
   // The page the video can be watched on, linked from the feed.
   href?: string;
-  // Video Universe videos only: the id the feed uses to refresh the counts
-  // live in the visitor's browser (allowed: iGEM's wiki rules permit
-  // runtime requests to igem.org domains), and the counts as of the build,
-  // shown until (or if) that refresh succeeds.
-  videoUniverseId?: string;
-  likes?: number;
-  views?: number;
-  // Set instead of src when the link couldn't be resolved; shown in place
-  // of that one clip rather than breaking the whole page or build.
+  // Set instead of a player when the link couldn't be resolved; shown in
+  // place of that one clip rather than breaking the whole page or build.
   error?: string;
 };
 
-type PeerTubeFile = { resolution: { id: number }; fileUrl: string; hasAudio?: boolean };
-type PeerTubeVideo = {
-  uuid: string;
-  url?: string;
-  likes?: number;
-  views?: number;
-  previewPath?: string;
-  files?: PeerTubeFile[];
-  streamingPlaylists?: { playlistUrl?: string; files?: PeerTubeFile[] }[];
-};
+type PeerTubeVideo = { uuid: string; url?: string; previewPath?: string };
 
 // Accepts the share link (/w/<short id>), the watch URL and the embed URL.
 function videoId(url: URL) {
@@ -76,25 +56,10 @@ export const resolveVideo = cache(async (raw: string): Promise<ResolvedVideo> =>
     if (response.status === 400 || response.status === 404) throw new Error('no such video on Video Universe');
     if (!response.ok) throw new Error(`Video Universe answered ${response.status}`);
     const video = (await response.json()) as PeerTubeVideo;
-    // Plain web-video files first, so they win ties over HLS fragments
-    // (the sort is stable); resolution 0 is the audio-only track.
-    const files = [...(video.files ?? []), ...(video.streamingPlaylists ?? []).flatMap((p) => p.files ?? [])]
-      .filter((file) => file.resolution.id > 0)
-      .sort((a, b) => a.resolution.id - b.resolution.id);
-    // A file with its own sound plays as is; otherwise fall back to HLS.
-    const withSound = files.filter((f) => f.hasAudio !== false);
-    const pool = withSound.length > 0 ? withSound : files;
-    const file = pool.find((f) => f.resolution.id >= PREFERRED_RESOLUTION) ?? pool.at(-1);
-    if (!file) throw new Error('it has no playable file yet (still processing?)');
-    const hlsSrc = withSound.length === 0 ? video.streamingPlaylists?.find((p) => p.playlistUrl)?.playlistUrl : undefined;
     return {
-      src: file.fileUrl,
-      hlsSrc,
+      embedSrc: `https://${VIDEO_UNIVERSE}/videos/embed/${video.uuid}?title=0&warningTitle=0&peertubeLink=0`,
       poster: video.previewPath ? `https://${VIDEO_UNIVERSE}${video.previewPath}` : undefined,
       href: video.url ?? raw,
-      videoUniverseId: video.uuid,
-      likes: video.likes,
-      views: video.views,
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
