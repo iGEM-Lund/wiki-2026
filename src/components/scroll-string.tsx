@@ -172,6 +172,13 @@ export function ScrollString() {
     if (!knotPath) return;
     const nav = notchesRef.current;
     let meta: Notch[] = [];
+    // The string's length at its longest: the viewport below the header, less
+    // its gap at both ends.
+    const room = () =>
+      window.innerHeight - (header ? header.getBoundingClientRect().bottom : 0) - 2 * endGap;
+    // The length that every heading's knot needs to be kept clear of its
+    // neighbours', names included, measured while all of them are shown.
+    let fullNeed = 0;
     // Each heading's top in the document, and how far the reader's scroll
     // has to land short of it (scroll-padding-top) when following a link.
     let offsets: number[] = [];
@@ -199,12 +206,9 @@ export function ScrollString() {
         if (!id || !document.getElementById(id)) return;
         links.push({ id, text: a.textContent ?? '', depth });
       });
-      // The h3s (depth 2) are left out when the knots wouldn't all fit on
-      // the string, a knot to every BEAD_GAP of its longest length (the
-      // viewport below the header, less the string's gap at both ends).
-      const room =
-        window.innerHeight - (header ? header.getBoundingClientRect().bottom : 0) - 2 * endGap;
-      const crowded = links.length * BEAD_GAP > room;
+      // The h3s (depth 2) are left out when the knots, with their names,
+      // wouldn't all fit on the string (see fullNeed).
+      const crowded = fullNeed > room();
       const found: Notch[] = [];
       let lastTop = -1;
       for (const link of links) {
@@ -256,12 +260,24 @@ export function ScrollString() {
       // for any that ended up past the end of the string. Names that wrap
       // onto more lines need more room than a knot (labels are centred on
       // their knot, so a pair needs half of each one's height).
+      els.forEach((el) => (el.hidden = false));
       const halves = els.map((el) => {
         const label = el.lastElementChild as HTMLElement | null;
         return (label?.offsetHeight ?? 0) / 2;
       });
       const gap = (a: number, b: number) => Math.max(BEAD_GAP, halves[a] + halves[b] + 4);
       const order = meta.map((_, i) => i);
+      if (!meta.some((n) => n.depth > 1) && order.length > 0) {
+        // Only the h2s are shown: the h3s' share isn't known, keep the
+        // measurement from when they were.
+      } else {
+        fullNeed = BEAD_HEIGHT;
+        for (let k = 1; k < order.length; k++) fullNeed += gap(order[k - 1], order[k]);
+        if (fullNeed > room()) {
+          scan();
+          return;
+        }
+      }
       for (let k = 1; k < order.length; k++) {
         ys[order[k]] = Math.max(ys[order[k]], ys[order[k - 1]] + gap(order[k - 1], order[k]));
       }
