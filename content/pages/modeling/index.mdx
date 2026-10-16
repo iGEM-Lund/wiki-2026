@@ -380,7 +380,7 @@ The system modelled is ci2350 produced from a Twist pET vector in *E. coli* *BL2
 
 #### Growth model
 
-A batch culture in a closed flask grows exponentially while nutrients are plentiful and then slows as they are consumed. The logistic equation is the simplest description of this behaviour (Verhulst, 1838).
+A batch culture in a closed flask grows exponentially while nutrients are plentiful and then slows as they are consumed. The logistic equation is the simplest description of this behaviour (<Citation reference="verhulst-et-al-1838" />).
 
 dX/dt = µmax · X · (1 − X/K)
 
@@ -404,15 +404,15 @@ From our experimental data, the cells **double** **every 28 minutes** (µmax = 1
 
 #### Expression model
 
-Since mRNA and the enzyme behave differently inside the cell, we examined them separately. m is the mRNA level in the cell and E the enzyme level, both in relative units. mRNA is short-lived: messages are transcribed at rate α and degraded at rate δm, so the cell maintains a small working pool at a steady level (<Ref target="fig-ldjtv" />), giving the ribosomes a constant supply to work from (Alon, 2006).
+Since mRNA and the enzyme behave differently inside the cell, we examined them separately. m is the mRNA level in the cell and E the enzyme level, both in relative units. mRNA is short-lived: messages are transcribed at rate α and degraded at rate δm, so the cell maintains a small working pool at a steady level (<Ref target="fig-ldjtv" />), giving the ribosomes a constant supply to work from (<Citation reference="alon-et-al-2006" />).
 
-dm/dt = α − δm · m  (Alon, 2006)
+dm/dt = α − δm · m  (<Citation reference="alon-et-al-2006" />)
 
-m\* = α / δm (steady state maintainace)
+m\* = α / δm (steady state maintainance)
 
-The enzyme is the opposite. It is built from those messages at rate β. We assume it is stable, so nothing degrades it, and the only loss is growth itself. At each division, the enzyme already made is shared between two daughter cells, so the faster the culture grows, the more it dilutes its own protein (Klumpp et al., 2009). This is where the two models are integrated: dilution takes the culture’s current growth rate, µ(t) = µmax · (1 − X/K), rather than a fixed value. Enzyme therefore stays low while the culture divides fast and accumulates as growth slows (<Ref target="fig-ldjtv" />) (Klumpp et al., 2009).
+The enzyme is the opposite. It is built from those messages at rate β. We assume it is stable, so nothing degrades it, and the only loss is growth itself. At each division, the enzyme already made is shared between two daughter cells, so the faster the culture grows, the more it dilutes its own protein (Klumpp et al., 2009). This is where the two models are integrated: dilution takes the culture’s current growth rate, µ(t) = µmax · (1 − X/K), rather than a fixed value. Enzyme therefore stays low while the culture divides fast and accumulates as growth slows (<Ref target="fig-ldjtv" />) (<Citation reference="klumpp-et-al-2009" />).
 
-dE/dt = β · m − µ(t) · E = β · m − µmax · (1 − X/K) · E     (Alon, 2006)
+dE/dt = β · m − µ(t) · E = β · m − µmax · (1 − X/K) · E (<Citation reference="alon-et-al-2006" />)
 
 Five assumptions:
 
@@ -422,7 +422,7 @@ Five assumptions:
 * Expression does not burden the cell, so it does not slow growth.
 * mRNA and enzyme are in relative units, since absolute counts would require data we do not have.
 
-Bacterial messages break down within minutes of being made (Bernstein et al., 2002). We used a half-life (3 to 8 mins) to predict the decay constants (δ = ln2 / t½) range and used their average of 9.53 h⁻¹. The transcription rate (α) and translation rate (β) are placeholders, as neither has been measured for ci2350.
+Bacterial messages break down within minutes of being made (<Citation reference="bernstein-et-al-2002" />). We used a half-life (3 to 8 mins) to predict the decay constants (δ = ln2 / t½) range and used their average of 9.53 h⁻¹. The transcription rate (α) and translation rate (β) are placeholders, as neither has been measured for ci2350.
 
 <TableWithCaption caption="Parameters of the expression model" refId="tab-2pa7e">
   | **Parameter**            | **Value**              | **Source**                               |
@@ -436,13 +436,13 @@ Bacterial messages break down within minutes of being made (Bernstein et al., 20
 
 #### Mathematical simulation and sensitivity of the enzyme level
 
-The integrated three-equation system was solved in R using the deSolve package (Soetaert et al., 2010), with the Runge–Kutta method ode45 over 24 h in 100 time steps, starting from X = 0.05, m = 0 and E = 0. Since several parameters are assumptions or literature ranges rather than measurements, we then asked how much the result depends on them, and which the experiments should pin down first (Saltelli et al., 2008). Each of K, µmax, α and δm was sweep by ±20% around its baseline individually, a standard window for local sensitivity, and the whole system was re-run at every step, recording culture density, mRNA level and enzyme level after 24 h as a percentage change from baseline. Because all three are recorded together, a single run shows how much the enzyme level moves and how a growth parameter affects expression, and vice versa. β was not varied separately since the enzyme level depends on α and β only through their product.
+The integrated three-equation system was solved in R using the deSolve package (<Citation reference="soetaert-et-al-2010" />), with the Runge–Kutta method ode45 over 24 h in 100 time steps, starting from X = 0.05, m = 0 and E = 0. Since several parameters are assumptions or literature ranges rather than measurements, we then asked how much the result depends on them, and which the experiments should pin down first (<Citation reference="saltelli-et-al-2008" />). Each of K, µmax, α and δm was sweep by ±20% around its baseline individually, a standard window for local sensitivity, and the whole system was re-run at every step, recording culture density, mRNA level and enzyme level after 24 h as a percentage change from baseline. Because all three are recorded together, a single run shows how much the enzyme level moves and how a growth parameter affects expression, and vice versa. β was not varied separately since the enzyme level depends on α and β only through their product.
 
 #### Uncertainty analysis of the enzyme level
 
-Sweeps change one parameter at a time, whereas in practice all of them are uncertain together. We therefore ran a Monte Carlo analysis (Saltelli et al., 2008), drawing 500 parameter sets at random, each value taken from a distribution centred on its baseline with a spread of 10%, and recorded the enzyme level after 24 h for each. The 10% is an assumed level of uncertainty, not a measured one.
+Sweeps change one parameter at a time, whereas in practice all of them are uncertain together. We therefore ran a Monte Carlo analysis (<Citation reference="saltelli-et-al-2008" />), drawing 500 parameter sets at random, each value taken from a distribution centred on its baseline with a spread of 10%, and recorded the enzyme level after 24 h for each. The 10% is an assumed level of uncertainty, not a measured one.
 
-The analysis was run three times: with only the growth parameters (K, µmax) varied, with only the expression parameters (α, δm) varied, and with all four varied together. Comparing the three shows which layer contributes most to the uncertainty in the enzyme level. We reported the mean and the 95% interval.
+The analysis was run **three times**: with only the growth parameters (K, µmax) varied, with only the expression parameters (α, δm) varied, and with all four varied together. Comparing the three shows which layer contributes most to the uncertainty in the enzyme level and we reported the mean and the 95% interval.
 
 The results of both per-parameter sweep and Monte Carlo analyses of enzyme production are presented on the Results page (Link to the Result of mathematical modelling). The scripts for the integrated model are available on GitLab (Link).
 
@@ -450,13 +450,13 @@ The results of both per-parameter sweep and Monte Carlo analyses of enzyme produ
 
 #### Activity model
 
-Testosterone and progesterone are close in shape and compete for the same active site of ci2350, so each slows down the conversion of the other. This is described by Michaelis–Menten kinetics for two competing substrates. Each substrate has its own turnover rate, but the two rates share same denominator, which makes the substrates compete (Michaelis et al., 1913).
+Testosterone and progesterone are close in shape and compete for the same active site of ci2350, so each slows down the conversion of the other. This is described by Michaelis–Menten kinetics for two competing substrates. Each substrate has its own turnover rate, but the two rates share same denominator, which makes the substrates compete (<Citation reference="michaelis-et-al-1913" />).
 
 v\_T = (kcat,T / Km,T) · E\_tot · T / (1 + T/Km,T + P/Km,P)
 
 v\_P = (kcat,P / Km,P) · E\_tot · P / (1 + T/Km,T + P/Km,P)
 
-T and P are the testosterone and progesterone concentrations (µM), and v\_T and v\_P are their rates of consumption (µM per hour). E\_tot is the enzyme concentration in the culture; Km,T and Km,P are the Michaelis constants (estimated from docking, see Table 18), and kcat,T and kcat,P are the turnover numbers. The ratio kcat/Km measures how efficiently each substrate is used, so the preference of a variant is the ratio of kcat,T/Km,T to kcat,P/Km,P.
+T and P are the testosterone and progesterone concentrations (µM), and v\_T and v\_P are their rates of consumption (µM per hour). E\_tot is the enzyme concentration in the culture; Km,T and Km,P are the Michaelis constants (estimated from docking, see <Ref target="tab-2pa7e" />), and kcat,T and kcat,P are the turnover numbers. The ratio kcat/Km measures how efficiently each substrate is used, so the preference of a variant is the ratio of kcat,T/Km,T to kcat,P/Km,P.
 
 The enzyme availability comes from the integrated model of enzyme production: enzyme per cell multiplied by culture density, converted to a concentration by a single scaling factor (model assumption). The enzyme in the flask therefore rises as the culture grows, and continues to rise more slowly once growth stops, because the enzyme is no longer diluted.
 
@@ -499,14 +499,14 @@ Seven assumptions underlie these equations which are listed below:
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/docking-to-km.avif" alt="Image of docking to Km" caption="From docking score to Km. Each docking score (ΔG) is converted to a binding constant, Kd = exp(ΔG/RT), and Km is assumed to follow Kd. The wild-type progesterone score is anchored to its measured Kd (0.432 µM), and each variant’s Km shifts by its score difference from wild type. A variant with a lower Km for testosterone than for progesterone prefers testosterone. This link between Km and Kd is an assumption, and docking errors are larger than most differences between variants." numbered={false} refId="fig-ldjtv" scale={100} plain={false} noZoom={false} />
 
-The activity model needs a Michaelis constant (Km) for testosterone and progesterone for every ci2350 variant, but none has been published. The only kinetic information on the enzyme is the wild-type dissociation constant (Kd) for progesterone, 0.432 µM, measured by isothermal titration calorimetry (Arp et al., 2025).
+The activity model needs a Michaelis constant (Km) for testosterone and progesterone for every ci2350 variant, but none has been published. The only kinetic information on the enzyme is the wild-type dissociation constant (Kd) for progesterone, 0.432 µM, measured by isothermal titration calorimetry (<Citation reference="arp-et-al-2025" />).
 
-We therefore **propose** to use our docking results to estimate the missing values. Docking gives a binding energy ΔG, which relates to Kd = exp(ΔG/RT) (Gilson & Zhou, 2007). Here R is the gas constant and RT = 0.616 kcal/mol at 37 °C, so a more **negative ΔG** means tighter binding and a **smaller Kd**. Docking scores are not reliable as absolute energies, since Vina can deviate from experiment by 1 to 2 kcal/mol (Eberhardt et al., 2021; Trott & Olson, 2010), so we used only the differences between scores calculated with the same protocol.
+We therefore **propose** to use our docking results to estimate the missing values. Docking gives a binding energy ΔG, which relates to Kd = exp(ΔG/RT) (<Citation reference="gilson-et-al-2007" />). Here R is the gas constant and RT = 0.616 kcal/mol at 37 °C, so a more **negative ΔG** means tighter binding and a **smaller Kd**. Docking scores are not reliable as absolute energies, since Vina can deviate from experiment by 1 to 2 kcal/mol (<Citation reference="eberhardt-et-al-2021" />, <Citation reference="trott-et-al-2010" />), so we used only the differences between scores calculated with the same protocol.
 
 We took the wild type with progesterone as the reference point and gave it the measured value, **0.432 µM**, as its Km. This treats **Km as proportional to Kd**, which is a **good approximation** when catalysis (kcat) is slower than the release of the steroid from the enzyme (Wilhelmová, 1996). Whether this holds for ci2350 is not known, because no kcat has been measured. From the reference, the Km values of all variants follow in two steps:
 
-1. Km for progesterone is scaled from the wild-type value by the difference between the progesterone scores of the variant and the wild type (Table 18).
-2. Testosterone has no measured value at all; its Km is calculated from the progesterone Km of the same variant, shifted by the difference between the two steroid scores of that variant (Table 18).
+1. Km for progesterone is scaled from the wild-type value by the difference between the progesterone scores of the variant and the wild type (<Ref target="tab-2pa7e" />).
+2. Testosterone has no measured value at all; its Km is calculated from the progesterone Km of the same variant, shifted by the difference between the two steroid scores of that variant (<Ref target="tab-2pa7e" />.
 
 Km,P(variant) = 0.432 µM · exp\[(ΔG\_P,variant − ΔG\_P,wild type) / RT]
 
