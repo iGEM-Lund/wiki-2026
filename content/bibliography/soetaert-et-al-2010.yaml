@@ -1,5 +1,5 @@
-shortForm: Soetaert et al. (2010)
+shortForm: Soetaert et al., 2010
 longForm: >-
   Soetaert, K., Petzoldt, T., & Setzer, R. W. (2010). Solving differential
-  equations in R: Package deSolve. Journal of Statistical Software, 33(9).
-  https://doi.org/10.18637/jss.v033.i09
+  equations in R: Package deSolve. Journal of Statistical Software, 33(9),
+  1–25. https://doi.org/10.18637/jss.v033.i09

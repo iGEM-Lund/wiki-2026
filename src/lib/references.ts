@@ -30,7 +30,7 @@ export async function resolveCitedReferences(source: string): Promise<CitedRefer
   );
   return entries
     .filter((e): e is CitedReference => e !== null)
-    .sort((a, b) => a.shortForm.localeCompare(b.shortForm));
+    .sort((a, b) => a.longForm.localeCompare(b.longForm));
 }
 
 // What a Citation needs to render: its label, and the full citation for its
@@ -41,4 +41,11 @@ export function toReferenceLookup(refs: CitedReference[]): ReferenceLookup {
   return Object.fromEntries(
     refs.map((r) => [r.slug, { shortForm: r.shortForm, longForm: r.longForm }]),
   );
+}
+
+// A short form reads "Chen & Penning, 2014" inside parentheses; in running
+// text APA moves the year out: "Chen & Penning (2014)". Forms with no
+// trailing ", year" (e.g. "Directive 2001/18/EC") are left as they are.
+export function narrativeForm(shortForm: string): string {
+  return shortForm.replace(/,\s*([^,]+)$/, ' ($1)');
 }

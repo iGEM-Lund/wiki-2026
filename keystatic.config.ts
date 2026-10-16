@@ -115,7 +115,8 @@ export default config({
         shortForm: fields.slug({
           name: {
             label: 'Short Form',
-            description: 'e.g. "Barker et al. (2020)": how this reference reads inline.',
+            description:
+              'How this reference reads inside parentheses, in APA 7 form without the parentheses themselves: "Barker et al., 2022", "Chen & Penning, 2014", "World Health Organization, 2026", "United Nations, n.d.". Use "et al." only from three authors up. The Citation component turns it into "Barker et al. (2022)" when set to read as part of the sentence.',
             validation: { isRequired: true },
           },
         }),

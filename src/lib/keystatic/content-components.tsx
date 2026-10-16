@@ -298,6 +298,12 @@ export const contentComponents = {
         collection: 'bibliography',
         validation: { isRequired: true },
       }),
+      narrative: fields.checkbox({
+        label: 'Part of the sentence',
+        description:
+          'Tick when the authors are part of the sentence ("Chen & Penning (2014) showed…"). Leave unticked inside parentheses, which you type yourself: "(Chen & Penning, 2014)". Join several with a semicolon: "(Chen & Penning, 2014; Faucher et al., 2008)".',
+        defaultValue: false,
+      }),
     },
     // ContentView only receives the raw field value; for a relationship
     // field that's just the target's slug, not its resolved short form

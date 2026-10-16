@@ -1,22 +1,23 @@
 import { ArrowDown } from 'lucide-react';
-import type { ReferenceLookup } from '@/lib/references';
+import { narrativeForm, type ReferenceLookup } from '@/lib/references';
 import { CitationLink } from './CitationLink';
 
 type CitationProps = {
   reference?: string | null;
+  narrative?: boolean;
   lookup?: ReferenceLookup;
 };
 
 // `lookup` is injected per-page by src/lib/mdx/render.ts; see
 // resolveCitedReferences in src/lib/references.ts for how it's built.
-export function Citation({ reference, lookup }: CitationProps) {
+export function Citation({ reference, narrative, lookup }: CitationProps) {
   const entry = reference ? lookup?.[reference] : undefined;
   if (!reference || !entry) {
     return <span className="citation citation--missing">[missing reference]</span>;
   }
   return (
     <CitationLink href={`#ref-${reference}`}>
-      {entry.shortForm}
+      {narrative ? narrativeForm(entry.shortForm) : entry.shortForm}
       {/* Hover/focus sign with the full citation and where the link goes
           (see .citation__sign in globals.css, and CitationLink for how it's
           opened). Hidden from screen readers,
