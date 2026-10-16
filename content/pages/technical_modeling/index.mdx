@@ -384,9 +384,9 @@ A batch culture in a closed flask grows exponentially while nutrients are plenti
 
 dX/dt = µmax · X · (1 − X/K)
 
-X is the culture density (OD600), µmax the maximum specific growth rate (per hour) and K the carrying capacity, the OD600 at which growth stops. The factor (1 − X/K) falls from 1 to 0 as the culture fills, so it acts as the brake on growth (<Ref target="fig-ldjtv" />). A lag phase was not included, so the simulated culture starts to grow immediately from the starting density.
+X is the culture density (OD600), µmax the maximum specific growth rate (per hour) and K the carrying capacity, the OD600 at which growth stops. The factor (1 − X/K) falls from 1 to 0 as the culture fills, so it acts as the brake on growth (<Ref target="fig-pllb8" />). A lag phase was not included, so the simulated culture starts to grow immediately from the starting density.
 
-From our experimental data, the cells **double** **every 28 minutes** (µmax = 1.48 h⁻¹). We did not measure the plateau, so K was set to OD600 15, a plausible density for a rich medium, and its influence is examined in the sensitivity analysis. From these parameters, the growth saturates near to 7 h (<Ref target="fig-ldjtv" />).
+From our experimental data, the cells **double** **every 28 minutes** (µmax = 1.48 h⁻¹). We did not measure the plateau, so K was set to OD600 15, a plausible density for a rich medium, and its influence is examined in the sensitivity analysis. From these parameters, the growth saturates near to 7 h (<Ref target="fig-pllb8" />).
 
 <TableWithCaption
   caption="Parameters of the growth model
@@ -404,13 +404,13 @@ From our experimental data, the cells **double** **every 28 minutes** (µmax = 1
 
 #### Expression model
 
-Since mRNA and the enzyme behave differently inside the cell, we examined them separately. m is the mRNA level in the cell and E the enzyme level, both in relative units. mRNA is short-lived: messages are transcribed at rate α and degraded at rate δm, so the cell maintains a small working pool at a steady level (<Ref target="fig-pllb8" />), giving the ribosomes a constant supply to work from (Alon, 2006).
+Since mRNA and the enzyme behave differently inside the cell, we examined them separately. m is the mRNA level in the cell and E the enzyme level, both in relative units. mRNA is short-lived: messages are transcribed at rate α and degraded at rate δm, so the cell maintains a small working pool at a steady level (<Ref target="fig-ldjtv" />), giving the ribosomes a constant supply to work from (Alon, 2006).
 
 dm/dt = α − δm · m  (Alon, 2006)
 
 m\* = α / δm (steady state maintainace)
 
-The enzyme is the opposite. It is built from those messages at rate β. We assume it is stable, so nothing degrades it, and the only loss is growth itself. At each division, the enzyme already made is shared between two daughter cells, so the faster the culture grows, the more it dilutes its own protein (Klumpp et al., 2009). This is where the two models are integrated: dilution takes the culture’s current growth rate, µ(t) = µmax · (1 − X/K), rather than a fixed value. Enzyme therefore stays low while the culture divides fast and accumulates as growth slows (<Ref target="fig-pllb8" />) (Klumpp et al., 2009).
+The enzyme is the opposite. It is built from those messages at rate β. We assume it is stable, so nothing degrades it, and the only loss is growth itself. At each division, the enzyme already made is shared between two daughter cells, so the faster the culture grows, the more it dilutes its own protein (Klumpp et al., 2009). This is where the two models are integrated: dilution takes the culture’s current growth rate, µ(t) = µmax · (1 − X/K), rather than a fixed value. Enzyme therefore stays low while the culture divides fast and accumulates as growth slows (<Ref target="fig-ldjtv" />) (Klumpp et al., 2009).
 
 dE/dt = β · m − µ(t) · E = β · m − µmax · (1 − X/K) · E     (Alon, 2006)
 
@@ -432,17 +432,7 @@ Bacterial messages break down within minutes of being made (Bernstein et al., 20
   | Translation rate (β)     | 3 h⁻¹                  | Placeholder                              |
 </TableWithCaption>
 
-<FigureWithCaption
-  src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/mrna-enzyme-timecourse.avif"
-  alt="Image of mRNA and enzyme time course"
-  caption="Baseline mRNA and enzyme time-course. mRNA reaches its steady state (0.525) within 0.48 hr. Enzyme keeps accumulating after growth saturates (6.96 hr), reaching 31.7 relative units at 24 hr, because dilution by growth stops. α and β are placeholders, so enzyme is in relative units.)
-"
-  numbered
-  refId="fig-ldjtv"
-  scale={100}
-  plain={false}
-  noZoom={false}
-/>
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/mrna-enzyme-timecourse.avif" alt="Image of mRNA and enzyme time course" caption="Baseline mRNA and enzyme time-course. mRNA reaches its steady state (0.525) within 0.48 hr. Enzyme keeps accumulating after growth saturates (6.96 hr), reaching 31.7 relative units at 24 hr, because dilution by growth stops. α and β are placeholders, so enzyme is in relative units.)" numbered refId="fig-ldjtv" scale={100} plain={false} noZoom={false} />
 
 #### Mathematical simulation and sensitivity of the enzyme level
 
@@ -507,9 +497,7 @@ Seven assumptions underlie these equations which are listed below:
 
 #### Linking docking to Km
 
-Add image of docking to Km.jpeg
-
-Caption (Figure 5. From docking score to Km. Each docking score (ΔG) is converted to a binding constant, Kd = exp(ΔG/RT), and Km is assumed to follow Kd. The wild-type progesterone score is anchored to its measured Kd (0.432 µM), and each variant’s Km shifts by its score difference from wild type. A variant with a lower Km for testosterone than for progesterone prefers testosterone. This link between Km and Kd is an assumption, and docking errors are larger than most differences between variants.)
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/docking-to-km.avif" alt="Image of docking to Km" caption="From docking score to Km. Each docking score (ΔG) is converted to a binding constant, Kd = exp(ΔG/RT), and Km is assumed to follow Kd. The wild-type progesterone score is anchored to its measured Kd (0.432 µM), and each variant’s Km shifts by its score difference from wild type. A variant with a lower Km for testosterone than for progesterone prefers testosterone. This link between Km and Kd is an assumption, and docking errors are larger than most differences between variants." numbered={false} refId="fig-ldjtv" scale={100} plain={false} noZoom={false} />
 
 The activity model needs a Michaelis constant (Km) for testosterone and progesterone for every ci2350 variant, but none has been published. The only kinetic information on the enzyme is the wild-type dissociation constant (Kd) for progesterone, 0.432 µM, measured by isothermal titration calorimetry (Arp et al., 2025).
 
