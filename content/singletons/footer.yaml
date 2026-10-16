@@ -46,12 +46,20 @@ sponsors:
     logoUrl: >-
       https://static.igem.wiki/teams/6160/wiki/sponsorship/synbio-technologies.avif
     websiteUrl: https://www.synbiotech.net/
+  - name: StickerApp
+    logoUrl: >-
+      https://static.igem.wiki/teams/6160/wiki/sponsorship/sponsorship/sticker-app.avif
+    websiteUrl: https://stickerapp.eu/
+  - name: Teefarm
+    logoUrl: >-
+      https://static.igem.wiki/teams/6160/wiki/sponsorship/sponsorship/teefarm-logo-banner.webp
+    websiteUrl: https://tee.farm/en
 socials:
-  - label: Instagram (placeholder)
+  - label: Instagram
     icon:
       discriminant: library
       value: at-sign
-    url: https://example.org/instagram
+    url: https://www.instagram.com/igem_lund/
   - label: Website (placeholder)
     icon:
       discriminant: library
