@@ -71,7 +71,9 @@ export function CitationLink({ href, children, pointTo }: CitationLinkProps) {
     const falling = sign.cloneNode(true) as HTMLElement;
     falling.removeAttribute('popover');
     falling.classList.add('citation__sign--falling');
-    falling.addEventListener('animationend', () => holder.remove(), { once: true });
+    falling.addEventListener('animationend', () => holder.remove(), {
+      once: true,
+    });
     holder.append(falling);
     // Into .site rather than <body>, which the site's fonts and colours
     // are set on.
@@ -104,6 +106,7 @@ export function CitationLink({ href, children, pointTo }: CitationLinkProps) {
       href={href}
       onClick={onClick}
       onPointerEnter={open}
+      onPointerMove={hanging.onPointerMove}
       onPointerLeave={hanging.onPointerLeave}
       onFocus={open}
       onBlur={hanging.onBlur}
