@@ -123,7 +123,9 @@ function threadPoints([one, two]: [number, number], under: number, [a, b]: P2, h
     [b, one],
     ...curl,
     [b, two],
-    [THREAD_EXIT, under + 12],
+    // Straight by 90vh at the latest, so it is in line with the thread the
+    // next section picks up at the bottom edge even when the cards run low.
+    [THREAD_EXIT, Math.min(under + 12, 90)],
     [THREAD_EXIT, 100],
     [THREAD_EXIT, 115],
   ];

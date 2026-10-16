@@ -6211,7 +6211,7 @@ article .layout__column p {
   font-size: min(4.2vw, 7vh);
   line-height: 1;
   white-space: pre;
-  color: var(--title);
+  color: var(--color-peacock);
   transform-origin: 50% 0;
 }
 /* A piece that folds away: cut to its width as that closes, without

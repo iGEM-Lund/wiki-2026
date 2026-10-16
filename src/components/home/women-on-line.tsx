@@ -103,7 +103,9 @@ const D = {
 // words instead of a number, set smaller.
 type Beat = { big: string; small: ReactNode; from: number; to: number; phrase?: boolean; top?: boolean };
 const BEATS: Beat[] = [
-  { big: 'Up to 70%', small: 'of them remain undiagnosed', from: at(200), to: at(320) },
+  // The first beat comes in while she is still falling, so she is never
+  // alone on the screen waiting for more scroll.
+  { big: 'Up to 70%', small: 'of them remain undiagnosed', from: DROP_AT, to: at(320) },
   {
     big: 'Polyendocrine Metabolic Ovarian Syndrome',
     small: (
@@ -251,7 +253,6 @@ const SINKERS: Sinker[] = [
 const HOLDS: Hold[] = [
   { at: HANG_AT, ms: HANG_MS },
   { at: DROP_AT, ms: DROP_MS },
-  { at: BEATS[0].from, ms: SINKERS_MS },
   { at: BEATS[1].from, ms: FLOAT_MS },
   { at: BEATS[2].from, ms: BEAT_MS },
   { at: BEATS[3].from, ms: RING_MS },
@@ -310,11 +311,13 @@ export function WomenOnLine() {
   const fall = FALL * easeInOut(drop) + SINK * sink;
   const camera = FOLLOW * easeInOut(phase(dropped, D.follow)) + SINK_FOLLOW * sink;
   const landed = dropped === 1;
+  // The first beat and the women round her come in together, as she nears the end of her fall.
+  const nearlyLanded = dropped > 0.7;
   const beats = useTimedToggles(
-    BEATS.map(({ from, to }) => landed && p >= from && p < to),
+    BEATS.map(({ from, to }, i) => (i === 0 ? nearlyLanded : landed) && p >= from && p < to),
     BEAT_MS,
   );
-  const sinkersIn = useTimedToggle(landed && p >= BEATS[0].from && p < BEATS[0].to, SINKERS_MS);
+  const sinkersIn = useTimedToggle(nearlyLanded && p >= BEATS[0].from && p < BEATS[0].to, SINKERS_MS);
   const float = smooth(useTimedToggle(landed && p >= BEATS[1].from, FLOAT_MS));
   const ring = useTimedToggle(landed && p >= BEATS[3].from, RING_MS);
   const centred = smooth(phase(ring, TO_CENTRE));
