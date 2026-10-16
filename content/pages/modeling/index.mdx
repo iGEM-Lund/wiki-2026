@@ -577,3 +577,51 @@ Thirteen stable AKR1D1 variants were docked with both steroids. Selectivity is r
   | Combo 1: V309T + L311S        | −9.9                        | −9.4                        | +0.5                          | −3.44     |
   | Combo 6: V309T + L311S + I57S | −10.4                       | −9.8                        | +0.6                          | +0.80     |
 </TableWithCaption>
+
+No variant shifted the preference. The largest gain was 0.1 kcal/mol, far below the ±0.5 kcal/mol noise of the scoring function, so V309S, V309E and I57Y cannot be called improvements. The only changes large enough to read as real went the wrong way: I57N moved the preference 0.4 kcal/mol further towards progesterone.
+
+The mutations are altering how well the pocket holds a steroid, not which steroid it holds. Testosterone and progesterone differ only at C17, and if a substitution cannot distinguish that one group, it will always move both ligands together.
+
+Two substitutions were examined in detail: V309T, which replaces a valine methyl group with the hydroxyl of threonine, and L311S, which trims a leucine side chain down to serine. Both were intended to introduce polarity near the steroid and make the pocket less comfortable for progesterone’s acetyl group. Both sit above the plane of the progesterone, over the B and C rings, while the C17 substituent extends past them into the open end of the pocket (Figure 1a and 1b).
+
+Since neither mutated side chain reaches the C17 group, there is no direct contact. So, an acetyl group and a hydroxyl look the same to the enzyme, which matches the docking scores: every substitution at these positions moved both substrates by the same amount, leaving the selectivity gap at +0.5 kcal/mol.
+
+AKR1D1 was therefore not carried forward. Engineering specificity here would need side chains long enough to reach C17 from these positions, or a different set of positions closer to it.
+
+**ADD FIGURES (AKR1D1\_V309T\_progesterone\_view\.png   (Side by side)**
+
+**Figure 1a. Progesterone (orange) docked into AKR1D1 V309T. The A ring and 3-keto group face Y58 (green) and the nicotinamide ring of NADP(H) (purple); the wild-type valine (grey) and mutant threonine (pink) lie opposite to the B-ring of progesterone.**
+
+**AKR1D1\_V309T\_testosterone\_view\.png (Side by side )**
+
+**Figure 1b. Testosterone (cyan) in AkR1D1 V309T, in the same orientation, with the 17β-hydroxyl occupying the space.**
+
+**AKR1D1\_V309T\_L311S\_progesterone\_view\.png  (Side by side)**
+
+**Figure 2a. Progesterone in the V309T + L311S double mutant (pink) , with the C17 acetyl group extending into the open region beyond V309 and L311.**
+
+**AKR1D1\_V309T\_L311S\_testosterone\_view\.png  (Side by side)**
+
+**Figure 2b. Testosterone in the V309T + L311S double mutant. Both mutated side chains (pink) sit on the same loop far from testosterone.)**
+
+AKR1D1 was therefore not carried forward. Engineering specificity here would need positions that contact C17 directly, and the residues identified by contact analysis do not.
+
+#### For ci2350
+
+Seventeen stable ci2350 variants were docked with both steroids. Selectivity is again ΔG(testosterone) − ΔG(progesterone), so a negative value means testosterone is bound more tightly. The wild type sits at −0.1 kcal/mol, a marginal preference that is within scoring noise.
+
+<TableWithCaption caption="Docking of stable ci2350 variants with progesterone and testosterone" refId="tab-k12yo">
+  | **Mutation**                    | **Progesterone (kcal/mol)** | **Testosterone (kcal/mol)** | **Selectivity (test − prog)** | ΔΔG (REU) | Recommendation                                                                |
+  | ------------------------------- | --------------------------- | --------------------------- | ----------------------------- | --------- | ----------------------------------------------------------------------------- |
+  | Wild type (reference)           | −9.1                        | −9.2                        | −0.1                          | Baseline  | Reference                                                                     |
+  | Combo 8: R215A + V263I          | −8.5                        | −9.4                        | −0.9                          | +1.42     | TOP PRIORITY – highest selectivity, enhanced test affinity, neutral stability |
+  | Combo 13: R215A + V263I + Q100T | −8.0                        | −8.5                        | −0.5                          | −7.19     | HIGH PRIORITY – strong selectivity, strongly stabilising                      |
+  | V263K                           | −6.9                        | −7.4                        | −0.5                          | +2.21     | HIGH PRIORITY – strong selectivity, single-point mutation                     |
+  | Combo 9: R215E + V263I          | −7.4                        | −7.7                        | −0.3                          | +4.84     | Good selectivity, borderline stability                                        |
+  | V263D                           | −9.1                        | −9.3                        | −0.2                          | +1.36     | Conservative – full affinity maintained, neutral stability                    |
+  | V59S                            | −9.0                        | −9.2                        | −0.2                          | −2.36     | Conservative – full affinity maintained, stabilising                          |
+  | V263E                           | −7.4                        | −7.6                        | −0.2                          | +2.36     | Good selectivity, mild instability                                            |
+  | V263I                           | −7.4                        | −7.6                        | −0.2                          | +4.96     | Good selectivity, borderline stability                                        |
+  | Combo 7: R215E + V263E          | −7.4                        | −7.6                        | −0.2                          | +2.28     | Good combo, mild instability                                                  |
+</TableWithCaption>
+
