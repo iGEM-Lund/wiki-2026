@@ -248,9 +248,13 @@ For AnTigone, we could adapt the Utrecht strategy to limit excessive EcN accumul
 
 **Principle.**&#x20;
 
-Amber suppression uses the amber stop codon UAG as a genetic lock: a TAG codon is inserted into the engineered gene, and normally the ribosome stops there, producing only an incomplete protein. A matching suppressor tRNA, provided in the intended host, recognizes UAG and inserts an amino acid instead, allowing translation to continue and producing a full-length, functional protein. If the gene is transferred to a bacterium lacking that suppressor tRNA, translation stops early and the protein is non-functional, making the engineered gene depend on a matching suppressor present only in the intended host.
+Amber suppression works by introducing a stop codon (UAG) into an engineered gene, which would normally cause protein production to stop early. However, in the intended host, a specially designed suppressor tRNA recognizes UAG and allows translation to continue, producing a full-length, functional protein. If the gene is transferred to another bacterium without the matching suppressor tRNA, translation stops prematurely, resulting in an incomplete protein that is unlikely to function properly. This makes the engineered gene dependent on the suppressor tRNA in the intended host.
 
-**Why we considered it.** In the gut, engineered DNA could potentially transfer to other bacteria. Amber suppression would not stop that transfer, but could make the transferred gene less likely to work in a new host, without relying on a dedicated toxin, an attractive additional safety layer.
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/collaborations/collaborations/amber.avif" alt="Diagram illustrating the mechanism of amber suppression. In the intended bacterial host, a suppressor tRNA recognizes the UAG stop codon, allowing translation to continue and producing a full-length protein. In bacteria lacking the matching suppressor tRNA, translation stops prematurely, resulting in a truncated protein." caption="Principle of Amber-Suppression Semantic Firewall" numbered refId="fig-v8iqm" scale={100} plain={false} noZoom={false} />
+
+**Why we considered it**&#x20;
+
+In the gut, engineered DNA could potentially transfer to other bacteria. Amber suppression would not stop that transfer, but could make the transferred gene less likely to work in a new host, without relying on a dedicated toxin, an attractive additional safety layer.
 
 **Main limitations**
 
