@@ -5,17 +5,17 @@ title: Modeling
 
 **AnTigone** targets hyperandrogenism driven by the gut-androgen axis, a pathway in which colonic bacteria convert steroid precursors into bioactive androgens, particularly testosterone, which are then reabsorbed into circulation. Our dry-lab work asks which engineered enzyme variants are worth building to reduce testosterone, and how those variants would be expected to behave once placed in a living bacterial system.&#x20;
 
-Two enzymes are central to this axis. **AKR1D1** is the human hepatic **Δ4-3-ketosteroid 5β-reductase**, a member of the aldo-keto reductase superfamily, which inactivates androgens and glucocorticoids in the liver and initiates bile acid synthesis (<Citation reference="chen-et-al-2014" />; <Citation reference="faucher-et-al-2008" />).
+Two enzymes are central to this axis. **AKR1D1** is the human hepatic <Tooltip text="An enzyme that adds hydrogen to a steroid that has a double bond at position 4 and a ketone (C=O) at position 3.">**Δ4-3-ketosteroid 5β-reductase**</Tooltip>, a member of the <Tooltip text="A large family of enzymes that reduce aldehydes and ketones using NADPH.">aldo-keto reductase superfamily</Tooltip>, which inactivates androgens and glucocorticoids in the liver and initiates bile acid synthesis (<Citation reference="chen-et-al-2014" />; <Citation reference="faucher-et-al-2008" />).
 
-**ci2350** is a bacterial Δ4-3-ketosteroid 5β-reductase from *Clostridium innocuum*, identified by Arp et al. (2025) as a member of the **Old Yellow Enzyme family (COG1902)**, a flavin-dependent ene-reductase that couples steroid reduction to NADH oxidation under the anaerobic conditions of the gut. It has been shown to reduce progesterone, cortisone and hydrocortisone directly, and *C. innocuum* extracts have been reported to reduce testosterone (<Citation reference="arp-et-al-2025" />, <Citation reference="stokes-et-al-1985" />).
+**ci2350** is a bacterial Δ4-3-ketosteroid 5β-reductase from *Clostridium innocuum*, identified by Arp et al. (2025) as a member of the <Tooltip text="Flavin-dependent enzymes that reduce carbon-carbon double bonds.">**Old Yellow Enzyme family (COG1902)**</Tooltip>, a <Tooltip text="Needing a flavin molecule, such as FMN, as a helper to carry out the reaction.">flavin-dependent</Tooltip> ene-reductase that couples steroid reduction to <Tooltip text="A molecule that carries electrons for enzymes to use in reactions.">NADH</Tooltip> oxidation under the anaerobic conditions of the gut. It has been shown to reduce progesterone, cortisone and hydrocortisone directly, and *C. innocuum* extracts have been reported to reduce testosterone (<Citation reference="arp-et-al-2025" />, <Citation reference="stokes-et-al-1985" />).
 
-The two enzymes are not homologous: they belong to unrelated families and have converged independently on the same 5β-reduction chemistry, with AKR1D1 acting on Δ4-3-ketosteroids spanning across **C18** to **C21 classes** (<Citation reference="chen-et-al-2011" />), while ci2350 has been shown to reduce **C21 steroids** (<Citation reference="arp-et-al-2025" />).
+The two enzymes are not <Tooltip text="Sharing a common evolutionary origin.">homologous</Tooltip>: they belong to unrelated families and have converged independently on the same 5β-reduction chemistry, with AKR1D1 acting on Δ4-3-ketosteroids spanning across <Tooltip text="Steroids grouped by how many carbon atoms they have; C21 steroids include progesterone and cortisol.">**C18** to **C21 classes**</Tooltip> (<Citation reference="chen-et-al-2011" />), while ci2350 has been shown to reduce **C21 steroids** (<Citation reference="arp-et-al-2025" />).
 
 ### **The selectivity problem**
 
 The capacity of both enzymes to accept testosterone as a substrate makes it a candidate for engineering, but wild-type activity alone is insufficient. Effective therapeutic application requires that the enzyme preferentially reduces testosterone over structurally similar steroids, and progesterone is the most demanding comparison. The two molecules share the same core steroid scaffold and differ critically at a single position: testosterone carries a **17β-hydroxyl group**, whereas progesterone bears a **C17 acetyl substituent** (<Citation reference="chen-et-al-2014" />). Any engineered selectivity must therefore be achieved by discriminating between these two chemically subtle substituents on an otherwise identical molecule.
 
-This problem cannot be addressed experimentally without first knowing which variants are structurally worth testing. The sequence space of possible active site mutations is far larger than can be screened at the bench, so a computational filter is needed to narrow it to a tractable set.
+This problem cannot be addressed experimentally without first knowing which variants are structurally worth testing. The sequence space of possible <Tooltip text="The pocket of an enzyme where the substrate binds and is converted.">active site</Tooltip> mutations is far larger than can be screened at the bench, so a computational filter is needed to narrow it to a tractable set.
 
 Binding affinity alone, however, does not predict how a variant would behave in a bacterial system. Cell growth, enzyme expression levels, and competition between substrates all shape the outcome, and a variant that binds testosterone well in isolation may still perform poorly when those factors are considered.
 
@@ -23,7 +23,7 @@ Binding affinity alone, however, does not predict how a variant would behave in 
 
 Our dry lab work addresses both challenges through two integrated strands.
 
-1. **Enzyme specificity:** Perform rational mutagenesis on ci2350 and AKR1D1 that make the enzyme prefer testosterone over progesterone, using molecular docking to guide which residues to change.
+1. **Enzyme specificity:** Perform rational mutagenesis on ci2350 and AKR1D1 that make the enzyme prefer testosterone over progesterone, using <Tooltip text="A computer simulation that predicts how well a molecule fits into a protein's binding site.">molecular docking</Tooltip> to guide which <Tooltip text="The individual amino acids that make up a protein.">residues</Tooltip> to change.
 2. **Mathematical modelling:** Build a mechanistic model of bacterial growth, enzyme expression and competitive kinetics that uses the docking results to predict how each variant would perform in practice and which parameters most affect the prediction.
 
 Together, these form a connected predictive layer: the first narrows a large design space to a small set of structurally plausible candidates, and the second takes those candidates and asks whether their effect would actually show up in a real bacterial system.
@@ -32,21 +32,21 @@ Together, these form a connected predictive layer: the first narrows a large des
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/specificity-modelling.avif" alt="Pipeline showing how to increase specificity towards testosterone" caption="Computational pipeline for engineering steroid substrate specificity. Structures from the PDB (AKR1D1, 3CAV) or AlphaFold (ci2350) were prepared for docking; the functional pocket was confirmed with fpocket v4.0 and CD Search; testosterone and progesterone were docked in AutoDock Vina 1.2 to identify residues within 4 Å of C17; mutants there were screened in PyRosetta (ΔΔG > +5 REU excluded) and re-docked for selectivity." numbered refId="fig-2ti4x" scale={100} plain={false} noZoom={false} />
 
-### Protein stcructure acquisition
+### Protein structure acquisition
 
-Three-dimensional structures for the two candidate enzymes were obtained through different routes, reflecting the availability of experimental data for each. The human AKR1D1 structure was retrieved from the RCSB Protein Data Bank (<Citation reference="berman-et-al-2000" />) (PDB entry 3CAV), resolved at 1.90 Å in complex with NADPH (<Citation reference="faucher-et-al-2008" />).
+Three-dimensional structures for the two candidate enzymes were obtained through different routes, reflecting the availability of experimental data for each. The human AKR1D1 structure was retrieved from the RCSB Protein Data Bank (<Citation reference="berman-et-al-2000" />) (PDB entry 3CAV), resolved at 1.90 <Tooltip text="Ångström, a unit of length equal to 0.1 nanometres.">Å</Tooltip> in complex with NADPH (<Citation reference="faucher-et-al-2008" />).
 
 <MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-chaina-clean.glb" format="glb" style="cartoon" caption="Crystal structure of human AKR1D1 (PDB 3CAV, chain A) in complex with NADPH. NADPH is highlighted in cornflower blue" refId="mod-s2bgl" />
 
-No experimentally determined structure was available for ci2350. A three-dimensional model was generated using AlphaFold v2.2.0 (<Citation reference="jumper-et-al-2021" />), with the input sequence taken from Arp et al., 2025. Per-residue confidence scores (pLDDT) exceeded 90 (pLDDT > 90, very high) across the model, confirming that the predicted structure met the threshold for structure-based analysis.
+No experimentally determined structure was available for ci2350. A three-dimensional model was generated using <Tooltip text="An AI program that predicts a protein's 3D structure from its amino acid sequence.">AlphaFold</Tooltip> v2.2.0 (<Citation reference="jumper-et-al-2021" />), with the input sequence taken from Arp et al., 2025. Per-residue confidence scores (<Tooltip text="AlphaFold's per-residue confidence score from 0 to 100. Above 90 is very high.">pLDDT</Tooltip>) exceeded 90 (pLDDT > 90, very high) across the model, confirming that the predicted structure met the threshold for structure-based analysis.
 
-<MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/c12350.glb" format="glb" style="cartoon" caption="AlphaFold v2.2.0 model of ci2350 from Clostridium innocuum. Per-residue confidence exceeded 90 (very high) across the model." refId="mod-iwdp3" />
+<MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/c12350.glb" format="glb" style="cartoon" caption="AlphaFold v2.2.0 model of ci2350 from *Clostridium innocuum*. Per-residue confidence exceeded 90 (very high) across the model." refId="mod-iwdp3" />
 
 ### Structure preparation
 
-All structures were prepared following the standard AutoDock receptor preparation protocol (<Citation reference="eberhardt-et-al-2021" />,<Citation reference="morris-et-al-2009" />). Water molecules and non-essential heteroatoms were removed. NADPH was present in the PDB structure of AKR1D1 and was retained to preserve the biologically relevant binding geometry. For ci2350, no cofactor present, since it is a predicted structure.&#x20;
+All structures were prepared following the standard AutoDock receptor preparation protocol (<Citation reference="eberhardt-et-al-2021" />,<Citation reference="morris-et-al-2009" />). Water molecules and non-essential heteroatoms were removed. NADPH was present in the PDB structure of AKR1D1 and was retained to preserve the biologically relevant binding geometry. For ci2350, no cofactor is present, since it is a predicted structure.&#x20;
 
-Hydrogen atoms were added, and protonation states were assigned at physiological pH (7.4), consistent with standard receptor preparation for molecular docking (<Citation reference="morris-et-al-2009" />). Structures were then converted to PDBQT format using MGLTools (prepare\_receptor4.py) (<Citation reference="morris-et-al-2009" />), which assigns Gasteiger partial charges and defines rotatable bonds for the docking software.
+Hydrogen atoms were added, and <Tooltip text="Whether each chemical group carries an extra hydrogen ion at a given pH.">protonation states</Tooltip> were assigned at physiological pH (7.4), consistent with standard receptor preparation for molecular docking (<Citation reference="morris-et-al-2009" />). Structures were then converted to <Tooltip text="The file format AutoDock uses for docking inputs, storing atom positions, charges and rotatable bonds.">PDBQT</Tooltip> format using MGLTools (prepare\_receptor4.py) (<Citation reference="morris-et-al-2009" />), which assigns <Tooltip text="A fast method for estimating the electric charge on each atom.">Gasteiger partial charges</Tooltip> and defines rotatable bonds for the docking software.
 
 ### Ligand preparation
 
@@ -66,15 +66,15 @@ Both ligands were retrieved from PubChem (CID 6013 and CID 5994, respectively) (
 
 ### Conserved domain analysis
 
-The sequence of each candidate enzyme was submitted to the NCBI Conserved Domain Search (CD Search) (<Citation reference="marchler-bauer-et-al-2017" />), which compares a query sequence against the Conserved Domain Database (CDD) to identify evolutionarily conserved functional domains and their annotated residue positions. These annotations cover substrate binding, cofactor coordination and catalytic function, and are inferred from structurally and biochemically characterised members of the same protein family. They provided a sequence-level map of the expected functional site and served as the reference for interpreting and validating the predicted active site pockets.
+The sequence of each candidate enzyme was submitted to the NCBI Conserved Domain Search (CD Search) (<Citation reference="marchler-bauer-et-al-2017" />), which compares a query sequence against the Conserved Domain Database (CDD) to identify evolutionarily <Tooltip text="Stretches of protein found across a family of related proteins, usually because they matter for function.">conserved functional domains</Tooltip> and their annotated residue positions. These annotations cover substrate binding, cofactor coordination and catalytic function, and are inferred from structurally and biochemically characterised members of the same protein family. They provided a sequence-level map of the expected functional site and served as the reference for interpreting and validating the predicted active site pockets.
 
 #### **For AKR1D1:**&#x20;
 
-CD Search assigned the query sequence (NP\_005980.1) to the AKR\_AKR1D1-3 family within the aldo-keto reductase superfamily, returning 32 annotated active site positions and a separately annotated catalytic tetrad (<Ref target="tab-vkjtr" />).
+CD Search assigned the query sequence (NP\_005980.1) to the AKR\_AKR1D1-3 family within the aldo-keto reductase superfamily, returning 32 annotated active site positions and a separately annotated <Tooltip text="The four residues that together carry out the chemical reaction.">catalytic tetrad</Tooltip> (<Ref target="tab-vkjtr" />).
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/cdsearch-akr1d1.avif" alt="CD search image" caption="NCBI CD Search result for AKR1D1 (NP_005980.1), assigning the sequence to the AKR_AKR1D1-3 family within the aldo-keto reductase superfamily." numbered refId="fig-7ogyu" scale={100} plain={false} noZoom={false} />
 
-The enzyme uses NADPH and a conserved catalytic tetrad of D53, Y58, K87 and E120 to deliver a hydride to the Δ4 double bond on the steroid A-ring. Y58 acts as the general acid, with K87 and D53 tuning its acidity. E120 is what distinguishes AKR1D1 from the rest of the superfamily: it replaces the histidine conserved in all other AKRs and acts as a superacid, polarising the C3 ketone (<Citation reference="di-costanzo-et-al-2008" />).
+The enzyme uses NADPH and a conserved catalytic tetrad of D53, Y58, K87 and E120 to deliver a <Tooltip text="A hydrogen atom carrying two electrons, which the enzyme passes to the steroid.">hydride</Tooltip> to the Δ4 double bond on the steroid A-ring. Y58 acts as the general acid, with K87 and D53 tuning its acidity. E120 is what distinguishes AKR1D1 from the rest of the superfamily: it replaces the histidine conserved in all other AKRs and acts as a superacid, polarising the C3 ketone (<Citation reference="di-costanzo-et-al-2008" />).
 
 <TableWithCaption caption="Conserved domain features of AKR1D1 (NP_005980.1) from NCBI CD Search. The four tetrad residues are a subset of the active site set." refId="tab-vkjtr">
   | **Active site**                                                                                                                                                                         | **Catalytic tetrad** |
@@ -88,7 +88,7 @@ For ci2350, CD Search assigned the query sequence to the OYE\_like\_FMN\_family 
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/cdsearch-ci2350.avif" alt="CD search image" caption="NCBI CD Search result for ci2350, assigning the sequence to the OYE_like_FMN_family within the TIM barrel superfamily." numbered refId="fig-f2bmm" scale={100} plain={false} noZoom={false} />
 
-The domain covers the N-terminal half of the 642-residue protein, and all annotated functional positions fall within it. These active site residues were combined with those of <Citation reference="arp-et-al-2025" />, who identified Y167 as the structural counterpart of the catalytic tyrosine in *E. coli* 2,4-dienoyl-CoA reductase (PDB 1PS9), w ith N166, S171 and N253 in the surrounding region. This combined set served as the reference for validating the fpocket predictions.
+The domain covers the N-terminal half of the 642-residue protein, and all annotated functional positions fall within it. These active site residues were combined with those of <Citation reference="arp-et-al-2025" />, who identified Y167 as the structural counterpart of the catalytic tyrosine in *E. coli* 2,4-dienoyl-CoA reductase (PDB 1PS9), with N166, S171 and N253 in the surrounding region. This combined set served as the reference for validating the fpocket predictions.
 
 <TableWithCaption caption="Conserved domain features of ci2350 from the NCBI CD Search with the active site residues reported by Arp et al. (2025)." refId="tab-co4yj">
   | **Active site**                                                     | **Catalytic / substrate-binding residues** |
@@ -98,7 +98,7 @@ The domain covers the N-terminal half of the 642-residue protein, and all annota
 
 ### Active site identification
 
-Binding pockets were identified computationally using fpocket v4.0 (<Citation reference="le-guilloux-et-al-2009" />), which detects cavities through Voronoi tessellation and alpha-sphere clustering and returns a ranked list of candidate pockets, each described by geometric and physicochemical descriptors. These predicted pockets were then cross-referenced against residue annotations from NCBI CD Search to identify which pocket best corresponded to the known catalytic and substrate-binding residues of each enzyme family. The pocket showing the greatest agreement with the annotated functional site was selected.
+Binding pockets were identified computationally using fpocket v4.0 (<Citation reference="le-guilloux-et-al-2009" />), which detects cavities through <Tooltip text="Geometry methods that fpocket uses to find cavities in a protein.">Voronoi tessellation and alpha-sphere clustering</Tooltip> and returns a ranked list of candidate pockets, each described by geometric and physicochemical descriptors. These predicted pockets were then cross-referenced against residue annotations from NCBI CD Search to identify which pocket best corresponded to the known catalytic and substrate-binding residues of each enzyme family. The pocket showing the greatest agreement with the annotated functional site was selected.
 
 #### **For AKR1D1:**
 
@@ -131,7 +131,7 @@ Similarly, fpocket identified 38 candidate pockets in the predicted ci2350 model
 
 In both enzymes Pocket 1 covered the majority of the annotated active site residues and was therefore used to define the docking search space. The box centre was taken as the mean x, y and z coordinates of the pocket’s alpha spheres, and each dimension was set from the span of those coordinates along that axis (maximum – minimum) plus a 4 Å margin to ensure sufficient room for the ligand to sample orientations within a tightly enclosed pocket.
 
-Because Pocket 1 did not capture every annotated residue in either enzyme, the box was then expanded as required so that all CD Search positions fell within the search space. After expanding, the pocket grid for both AKR1D1 and ci2350 the final search box parameters for both enzymes are given in <Ref target="tab-25ega" />.
+Because Pocket 1 did not capture every annotated residue in either enzyme, the box was then expanded as required so that all CD Search positions fell within the search space. After expanding, the final search box parameters for both AKR1D1 and ci2350 are given in <Ref target="tab-25ega" />.
 
 <TableWithCaption caption="Docking search box parameters." refId="tab-25ega">
   | **Parameter** | **AKR1D1** | **ci2350** |
@@ -150,7 +150,7 @@ Because Pocket 1 did not capture every annotated residue in either enzyme, the b
 
 ### Molecular docking&#x20;
 
-Docking was performed using AutoDock Vina 1.2 (<Citation reference="eberhardt-et-al-2021" />) with an exhaustiveness setting of 32 and an energy range of 4 kcal/mol. Vina combines a stochastic global search for scoring, which samples ligand position, orientation and torsion angles, with local gradient-based optimisation that refines promising candidates into nearby energy minima.
+Docking was performed using AutoDock Vina 1.2 (<Citation reference="eberhardt-et-al-2021" />) with an <Tooltip text="A docking setting: higher values search more thoroughly.">exhaustiveness</Tooltip> setting of 32 and an energy range of 4 <Tooltip text="A unit of energy per mole of molecules. More negative binding energy means tighter binding.">kcal/mol</Tooltip>. Vina combines a stochastic global search for scoring, which samples ligand position, orientation and torsion angles, with local gradient-based optimisation that refines promising candidates into nearby energy minima.
 
 Each ligand was docked independently into each prepared enzyme structure, and the top-ranked pose was recorded along with its predicted binding affinity in kcal/mol. To establish a selectivity baseline, we defined a selectivity score as the difference in predicted affinity between testosterone and progesterone, ΔG(testosterone) – ΔG(progesterone). A negative value indicates that testosterone is preferred by the enzyme. The inherent stochastic variability of the Vina scoring function, approximately ±0.5 kcal/mol, was treated as the noise threshold (<Citation reference="eberhardt-et-al-2021" />), and selectivity differences below this value were not considered meaningful.
 
@@ -163,9 +163,9 @@ After docking, the two enzymes gave comparable absolute affinities but opposite 
   | **ci2350** | −9.1                       | −9.2                       | −0.1                         | Testosterone   |
 </TableWithCaption>
 
-AKR1D1 bound progesterone 0.5 kcal/mol more tightly than testosterone. Converting this through ΔΔG (|ΔGT – ΔGP|) = RT ln(ratio), with RT = 0.616 kcal/mol at 310 K, gives approximately 2.3-fold selectivity for progesterone. This is consistent with AKR1D1's biological role, where progesterone intermediates are the primary physiological substrates.
+AKR1D1 bound progesterone 0.5 kcal/mol more tightly than testosterone. Converting this through <Tooltip text="A difference between two free energies, for example between a mutant and the wild type, or between two ligands.">ΔΔG</Tooltip> (|ΔGT – ΔGP|) = RT ln(ratio), with RT = 0.616 kcal/mol at 310 K, gives approximately 2.3-fold selectivity for progesterone. This is consistent with AKR1D1's biological role, where progesterone intermediates are the primary physiological substrates.
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-testosterone-view.avif" alt="Image of AKR1D1-t=estosterone" caption="Top-ranked docking pose of testosterone in the AKR1D1 active site (−9.3 kcal/mol), with NADPH and the catalytic tetrad Y58 labelled." numbered refId="fig-780fc" scale={100} plain={false} noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-testosterone-view.avif" alt="Image of AKR1D1-testosterone" caption="Top-ranked docking pose of testosterone in the AKR1D1 active site (−9.3 kcal/mol), with NADPH and the catalytic tetrad Y58 labelled." numbered refId="fig-780fc" scale={100} plain={false} noZoom={false} />
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-progesterone.avif" alt="Image of AKR1D1-progesterone" caption="Top-ranked docking pose of progesterone in the AKR1D1 active site (−9.8 kcal/mol), with NADPH and the catalytic tetrad Y58 labelled." numbered refId="fig-xajrx" scale={100} plain={false} noZoom={false} />
 
@@ -179,7 +179,7 @@ Neither wild-type meets the selectivity requirement, and both were taken forward
 
 ### Contact analysis and residue identification
 
-From the top-ranked docking pose, all enzyme residues within 4 Å of each docked ligand were identified. This is a standard cut-off for direct protein–ligand contacts and captures residues involved in van der Waals interactions and short-range electrostatics (<Citation reference="le-guilloux-et-al-2009" />). Residues in proximity to the C17 position were given particular attention, as this is the only position at which the two substrates differ, as discussed previously in the ligand preparation (<Citation reference="chen-et-al-2014" />).
+From the top-ranked docking pose, all enzyme residues within 4 Å of each docked ligand were identified. This is a standard cut-off for direct protein–ligand contacts and captures residues involved in <Tooltip text="Weak attractions between atoms that are very close to each other.">van der Waals</Tooltip> interactions and short-range <Tooltip text="Attraction or repulsion between electrically charged groups.">electrostatics</Tooltip> (<Citation reference="le-guilloux-et-al-2009" />). Residues in proximity to the C17 position were given particular attention, as this is the only position at which the two substrates differ, as discussed previously in the ligand preparation (<Citation reference="chen-et-al-2014" />).
 
 #### **For AKR1D1:**
 
@@ -217,7 +217,7 @@ The residues in <Ref target="tab-53c3s" /> and <Ref target="tab-zkjil" /> were s
 
 #### **For AKR1D1:**
 
-At V309 and L311, the substitutions cover three different mechanisms: serine (S) and threonine (T) shrink the side chain and add polarity to pocket; tyrosine (Y), phenylalanine (F) and tryptophan (W) fill the cavity so the acetyl group has less room; and glutamate (E) and lysine (K) place a charge against a neutral substituent. Comparing them should indicate which property actually governs discrimination towards progesterone.
+At V309 and L311, the substitutions cover three different mechanisms: serine (S) and threonine (T) shrink the side chain and add polarity to the pocket; tyrosine (Y), phenylalanine (F) and tryptophan (W) fill the cavity so the acetyl group has less room; and glutamate (E) and lysine (K) place a charge against a neutral substituent. Comparing them should indicate which property actually governs discrimination towards progesterone.
 
 At I57, all five substitutions replace an aliphatic side chain with one capable of hydrogen bonding, any of which could pair with testosterone’s 17β-hydroxyl. Combinations test whether the two mutation effects are independent. If they are, the selectivity shifts should roughly sum.
 
@@ -247,9 +247,9 @@ For testosterone, F71Y adds a hydroxyl to an aromatic ring already in contact wi
 
 Structural stability was evaluated using PyRosetta (<Citation reference="chaudhury-et-al-2010" />) with the ref2015 scoring function (<Citation reference="alford-et-al-2017" />). The ref2015 function returns a single score summing van der Waals packing, hydrogen bonding, electrostatics, implicit solvation and backbone and sidechain torsional strain, with lower, more negative values corresponding to a better-packed and more stable structure.
 
-Local sidechain repacking was performed within a 5.0 Å radius of the mutated position, capturing the first layer of residues most likely to be directly affected by the substitution (Chaudhury et al., 2010). Stability was expressed as the difference between mutant and wild-type (ΔΔG = E(mutant) − E(wild-type)), cancelling the common baseline and isolating the effect of the substitution. A high positive ΔΔG indicates that the mutation destabilises the structure (<Citation reference="alford-et-al-2017" />).
+Local <Tooltip text="Re-optimising the positions of nearby amino acid side chains after a mutation.">sidechain repacking</Tooltip> was performed within a 5.0 Å radius of the mutated position, capturing the first layer of residues most likely to be directly affected by the substitution (Chaudhury et al., 2010). Stability was expressed as the difference between mutant and wild-type (ΔΔG = E(mutant) − E(wild-type)), cancelling the common baseline and isolating the effect of the substitution. A high positive ΔΔG indicates that the mutation destabilises the structure (<Citation reference="alford-et-al-2017" />).
 
-Variants with ΔΔG above +5 REU were excluded; those below this threshold were considered structurally acceptable and advanced to docking (<Citation reference="alford-et-al-2017" />, <Citation reference="kellogg-et-al-2011" />). The threshold is deliberately permissive. It is set to reject severely destabilised variants, such as unresolvable steric clashes or lost buried hydrogen bonds.
+Variants with ΔΔG above +5 <Tooltip text="Rosetta Energy Units, the score PyRosetta uses. Lower means more stable.">REU</Tooltip> were excluded; those below this threshold were considered structurally acceptable and advanced to docking (<Citation reference="alford-et-al-2017" />, <Citation reference="kellogg-et-al-2011" />). The threshold is deliberately permissive. It is set to reject severely destabilised variants, such as unresolvable steric clashes or lost buried hydrogen bonds.
 
 #### **For AKR1D1:**
 
@@ -360,13 +360,13 @@ No AKR1D1 variant shifted selectivity meaningfully. The three best mutants, V309
   | **V263D**                           | −9.1                       | −9.3                       | −0.2                         | Favoured testosterone                       |
 </TableWithCaption>
 
-The combination mutation of **R215A + V263I** is the clear leading candidate, with a selectivity score of **−0.9 kcal/mol** and a shift of **−0.8** against the wild-type, and the only variant to exceed the noise threshold. It is also the only one where testosterone binding improved in absolute terms while progesterone binding weakened, so the gain comes from both directions at once. The other candidates gained selectivity by losing affinity. R215A + V263I was therefore selected as one of the candidates for experimental characterisation. The detailed analysis of  variant specificity towards testosterone is presented on the [Results](/modeling#results) page.
+The combination mutation of **R215A + V263I** is the clear leading candidate, with a selectivity score of **−0.9 kcal/mol** and a shift of **−0.8** against the wild-type, and the only variant to exceed the noise threshold. It is also the only one where testosterone binding improved in absolute terms while progesterone binding weakened, so the gain comes from both directions at once. The other candidates gained selectivity by losing affinity. R215A + V263I was therefore selected as one of the candidates for experimental characterisation. The detailed analysis of variant specificity towards testosterone is presented on the [Results](/modeling#results) page.
 
 **The complete implementation of the pipeline for enzyme specificity analysis is available on GitLab (Link)**
 
 ## **Mathematical modelling of enzyme production and activity**
 
-Biological systems combine processes that run at different speeds and affect one another, so the outcome of an experiment is rarely obvious from the individual parts. Mathematical models address this by describing each process with an equation whose terms correspond to defined biological events (<Citation reference="kraikivski-et-al-2023" />). These equations are Ordinary Differential Equations (ODEs), solved numerically. Writing the system this way states every assumption openly and lets us change one parameter at a time, which is rarely practical at the bench (<Citation reference="alon-et-al-2006" />).
+Biological systems combine processes that run at different speeds and affect one another, so the outcome of an experiment is rarely obvious from the individual parts. Mathematical models address this by describing each process with an equation whose terms correspond to defined biological events (<Citation reference="kraikivski-et-al-2023" />). These equations are <Tooltip text="Equations describing how quantities change continuously over time.">Ordinary Differential Equations (ODEs)</Tooltip>, solved numerically. Writing the system this way states every assumption openly and lets us change one parameter at a time, which is rarely practical at the bench (<Citation reference="alon-et-al-2006" />).
 
 The specificity analysis found no AKR1D1 variant that shifted preference towards testosterone, while ci2350 produced several promising candidates, so the model was built around ci2350 alone. These findings are described on the Results page (add link to the enzyme specificity result here)
 
@@ -376,17 +376,17 @@ The specificity analysis found no AKR1D1 variant that shifted preference towards
 
 #### System definition
 
-The system modelled is ci2350 produced from a Twist pET vector in *E. coli* *BL21(DE3)*, with the gene under the T7 promoter and induced with 0.8 mM IPTG. The quantity of interest is the amount of enzyme per cell because it determines how much enzyme is available to act on the steroids. Described in Parts page. (add link to parts page)
+The system modelled is ci2350 produced from a Twist <Tooltip text="A common plasmid for producing proteins in E. coli from a T7 promoter.">pET vector</Tooltip> in *E. coli* <Tooltip text="An E. coli strain made for high-level protein production.">*BL21(DE3)*</Tooltip>, with the gene under the <Tooltip text="A strong promoter read by T7 RNA polymerase, which BL21(DE3) makes when IPTG is added.">T7 promoter</Tooltip> and induced with 0.8 mM <Tooltip text="A lab chemical that switches on the T7 system.">IPTG</Tooltip>. The quantity of interest is the amount of enzyme per cell because it determines how much enzyme is available to act on the steroids. Described in Parts page. (add link to parts page)
 
 #### Growth model
 
-A batch culture in a closed flask grows exponentially while nutrients are plentiful and then slows as they are consumed. The logistic equation is the simplest description of this behaviour (<Citation reference="verhulst-et-al-1838" />).
+A batch culture in a closed flask grows exponentially while nutrients are plentiful and then slows as they are consumed. The <Tooltip text="A growth equation that starts exponential and levels off as the culture fills its container.">logistic equation</Tooltip> is the simplest description of this behaviour (<Citation reference="verhulst-et-al-1838" />).
 
 dX/dt = µmax · X · (1 − X/K)
 
-X is the culture density (OD600), µmax the maximum specific growth rate (per hour) and K the carrying capacity, the OD600 at which growth stops. The factor (1 − X/K) falls from 1 to 0 as the culture fills, so it acts as the brake on growth (<Ref target="fig-8xckn" />). A lag phase was not included, so the simulated culture starts to grow immediately from the starting density.
+X is the culture density (<Tooltip text="Light absorbance at 600 nm, used to measure how dense a bacterial culture is.">OD600</Tooltip>), µmax the maximum specific growth rate (per hour) and K the <Tooltip text="The maximum culture density the medium can support.">carrying capacity</Tooltip>, the OD600 at which growth stops. The factor (1 − X/K) falls from 1 to 0 as the culture fills, so it acts as the brake on growth (<Ref target="fig-8xckn" />). A <Tooltip text="The initial period before bacteria start growing.">lag phase</Tooltip> was not included, so the simulated culture starts to grow immediately from the starting density.
 
-From our experimental data, the cells **double** **every 28 minutes** (µmax = 1.48 h⁻¹). We did not measure the plateau, so K was set to OD600 15, a plausible density for a rich medium, and its influence is examined in the sensitivity analysis. From these parameters, the growth saturates near to 7 h (<Ref target="fig-8xckn" />).
+From our experimental data, the cells **double** **every 28 minutes** (µmax = 1.48 h⁻¹). We did not measure the plateau, so K was set to OD600 15, a plausible density for a rich medium, and its influence is examined in the <Tooltip text="Changing one input at a time to see how much the result depends on it.">sensitivity analysis</Tooltip>. From these parameters, the growth saturates near to 7 h (<Ref target="fig-8xckn" />).
 
 <TableWithCaption
   caption="Parameters of the growth model
@@ -408,7 +408,7 @@ Since mRNA and the enzyme behave differently inside the cell, we examined them s
 
 dm/dt = α − δm · m  (<Citation reference="alon-et-al-2006" />)
 
-m\* = α / δm (steady state maintainance)
+m\* = α / δm (steady-state maintenance)
 
 The enzyme is the opposite. It is built from those messages at rate β. We assume it is stable, so nothing degrades it, and the only loss is growth itself. At each division, the enzyme already made is shared between two daughter cells, so the faster the culture grows, the more it dilutes its own protein (<Citation reference="klumpp-et-al-2009" />). This is where the two models are integrated: dilution takes the culture’s current growth rate, µ(t) = µmax · (1 − X/K), rather than a fixed value. Enzyme therefore stays low while the culture divides fast and accumulates as growth slows (<Ref target="fig-qgy4n" />) (<Citation reference="klumpp-et-al-2009" />).
 
@@ -424,7 +424,7 @@ Five assumptions:
 
 Bacterial messages break down within minutes of being made (<Citation reference="bernstein-et-al-2002" />). We used a half-life (3 to 8 mins) to predict the decay constants (δ = ln2 / t½) range and used their average of 9.53 h⁻¹. The transcription rate (α) and translation rate (β) are placeholders, as neither has been measured for ci2350.
 
-<TableWithCaption caption="Parameters of the expression model" refId="tab-2pa7e">
+<TableWithCaption caption="Parameters of the expression model" refId="tab-o6z4w">
   | **Parameter**            | **Value**              | **Source**                               |
   | ------------------------ | ---------------------- | ---------------------------------------- |
   | Transcription rate (α)   | 5 (relative units h⁻¹) | Placeholder                              |
@@ -436,11 +436,11 @@ Bacterial messages break down within minutes of being made (<Citation reference=
 
 #### Mathematical simulation and sensitivity of the enzyme level
 
-The integrated three-equation system was solved in R using the deSolve package (<Citation reference="soetaert-et-al-2010" />), with the Runge–Kutta method ode45 over 24 h in 100 time steps, starting from X = 0.05, m = 0 and E = 0. Since several parameters are assumptions or literature ranges rather than measurements, we then asked how much the result depends on them, and which the experiments should pin down first (<Citation reference="saltelli-et-al-2008" />). Each of K, µmax, α and δm was sweep by ±20% around its baseline individually, a standard window for local sensitivity, and the whole system was re-run at every step, recording culture density, mRNA level and enzyme level after 24 h as a percentage change from baseline. Because all three are recorded together, a single run shows how much the enzyme level moves and how a growth parameter affects expression, and vice versa. β was not varied separately since the enzyme level depends on α and β only through their product.
+The integrated three-equation system was solved in R using the deSolve package (<Citation reference="soetaert-et-al-2010" />), with the <Tooltip text="A standard numerical method for solving differential equations.">Runge–Kutta</Tooltip> method ode45 over 24 h in 100 time steps, starting from X = 0.05, m = 0 and E = 0. Since several parameters are assumptions or literature ranges rather than measurements, we then asked how much the result depends on them, and which the experiments should pin down first (<Citation reference="saltelli-et-al-2008" />). Each of K, µmax, α and δm was swept by ±20% around its baseline individually, a standard window for local sensitivity, and the whole system was re-run at every step, recording culture density, mRNA level and enzyme level after 24 h as a percentage change from baseline. Because all three are recorded together, a single run shows how much the enzyme level moves and how a growth parameter affects expression, and vice versa. β was not varied separately since the enzyme level depends on α and β only through their product.
 
 #### Uncertainty analysis of the enzyme level
 
-Sweeps change one parameter at a time, whereas in practice all of them are uncertain together. We therefore ran a Monte Carlo analysis (<Citation reference="saltelli-et-al-2008" />), drawing 500 parameter sets at random, each value taken from a distribution centred on its baseline with a spread of 10%, and recorded the enzyme level after 24 h for each. The 10% is an assumed level of uncertainty, not a measured one.
+Sweeps change one parameter at a time, whereas in practice all of them are uncertain together. We therefore ran a <Tooltip text="Repeating a calculation many times with randomly drawn inputs to see how uncertain the result is.">Monte Carlo analysis</Tooltip> (<Citation reference="saltelli-et-al-2008" />), drawing 500 parameter sets at random, each value taken from a distribution centred on its baseline with a spread of 10%, and recorded the enzyme level after 24 h for each. The 10% is an assumed level of uncertainty, not a measured one.
 
 The analysis was run **three times**: with only the growth parameters (K, µmax) varied, with only the expression parameters (α, δm) varied, and with all four varied together. Comparing the three shows which layer contributes most to the uncertainty in the enzyme level and we reported the mean and the 95% interval.
 
@@ -450,13 +450,13 @@ The results of both per-parameter sweep and Monte Carlo analyses of enzyme produ
 
 #### Activity model
 
-Testosterone and progesterone are close in shape and compete for the same active site of ci2350, so each slows down the conversion of the other. This is described by Michaelis–Menten kinetics for two competing substrates. Each substrate has its own turnover rate, but the two rates share same denominator, which makes the substrates compete (<Citation reference="michaelis-et-al-1913" />).
+Testosterone and progesterone are close in shape and compete for the same active site of ci2350, so each slows down the conversion of the other. This is described by <Tooltip text="A model of how fast an enzyme works as the amount of substrate changes.">Michaelis–Menten kinetics</Tooltip> for two competing substrates. Each substrate has its own turnover rate, but the two rates share the same denominator, which makes the substrates compete (<Citation reference="michaelis-et-al-1913" />).
 
 v\_T = (kcat,T / Km,T) · E\_tot · T / (1 + T/Km,T + P/Km,P)
 
 v\_P = (kcat,P / Km,P) · E\_tot · P / (1 + T/Km,T + P/Km,P)
 
-T and P are the testosterone and progesterone concentrations (µM), and v\_T and v\_P are their rates of consumption (µM per hour). E\_tot is the enzyme concentration in the culture; Km,T and Km,P are the Michaelis constants (estimated from docking, see <Ref target="tab-xr0un" />), and kcat,T and kcat,P are the turnover numbers. The ratio kcat/Km measures how efficiently each substrate is used, so the preference of a variant is the ratio of kcat,T/Km,T to kcat,P/Km,P.
+T and P are the testosterone and progesterone concentrations (µM), and v\_T and v\_P are their rates of consumption (µM per hour). E\_tot is the enzyme concentration in the culture; Km,T and Km,P are the <Tooltip text="The substrate concentration at which an enzyme works at half its top speed. Lower means tighter binding.">Michaelis constants</Tooltip> (estimated from docking, see <Ref target="tab-xr0un" />), and kcat,T and kcat,P are the <Tooltip text="The number of substrate molecules one enzyme converts per second when fully busy.">turnover numbers</Tooltip>. The ratio kcat/Km measures how efficiently each substrate is used, so the preference of a variant is the ratio of kcat,T/Km,T to kcat,P/Km,P.
 
 The enzyme availability comes from the integrated model of enzyme production: enzyme per cell multiplied by culture density, converted to a concentration by a single scaling factor (model assumption). The enzyme in the flask therefore rises as the culture grows, and continues to rise more slowly once growth stops, because the enzyme is no longer diluted.
 
@@ -474,7 +474,7 @@ The first three are the growth and expression layers described in the integrated
 
 Seven assumptions underlie these equations which are listed below:
 
-1. Testosterone and progesterone bind the same site and exclude each other (competitive binding).
+1. Testosterone and progesterone bind the same site and exclude each other (<Tooltip text="Two molecules compete for the same site, so each slows the other.">competitive binding</Tooltip>).
 2. NADH is present in saturating amounts, so it does not limit the rate.
 3. kcat is the same for both steroids and for all variants.
 4. The amount of enzyme per cell is the same for all ci2350 variants, because they are expressed under the same conditions.
@@ -482,7 +482,7 @@ Seven assumptions underlie these equations which are listed below:
 6. Product inhibition is not included.
 7. The ci2350 variants do not change folding or stability.
 
-<TableWithCaption caption="Parameters of activity model" refId="tab-2pa7e">
+<TableWithCaption caption="Parameters of activity model" refId="tab-rj5qy">
   | **Parameter**                                           | **Value**           | **Source**                                              |
   | ------------------------------------------------------- | ------------------- | ------------------------------------------------------- |
   | tind – time of induction                                | OD600 0.5 (1.58 h)  | Assumed experimental design; time from the growth model |
@@ -497,9 +497,9 @@ Seven assumptions underlie these equations which are listed below:
 
 #### Linking docking to Km
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/docking-to-km.avif" alt="Image of docking to Km" caption="From docking score to Km. Each docking score (ΔG) is converted to a binding constant, Kd = exp(ΔG/RT), and Km is assumed to follow Kd. The wild-type progesterone score is anchored to its measured Kd (0.432 µM), and each variant’s Km shifts by its score difference from wild type. A variant with a lower Km for testosterone than for progesterone prefers testosterone. This link between Km and Kd is an assumption, and docking errors are larger than most differences between variants." numbered={false} refId="fig-ldjtv" scale={100} plain={false} noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/docking-to-km.avif" alt="Image of docking to Km" caption="From docking score to Km. Each docking score (ΔG) is converted to a binding constant, Kd = exp(ΔG/RT), and Km is assumed to follow Kd. The wild-type progesterone score is anchored to its measured Kd (0.432 µM), and each variant’s Km shifts by its score difference from wild type. A variant with a lower Km for testosterone than for progesterone prefers testosterone. This link between Km and Kd is an assumption, and docking errors are larger than most differences between variants." numbered={false} refId="fig-82fl2" scale={100} plain={false} noZoom={false} />
 
-The activity model needs a Michaelis constant (Km) for testosterone and progesterone for every ci2350 variant, but none has been published. The only kinetic information on the enzyme is the wild-type dissociation constant (Kd) for progesterone, 0.432 µM, measured by isothermal titration calorimetry (<Citation reference="arp-et-al-2025" />).
+The activity model needs a Michaelis constant (Km) for testosterone and progesterone for every ci2350 variant, but none has been published. The only kinetic information on the enzyme is the wild-type <Tooltip text="A measure of binding strength: a smaller value means tighter binding.">dissociation constant (Kd)</Tooltip> for progesterone, 0.432 µM, measured by <Tooltip text="A lab method that measures binding by the heat it gives off.">isothermal titration calorimetry</Tooltip> (<Citation reference="arp-et-al-2025" />).
 
 We therefore **propose** to use our docking results to estimate the missing values. Docking gives a binding energy ΔG, which relates to Kd = exp(ΔG/RT) (<Citation reference="gilson-et-al-2007" />). Here R is the gas constant and RT = 0.616 kcal/mol at 37 °C, so a more **negative ΔG** means tighter binding and a **smaller Kd**. Docking scores are not reliable as absolute energies, since Vina can deviate from experiment by 1 to 2 kcal/mol (<Citation reference="eberhardt-et-al-2021" />, <Citation reference="trott-et-al-2010" />), so we used only the differences between scores calculated with the same protocol.
 
@@ -594,7 +594,7 @@ AKR1D1 was therefore not carried forward. Engineering specificity here would nee
   </LayoutColumn>
 
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-v309t-testosterone-view.avif" alt="AKR1D1_V309T_testosterone_view" caption="Testosterone (cyan) in AkR1D1 V309T, in the same orientation, with the 17β-hydroxyl occupying the space" numbered refId="fig-bifbg" scale={100} plain={false} noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-v309t-testosterone-view.avif" alt="AKR1D1_V309T_testosterone_view" caption="Testosterone (cyan) in AKR1D1 V309T, in the same orientation, with the 17β-hydroxyl occupying the space" numbered refId="fig-bifbg" scale={100} plain={false} noZoom={false} />
   </LayoutColumn>
 </Layout2>
 
@@ -608,11 +608,11 @@ Figure 2b. Testosterone in the V309T + L311S double mutant. Both mutated side ch
 
 <Layout2>
   <LayoutColumn>
-    <FigureWithCaption numbered={false} refId="fig-tonmw" scale={100} plain={false} noZoom={false} />
+    <FigureWithCaption numbered={false} refId="fig-vzzbw" scale={100} plain={false} noZoom={false} />
   </LayoutColumn>
 
   <LayoutColumn>
-    <FigureWithCaption numbered={false} refId="fig-tonmw" scale={100} plain={false} noZoom={false} />
+    <FigureWithCaption numbered={false} refId="fig-aqisx" scale={100} plain={false} noZoom={false} />
   </LayoutColumn>
 </Layout2>
 
@@ -657,7 +657,7 @@ Figure 3b. Testosterone (cyan) docked into the ci2350 Combo 8 variant (R215A + V
 
 The two mutations behave very differently on their own. V263I shifts the preference by only −0.2 selectivity and weakens progesterone binding to −7.4 kcal/mol, so the gain in Combo 8 has to come from removing the arginine at 215 <Ref target="tab-nn49s" />.
 
-**Combo 13 (R215A + V263I + Q100T)** adds Q100T to the Combo 8 backbone. **Q100** contacts the **17β-hydroxyl** of testosterone, and threonine offers the same hydrogen-bonding capacity from a shorter side chain, which may suit the compact hydroxyl better. In combination the variant reaches **ΔΔG = −7.19 REU**, the most stable candidate in the set, helps in getting enough soluble protein to characterise. The cost is selectivity: the preference falls to −0.5 kcal/mol, within the noise floor. Combo 13 is therefore the safer choice if stability proves limiting, rather than the better one on specificity.
+**Combo 13 (R215A + V263I + Q100T)** adds Q100T to the Combo 8 backbone. **Q100** contacts the **17β-hydroxyl** of testosterone, and threonine offers the same hydrogen-bonding capacity from a shorter side chain, which may suit the compact hydroxyl better. In combination the variant reaches **ΔΔG = −7.19 REU**, the most stable candidate in the set, which helps in obtaining enough soluble protein to characterise. The cost is selectivity: the preference falls to −0.5 kcal/mol, within the noise floor. Combo 13 is therefore the safer choice if stability proves limiting, rather than the better one on specificity.
 
 ci2350\_Combo13\_progesterone\_view\.png
 
