@@ -1,17 +1,19 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { useClock, useScrollProgress, useTimedToggle, useTimedToggles, type Hold } from './scroll-play';
 import { SymptomRing } from './symptom-ring';
 import { dimmed, SolutionPapers } from './solution-papers';
 import { SkipToEnd } from './skip-to-end';
 import { TeamRoom } from './team-room';
+import { SYMPTOMS_OUT, TREATMENT_SPOTS, Treatments } from './treatments';
 import { LayerArt } from './women-art';
 import {
   blendPose,
   drawWoman,
   FIGURE_SCALE,
   POSES,
+  type Figure,
   type Look,
   type Pose,
   type V3,
@@ -64,7 +66,7 @@ const HER = 5;
 // How much scroll the scene plays over (--play in globals.css, in vh), and
 // a point `vh` into it as a share of that, which is how the timings below
 // are given, so adding to the end doesn't move what comes before.
-const PLAY_VH = 960;
+const PLAY_VH = 1180;
 const at = (vh: number) => vh / PLAY_VH;
 
 // Her swing down to hang plays by itself, over HANG_MS, once the scroll
@@ -102,6 +104,8 @@ const D = {
 // the words of the wiki design's Problem section. `phrase` beats lead with
 // words instead of a number, set smaller.
 type Beat = { big: string; small: ReactNode; from: number; to: number; phrase?: boolean; top?: boolean };
+const TREAT_AT = at(740);
+const TREAT_MS = 5200;
 const BEATS: Beat[] = [
   // The first beat comes in while she is still falling, so she is never
   // alone on the screen waiting for more scroll.
@@ -132,6 +136,26 @@ const BEATS: Beat[] = [
     big: 'Androgen excess',
     small: 'leads to androgen receptor activation throughout the body, and shows as',
     from: at(600),
+    to: at(740),
+    phrase: true,
+    top: true,
+  },
+  // Then the treatments come in round her, and, a beat later, why they are
+  // not the end of it.
+  {
+    big: 'Current treatments',
+    small:
+      'Combined oral contraceptives regulate menstrual cycles and suppress ovarian androgen production. Metformin improves insulin sensitivity, but has limited effects on hyperandrogenism. Anti-androgens reduce androgen action, but require systemic exposure.',
+    from: TREAT_AT,
+    to: at(870),
+    phrase: true,
+    top: true,
+  },
+  {
+    big: 'Symptoms, not the source',
+    small:
+      'These therapies relieve symptoms rather than addressing the underlying mechanism. They act on the whole body, cover only part of the problem, and some rule out pregnancy. We need a localized strategy that targets androgen regeneration.',
+    from: at(870),
     to: Infinity,
     phrase: true,
     top: true,
@@ -155,7 +179,7 @@ const TO_CENTRE: [number, number] = [0, 0.35];
 const RING_MS = 2600;
 // Then the whole scene pulls back into a speech bubble over one of the
 // team, in a room full of them (see TeamRoom).
-const ROOM_AT = at(760);
+const ROOM_AT = at(990);
 // The bubble's tail: from its bottom edge, where it leans towards the
 // teammate telling it, to a point TAIL_GAP (px) over her head, all in the
 // bubble's own box (0 to 100 each way, see the bubble's edge below), as
@@ -181,7 +205,7 @@ const ROOM_MS = 2200;
 // The papers on their table fly away, and cards with our solution on fly
 // in, all in one go, clipped onto a thread as it draws in (see
 // SolutionPapers).
-const SOLUTION_AT = at(830);
+const SOLUTION_AT = at(1060);
 const SOLUTION_MS = 3800;
 
 // How far the scene rises (in vh) at scroll progress `p`: quickly at first, carrying the
@@ -209,6 +233,8 @@ const FALL = 600;
 const FOLLOW = 660;
 const SINK = 380;
 const SINK_FOLLOW = 340;
+// She sinks on, with the scroll, till where the scene used to end.
+const SINK_END = at(960);
 
 // Once she has stopped, nine more, smaller and farther off, sinking round
 // her, all in her crimson. Seven of the ten (`faint`) are see-through: the
@@ -256,6 +282,8 @@ const HOLDS: Hold[] = [
   { at: BEATS[1].from, ms: FLOAT_MS },
   { at: BEATS[2].from, ms: BEAT_MS },
   { at: BEATS[3].from, ms: RING_MS },
+  { at: BEATS[4].from, ms: TREAT_MS },
+  { at: BEATS[5].from, ms: BEAT_MS },
   { at: ROOM_AT, ms: ROOM_MS },
   { at: SOLUTION_AT, ms: SOLUTION_MS },
 ];
@@ -307,7 +335,7 @@ export function WomenOnLine() {
   // the screen is tall enough that the fall wouldn't take it off the top).
   const stat = smooth(phase(hang, H.stat)) * (1 - straighten);
   const drop = phase(dropped, D.fall);
-  const sink = phase(p, [DROP_AT, 1]) * dropped;
+  const sink = phase(p, [DROP_AT, SINK_END]) * dropped;
   const fall = FALL * easeInOut(drop) + SINK * sink;
   const camera = FOLLOW * easeInOut(phase(dropped, D.follow)) + SINK_FOLLOW * sink;
   const landed = dropped === 1;
@@ -322,6 +350,9 @@ export function WomenOnLine() {
   const ring = useTimedToggle(landed && p >= BEATS[3].from, RING_MS);
   const centred = smooth(phase(ring, TO_CENTRE));
   const symptoms = phase(ring, [TO_CENTRE[1] - 0.05, 1]);
+  // The treatments come in over the symptoms, which go as they do.
+  const treat = useTimedToggle(landed && p >= TREAT_AT, TREAT_MS);
+  const symptomsOut = 1 - smooth(phase(treat, SYMPTOMS_OUT));
   const room = smooth(useTimedToggle(landed && p >= ROOM_AT, ROOM_MS));
   // Where the tail points: her head, found on the screen, in the
   // bubble's box, as the room settles round the bubble.
@@ -500,9 +531,22 @@ export function WomenOnLine() {
                   </g>
                 );
               })}
-            <g opacity={wordsOut}>
-              <SymptomRing cx={herNowX} cy={herRingY + HER_MIDDLE} span={span} shown={wordsOut ? symptoms : 0} />
+            <g opacity={wordsOut * symptomsOut}>
+              <SymptomRing cx={herNowX} cy={herRingY + HER_MIDDLE} span={span} shown={wordsOut * symptomsOut ? symptoms : 0} />
             </g>
+            <g opacity={wordsOut}>
+              <Treatments cx={herNowX} cy={herRingY + HER_MIDDLE} shown={treat} />
+            </g>
+            {treat > 0 && (
+              <PeacockHer
+                figure={herFigure}
+                transform={women[HER].transform}
+                x={herNowX}
+                y={herRingY + HER_MIDDLE}
+                shown={treat}
+                opacity={wordsOut}
+              />
+            )}
           </svg>
           <p className="women-line-scene__stat" style={{ opacity: stat, translate: `0 ${((1 - stat) * 1).toFixed(3)}rem` }}>
             <strong>10–13%</strong>
@@ -557,5 +601,49 @@ export function WomenOnLine() {
         )}
       </div>
     </section>
+  );
+}
+
+// Her, over her own drawing, in peacock, but only where the treatments
+// reach her (TREATMENT_SPOTS), each growing from its spot as it comes in,
+// soft at its edge: the part of her they give some relief to.
+function PeacockHer({
+  figure,
+  transform,
+  x,
+  y,
+  shown,
+  opacity,
+}: {
+  figure: Figure;
+  transform: string;
+  x: number;
+  y: number;
+  shown: number;
+  opacity: number;
+}) {
+  const id = useId().replace(/:/g, '');
+  return (
+    <g opacity={opacity}>
+      <defs>
+        <radialGradient id={`${id}-fade`}>
+          <stop offset="0.7" stopColor="#fff" />
+          <stop offset="1" stopColor="#000" />
+        </radialGradient>
+        <mask id={`${id}-mask`} maskUnits="userSpaceOnUse" x={-2400} y={-2400} width={6000} height={6000}>
+          {TREATMENT_SPOTS.map(({ dx, dy, r, reach }, i) => {
+            const grown = reach(shown);
+            return grown ? (
+              <circle key={i} cx={x + dx} cy={y + dy} r={r * grown} fill={`url(#${id}-fade)`} />
+            ) : null;
+          })}
+        </mask>
+      </defs>
+      <g mask={`url(#${id}-mask)`} style={{ '--women-ink': 'var(--color-peacock)' } as CSSProperties}>
+        <LayerArt layer={figure.behind} transform={transform} />
+        <LayerArt layer={figure.main} transform={transform} />
+        <LayerArt layer={figure.over} transform={transform} />
+      </g>
+    </g>
   );
 }
