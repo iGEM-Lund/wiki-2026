@@ -6,7 +6,7 @@ import { cache } from 'react';
 // a 403 saying to use its player), so a bare <video> can't play them: the
 // clips are shown in Video Universe's own embedded player instead. A writer
 // pastes the ordinary watch link, and it's resolved here, while rendering
-// (at build time for the production export), to the video's id, poster and
+// (at build time for the production export), to the video's embed address, poster, counts and
 // watch page. The visitor's browser only ever talks to igem.org domains.
 const VIDEO_UNIVERSE = 'video.igem.org';
 
@@ -18,12 +18,19 @@ export type ResolvedVideo = {
   poster?: string;
   // The page the video can be watched on, linked from the feed.
   href?: string;
+  // Video Universe videos only: the id the feed uses to refresh the counts
+  // live in the visitor's browser (allowed: iGEM's wiki rules permit
+  // runtime requests to igem.org domains), and the counts as of the build,
+  // shown until (or if) that refresh succeeds.
+  videoUniverseId?: string;
+  likes?: number;
+  views?: number;
   // Set instead of a player when the link couldn't be resolved; shown in
   // place of that one clip rather than breaking the whole page or build.
   error?: string;
 };
 
-type PeerTubeVideo = { uuid: string; url?: string; previewPath?: string };
+type PeerTubeVideo = { uuid: string; url?: string; likes?: number; views?: number; previewPath?: string };
 
 // Accepts the share link (/w/<short id>), the watch URL and the embed URL.
 function videoId(url: URL) {
@@ -57,9 +64,12 @@ export const resolveVideo = cache(async (raw: string): Promise<ResolvedVideo> =>
     if (!response.ok) throw new Error(`Video Universe answered ${response.status}`);
     const video = (await response.json()) as PeerTubeVideo;
     return {
-      embedSrc: `https://${VIDEO_UNIVERSE}/videos/embed/${video.uuid}?title=0&warningTitle=0&peertubeLink=0`,
+      embedSrc: `https://${VIDEO_UNIVERSE}/videos/embed/${video.uuid}?api=1&controls=0&loop=1&muted=1&title=0&warningTitle=0&peertubeLink=0`,
       poster: video.previewPath ? `https://${VIDEO_UNIVERSE}${video.previewPath}` : undefined,
       href: video.url ?? raw,
+      videoUniverseId: video.uuid,
+      likes: video.likes,
+      views: video.views,
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
