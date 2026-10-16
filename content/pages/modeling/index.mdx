@@ -92,6 +92,34 @@ The sequence of each candidate enzyme was submitted to the NCBI Conserved Domain
   </Expandable>
 </Card>
 
+
+
+<Card>
+  <CardTitle>
+    **For ci2350:**
+  </CardTitle>
+
+  For ci2350, CD Search assigned the query sequence to the OYE\_like\_FMN\_family within the TIM barrel superfamily, returning annotated tracks for the active site, substrate binding site, FMN binding site and a putative catalytic residue (<Ref target="fig-f2bmm" />).&#x20;
+
+  <Expandable defaultOpen={false}>
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/cdsearch-ci2350.avif" alt="CD search image" caption="NCBI CD Search result for ci2350, assigning the sequence to the OYE_like_FMN_family within the TIM barrel superfamily." numbered refId="fig-f2bmm" scale={100} plain={false} noZoom={false} />
+
+    The domain covers the N-terminal half of the 642-residue protein, and all annotated functional positions fall within it. These active site residues were combined with those of <Citation reference="arp-et-al-2025" narrative />, who identified Y167 as the structural counterpart of the catalytic tyrosine in *E. coli* 2,4-dienoyl-CoA reductase (PDB 1PS9), with N166, S171 and N253 in the surrounding region. This combined set served as the reference for validating the fpocket predictions.
+
+    <TableWithCaption caption="Conserved domain features of ci2350 from the NCBI CD Search with the active site residues reported by Arp et al. (2025)." refId="tab-co4yj">
+      | **Active site**                                                     | **Catalytic / substrate-binding residues** |
+      | ------------------------------------------------------------------- | ------------------------------------------ |
+      | A24, G26, V59, Q100, H165, N166, Y167, S171, R215, N253, G315, R316 | H165, N166, Y167, S171, N253               |
+    </TableWithCaption>
+
+    &#x20; &#x20;
+
+    &#x20;&#x20;
+  </Expandable>
+</Card>
+
+&#x20;&#x20;
+
 #### **For AKR1D1:**&#x20;
 
 CD Search assigned the query sequence (NP\_005980.1) to the AKR\_AKR1D1-3 family within the aldo-keto reductase superfamily, returning 32 annotated active site positions and a separately annotated <Tooltip text="The four residues that together carry out the chemical reaction.">catalytic tetrad</Tooltip> (<Ref target="tab-vkjtr" />).
