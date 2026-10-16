@@ -26,20 +26,21 @@ const ALT_TEXT_DESCRIPTION =
 // Shared by Badges, Badge and Pillars, so a badge in a table cell picks from
 // the same palette, and gets the same automatic colour, as one on a card or
 // the pillar it names.
-function badgeColorField() {
+function badgeColorField({ automatic = true } = {}) {
   return fields.select({
     label: 'Colour',
-    description:
-      'Automatic picks a colour from the text, so the same committee or pillar always gets the same colour (a pillar matches badges with the same text). Choose one yourself only if two clash.',
+    description: automatic
+      ? 'Automatic picks a colour from the text, so the same committee or pillar always gets the same colour (a pillar matches badges with the same text). Choose one yourself only if two clash.'
+      : 'Pick the colour this pillar is sewn in.',
     options: [
-      { label: 'Automatic', value: 'auto' },
+      ...(automatic ? [{ label: 'Automatic', value: 'auto' }] : []),
       { label: 'Teal', value: 'teal' },
       { label: 'Crimson', value: 'crimson' },
       { label: 'Rose', value: 'rose' },
       { label: 'Dark teal', value: 'depths' },
       { label: 'Kraft', value: 'kraft' },
     ],
-    defaultValue: 'auto',
+    defaultValue: automatic ? 'auto' : 'teal',
   });
 }
 
@@ -694,7 +695,7 @@ export const contentComponents = {
             description:
               'Only needed when the heading on the page is worded differently from the title. Type its text exactly as it appears.',
           }),
-          color: badgeColorField(),
+          color: badgeColorField({ automatic: false }),
         }),
         { label: 'Pillars', itemLabel: (props) => props.fields.title.value || 'Pillar' },
       ),

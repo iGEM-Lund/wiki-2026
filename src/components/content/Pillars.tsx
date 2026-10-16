@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import GithubSlugger from 'github-slugger';
-import { badgeTone, type BadgeColor } from './Badges';
+import { SectionHeading } from '@/components/section-heading';
+import { BADGE_COLORS, type BadgeColor } from './Badges';
 
 // Each pillar is drawn as an Ionic column, outlined and filled: a rounded top slab, a
 // tapering echinus, and a scroll band with a curled volute at either end, then
@@ -32,6 +33,13 @@ function Base() {
 
 export type Pillar = { title: string; heading?: string; color?: BadgeColor | 'auto' | null };
 
+// A pillar's colour is hand picked in the editor. One saved without a choice
+// (older content) takes the palette's colours in order, never a hash of its
+// title, so rewording a title can't recolour it.
+function pillarTone(pillar: Pillar, index: number): BadgeColor {
+  return pillar.color && pillar.color !== 'auto' ? pillar.color : BADGE_COLORS[index % BADGE_COLORS.length];
+}
+
 // The id rehype-slug gives the heading a pillar points at (see
 // src/lib/mdx/render.ts), computed with the same github-slugger so the two
 // can't drift: the pillar's `heading` text if set, else its title.
@@ -52,8 +60,8 @@ function longestWord(pillars: Pillar[]): number {
 // `activeIndex` set the row is the one that replaces that pillar's heading
 // (see PillarsSectionHeading): that pillar is enlarged, and no longer a
 // link, since it is where the reader already is. Each pillar is sewn in one
-// of the badge colours (see .pillars__link--* in globals.css), picked the
-// same way as a badge's, so "Automatic" matches a badge with the same text.
+// of the badge colours (see .pillars__link--* in globals.css), hand picked in
+// the editor.
 export function PillarRow({ pillars, activeIndex }: { pillars: Pillar[]; activeIndex?: number }) {
   if (pillars.length === 0) return null;
 
@@ -71,7 +79,7 @@ export function PillarRow({ pillars, activeIndex }: { pillars: Pillar[]; activeI
               : index < activeIndex
                 ? 'pillars__item pillars__item--before'
                 : 'pillars__item pillars__item--after';
-          const linkClass = `pillars__link pillars__link--${badgeTone({ text: pillar.title, color: pillar.color })}`;
+          const linkClass = `pillars__link pillars__link--${pillarTone(pillar, index)}`;
           const body = (
             <>
               <Capital />
@@ -115,8 +123,7 @@ export function Pillars({ pillars = [] }: { pillars?: Pillar[] }) {
 
 // Stands in for the h2 of a pillar's section (src/lib/mdx/render.ts swaps it
 // in). The anchor id moves to the wrapper, so the pillar links and the page
-// outline still land here; the real h2 stays in the document, visually
-// hidden, so the heading structure and screen readers keep it.
+// outline still land here; the h2 stays visible above the row.
 export function PillarsSectionHeading({
   id,
   pillars,
@@ -130,7 +137,7 @@ export function PillarsSectionHeading({
 }) {
   return (
     <div id={id} className="pillars-section">
-      <h2 className="pillars__sr-only">{children}</h2>
+      <SectionHeading className="pillars-section__title">{children}</SectionHeading>
       <PillarRow pillars={pillars} activeIndex={activeIndex} />
     </div>
   );
