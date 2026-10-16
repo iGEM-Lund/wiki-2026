@@ -1,7 +1,16 @@
 ---
 title: Biosafety
 ---
-## Genetic and ecological safety: &#x20;
+## Genetic and ecological safety:&#x20;
+
+### Introduction:&#x20;
+
+Biosafety is a specific set of measures which help keep genetically modified organisms from causing harm to people, other organisms or the environment. For most lab work, laboratory containment is enough. Our probiotic, AnTigone is a living biotherapeutic which has to be administered orally and has to work inside the gut. It passes through patients, can be shed into faeces and could meet the wider environment. Once released, living cells can multiply, survive and pass genes to other bacteria. To avoid all of these dangers we have incorporated a safety design. Our target questions while building the safety design were:&#x20;
+
+* Does it act only when and where it should?&#x20;
+* Can it survive or spread outside the gut?&#x20;
+* Which safety standards must be followed before the product reaches patients?\
+  &#x20;
 
 <Pillars pillars={[{"title":"In-Host Control","heading":"In-Host Control","color":"auto"},{"title":"Environmental Biocontainment ","heading":"Environmental Biocontainment","color":"auto"},{"title":"GMO Regulations","heading":"GMO Regulations","color":"auto"}]} />
 
@@ -25,19 +34,33 @@ For each strategy, we researched multiple possible approaches, compared them aga
 
 #### **Gut Gate**
 
-Our <Tooltip text="The part of the system that carries out the intended action, here the enzyme that transforms the steroid.">effector</Tooltip> should only be active when our engineered probiotic is in the gut. The distinct physicochemical signals in the gut vary from both the outside environment and between different compartments within the gut itself, and these signals can be used to build a location-based switch. We compared three strategies from the literature and chose hypoxia sensing for our proof-of-concept.
+Our effector should only be active when our engineered probiotic is in the gut. The distinct physicochemical signals in the gut vary from both the outside environment and between different compartments within the gut itself, and these signals can be used to build a location-based switch. <Citation reference="chien-et-al-2022" narrative /> built oxygen, pH and lactate biosensors that control essential genes (*asd, glms) in E. coli* and S.Typhimurium, so that growth depends on the gut-like signal, and tested them in gut-mimicking media and in mice. The three sensing options are compared in tab-6t28q.  We chose hypoxia sensing for our proof of concept.
 
-<Citation reference="chien-et-al-2022" narrative /> built oxygen, pH and lactate <Tooltip text="Biological parts that detect a signal, such as oxygen or a hormone, and trigger a response.">biosensors</Tooltip> that control <Tooltip text="Genes a cell cannot live without.">essential genes</Tooltip> (asd, glms) in *E. coli* and *S.* Typhimurium, so that growth depends on the gut-like signal, and tested them in gut-mimicking media and in mice. This gives three sensing options for a location-based gate:
+<TableWithCaption
+  caption="
+Sensing options compared for the gut gate
 
-| **Option**                  | **How it works**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | **Registry part**                                                                      |
-| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| Hypoxia sensing             | A <Tooltip text="The DNA sequence in front of a gene that controls when it is switched on.">promoter</Tooltip> (e.g. PfnrS: hypoxia-induced, <Tooltip text="A bacterial protein that switches genes on or off depending on oxygen.">FNR</Tooltip>-regulated) is only active under low-oxygen conditions. The gut <Tooltip text="The hollow inside of the gut, where food and bacteria are.">lumen</Tooltip> is <Tooltip text="Without oxygen.">anaerobic</Tooltip> while conditions outside are aerobic. | **BBa\_25DMNRIB** — sequence-verified match to the PfnrS promoter in our own construct |
-| pH sensing                  | A promoter responds to the gut's pH gradient (small intestine \~pH 6.3, colon \~pH 7).                                                                                                                                                                                                                                                                                                                                                                                                                   | —                                                                                      |
-| Lactate / bile acid sensing | A promoter responds to gut-specific metabolites like lactate or bile acids, present at much higher concentration in the gut than elsewhere.                                                                                                                                                                                                                                                                                                                                                              | —                                                                                      |
+"
+  refId="tab-6t28q"
+>
+  &#x20;&#x20;
 
-Hypoxia sensing was chosen as our gate. In principle, the oxygen gap between the gut and outside conditions is wide and more consistent than the gut's pH gradient or bile-acid fluctuations, which vary with time of day and diet. Hypoxia promoters are also well establi<Tooltip text="Leave the body with stool.">shed</Tooltip> in *E. coli*, since they rely on the bacterium's native FNR-based anaerobic response rather than an engineered bile-acid receptor or pH sensor. Our choice was discussed with Dr. Tsz Yan Clement Chan, who confirmed hypoxia sensing as a valid biosafety layer, while noting it is one layer rather than a complete containment solution on its own.
+  | **Option**                  | **How it works**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | **Registry part**                                                                      |
+  | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+  | Hypoxia sensing             | A <Tooltip text="The DNA sequence in front of a gene that controls when it is switched on.">promoter</Tooltip> (e.g. PfnrS: hypoxia-induced, <Tooltip text="A bacterial protein that switches genes on or off depending on oxygen.">FNR</Tooltip>-regulated) is only active under low-oxygen conditions. The gut <Tooltip text="The hollow inside of the gut, where food and bacteria are.">lumen</Tooltip> is <Tooltip text="Without oxygen.">anaerobic</Tooltip> while conditions outside are aerobic. | **BBa\_25DMNRIB** — sequence-verified match to the PfnrS promoter in our own construct |
+  | pH sensing                  | A promoter responds to the gut's pH gradient (small intestine \~pH 6.3, colon \~pH 7).                                                                                                                                                                                                                                                                                                                                                                                                                   | —                                                                                      |
+  | Lactate / bile acid sensing | A promoter responds to gut-specific metabolites like lactate or bile acids, present at much higher concentration in the gut than elsewhere.                                                                                                                                                                                                                                                                                                                                                              | —                                                                                      |
 
-We therefore treat hypoxia gating as a partial restriction that works together with the feedback loop and auxotrophy, not as strict gating on its own.
+  &#x20;&#x20;
+</TableWithCaption>
+
+Why Hypoxia Sensing?&#x20;
+
+* The oxygen gap between the gut and outside conditions is wide and more consistent than the gut's pH gradient or bile-acid fluctuations, which vary with time of day and diet.
+* Hypoxia promoters are also well established in *E. coli ,* since they rely on the bacterium's native FNR-based anaerobic response rather than an engineered bile-acid receptor or pH sensor.&#x20;
+* Dr. Tsz Yan Clement Chan confirmed hypoxia sensing as a valid biosafety layer, while noting it is one layer rather than a complete containment solution on its own.
+
+  We therefore treat hypoxia gating as a partial restriction that works together with the feedback loop and auxotrophy, not as strict gating on its own.
 
 #### **Feedback-Responsive Expression**
 
