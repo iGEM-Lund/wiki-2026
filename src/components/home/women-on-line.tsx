@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { useClock, useScrollProgress, useTimedToggle, useTimedToggles, type Hold } from './scroll-play';
 import { SymptomRing } from './symptom-ring';
 import { dimmed, SolutionPapers } from './solution-papers';
@@ -101,13 +101,17 @@ const D = {
 // her, a beat at a time, each fading in and out over its own stretch, in
 // the words of the wiki design's Problem section. `phrase` beats lead with
 // words instead of a number, set smaller.
-type Beat = { big: string; small: string; from: number; to: number; phrase?: boolean; top?: boolean };
+type Beat = { big: string; small: ReactNode; from: number; to: number; phrase?: boolean; top?: boolean };
 const BEATS: Beat[] = [
   { big: 'Up to 70%', small: 'of them remain undiagnosed', from: at(200), to: at(320) },
   {
     big: 'Polyendocrine Metabolic Ovarian Syndrome',
-    small:
-      'is a multisystem disorder characterized by hormonal imbalance, metabolic dysfunction, and impaired ovarian function, with hyperandrogenism being a major pathological driver.',
+    small: (
+      <>
+        is a multisystem disorder characterized by hormonal imbalance, metabolic dysfunction, and impaired ovarian
+        function, with <strong>hyperandrogenism</strong> being a major pathological driver.
+      </>
+    ),
     from: at(320),
     to: at(460),
     phrase: true,

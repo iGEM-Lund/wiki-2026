@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { Tooltip } from '@/components/content/Tooltip';
 import { Card } from '@/components/content/Card';
 import { CardTitle } from '@/components/content/CardTitle';
 
@@ -14,7 +15,16 @@ import { CardTitle } from '@/components/content/CardTitle';
 const SOLUTION = [
   {
     title: 'A gut-gated system',
-    text: 'Under gut-like conditions, an engineered probiotic expresses an effector that modulates androgen bioactivity locally, within the testobolome.',
+    text: (
+      <>
+        Under gut-like conditions, an engineered probiotic expresses an effector that modulates androgen bioactivity
+        locally, within the{' '}
+        <Tooltip text="The gut bacteria that metabolise testosterone and other androgens, and so help regulate how much of them stays active in the body.">
+          testobolome
+        </Tooltip>
+        .
+      </>
+    ),
   },
   {
     title: 'Local androgen conversion',

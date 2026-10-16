@@ -5805,12 +5805,12 @@ article .layout__column p {
   font-family: var(--font-heading);
   line-height: 1.15;
 }
-.women-line-scene__next strong {
+.women-line-scene__next > strong {
   display: block;
   font-size: clamp(2.5rem, 7 * var(--u), 5.5rem);
   font-weight: 600;
 }
-.women-line-scene__next:not(.women-line-scene__next--phrase) strong {
+.women-line-scene__next:not(.women-line-scene__next--phrase) > strong {
   white-space: nowrap;
 }
 /* The longer beats, beside her as she floats right of the middle: in
@@ -5818,16 +5818,22 @@ article .layout__column p {
 .women-line-scene__next--phrase {
   left: max(6%, calc(50% - min(32%, 28rem)));
 }
-.women-line-scene__next--phrase strong {
+.women-line-scene__next--phrase > strong {
   font-size: clamp(1.75rem, 3.6 * var(--u), 3.25rem);
   line-height: 1.05;
   margin-bottom: 0.4rem;
 }
-.women-line-scene__next span,
+.women-line-scene__next > span,
 .women-line-scene__stat span {
   display: block;
   font-size: clamp(1rem, 1.8 * var(--u), 1.5rem);
   color: var(--text);
+}
+
+/* A term picked out inside a beat's text (hyperandrogenism). */
+.women-line-scene__next span strong {
+  font-weight: 600;
+  color: var(--heading-minor);
 }
 
 /* Everything the scene has shown so far, which at the end pulls back
@@ -6030,17 +6036,29 @@ article .layout__column p {
 }
 .symptom-ring__icon {
   overflow: visible;
-  color: var(--text);
+  color: var(--heading-minor);
 }
 /* As wide a line as the women are drawn with (see SymptomRing). */
 .symptom-ring__icon :is(path, rect, circle) {
   stroke-width: var(--icon-line);
 }
+/* Each symptom is one hover/focus target (a Tooltip): icon over label,
+   all in crimson, without the Tooltip's dotted underline. */
+.symptom-ring__item .term-tip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+}
 .symptom-ring__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-family: var(--font-heading);
-  font-size: calc(16px * var(--label-scale, 1));
-  text-anchor: middle;
-  fill: var(--text);
+  line-height: 1.15;
+  text-align: center;
+  color: var(--heading-minor);
 }
 
 /* On a tall, narrow screen, where the scene is cropped either side and

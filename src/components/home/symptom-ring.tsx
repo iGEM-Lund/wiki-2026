@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { Tooltip } from '@/components/content/Tooltip';
 import { FIGURE_SCALE, LINE } from '@/lib/women-on-line';
 import { SYMPTOM_ICONS, type SymptomIcon } from './symptom-icons';
 
@@ -7,11 +8,31 @@ import { SYMPTOM_ICONS, type SymptomIcon } from './symptom-icons';
 // Drawn inside the scene's SVG, in its units, so they stay round her.
 
 const SYMPTOMS = [
-  { icon: SYMPTOM_ICONS.hirsutism, label: 'Hirsutism' },
-  { icon: SYMPTOM_ICONS.acne, label: 'Acne & oily skin' },
-  { icon: SYMPTOM_ICONS.hairLoss, label: ['Female-pattern', 'hair loss'] },
-  { icon: SYMPTOM_ICONS.irregularMenstruation, label: ['Irregular', 'menstruation'] },
-  { icon: SYMPTOM_ICONS.metabolic, label: ['Metabolic', 'abnormalities'] },
+  {
+    icon: SYMPTOM_ICONS.hirsutism,
+    label: 'Hirsutism',
+    tip: 'Excess growth of thick, dark hair in places where women usually have little or none, such as the face, chest and back.',
+  },
+  {
+    icon: SYMPTOM_ICONS.acne,
+    label: 'Acne & oily skin',
+    tip: 'Androgens make the skin glands produce more oil, which blocks pores and causes spots.',
+  },
+  {
+    icon: SYMPTOM_ICONS.hairLoss,
+    label: ['Female-pattern', 'hair loss'],
+    tip: 'Gradual thinning of the hair on the top of the scalp, caused by androgens shrinking the hair follicles.',
+  },
+  {
+    icon: SYMPTOM_ICONS.irregularMenstruation,
+    label: ['Irregular', 'menstruation'],
+    tip: 'Periods that are infrequent, unpredictable or absent, because excess androgens disturb ovulation.',
+  },
+  {
+    icon: SYMPTOM_ICONS.metabolic,
+    label: ['Metabolic', 'abnormalities'],
+    tip: 'Problems in how the body handles sugar and fat, such as insulin resistance, weight gain and raised cholesterol.',
+  },
 ];
 
 // The ring: its radii, and where on it each goes, in degrees clockwise from
@@ -26,6 +47,7 @@ const FIT_EDGE = 95;
 const ANGLES = [-30, 25, 90, 155, 210];
 const ICON = 96;
 const LABEL_LINE = 18;
+const ITEM_W = 200;
 
 // Each icon cropped to a square round its drawing, sized so that the
 // drawings cover about the same area (whatever their shape), and so feel
@@ -48,7 +70,7 @@ export function SymptomRing({ cx, cy, span, shown }: { cx: number; cy: number; s
   const labels = Math.max(1, 0.75 * (1200 / span));
   return (
     <g className="symptom-ring" style={{ '--label-scale': labels.toFixed(3) } as CSSProperties}>
-      {SYMPTOMS.map(({ icon, label }, i) => {
+      {SYMPTOMS.map(({ icon, label, tip }, i) => {
         const t = smooth(clamp01(shown * SYMPTOMS.length - i));
         if (!t) return null;
         const a = (ANGLES[i] * Math.PI) / 180;
@@ -60,23 +82,29 @@ export function SymptomRing({ cx, cy, span, shown }: { cx: number; cy: number; s
         const { viewBox, line } = fitted(icon);
         return (
           <g key={i} opacity={t}>
-            <svg
-              x={x - ICON / 2}
+            <foreignObject
+              x={x - ITEM_W / 2}
               y={y - ICON / 2 - 20}
-              width={ICON}
-              height={ICON}
-              viewBox={viewBox}
-              className="symptom-ring__icon"
-              style={{ '--icon-line': line.toFixed(3) } as CSSProperties}
-              dangerouslySetInnerHTML={{ __html: icon.markup }}
-            />
-            <text className="symptom-ring__label" x={x} y={y + ICON / 2 + 6}>
-              {lines.map((line, j) => (
-                <tspan key={j} x={x} dy={j ? LABEL_LINE * labels : 0}>
-                  {line}
-                </tspan>
-              ))}
-            </text>
+              width={ITEM_W}
+              height={ICON + 4 + lines.length * LABEL_LINE * labels}
+              className="symptom-ring__item"
+            >
+              <Tooltip text={tip}>
+                <svg
+                  width={ICON}
+                  height={ICON}
+                  viewBox={viewBox}
+                  className="symptom-ring__icon"
+                  style={{ '--icon-line': line.toFixed(3) } as CSSProperties}
+                  dangerouslySetInnerHTML={{ __html: icon.markup }}
+                />
+                <span className="symptom-ring__label" style={{ fontSize: `${16 * labels}px` }}>
+                  {lines.map((text, j) => (
+                    <span key={j}>{text}</span>
+                  ))}
+                </span>
+              </Tooltip>
+            </foreignObject>
           </g>
         );
       })}
