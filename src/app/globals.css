@@ -2562,7 +2562,7 @@ a.inline-icon--link:focus-visible {
   position: relative;
   cursor: help;
   text-decoration: underline;
-  text-decoration-style: dotted;
+  text-decoration-style: dashed;
   text-underline-offset: 0.2em;
 }
 .term-tip__bubble,
@@ -6061,8 +6061,10 @@ article .layout__column p {
 .symptom-ring__icon :is(path, rect, circle) {
   stroke-width: var(--icon-line);
 }
-/* Each symptom is one hover/focus target (a Tooltip): icon over label,
-   all in crimson, without the Tooltip's dotted underline. */
+/* Each symptom is an icon over its label, all in crimson; where there is a
+   Tooltip (hirsutism) the whole of it is the hover/focus target, and the
+   label is dash-underlined like any Tooltip term. */
+.symptom-ring__stack,
 .symptom-ring__item .term-tip {
   display: flex;
   flex-direction: column;
@@ -6078,6 +6080,10 @@ article .layout__column p {
   line-height: 1.15;
   text-align: center;
   color: var(--heading-minor);
+}
+.symptom-ring__label--tip > span {
+  text-decoration: underline dashed;
+  text-underline-offset: 0.2em;
 }
 
 /* On a tall, narrow screen, where the scene is cropped either side and

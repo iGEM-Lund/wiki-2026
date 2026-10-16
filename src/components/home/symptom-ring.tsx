@@ -1,7 +1,7 @@
-import type { CSSProperties } from 'react';
-import { Tooltip } from '@/components/content/Tooltip';
-import { FIGURE_SCALE, LINE } from '@/lib/women-on-line';
-import { SYMPTOM_ICONS, type SymptomIcon } from './symptom-icons';
+import type { CSSProperties } from "react";
+import { Tooltip } from "@/components/content/Tooltip";
+import { FIGURE_SCALE, LINE } from "@/lib/women-on-line";
+import { SYMPTOM_ICONS, type SymptomIcon } from "./symptom-icons";
 
 // The home scene's symptoms beat: the five symptoms of androgen excess, from
 // the wiki design, coming in one by one in a ring round her as she floats.
@@ -10,29 +10,16 @@ import { SYMPTOM_ICONS, type SymptomIcon } from './symptom-icons';
 const SYMPTOMS = [
   {
     icon: SYMPTOM_ICONS.hirsutism,
-    label: 'Hirsutism',
-    tip: 'Excess growth of thick, dark hair in places where women usually have little or none, such as the face, chest and back.',
+    label: "Hirsutism",
+    tip: "Excess growth of thick, dark hair in places where women usually have little or none, such as the face, chest and back.",
   },
-  {
-    icon: SYMPTOM_ICONS.acne,
-    label: 'Acne & oily skin',
-    tip: 'Androgens make the skin glands produce more oil, which blocks pores and causes spots.',
-  },
-  {
-    icon: SYMPTOM_ICONS.hairLoss,
-    label: ['Female-pattern', 'hair loss'],
-    tip: 'Gradual thinning of the hair on the top of the scalp, caused by androgens shrinking the hair follicles.',
-  },
+  { icon: SYMPTOM_ICONS.acne, label: "Acne & oily skin" },
+  { icon: SYMPTOM_ICONS.hairLoss, label: ["Female-pattern", "hair loss"] },
   {
     icon: SYMPTOM_ICONS.irregularMenstruation,
-    label: ['Irregular', 'menstruation'],
-    tip: 'Periods that are infrequent, unpredictable or absent, because excess androgens disturb ovulation.',
+    label: ["Irregular", "menstruation"],
   },
-  {
-    icon: SYMPTOM_ICONS.metabolic,
-    label: ['Metabolic', 'abnormalities'],
-    tip: 'Problems in how the body handles sugar and fat, such as insulin resistance, weight gain and raised cholesterol.',
-  },
+  { icon: SYMPTOM_ICONS.metabolic, label: ["Metabolic", "abnormalities"] },
 ];
 
 // The ring: its radii, and where on it each goes, in degrees clockwise from
@@ -56,20 +43,35 @@ const ITEM_W = 200;
 const FILL = 0.8;
 const fitted = ({ box: [x, y, w, h], weight = 1 }: SymptomIcon) => {
   const side = Math.sqrt(w * h) / FILL / weight;
-  const viewBox = [x + w / 2 - side / 2, y + h / 2 - side / 2, side, side].map((n) => n.toFixed(2)).join(' ');
+  const viewBox = [x + w / 2 - side / 2, y + h / 2 - side / 2, side, side]
+    .map((n) => n.toFixed(2))
+    .join(" ");
   return { viewBox, line: (LINE * FIGURE_SCALE * side) / ICON };
 };
 
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
 const smooth = (t: number) => t * t * (3 - 2 * t);
 
-export function SymptomRing({ cx, cy, span, shown }: { cx: number; cy: number; span: number; shown: number }) {
+export function SymptomRing({
+  cx,
+  cy,
+  span,
+  shown,
+}: {
+  cx: number;
+  cy: number;
+  span: number;
+  shown: number;
+}) {
   if (!shown) return null;
   const rx = Math.min(RX, span / 2 - FIT_EDGE);
   const ry = RY + (RX - rx) * 0.8;
   const labels = Math.max(1, 0.75 * (1200 / span));
   return (
-    <g className="symptom-ring" style={{ '--label-scale': labels.toFixed(3) } as CSSProperties}>
+    <g
+      className="symptom-ring"
+      style={{ "--label-scale": labels.toFixed(3) } as CSSProperties}
+    >
       {SYMPTOMS.map(({ icon, label, tip }, i) => {
         const t = smooth(clamp01(shown * SYMPTOMS.length - i));
         if (!t) return null;
@@ -89,21 +91,26 @@ export function SymptomRing({ cx, cy, span, shown }: { cx: number; cy: number; s
               height={ICON + 4 + lines.length * LABEL_LINE * labels}
               className="symptom-ring__item"
             >
-              <Tooltip text={tip}>
-                <svg
-                  width={ICON}
-                  height={ICON}
-                  viewBox={viewBox}
-                  className="symptom-ring__icon"
-                  style={{ '--icon-line': line.toFixed(3) } as CSSProperties}
-                  dangerouslySetInnerHTML={{ __html: icon.markup }}
-                />
-                <span className="symptom-ring__label" style={{ fontSize: `${16 * labels}px` }}>
-                  {lines.map((text, j) => (
-                    <span key={j}>{text}</span>
-                  ))}
-                </span>
-              </Tooltip>
+              <div className="symptom-ring__stack">
+                <Tooltip text={tip}>
+                  <svg
+                    width={ICON}
+                    height={ICON}
+                    viewBox={viewBox}
+                    className="symptom-ring__icon"
+                    style={{ "--icon-line": line.toFixed(3) } as CSSProperties}
+                    dangerouslySetInnerHTML={{ __html: icon.markup }}
+                  />
+                  <span
+                    className={`symptom-ring__label${tip ? " symptom-ring__label--tip" : ""}`}
+                    style={{ fontSize: `${16 * labels}px` }}
+                  >
+                    {lines.map((text, j) => (
+                      <span key={j}>{text}</span>
+                    ))}
+                  </span>
+                </Tooltip>
+              </div>
             </foreignObject>
           </g>
         );

@@ -385,7 +385,9 @@ export function WomenOnLine() {
   // has drifted to the middle herself.
   const panRoom = (WIDTH - span) / 2;
   const pan = Math.max(-panRoom, Math.min(panRoom, CENTRE_X - herNowX));
-  const herY = stringY(herX, dip, herX) + fall + 5 * Math.sin(time * 1.3) * float;
+  // The symptoms ring where she is without her bob, so they stay still.
+  const herRingY = stringY(herX, dip, herX) + fall;
+  const herY = herRingY + 5 * Math.sin(time * 1.3) * float;
   const herTurn = 3 * Math.sin(time * 0.7) * float;
   const women = others.map((other, i) =>
     i === HER
@@ -496,7 +498,7 @@ export function WomenOnLine() {
                 );
               })}
             <g opacity={wordsOut}>
-              <SymptomRing cx={herNowX} cy={herY + HER_MIDDLE} span={span} shown={wordsOut ? symptoms : 0} />
+              <SymptomRing cx={herNowX} cy={herRingY + HER_MIDDLE} span={span} shown={wordsOut ? symptoms : 0} />
             </g>
           </svg>
           <p className="women-line-scene__stat" style={{ opacity: stat, translate: `0 ${((1 - stat) * 1).toFixed(3)}rem` }}>
