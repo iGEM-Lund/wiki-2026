@@ -456,7 +456,7 @@ v\_T = (kcat,T / Km,T) · E\_tot · T / (1 + T/Km,T + P/Km,P)
 
 v\_P = (kcat,P / Km,P) · E\_tot · P / (1 + T/Km,T + P/Km,P)
 
-T and P are the testosterone and progesterone concentrations (µM), and v\_T and v\_P are their rates of consumption (µM per hour). E\_tot is the enzyme concentration in the culture; Km,T and Km,P are the Michaelis constants (estimated from docking, see <Ref target="tab-2pa7e" />), and kcat,T and kcat,P are the turnover numbers. The ratio kcat/Km measures how efficiently each substrate is used, so the preference of a variant is the ratio of kcat,T/Km,T to kcat,P/Km,P.
+T and P are the testosterone and progesterone concentrations (µM), and v\_T and v\_P are their rates of consumption (µM per hour). E\_tot is the enzyme concentration in the culture; Km,T and Km,P are the Michaelis constants (estimated from docking, see <Ref target="tab-xr0un" />), and kcat,T and kcat,P are the turnover numbers. The ratio kcat/Km measures how efficiently each substrate is used, so the preference of a variant is the ratio of kcat,T/Km,T to kcat,P/Km,P.
 
 The enzyme availability comes from the integrated model of enzyme production: enzyme per cell multiplied by culture density, converted to a concentration by a single scaling factor (model assumption). The enzyme in the flask therefore rises as the culture grows, and continues to rise more slowly once growth stops, because the enzyme is no longer diluted.
 
@@ -505,8 +505,8 @@ We therefore **propose** to use our docking results to estimate the missing valu
 
 We took the wild type with progesterone as the reference point and gave it the measured value, **0.432 µM**, as its Km. This treats **Km as proportional to Kd**, which is a **good approximation** when catalysis (kcat) is slower than the release of the steroid from the enzyme (Wilhelmová, 1996). Whether this holds for ci2350 is not known, because no kcat has been measured. From the reference, the Km values of all variants follow in two steps:
 
-1. Km for progesterone is scaled from the wild-type value by the difference between the progesterone scores of the variant and the wild type (<Ref target="tab-2pa7e" />).
-2. Testosterone has no measured value at all; its Km is calculated from the progesterone Km of the same variant, shifted by the difference between the two steroid scores of that variant (<Ref target="tab-2pa7e" />.
+1. Km for progesterone is scaled from the wild-type value by the difference between the progesterone scores of the variant and the wild type (<Ref target="tab-xr0un" />).
+2. Testosterone has no measured value at all; its Km is calculated from the progesterone Km of the same variant, shifted by the difference between the two steroid scores of that variant (<Ref target="tab-xr0un" />.
 
 Km,P(variant) = 0.432 µM · exp\[(ΔG\_P,variant − ΔG\_P,wild type) / RT]
 
@@ -514,7 +514,7 @@ Km,T(variant) = Km,P(variant) · exp(ΔΔG\_T–P / RT);   ΔΔG\_T–P = ΔG\_
 
 A negative ΔΔG\_T–P means that the variant binds testosterone more tightly than progesterone, which gives testosterone the lower Km. We assumed the same kcat for both steroids because docking describes binding and not catalysis. The Km values obtained this way are predictions that guide the experiments, not measured constants. The assumptions behind them (Km proportional to Kd, equal kcat) are tested in the sensitivity analysis and are the first targets of the planned kinetic measurements.
 
-<TableWithCaption caption="Docking scores of the wild type and top 5 variants of ci2350, with the Michaelis constants (Km) calculated from them" refId="tab-2pa7e">
+<TableWithCaption caption="Docking scores of the wild type and top 5 variants of ci2350, with the Michaelis constants (Km) calculated from them" refId="tab-xr0un">
   | **Variant**           | **ΔG progesterone (kcal/mol)** | **ΔG testosterone (kcal/mol)** | **ΔΔG (kcal/mol)** | **\[ΔG\_T** − **ΔG \_P]** | **Km,P (µM)** |
   | --------------------- | ------------------------------ | ------------------------------ | ------------------ | ------------------------- | ------------- |
   | Wild type             | −9.1                           | −9.2                           | −0.1               | 0.43                      | 0.37          |
@@ -553,7 +553,7 @@ Structures were obtained from the PDB (AKR1D1, **3CAV**) and from **AlphaFold** 
 
 Residues within **4 Å** of each docked ligand were sorted by which substrate they contacted. This identified three specificity determinants in AKR1D1 (**V309, L311, I57**) and six in ci2350 (**A107, R215, V263, V59, F71, Q100**). Substitutions at these positions were designed to weaken progesterone binding or strengthen testosterone binding, then screened for structural stability in **PyRosetta**. Of 24 AKR1D1 variants, 13 passed the **+5 REU** threshold; of 31 ci2350 variants, 17 passed. These variants were then docked with both substrates to assess their specificity towards testosterone.
 
-The full workflow for both AKR1D1 and ci2350, from protein structure acquisition through to stability screening, is described on the [Modeling page](/modeling#enzyme-specificity-engineering-towards-testosterone).&#x20;
+The full workflow for both AKR1D1 and ci2350, from protein structure acquisition through to stability screening, is described on the [Modeling page](https://wiki.igemlund.org/technical_modeling#enzyme-specificity-engineering-towards-testosterone).&#x20;
 
 #### Docked poses of the AKR1D1 variants
 
