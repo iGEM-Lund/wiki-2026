@@ -167,6 +167,16 @@ Docking showed that AKR1D1 cannot be engineered towards testosterone with the po
 
 ## **Mathematical modelling of enzyme production and activity**
 
+### Overview
+
+The aim was to predict how much enzyme a culture produces, and what that enzyme does once both steroids are present. Three layers were built and run as one system: a growth model for the culture, an expression model for how much enzyme each cell carries, and an activity model for how the enzyme divides its time between testosterone and progesterone.
+
+Growth follows a logistic curve fitted to our own OD600 measurements, which sets the maximum growth rate, the carrying capacity and the starting density. Expression covers transcription, translation and dilution by growth. The activity layer treats the two steroids as competing for a single active site, so the preference predicted from docking determines which one is turned over.
+
+Because this layer depends on binding, it is tied to the specificity work. Since AKR1D1 showed no useful shift in preference, the activity model was run for ci2350 and its variants, using Michaelis constants derived from the docking scores.
+
+Most parameters are literature values rather than measurements from our own strain, so the model was tested rather than taken at face value. Each was varied by ±20% one at a time to see which ones the output depends on, and a Monte Carlo analysis drew all of them at random together to check whether the conclusions hold across the plausible range. The results of both analyses were reported below.
+
 ## **Establishing expression constructs**&#x20;
 
 ## **Comparing AKR1D1 tag configurations**
@@ -182,10 +192,6 @@ To investigate the testosterone-transforming activity of our candidate enzymes, 
 Our initial experiments used CI2350–MBP preparations in a microplate format. However, the resulting absorbance traces showed abrupt fluctuations and considerable variability between replicates. Some reactions without protein exhibited larger absorbance decreases than enzyme-containing samples, and increasing protein concentration did not produce a consistent response. Multiple troubleshooting iteration identified errors in reaction preparation, including a tenfold stock-concentration calculation error and visible testosterone precipitation. We corrected the assay composition and improved substrate preparation, after which no visible crystals were observed and the absorbance traces became more stable.&#x20;
 
 NADPH calibration experiments carried in microplates failed to establish
-
-
-
-
 
 &#x20;not establish a reliable concentration–absorbance relationship under the tested microplate conditions and preparing fresh cofactor did not fully resolve this limitation. We tried a different instrument and used UV-transparent cuvettes, a wave scan was acquired, confirming the presence of NADPH and from this moment on we kept using cuvettes instead of microplates.&#x20;
 
