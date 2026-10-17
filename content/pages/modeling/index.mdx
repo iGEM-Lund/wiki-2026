@@ -203,7 +203,7 @@ AKR1D1 bound progesterone 0.5 kcal/mol more tightly than testosterone. Convertin
   </LayoutColumn>
 </Layout2>
 
-ci2350 showed a marginal preference for testosterone (−0.1 kcal/mol, \~1.2-fold), well within the noise floor and cannot be read as meaningful selectivity (<Ref target="tab-sznaf" />). The useful conclusion is negative, which makes ci2350 a workable starting point for engineering a preference in the required direction, since selectivity must be increased rather than reversed.  The docking visualisation is shown below ( <Ref target="fig-i27k7" /> , <Ref target="fig-uddfd" />)
+ci2350 showed a marginal preference for testosterone (−0.1 kcal/mol, \~1.2-fold), well within the noise floor and cannot be read as meaningful selectivity (<Ref target="tab-sznaf" />). The useful conclusion is negative, which makes ci2350 a workable starting point for engineering a preference in the required direction, since selectivity must be increased rather than reversed.  The docking visualisation is shown below ( <Ref target="fig-i27k7" /> and <Ref target="fig-uddfd" />)
 
 &#x20;&#x20;
 
@@ -424,7 +424,7 @@ The combination mutation of **R215A + V263I** is the clear leading candidate, wi
 
 Biological systems combine processes that run at different speeds and affect one another, so the outcome of an experiment is rarely obvious from the individual parts. Mathematical models address this by describing each process with an equation whose terms correspond to defined biological events (<Citation reference="kraikivski-et-al-2023" narrative={false} />). These equations are <Tooltip text="Equations describing how quantities change continuously over time.">Ordinary Differential Equations (ODEs)</Tooltip>, solved numerically. Writing the system this way states every assumption openly and lets us change one parameter at a time, which is rarely practical at the bench (<Citation reference="alon-et-al-2006" narrative={false} />).
 
-The specificity analysis found no AKR1D1 variant that shifted preference towards testosterone, while ci2350 produced several promising candidates, so the model was built around ci2350 alone. These findings are described on the [Results page](https://wiki.igemlund.org/results#enzyme-specificity-engineering).
+The specificity analysis found no AKR1D1 variant that shifted preference towards testosterone, while ci2350 produced several promising candidates, so the **model was built around ci2350 alone**. These findings are described on the [Results page](https://wiki.igemlund.org/results#enzyme-specificity-engineering).
 
 ### Integrated growth and expression model
 
@@ -494,7 +494,7 @@ The enzyme is the opposite. It is built from those messages at rate β. We assum
 * Expression does not burden the cell, so it does not slow growth.
 * mRNA and enzyme are in relative units, since absolute counts would require data we do not have.
 
-Bacterial messages break down within minutes of being made (<Citation reference="bernstein-et-al-2002" narrative={false} />). We used a half-life (3 to 8 mins) to predict the decay constants <Formula latex="(δ = ln2 / t½)" /> range and used their average of 9.53 h⁻¹. The transcription rate (α) and translation rate (β) are placeholders, as neither has been measured for ci2350 <Ref target="tab-aqmwv" />.
+Bacterial messages break down within minutes of being made (<Citation reference="bernstein-et-al-2002" narrative={false} />). We used a half-life (3 to 8 mins) to predict the decay constants <Formula latex="(δ = ln2 / t½)" /> range and used their average of 9.53 h⁻¹. The transcription rate (α) and translation rate (β) are placeholders, as neither has been measured for ci2350 (<Ref target="tab-aqmwv" />).
 
 <TableWithCaption caption="Parameters of the expression model" refId="tab-aqmwv">
   | **Parameter**                | **Value**              | **Source**                               |
