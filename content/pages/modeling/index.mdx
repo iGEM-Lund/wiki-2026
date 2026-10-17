@@ -514,7 +514,7 @@ The integrated three-equation system was solved in R using the deSolve package (
 
 Sweeps change one parameter at a time, whereas in practice all of them are uncertain together. We therefore ran a <Tooltip text="Repeating a calculation many times with randomly drawn inputs to see how uncertain the result is.">Monte Carlo analysis</Tooltip> (<Citation reference="saltelli-et-al-2008" narrative={false} />), drawing 500 parameter sets at random, each value taken from a distribution centred on its baseline with a spread of 10%, and recorded the enzyme level after 24 h for each. The 10% is an assumed level of uncertainty, not a measured one.
 
-The analysis was run **three times**: with only the growth parameters (K, µmax) varied, with only the expression parameters (α, δm) varied, and with all four varied together. Comparing the three shows which layer contributes most to the uncertainty in the enzyme level and we reported the mean and the 95% interval.
+The analysis was run three times: with only the growth parameters (K, µmax) varied, with only the expression parameters (α, δm) varied, and with all four varied together. Comparing the three shows which layer contributes most to the uncertainty in the enzyme level and we reported the mean and the 95% interval.
 
 The results of both per-parameter sweep and Monte Carlo analyses of enzyme production are presented on the [Results page](https://wiki.igemlund.org/results#mathematical-modelling-of-enzyme-production-and-activity). The scripts for the integrated model are available on GitLab (Link).
 
@@ -575,11 +575,11 @@ The enzyme availability comes from the integrated model of enzyme production: en
 
 <FormulaBlock latex="dP/dt = −v_P · s_sub(t)" />
 
-The first three are the growth and expression layers described in the integrated model of enzyme production; the last two are the substrates being consumed. In the earlier model, the expression started at time zero. Here α is multiplied by s\_ind, so that mRNA is made only after IPTG is added, and a second switch, s\_sub(t), allows the steroids to be consumed only after they have been added. The switches reproduce the bench protocol: s\_ind(t) turns transcription on when the culture reaches OD600 0.5, which the growth model identifies at 1.58 h, and s\_sub(t) turns substrate consumption on four hours later, when substrate is added and enough enzyme has built up. Both steroids start at 50 µM, and the reaction is followed for eight hours.&#x20;
+The first three are the growth and expression layers described in the integrated model of enzyme production; the last two are the substrates being consumed. In the earlier model, the expression started at time zero. Here α is multiplied by s\_ind, so that mRNA is made only after IPTG is added, and a second switch, s\_sub(t), allows the steroids to be consumed only after they have been added. The switches reproduce the bench protocol: s\_ind(t) turns transcription on when the culture reaches OD600 0.5, which the growth model identifies at 1.58 h, and s\_sub(t) turns substrate consumption on four hours later, when substrate is added and enough enzyme has built up. Both steroids start at 50 µM, and the reaction is followed for eight hours (<Ref target="tab-i8ink" />).&#x20;
 
-Seven assumptions underlie these equations which are listed below:
+**Seven assumptions underlie these equations which are listed below:**
 
-1. Testosterone and progesterone bind the same site and exclude each other (<Tooltip text="Two molecules compete for the same site, so each slows the other.">competitive binding</Tooltip>).
+1. Testosterone and progesterone bind the same site and exclude each other (competitive binding).
 2. NADH is present in saturating amounts, so it does not limit the rate.
 3. kcat is the same for both steroids and for all variants.
 4. The amount of enzyme per cell is the same for all ci2350 variants, because they are expressed under the same conditions.
@@ -587,7 +587,7 @@ Seven assumptions underlie these equations which are listed below:
 6. Product inhibition is not included.
 7. The ci2350 variants do not change folding or stability.
 
-<TableWithCaption caption="Parameters of activity model" refId="tab-rj5qy">
+<TableWithCaption caption="Parameters of activity model" refId="tab-i8ink">
   | **Parameter**                                               | **Value**           | **Source**                                              |
   | ----------------------------------------------------------- | ------------------- | ------------------------------------------------------- |
   | **tind – time of induction**                                | OD600 0.5 (1.58 h)  | Assumed experimental design; time from the growth model |
@@ -602,11 +602,11 @@ Seven assumptions underlie these equations which are listed below:
 
 #### Linking docking to Km
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/docking-to-km.avif" alt="Image of docking to Km" caption="From docking score to Km. Each docking score (ΔG) is converted to a binding constant, Kd = exp(ΔG/RT), and Km is assumed to follow Kd. The wild-type progesterone score is anchored to its measured Kd (0.432 µM), and each variant’s Km shifts by its score difference from wild type. A variant with a lower Km for testosterone than for progesterone prefers testosterone. This link between Km and Kd is an assumption, and docking errors are larger than most differences between variants." numbered={false} refId="fig-82fl2" scale={100} plain={false} noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/docking-to-km.avif" alt="Image of docking to Km" caption="From docking score to Km. Each docking score (ΔG) is converted to a binding constant, Kd = exp(ΔG/RT), and Km is assumed to follow Kd. The wild-type progesterone score is anchored to its measured Kd (0.432 µM), and each variant’s Km shifts by its score difference from wild type. A variant with a lower Km for testosterone than for progesterone prefers testosterone. This link between Km and Kd is an assumption, and docking errors are larger than most differences between variants." numbered refId="fig-z9s4i" scale={100} plain={false} noZoom={false} />
 
-The activity model needs a Michaelis constant (Km) for testosterone and progesterone for every ci2350 variant, but none has been published. The only kinetic information on the enzyme is the wild-type <Tooltip text="A measure of binding strength: a smaller value means tighter binding.">dissociation constant (Kd)</Tooltip> for progesterone, 0.432 µM, measured by <Tooltip text="A lab method that measures binding by the heat it gives off.">isothermal titration calorimetry</Tooltip> (<Citation reference="arp-et-al-2025" narrative={false} />).
+The activity model needs a Michaelis constant (Km) for testosterone and progesterone for every ci2350 variant, but none has been published. The only kinetic information on the enzyme is the wild-type <Tooltip text="A measure of binding strength: a smaller value means tighter binding.">dissociation constant (Kd)</Tooltip> for progesterone, 0.432 µM, measured by <Tooltip text="A lab method that measures binding by the heat it gives off.">isothermal titration calorimetry (<Ref target="fig-z9s4i" />)</Tooltip> (<Citation reference="arp-et-al-2025" narrative={false} />).
 
-We therefore **propose** to use our docking results to estimate the missing values. Docking gives a binding energy ΔG, which relates to Kd = exp(ΔG/RT) (<Citation reference="gilson-et-al-2007" narrative={false} />). Here R is the gas constant and RT = 0.616 kcal/mol at 37 °C, so a more **negative ΔG** means tighter binding and a **smaller Kd**. Docking scores are not reliable as absolute energies, since Vina can deviate from experiment by 1 to 2 kcal/mol (<Citation reference="eberhardt-et-al-2021" narrative={false} />; <Citation reference="trott-et-al-2010" narrative={false} />), so we used only the differences between scores calculated with the same protocol.
+We therefore **propose** to use our docking results to estimate the missing values. Docking gives a binding energy ΔG, which relates to <Formula latex="Kd = exp(ΔG/RT)" /> (<Citation reference="gilson-et-al-2007" narrative={false} />). Here R is the gas constant and RT = 0.616 kcal/mol at 37 °C, so a more **negative ΔG** means tighter binding and a **smaller Kd**. Docking scores are not reliable as absolute energies, since Vina can deviate from experiment by 1 to 2 kcal/mol (<Citation reference="eberhardt-et-al-2021" narrative={false} />; <Citation reference="trott-et-al-2010" narrative={false} />), so we used only the differences between scores calculated with the same protocol.
 
 We took the wild type with progesterone as the reference point and gave it the measured value, **0.432 µM**, as its Km. This treats **Km as proportional to Kd**, which is a **good approximation** when catalysis (kcat) is slower than the release of the steroid from the enzyme (Wilhelmová, 1996). Whether this holds for ci2350 is not known, because no kcat has been measured. From the reference, the Km values of all variants follow in two steps:
 
