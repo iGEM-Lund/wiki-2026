@@ -92,8 +92,6 @@ The sequence of each candidate enzyme was submitted to the NCBI Conserved Domain
   </Expandable>
 </Card>
 
-
-
 <Card>
   <CardTitle>
     **For ci2350:**
@@ -592,5 +590,18 @@ Each variant was compared against a wild type given the same random expression a
 What comes out is a percentage for each variant: how often testosterone is preferred, and how often the variant beats the wild type. The wild type was also compared against a second random copy of itself, which shows how often a difference appears purely by chance when there is no real one.
 
 The results of activity modeling are presented on the Results page (Link to the Results of mathematical modeling). The scripts for the integrated model are available on GitLab (Link).
+
+## Limitations&#x20;
+
+* Single-run docking: Vina’s random seed gives about ±0.5 kcal/mol of variation, which is at or above most selectivity differences (0.1–0.5 kcal/mol). Averaging at least three runs per ligand–receptor pair would be needed to confirm them.
+* AlphaFold structure: ci2350 has no experimental structure, so subtle side-chain positions in the active site may differ from the real enzyme.
+* Rigid receptor: Vina keeps the protein rigid, so induced fit of flexible residues such as Q100 and R215 is not captured.
+* Fast stability scoring: PyRosetta ΔΔG with local repacking only is an approximation, and a FastRelax protocol would be more accurate.
+* Single-pose contacts: The contact analysis used only the top-ranked pose (Mode 1), so the real binding mode may involve different residues.
+* Placeholder parameters: The transcription rate, translation rate, carrying capacity and the enzyme amount per cell are placeholders, and the mRNA half-life is poorly known. The absolute times are therefore not predictions. Only the order of conversion and the trends across the sweeps can be trusted.
+* Km from docking: Km values were derived from docking scores by assuming Km is proportional to Kd. This has not been tested for this enzyme.
+* Unmeasured kcat: The turnover rate for each steroid is unknown and was assumed equal. A testosterone turnover about four times slower than progesterone would remove the advantage of R215A + V263I.
+* Missing cell processes: Steroid uptake into the cell, solubility of the steroids and any toxicity to the cells are not modelled.
+* Incomplete uncertainty analysis: The activity Monte Carlo did not vary the growth rate or carrying capacity, and some draws without a defined half-time were excluded.
 
 ##
