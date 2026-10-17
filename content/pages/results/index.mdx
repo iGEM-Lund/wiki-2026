@@ -276,6 +276,44 @@ Anything that increases the total amount of enzyme in the flask makes both stero
   |   |   |   |
 </TableWithCaption>
 
+
+
+Across every sweep the testosterone t50 changed from 2.7 to 92.5 min, while the speed ratio stayed between 1.8 and 2.2 (Table 2, Figure 6). Here, growth mattered as much as expression because total enzyme depends on the culture density.
+
+&#x20;
+
+layer3\_expression\_sweeps.png
+
+Figure 6. **Effect of expression and growth settings on the half-times (R215A + V263I).** Higher α, β, µmax and K, and later induction, shorten both t50 values, and testosterone stays faster throughout. The last panel shows the enzyme available at substrate addition.
+
+But what changes the preference of a steroid by an enzyme is the binding energy and the turnover number (kcat). Considering a ±0.3 kcal/mol shift in the progesterone docking score changes the speed ratio \[t50(P) / t50(T)]. Among all the variants, R215A + V263I stayed the most testosterone-selective with minor variation (Figure 7a). Similarly, altering the turnover rate kcat ratio (kcatT / kcatP), the R215A + V263I favoured testosterone even at the lower ratio (Figure 7b).
+
+layer3\_dG\_shift\_change.png  side by side
+
+Figure 7a. **Sensitivity of the speed ratio to a ±0.3 kcal/mol shift in the progesterone docking score.** Each line spans the change in speed ratio from a shift of −0.3 kcal/mol (blue, tighter progesterone binding) to +0.3 kcal/mol (orange, weaker binding), relative to the baseline of each enzyme. R215A + V263I changes least (−16% to +11%), while the other enzymes change by about −23% to −25% and +23% to +32%.
+
+layer3\_kcat\_sweep.png  side by side
+
+Figure 7b. **Effect of the kcat ratio on the speed ratio for all six enzymes.** The speed ratio is t50 of progesterone divided by t50 of testosterone (above 1 means testosterone is faster, dashed line = 1). R215A + V263I is highest at every ratio, but preference falls to about 1 or below when testosterone is turned over 2–4 times more slowly.
+
+
+
+Uncertainty of activity (sub heading)
+
+Each docking score (progesterone and testosterone) was drawn with a standard deviation of 0.5 or 1.0 kcal/mol, together with broad random draws of the expression and kinetic parameters (α, β, E\_scale, kcat and the Km anchor), 200 draws per enzyme. Every draw was compared with the wild type from the same draw, and the wild type itself served as a noise-only control.
+
+The distributions of both speed ratio \[t50(P) / t50(T)] and selectivity score of docking ΔΔG = ΔG\_T − ΔG\_P of the R215A + V263I variant favoured testosterone a lot compared to other variants and wild type (Figure 9a and 9b). V263K has a long tail towards high ratios (95th percentile 6.7 at 1.0 kcal/mol), because its Km values are large and uncertain (Figure 9a).
+
+layer3\_mc\_ratio\_sd05.png  side by side
+
+Figure 9a. **Speed ratio of each enzyme after random docking error (SD 0.5 kcal/mol per score) and random expression and kinetic parameters.** Density of t50(P)/t50(T) over 200 draws per enzyme (above 1 = testosterone faster), with the wild type as the control.
+
+layer3\_mc\_ddG\_sd05.png  side by side
+
+Figure 9b. **Selectivity after docking error with a standard deviation of 0.5 kcal/mol per score.** Density of ΔΔG = ΔG\_T − ΔG\_P (negative = testosterone preferred). R215A + V263I is shifted furthest towards testosterone, and wild type is the noise-only control.
+
+R215A + V263I is the most promising variant. Its docking-based Km values predict a testosterone preference. This preference is the least affected by a ±0.3 kcal/mol docking shift, and the variant survives the random-error draws against the WT control. Expression and growth settings change how fast the steroids are consumed but barely change which one is consumed first. The ranking is still a prediction, because the kcat ratio is unknown and docking error is larger than most differences between variants.
+
 ## **Establishing expression constructs**&#x20;
 
 ## **Comparing AKR1D1 tag configurations**
