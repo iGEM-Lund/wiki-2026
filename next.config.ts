@@ -2,6 +2,11 @@ import type { NextConfig } from 'next';
 
 const isProductionExport = process.env.BUILD_TARGET === 'production';
 const basePath = isProductionExport ? '/lund' : '';
+// GitLab sets CI=true. iGEM's runner kills a job after 10 minutes and is slow
+// enough that type-checking and linting during `next build` can tip it over.
+// Both already ran in scripts/deploy-production.sh's local pre-flight build
+// (which has no CI set) on the exact tree being published, so skip them there.
+const skipChecks = process.env.CI === 'true' && isProductionExport;
 
 const nextConfig: NextConfig = {
   output: isProductionExport ? 'export' : undefined,
@@ -27,6 +32,8 @@ const nextConfig: NextConfig = {
   // not support trailingSlash. Keystatic is stripped from the production build,
   // so scoping this flag to the export target fixes login with no prod impact.
   trailingSlash: isProductionExport,
+  typescript: { ignoreBuildErrors: skipChecks },
+  eslint: { ignoreDuringBuilds: skipChecks },
   // Dev-only badge; its default bottom-left corner covers the accessibility
   // button at the foot of the nav sidebar.
   devIndicators: { position: 'top-right' },
