@@ -385,14 +385,14 @@ All variants passing the stability threshold were subjected to the same docking 
 #### **For AKR1D1:**
 
 <TableWithCaption caption="Mutant docking results for AKR1D1 (top-ranked variants)." refId="tab-h4s3i">
-  | **Variant**                       | **Progesterone(kcal/mol)** | **Testosterone(kcal/mol)** | **Selectivity(Test − Prog)** | **Outcome**          |
-  | --------------------------------- | -------------------------- | -------------------------- | ---------------------------- | -------------------- |
-  | **Wild-type**                     | −9.8                       | −9.3                       | +0.5                         | Reference            |
-  | **V309S**                         | −9.8                       | −9.4                       | +0.4                         | Favored progesterone |
-  | **V309E**                         | −9.8                       | −9.4                       | +0.4                         | Favored progesterone |
-  | **I57Y**                          | −9.8                       | −9.4                       | +0.4                         | Favored progesterone |
-  | **Combo 1: V309T + L311S**        | −9.9                       | −9.4                       | +0.5                         | Favored progesterone |
-  | **Combo 6: V309T + L311S + I57S** | −10.4                      | −9.8                       | +0.6                         | Favored progesterone |
+  | **Variant**                       | **Progesterone(kcal/mol)** | **Testosterone(kcal/mol)** | **Selectivity(ΔGT − ΔGP)** | **Outcome**          |
+  | --------------------------------- | -------------------------- | -------------------------- | -------------------------- | -------------------- |
+  | **Wild-type**                     | −9.8                       | −9.3                       | +0.5                       | Reference            |
+  | **V309S**                         | −9.8                       | −9.4                       | +0.4                       | Favored progesterone |
+  | **V309E**                         | −9.8                       | −9.4                       | +0.4                       | Favored progesterone |
+  | **I57Y**                          | −9.8                       | −9.4                       | +0.4                       | Favored progesterone |
+  | **Combo 1: V309T + L311S**        | −9.9                       | −9.4                       | +0.5                       | Favored progesterone |
+  | **Combo 6: V309T + L311S + I57S** | −10.4                      | −9.8                       | +0.6                       | Favored progesterone |
 </TableWithCaption>
 
 No AKR1D1 variant shifted selectivity meaningfully. The three best mutants, V309S, V309E and I57Y moved the score by just 0.1 kcal/mol (<Ref target="tab-h4s3i" />), well within the noise threshold, and every variant kept a positive score, so progesterone remained preferred throughout. None of the substitutions tested was able to redirect AKR1D1 towards testosterone.
@@ -400,14 +400,14 @@ No AKR1D1 variant shifted selectivity meaningfully. The three best mutants, V309
 #### **For ci2350:**
 
 <TableWithCaption caption="Mutant docking results for ci2350 (top-ranked variants)." refId="tab-abuyo">
-  | **Variant**                         | **Progesterone(kcal/mol)** | **Testosterone(kcal/mol)** | **Selectivity(Test − Prog)** | **Outcome**                                |
-  | ----------------------------------- | -------------------------- | -------------------------- | ---------------------------- | ------------------------------------------ |
-  | **Wild-type**                       | −9.1                       | −9.2                       | −0.1                         | Reference                                  |
-  | **Combo 8: R215A + V263I**          | −8.5                       | −9.4                       | −0.9                         | Highly favored testosterone                |
-  | **V263K**                           | −6.9                       | −7.4                       | −0.5                         | Favored testosterone, but affinity reduced |
-  | **Combo 13: R215A + V263I + Q100T** | −8.0                       | −8.5                       | −0.5                         | Favored testosterone, but affinity reduced |
-  | **Combo 9: R215E + V263I**          | −7.4                       | −7.7                       | −0.3                         | Favored testosterone, but affinity reduced |
-  | **V263D**                           | −9.1                       | −9.3                       | −0.2                         | Favored testosterone                       |
+  | **Variant**                         | **Progesterone(kcal/mol)** | **Testosterone(kcal/mol)** | **Selectivity(ΔGT − ΔGP)** | **Outcome**                                |
+  | ----------------------------------- | -------------------------- | -------------------------- | -------------------------- | ------------------------------------------ |
+  | **Wild-type**                       | −9.1                       | −9.2                       | −0.1                       | Reference                                  |
+  | **Combo 8: R215A + V263I**          | −8.5                       | −9.4                       | −0.9                       | Highly favored testosterone                |
+  | **V263K**                           | −6.9                       | −7.4                       | −0.5                       | Favored testosterone, but affinity reduced |
+  | **Combo 13: R215A + V263I + Q100T** | −8.0                       | −8.5                       | −0.5                       | Favored testosterone, but affinity reduced |
+  | **Combo 9: R215E + V263I**          | −7.4                       | −7.7                       | −0.3                       | Favored testosterone, but affinity reduced |
+  | **V263D**                           | −9.1                       | −9.3                       | −0.2                       | Favored testosterone                       |
 </TableWithCaption>
 
 The combination mutation of **R215A + V263I** is the clear leading candidate, with a selectivity score of **−0.9 kcal/mol** and a shift of **−0.8** against the wild-type, and the only variant to exceed the noise threshold (<Ref target="tab-abuyo" />). It is also the only one where testosterone binding improved in absolute terms while progesterone binding weakened, so the gain comes from both directions at once. The other candidates gained selectivity by losing affinity. &#x20;
@@ -430,11 +430,11 @@ The specificity analysis found no AKR1D1 variant that shifted preference towards
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/integrated-model.avif" alt="Image of workflow" caption="Workflow of the integrated growth and expression model. Growth data and literature values define the parameters of two coupled layers, which are solved numerically and then tested by parameter sweeps and Monte Carlo sampling." numbered refId="fig-ldjtv" scale={100} plain={false} noZoom={false} />
 
-#### System definition
+#### **System definition**
 
 The system modelled is ci2350 produced from a Twist <Tooltip text="A common plasmid for producing proteins in E. coli from a T7 promoter.">pET vector</Tooltip> in *E. coli* <Tooltip text="An E. coli strain made for high-level protein production.">*BL21(DE3)*</Tooltip>, with the gene under the <Tooltip text="A strong promoter read by T7 RNA polymerase, which BL21(DE3) makes when IPTG is added.">T7 promoter</Tooltip> and induced with 0.8 mM <Tooltip text="A lab chemical that switches on the T7 system.">IPTG</Tooltip>. The quantity of interest is the amount of enzyme per cell because it determines how much enzyme is available to act on the steroids. Described in [Parts](/parts) page.
 
-#### Growth model
+#### **Growth model**
 
 A batch culture in a closed flask grows exponentially while nutrients are plentiful and then slows as they are consumed. The <Tooltip text="A growth equation that starts exponential and levels off as the culture fills its container.">logistic equation</Tooltip> is the simplest description of this behavior (<Citation reference="verhulst-et-al-1838" narrative={false} />).&#x20;
 
@@ -461,7 +461,7 @@ From our experimental data, the cells **double** **every 28 minutes** (µmax = 1
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/growth-curve.avif" alt="Image of growth curve" caption="Logistic growth curve of the culture with µmax = 1.48 per hour and K = 15. The plateau is reached after about 7 h." numbered refId="fig-8xckn" scale={100} plain={false} noZoom={false} />
 
-#### Expression model
+#### **Expression model**
 
 Since mRNA and the enzyme behave differently inside the cell, we examined them separately. m is the mRNA level in the cell and E the enzyme level, both in relative units. mRNA is short-lived: messages are transcribed at rate α and degraded at rate δm, so the cell maintains a small working pool at a steady level (<Ref target="fig-qgy4n" />), giving the ribosomes a constant supply to work from (<Citation reference="alon-et-al-2006" narrative={false} />).&#x20;
 
@@ -469,8 +469,6 @@ Since mRNA and the enzyme behave differently inside the cell, we examined them s
   latex="dm/dt = α − δm · m
 "
 />
-
-&#x20;&#x20;
 
 **Steady-state maintenance**
 
@@ -538,7 +536,7 @@ T and P are the testosterone and progesterone concentrations (µM), and v\_T and
 
 The enzyme availability comes from the integrated model of enzyme production: enzyme per cell multiplied by culture density, converted to a concentration by a single scaling factor (model assumption). The enzyme in the flask therefore rises as the culture grows, and continues to rise more slowly once growth stops, because the enzyme is no longer diluted.&#x20;
 
-**Model Assumption**
+**Model Assumption:**
 
 <FormulaBlock latex="E_tot = E_scale · E · X " />
 
@@ -636,13 +634,13 @@ A negative ΔΔG\_T–P means that the variant binds testosterone more tightly t
   | **V263D**                 | −9.1                           | −9.3                           | −0.2                                    | 0.43          | 0.31          |
 </TableWithCaption>
 
-#### Sensitivity analysis of activity model
+#### **Sensitivity analysis of activity model**
 
 The activity layer adds more uncertain values, such as kcat, E\_scale, the wild-type Km,P and the docking scores, on top of the uncertain expression parameters, so two checks were run.
 
 For the variant with the largest predicted preference, R215A + V263I (see [Result page](https://wiki.igemlund.org/results#enzyme-specificity-engineering)), each parameter was varied by ±20% with the others held at baseline, and the progesterone docking score was shifted by ±0.3 kcal/mol to see how a small docking error changes the outcome. The expression settings were swept more widely: α from 0.25 to 4 times baseline, β from 0.4 to 12 times, and the induction point from OD600 0.3 to 1.0.
 
-#### Uncertainty analysis of activity
+#### **Uncertainty analysis of activity**
 
 Most of the values in the model are guesses, so running it once would only tell us what happens if every guess is right. The Monte Carlo analysis instead ran the model 200 times for each variant, picking a different random value for each uncertain input every time.
 
@@ -654,15 +652,15 @@ The results of activity modeling are presented on the [Results page](https://wik
 
 ## Limitations&#x20;
 
-* Single-run docking: Vina’s random seed gives about ±0.5 kcal/mol of variation, which is at or above most selectivity differences (0.1–0.5 kcal/mol). Averaging at least three runs per ligand–receptor pair would be needed to confirm them.
-* AlphaFold structure: ci2350 has no experimental structure, so subtle side-chain positions in the active site may differ from the real enzyme.
-* Rigid receptor: Vina keeps the protein rigid, so induced fit of flexible residues such as Q100 and R215 is not captured.
-* Fast stability scoring: PyRosetta ΔΔG with local repacking only is an approximation, and a FastRelax protocol would be more accurate.
-* Single-pose contacts: The contact analysis used only the top-ranked pose (Mode 1), so the real binding mode may involve different residues.
-* Placeholder parameters: The transcription rate, translation rate, carrying capacity and the enzyme amount per cell are placeholders, and the mRNA half-life is poorly known. The absolute times are therefore not predictions. Only the order of conversion and the trends across the sweeps can be trusted.
-* Km from docking: Km values were derived from docking scores by assuming Km is proportional to Kd. This has not been tested for this enzyme.
-* Unmeasured kcat: The turnover rate for each steroid is unknown and was assumed equal. A testosterone turnover about four times slower than progesterone would remove the advantage of R215A + V263I.
-* Missing cell processes: Steroid uptake into the cell, solubility of the steroids and any toxicity to the cells are not modelled.
-* Incomplete uncertainty analysis: The activity Monte Carlo did not vary the growth rate or carrying capacity, and some draws without a defined half-time were excluded.
+* **Single-run docking:** Vina’s random seed gives about ±0.5 kcal/mol of variation, which is at or above most selectivity differences (0.1–0.5 kcal/mol). Averaging at least three runs per ligand–receptor pair would be needed to confirm them.
+* **AlphaFold structure:** ci2350 has no experimental structure, so subtle side-chain positions in the active site may differ from the real enzyme.
+* **Rigid receptor:** Vina keeps the protein rigid, so induced fit of flexible residues such as Q100 and R215 is not captured.
+* **Fast stability scoring:** PyRosetta ΔΔG with local repacking only is an approximation, and a FastRelax protocol would be more accurate.
+* **Single-pose contacts:** The contact analysis used only the top-ranked pose (Mode 1), so the real binding mode may involve different residues.
+* **Placeholder parameters:** The transcription rate, translation rate, carrying capacity and the enzyme amount per cell are placeholders, and the mRNA half-life is poorly known. The absolute times are therefore not predictions. Only the order of conversion and the trends across the sweeps can be trusted.
+* **Km from docking:** Km values were derived from docking scores by assuming Km is proportional to Kd. This has not been tested for this enzyme.
+* **Unmeasured kcat:** The turnover rate for each steroid is unknown and was assumed equal. A testosterone turnover about four times slower than progesterone would remove the advantage of R215A + V263I.
+* **Missing cell processes:** Steroid uptake into the cell, solubility of the steroids and any toxicity to the cells are not modelled.
+* **Incomplete uncertainty analysis:** The activity Monte Carlo did not vary the growth rate or carrying capacity, and some draws without a defined half-time were excluded.
 
 ##
