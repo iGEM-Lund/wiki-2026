@@ -1,9 +1,7 @@
 ---
 title: Biosafety
 ---
-## Genetic and ecological safety:&#x20;
-
-### Introduction:&#x20;
+## Introduction&#x20;
 
 Biosafety is a specific set of measures which help keep genetically modified organisms from causing harm to people, other organisms or the environment. For most lab work, laboratory containment is enough. Our probiotic, AnTigone is a living biotherapeutic which has to be administered orally and has to work inside the gut. It passes through patients, can be shed into faeces and could meet the wider environment. Once released, living cells can multiply, survive and pass genes to other bacteria. To avoid all of these dangers we have incorporated a safety design. Our target questions while building the safety design were:&#x20;
 
@@ -14,7 +12,7 @@ Biosafety is a specific set of measures which help keep genetically modified org
 
 <Pillars pillars={[{"title":"In-Host Control","heading":"In-Host Control","color":"teal"},{"title":"Environmental Biocontainment ","heading":"Environmental Biocontainment","color":"rose"},{"title":"GMO Regulations","heading":"GMO Regulations","color":"rose"}]} />
 
-### Summary
+## Summary
 
 As our engineered probiotic is a <Tooltip text="A medicine made of live microorganisms, here a bacterium that works inside the body.">living biotherapeutic</Tooltip> product, meant to be administered directly into the human gut, it comes with safety considerations that go beyond those of a standard lab strain. Since the bacterium is meant to survive, act, and eventually be cleared from a living host, we need to ensure that it behaves predictably while inside the gut, cannot cause harm if it escapes into the environment, and does not pass its engineered traits on to the native gut microbiota. We approached this through two layers of biological control, and checked both against the regulatory framework.\
 \
@@ -30,9 +28,9 @@ Beyond these two layers, we also considered risks that could affect both in-host
 
 For each strategy, we researched multiple possible approaches, compared them against our project's specific constraints, and selected the combination that best balances safety, feasibility, and relevance to AnTigone as a testosterone-lowering gut therapeutic. &#x20;
 
-### In-Host Control
+## In-Host Control
 
-#### **Gut Gate**
+### **Gut Gate**
 
 Our effector should only be active when our engineered probiotic is in the gut. The distinct physicochemical signals in the gut vary from both the outside environment and between different compartments within the gut itself, and these signals can be used to build a location-based switch. <Citation reference="chien-et-al-2022" narrative /> built oxygen, pH and lactate biosensors that control essential genes (*asd, glms) in E. coli* and S.Typhimurium, so that growth depends on the gut-like signal, and tested them in gut-mimicking media and in mice. The three sensing options are compared in <Ref target="tab-nfs0k" />. We chose hypoxia sensing for our proof of concept.
 
@@ -62,7 +60,7 @@ Why **Hypoxia Sensing**?&#x20;
 
   We therefore treat hypoxia gating as a partial restriction that works together with the feedback loop and auxotrophy, not as strict gating on its own.
 
-#### **Feedback-Responsive Expression**
+### **Feedback-Responsive Expression**
 
 Our effector should be expressed only when testosterone levels exceed a threshold. To ensure the enzyme is produced only to lower elevated testosterone, we propose combining our gut gate with a testosterone-responsive <Tooltip text="A protein that binds DNA to switch a gene on or off.">transcription factor</Tooltip> to form an <Tooltip text="A genetic circuit that switches on only when both inputs are present.">AND gate</Tooltip>, building directly on feedback from the Malaga iGEM meet-up, where judges recommended an AND gate combining our biosensor with a feedback loop.&#x20;
 
@@ -89,7 +87,7 @@ The sensor is TeiR, a transcription factor from *Comamonas testosteroni*, a bact
 
 Our effector enzyme ci2350 is a 5β-reductase that reduced progesterone, cortisone and hydrocortisone in the study that identified it; testosterone was not assayed there (<Citation reference="arp-et-al-2025" narrative={false} />), so its activity on testosterone must be tested directly. A related gut-bacterial reductase pathway (OsrB) was functional when expressed in anaerobically grown *E. coli*, and colonization by the donor bacterium lowered prednisolone 2–10-fold in mouse cecum, colon and feces <Citation reference="jacoby-et-al-2025" narrative={false} />. This shows that a gut bacterium can remove a steroid <Tooltip text="In a living organism.">in vivo</Tooltip>, but it is not a sense-and-degrade circuit, and no study has built one for testosterone.
 
-#### **Colonization Control**
+### **Colonization Control**
 
 Colonization control is the decision about how long our probiotic should remain in the gut after dosing. It can either be transient (not colonizing the gut, cleared between doses and requiring redosing) or engineered to be self-limiting. Residence time matters because shedding continues for as long as the bacterium stays in the gut, and a gut gate does not shorten that. We assume that lowering gut testosterone is a continuous process, so a transient design fits better: the effect is maintained by redosing and the bacterium does not have to persist.
 
@@ -123,7 +121,7 @@ Colonization control is the decision about how long our probiotic should remain 
 
 Our Choice: AnTigone is intended to be transient by design and the effect will be maintained by repeated dosing.
 
-#### **Resident Gut Communities**
+### **Resident Gut Communities**
 
 Resident gut communities are the native bacterial communities present in the gut. A living biotherapeutic is not alone in the gut, so we considered how it might affect this community.
 
@@ -155,9 +153,9 @@ Resident gut communities are the native bacterial communities present in the gut
 \
 In conclusion, we found no study that profiled the gut community in humans dosed with an engineered EcN, so we cannot say how large any effect would be. We therefore treat the effect on resident communities as an open question.
 
-### Environmental Biocontainment
+## Environmental Biocontainment
 
-#### **Auxotrophy**
+### Auxotrophy
 
 Auxotrophy is a <Tooltip text="Built-in measures that stop an engineered organism from surviving or spreading outside its intended place.">biocontainment</Tooltip> strategy that makes an organism unable to synthesize a substance essential for growth, so its normal growth depends on an exogenous supply of that substance. The engineered *E. coli* in AnTigone is designed to metabolize testosterone in the gut using enzymes encoded by AKR1D1, ci2350/CIMBP, and atcABC; for future therapeutic use, the bacteria must not proliferate indefinitely or persist long-term after performing their function. We chose Δ*dapA*-mediated <Tooltip text="Diaminopimelic acid, a molecule bacteria need to build their cell wall, which our strain can no longer make.">DAP</Tooltip> auxotrophy to permit brief metabolic activity while restricting long-term proliferation.
 
@@ -218,7 +216,7 @@ We compared six auxotrophy options before selecting this one. Each row states wh
 
 Δ*dapA* creates selective pressure, so any compensatory mutation restoring DHDPS activity or acquisition of *dapA* (or an equivalent gene) via HGT could let the bacteria escape containment; cross-feeding of *meso*-DAP in the gut is a further, though less likely, risk. To improve stability, we are considering combining DAP auxotrophy with a second, independent essential dependency, and a CRISPR-based system (following Hayashi et al.'s approach for *thyA*) that targets and disrupts any exogenous *dapA* acquired via HGT. Synthetic auxotrophy is not being pursued now, given the genome-editing complexity involved, but remains a candidate for a future therapeutic-grade strain. We also plan to periodically measure escape frequency and characterize any escape variants to monitor long-term stability. Given the direct link between *dapA* and cell-wall synthesis, its precedent in engineered bacteria, and its relatively simple construction, we selected Δ*dapA*-mediated DAP auxotrophy as our biocontainment strategy.
 
-#### **Kill-Switch**
+### **Kill-Switch**
 
 As our final product is a probiotic, it is important that it will not pose a risk to the environment or users if it is accidentally released. We looked at two families of kill-switch strategy, CRISPR-based and quorum-sensing-based, and expect combining strategies to be more effective than any single one alone.
 
@@ -242,7 +240,7 @@ CRISPR is a gene-editing strategy naturally present in bacteria as phage defense
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/biosafety/our-approaches-with-crispr.avif" alt="CRISPR approach using Hypoxia" caption="Our chosen approach with Hypoxia promoter as a kill switch" numbered refId="fig-mmp6f" scale={100} plain noZoom={false} />
 
-#### **Quorum sensing**
+### **Quorum sensing**
 
 Quorum sensing (QS) is a bacterial communication system using signaling molecules to sense population density and regulate gene expression. In the LuxI/LuxR system, bacteria produce AHL, which accumulates with population size; once a threshold is reached, AHL binds LuxR and activates downstream genes. We looked at QS as a population-dependent safety layer based on precedent from other iGEM teams:&#x20;
 
@@ -252,7 +250,7 @@ Quorum sensing (QS) is a bacterial communication system using signaling molecule
 
 For AnTigone, we could adapt the Utrecht strategy to limit excessive EcN accumulation, particularly given previous findings that EcN can preferentially colonize colorectal neoplastic tissue (<Citation reference="gurbatri-et-al-2024" narrative={false} />). Alternatively, we could combine quorum sensing with our hypoxia-based gate, so that bacterial survival depends on both low oxygen availability and an appropriate population density.
 
-#### **Genetic Firewalling: Amber-Suppression Semantic Firewall**
+### **Genetic Firewalling: Amber-Suppression Semantic Firewall**
 
 Amber suppression works by introducing a stop codon (UAG) into an engineered gene, which would normally cause protein production to stop early. However, in the intended host, a specially designed suppressor tRNA recognizes UAG and allows translation to continue, producing a full-length, functional protein. If the gene is transferred to another bacterium without the matching suppressor tRNA, translation stops prematurely, resulting in an incomplete protein that is unlikely to function properly. This makes the engineered gene dependent on the suppressor tRNA in the intended host (<Citation reference="bautista-et-al-2021" narrative={false} />; <Citation reference="wals-and-ovaa-2014" narrative={false} />; <Citation reference="whitford-et-al-2018" narrative={false} />).
 
@@ -271,7 +269,7 @@ In the gut, engineered DNA could potentially transfer to other bacteria (<Citati
 
 **Overall assessment.** Amber suppression is a useful additional genetic safety layer, since it reduces the function of transferred genes without requiring a toxin, but it does not directly control *E. coli* survival, can interfere with normal UAG translation, may lose stability over long-term growth, and has not been validated as a standalone containment system in the human gut. We treat it as a supporting genetic safeguard alongside an organism-level containment system, rather than a containment system on its own.
 
-### GMO Regulations
+## GMO Regulations
 
 As AnTigone is a genetically engineered live bacterial therapeutic, we considered the regulatory requirements relevant to its development and potential clinical application. These include pharmaceutical and GMO regulations covering laboratory use, human administration, environmental safety, and international transport. The table below summarises the key regulatory frameworks and their relevance to AnTigone.
 
@@ -286,7 +284,7 @@ As AnTigone is a genetically engineered live bacterial therapeutic, we considere
 | EMA Guideline: Environmental Risk Assessment           | Environmental risk assessment for GMO-containing medicinal products                                                                                                                                                                                                                           | Patient shedding could expose the environment to the engineered bacteria, requiring assessment before marketing authorisation                     |
 | Cartagena Protocol: International Movement             | Safe transfer, handling, and transport of living modified organisms across borders                                                                                                                                                                                                            | Would apply if the engineered bacteria were transported internationally                                                                           |
 
-#### US
+#### USA
 
 In the United States, AnTigone would likely follow the FDA's regulatory pathway for drugs and biological products. If classified as a biological product, an <Tooltip text="The request to start clinical trials of a new medicine.">Investigational New Drug (IND) application</Tooltip> would generally be required before initiating clinical trials, followed by a <Tooltip text="The request to sell a biological product.">Biologics License Application (BLA)</Tooltip> to obtain marketing approval. As AnTigone involves genetically engineered bacteria, we would also need to assess whether an <Tooltip text="A review of a product's impact on the environment.">Environmental Assessment (EA)</Tooltip> is required or whether the product qualifies for a <Tooltip text="An exemption from a full environmental assessment for categories of actions known to have little impact.">categorical exclusion</Tooltip> under FDA regulations.
 
