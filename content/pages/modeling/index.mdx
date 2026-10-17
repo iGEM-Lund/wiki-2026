@@ -28,7 +28,7 @@ Our dry lab work addresses both challenges through two integrated strands.
 
 Together, these form a connected predictive layer: the first narrows a large design space to a small set of structurally plausible candidates, and the second takes those candidates and asks whether their effect would actually show up in a real bacterial system.
 
-## **Enzyme specificity engineering towards testosterone**
+## **Enzyme specificity engineering**
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/specificity-modelling.avif" alt="Pipeline showing how to increase specificity towards testosterone" caption="Computational pipeline for engineering steroid substrate specificity. Structures from the PDB (AKR1D1, 3CAV) or AlphaFold (ci2350) were prepared for docking; the functional pocket was confirmed with fpocket v4.0 and CD Search; testosterone and progesterone were docked in AutoDock Vina 1.2 to identify residues within 4 Å of C17; mutants there were screened in PyRosetta (ΔΔG > +5 REU excluded) and re-docked for selectivity." numbered refId="fig-2ti4x" scale={100} plain={false} noZoom={false} />
 
@@ -62,11 +62,11 @@ Testosterone and progesterone share the four-ring steroid scaffold, with rings l
   </LayoutColumn>
 </Layout2>
 
-Both ligands were retrieved from PubChem (CID 6013 and CID 5994, respectively) (<Citation reference="kim-et-al-2025" narrative={false} />) as three-dimensional SDF structures. Each ligand was processed using MGLTools (prepare\_ligand4.py) (<Citation reference="morris-et-al-2009" narrative={false} />) to assign partial charges and define rotatable bonds, generating PDBQT files for docking input. No additional energy minimization was performed prior to docking, as AutoDock Vina performs internal conformational sampling through multiple independent search runs during the docking process (<Citation reference="eberhardt-et-al-2021" narrative={false} />).
+Both ligands were retrieved from PubChem ([CID 6013](https://pubchem.ncbi.nlm.nih.gov/compound/6013) and [CID 5994](https://pubchem.ncbi.nlm.nih.gov/compound/5994), respectively) (<Citation reference="kim-et-al-2025" narrative={false} />) as three-dimensional SDF structures. Each ligand was processed using MGLTools (prepare\_ligand4.py) (<Citation reference="morris-et-al-2009" narrative={false} />) to assign partial charges and define rotatable bonds, generating PDBQT files for docking input. No additional energy minimization was performed prior to docking, as AutoDock Vina performs internal conformational sampling through multiple independent search runs during the docking process (<Citation reference="eberhardt-et-al-2021" narrative={false} />).
 
 ### Conserved domain analysis
 
-The sequence of each candidate enzyme was submitted to the NCBI Conserved Domain Search (CD Search) (<Citation reference="marchler-bauer-et-al-2017" narrative={false} />), which compares a query sequence against the Conserved Domain Database (CDD) to identify evolutionarily <Tooltip text="Stretches of protein found across a family of related proteins, usually because they matter for function.">conserved functional domains</Tooltip> and their annotated residue positions. These annotations cover substrate binding, cofactor coordination and catalytic function, and are inferred from structurally and biochemically characterized members of the same protein family. They provided a sequence-level map of the expected functional site and served as the reference for interpreting and validating the predicted active site pockets.
+The sequence of each candidate enzyme was submitted to the NCBI [Conserved Domain Search (CD Search)](https://www.ncbi.nlm.nih.gov/Structure/cdd/wrpsb.cgi) (<Citation reference="marchler-bauer-et-al-2017" narrative={false} />), which compares a query sequence against the Conserved Domain Database (CDD) to identify evolutionarily <Tooltip text="Stretches of protein found across a family of related proteins, usually because they matter for function.">conserved functional domains</Tooltip> and their annotated residue positions. These annotations cover substrate binding, cofactor coordination and catalytic function, and are inferred from structurally and biochemically characterized members of the same protein family. They provided a sequence-level map of the expected functional site and served as the reference for interpreting and validating the predicted active site pockets.
 
 <Card>
   <CardTitle>
@@ -148,7 +148,7 @@ The domain covers the N-terminal half of the 642-residue protein, and all annota
 
 ### Active site identification
 
-Binding pockets were identified computationally using fpocket v4.0 (<Citation reference="le-guilloux-et-al-2009" narrative={false} />), which detects cavities through <Tooltip text="Geometry methods that fpocket uses to find cavities in a protein.">Voronoi tessellation and alpha-sphere clustering</Tooltip> and returns a ranked list of candidate pockets, each described by geometric and physicochemical descriptors. These predicted pockets were then cross-referenced against residue annotations from NCBI CD Search to identify which pocket best corresponded to the known catalytic and substrate-binding residues of each enzyme family. The pocket showing the greatest agreement with the annotated functional site was selected.
+Binding pockets were identified computationally using fpocket v4.0 (<Citation reference="le-guilloux-et-al-2009" narrative={false} />), which detects cavities through Voronoi tessellation and alpha-sphere clustering and returns a ranked list of candidate pockets, each described by geometric and physicochemical descriptors. These predicted pockets were then cross-referenced against residue annotations from NCBI CD Search to identify which pocket best corresponded to the known catalytic and substrate-binding residues of each enzyme family. The pocket showing the greatest agreement with the annotated functional site was selected.
 
 #### **For AKR1D1:**
 
@@ -193,10 +193,6 @@ Because Pocket 1 did not capture every annotated residue in either enzyme, the b
   | Size y (Å)    | 29.0       | 20.0       |
   | Size z (Å)    | 20.0       | 22.0       |
 </TableWithCaption>
-
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-active-site.avif" alt="Image of active site pocket of AKR1D1" caption="Active site pockets selected for docking in AKR1D1-NADPH, corresponding to Pocket 1 as identified by fpocket and validated against CD Search annotations." numbered refId="fig-fr16s" scale={100} plain={false} noZoom={false} />
-
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/ci2350-active-site.avif" alt="Image of active site pocket of ci2350" caption="Active site pockets selected for docking in ci2350, corresponding to Pocket 1 as identified by fpocket and validated against CD Search annotations." numbered refId="fig-af7ya" scale={100} plain={false} noZoom={false} />
 
 ### Molecular docking&#x20;
 
