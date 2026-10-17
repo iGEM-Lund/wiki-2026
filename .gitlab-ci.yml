@@ -8,38 +8,21 @@
 # (a Vite/yarn Pages template), confirmed by inspecting the template.
 # scripts/deploy-production.sh's mirror push replaces the whole tree,
 # this file included, so it fully overwrites theirs; no reconciling needed.
-stages:
-  - build
-  - verify
-  - deploy
-
+# One job: iGEM's GitLab rejects large artifact uploads (413), so the export is
+# uploaded once, as `public`, rather than as a build artifact and again as the
+# Pages artifact. The .woff/.ttf duplicates of every font are dropped; the
+# .woff2 files listed first in each @font-face are used by all current browsers.
 image: node:20-alpine
 
-build:
-  stage: build
+pages:
   script:
     - npm ci
     - npm run build
-  artifacts:
-    paths:
-      - out
-    expire_in: 1 hour
-
-verify:
-  stage: verify
-  script:
     - node scripts/verify-export.mjs
-  dependencies:
-    - build
-
-pages:
-  stage: deploy
-  script:
+    - find out -type f \( -name '*.woff' -o -name '*.ttf' \) -delete
     - mv out public
   artifacts:
     paths:
       - public
-  dependencies:
-    - build
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
