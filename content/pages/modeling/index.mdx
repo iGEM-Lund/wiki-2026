@@ -172,9 +172,9 @@ Because Pocket 1 did not capture every annotated residue in either enzyme, the b
 
 ### Molecular docking&#x20;
 
-Docking was performed using AutoDock Vina 1.2 (<Citation reference="eberhardt-et-al-2021" narrative={false} />) with an <Tooltip text="A docking setting: higher values search more thoroughly.">exhaustiveness</Tooltip> setting of 32 and an energy range of 4 <Tooltip text="A unit of energy per mole of molecules. More negative binding energy means tighter binding.">kcal/mol</Tooltip>. Vina combines a stochastic global search for scoring, which samples ligand position, orientation and torsion angles, with local gradient-based optimization that refines promising candidates into nearby energy minima.
+Docking was performed using AutoDock Vina 1.2 (<Citation reference="eberhardt-et-al-2021" narrative={false} />) with an <Tooltip text="A docking setting: higher values search more thoroughly.">exhaustiveness</Tooltip> setting of 32 and an energy range of 4 kcal/mol. Vina combines a stochastic global search for scoring, which samples ligand position, orientation and torsion angles, with local gradient-based optimization that refines promising candidates into nearby energy minima.
 
-Each ligand was docked independently into each prepared enzyme structure, and the top-ranked pose was recorded along with its predicted binding affinity in kcal/mol. To establish a selectivity baseline, we defined a selectivity score as the difference in predicted affinity between testosterone and progesterone, ΔG(testosterone) – ΔG(progesterone). A negative value indicates that testosterone is preferred by the enzyme. The inherent stochastic variability of the Vina scoring function, approximately ±0.5 kcal/mol, was treated as the noise threshold (<Citation reference="eberhardt-et-al-2021" narrative={false} />), and selectivity differences below this value were not considered meaningful.
+Each ligand was docked independently into each prepared enzyme structure, and the top-ranked pose was recorded along with its predicted binding affinity in kcal/mol. To establish a selectivity baseline, we defined a selectivity score as the difference in predicted affinity between testosterone and progesterone, **ΔG(testosterone) – ΔG(progesterone)**. A **negative value indicates that testosterone** is preferred by the enzyme. The inherent stochastic variability of the Vina scoring function, approximately ±0.5 kcal/mol, was treated as the noise threshold (<Citation reference="eberhardt-et-al-2021" narrative={false} />), and selectivity differences below this value were not considered meaningful.
 
 After docking, the two enzymes gave comparable absolute affinities but opposite directions of preference.
 
@@ -185,7 +185,7 @@ After docking, the two enzymes gave comparable absolute affinities but opposite 
   | **ci2350** | −9.1                       | −9.2                       | −0.1                         | Testosterone   |
 </TableWithCaption>
 
-AKR1D1 bound progesterone 0.5 kcal/mol more tightly than testosterone. Converting this through <Tooltip text="A difference between two free energies, for example between a mutant and the wild type, or between two ligands.">ΔΔG</Tooltip> (|ΔGT – ΔGP|) = RT ln(ratio), with RT = 0.616 kcal/mol at 310 K, gives approximately 2.3-fold selectivity for progesterone. This is consistent with AKR1D1's biological role, where progesterone intermediates are the primary physiological substrates.
+AKR1D1 bound progesterone 0.5 kcal/mol more tightly than testosterone. Converting this through ΔΔG (|ΔGT – ΔGP|) = RT ln(ratio), with RT = 0.616 kcal/mol at 310 K, gives approximately 2.3-fold selectivity for progesterone. This is consistent with AKR1D1's biological role, where progesterone intermediates are the primary physiological substrates.
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-testosterone-view.avif" alt="Image of AKR1D1-testosterone" caption="Top-ranked docking pose of testosterone in the AKR1D1 active site (−9.3 kcal/mol), with NADPH and the catalytic tetrad Y58 labelled." numbered refId="fig-780fc" scale={100} plain={false} noZoom={false} />
 
