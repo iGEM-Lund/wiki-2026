@@ -535,7 +535,7 @@ export function WomenOnLine() {
               <SymptomRing cx={herNowX} cy={herRingY + HER_MIDDLE} span={span} shown={wordsOut * symptomsOut ? symptoms : 0} />
             </g>
             <g opacity={wordsOut}>
-              <Treatments cx={herNowX} cy={herRingY + HER_MIDDLE} shown={treat} />
+              <Treatments cx={herNowX} cy={herRingY + HER_MIDDLE} span={span} shown={treat} />
             </g>
             {treat > 0 && (
               <PeacockHer

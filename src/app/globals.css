@@ -5891,7 +5891,12 @@ article .layout__column p {
      floor, sits in the middle of the screen; --bubble-y is the bubble's
      top. */
   --room-raise: calc(34vh - 13.73cqw);
-  --bubble-y: calc(69.5vh - var(--room-raise) - 24.86cqw);
+  /* On a tall, narrow screen, keeping the screen's shape would make the
+     bubble an elongated oval; its height is cut down to 0.8 of its width,
+     from the top (its bottom stays where the tail is), showing less of
+     the world above and below her. */
+  --bubble-cut: max(0px, calc(var(--bubble-scale) * 100vh - 0.8 * var(--bubble-scale) * 100cqw));
+  --bubble-y: calc(69.5vh - var(--room-raise) - 24.86cqw + var(--bubble-cut));
 }
 .women-line-scene__bubble,
 .women-line-scene__bubble-edge {
@@ -5899,7 +5904,7 @@ article .layout__column p {
   left: calc(var(--room, 0) * var(--bubble-x));
   top: calc(var(--lift, 0vh) + var(--room, 0) * var(--bubble-y));
   width: calc(100% - var(--room, 0) * (100% - var(--bubble-scale) * 100%));
-  height: calc(100vh - var(--room, 0) * (100vh - var(--bubble-scale) * 100vh));
+  height: calc(100vh - var(--room, 0) * (100vh - var(--bubble-scale) * 100vh + var(--bubble-cut)));
 }
 .women-line-scene__bubble {
   overflow: hidden;
@@ -5910,7 +5915,7 @@ article .layout__column p {
 .women-line-scene__world {
   position: absolute;
   left: 0;
-  top: calc(var(--lift, 0vh) * -1);
+  top: calc(var(--lift, 0vh) * -1 - var(--room, 0) * var(--bubble-cut) / 2);
   width: 100cqw;
   height: 100vh;
   transform: scale(calc(1 - var(--room, 0) * (1 - var(--bubble-scale))));

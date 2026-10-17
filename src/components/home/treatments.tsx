@@ -94,8 +94,18 @@ const lineTo = (from: { x: number; y: number }, to: { x: number; y: number }, ga
   return `M${start.x.toFixed(1)} ${start.y.toFixed(1)}Q${bow.x.toFixed(1)} ${bow.y.toFixed(1)} ${tip.x.toFixed(1)} ${tip.y.toFixed(1)}`;
 };
 
-export function Treatments({ cx, cy, shown }: { cx: number; cy: number; shown: number }) {
+// How far out the drawings reach from her middle, to either side, and how
+// far in from the screen's sides they are kept.
+const REACH = 460;
+const FIT_EDGE = 10;
+
+export function Treatments({ cx, cy, span, shown }: { cx: number; cy: number; span: number; shown: number }) {
   if (!shown) return null;
+  // Where less of the scene's width is on the screen (`span`, see
+  // WomenOnLine), the clusters are drawn smaller and closer in, to stay on
+  // it and clear of her, with the names larger to stay legible.
+  const k = Math.min(1, (span / 2 - FIT_EDGE) / REACH);
+  const labels = Math.max(1, 0.75 * (1200 / span)) / Math.max(k, 0.01);
   return (
     <g className="treatments" aria-hidden="true">
       {CLUSTERS.map(({ name, window, items, spot }) => {
@@ -105,7 +115,8 @@ export function Treatments({ cx, cy, shown }: { cx: number; cy: number; shown: n
         const her = { x: cx + spot.dx, y: cy + spot.dy };
         return (
           <g key={name}>
-            {items.map(({ art, dx, dy, size, label, reaches }) => {
+            {items.map(({ art, dx: ix, dy: iy, size: isize, label, reaches }) => {
+              const [dx, dy, size] = [ix * k, iy * k, isize * k];
               const [w, h] = ART[art] >= 1 ? [size, size / ART[art]] : [size * ART[art], size];
               // Each drifts in a little way from further out.
               const out = (1 - arrive) * 0.12;
@@ -115,9 +126,15 @@ export function Treatments({ cx, cy, shown }: { cx: number; cy: number; shown: n
                 <g key={art} opacity={arrive}>
                   <image href={`${BASE}/${art}.avif`} x={x - w / 2} y={y - h / 2} width={w} height={h} />
                   {label && (
-                    <text className="treatments__label" x={x} y={y + h / 2 + 22} textAnchor="middle">
+                    <text
+                      className="treatments__label"
+                      x={x}
+                      y={y + h / 2 + 22 * k * labels}
+                      textAnchor="middle"
+                      style={{ fontSize: `${17 * k * labels}px` }}
+                    >
                       {label.map((line, i) => (
-                        <tspan key={line} x={x} dy={i ? 20 : 0}>
+                        <tspan key={line} x={x} dy={i ? 20 * k * labels : 0}>
                           {line}
                         </tspan>
                       ))}
