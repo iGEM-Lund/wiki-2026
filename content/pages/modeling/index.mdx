@@ -506,11 +506,11 @@ Bacterial messages break down within minutes of being made (<Citation reference=
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/mrna-enzyme-timecourse.avif" alt="Image of mRNA and enzyme time course" caption="Baseline mRNA and enzyme time-course. mRNA reaches its steady state (0.525) within 0.48 hr. Enzyme keeps accumulating after growth saturates (6.96 hr), reaching 31.7 relative units at 24 hr, because dilution by growth stops. α and β are placeholders, so enzyme is in relative units.)" numbered refId="fig-qgy4n" scale={100} plain={false} noZoom={false} />
 
-#### Mathematical simulation and sensitivity of the enzyme level
+#### **Mathematical simulation and sensitivity of the enzyme level**
 
 The integrated three-equation system was solved in R using the deSolve package (<Citation reference="soetaert-et-al-2010" narrative={false} />), with the <Tooltip text="A standard numerical method for solving differential equations.">Runge–Kutta</Tooltip> method ode45 over 24 h in 100 time steps, starting from X = 0.05, m = 0 and E = 0. Since several parameters are assumptions or literature ranges rather than measurements, we then asked how much the result depends on them, and which the experiments should pin down first (<Citation reference="saltelli-et-al-2008" narrative={false} />). Each of K, µmax, α and δm was swept by ±20% around its baseline individually, a standard window for local sensitivity, and the whole system was re-run at every step, recording culture density, mRNA level and enzyme level after 24 h as a percentage change from baseline. Because all three are recorded together, a single run shows how much the enzyme level moves and how a growth parameter affects expression, and vice versa. β was not varied separately since the enzyme level depends on α and β only through their product.
 
-#### Uncertainty analysis of the enzyme level
+#### **Uncertainty analysis of the enzyme level**
 
 Sweeps change one parameter at a time, whereas in practice all of them are uncertain together. We therefore ran a <Tooltip text="Repeating a calculation many times with randomly drawn inputs to see how uncertain the result is.">Monte Carlo analysis</Tooltip> (<Citation reference="saltelli-et-al-2008" narrative={false} />), drawing 500 parameter sets at random, each value taken from a distribution centred on its baseline with a spread of 10%, and recorded the enzyme level after 24 h for each. The 10% is an assumed level of uncertainty, not a measured one.
 
@@ -520,7 +520,7 @@ The results of both per-parameter sweep and Monte Carlo analyses of enzyme produ
 
 ### Enzyme activity model
 
-#### Activity model
+#### **Activity model**
 
 Testosterone and progesterone are close in shape and compete for the same active site of ci2350, so each slows down the conversion of the other. This is described by <Tooltip text="A model of how fast an enzyme works as the amount of substrate changes.">Michaelis–Menten kinetics</Tooltip> for two competing substrates. Each substrate has its own turnover rate, but the two rates share the same denominator, which makes the substrates compete (<Citation reference="michaelis-et-al-1913" narrative={false} />).&#x20;
 
@@ -604,7 +604,7 @@ The first three are the growth and expression layers described in the integrated
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/docking-to-km.avif" alt="Image of docking to Km" caption="From docking score to Km. Each docking score (ΔG) is converted to a binding constant, Kd = exp(ΔG/RT), and Km is assumed to follow Kd. The wild-type progesterone score is anchored to its measured Kd (0.432 µM), and each variant’s Km shifts by its score difference from wild type. A variant with a lower Km for testosterone than for progesterone prefers testosterone. This link between Km and Kd is an assumption, and docking errors are larger than most differences between variants." numbered refId="fig-z9s4i" scale={100} plain={false} noZoom={false} />
 
-The activity model needs a Michaelis constant (Km) for testosterone and progesterone for every ci2350 variant, but none has been published. The only kinetic information on the enzyme is the wild-type <Tooltip text="A measure of binding strength: a smaller value means tighter binding.">dissociation constant (Kd)</Tooltip> for progesterone, 0.432 µM, measured by <Tooltip text="A lab method that measures binding by the heat it gives off.">isothermal titration calorimetry (<Ref target="fig-z9s4i" />)</Tooltip> (<Citation reference="arp-et-al-2025" narrative={false} />).
+The activity model needs a Michaelis constant (Km) for testosterone and progesterone for every ci2350 variant, but none has been published. The only kinetic information on the enzyme is the wild-type <Tooltip text="A measure of binding strength: a smaller value means tighter binding.">dissociation constant (Kd)</Tooltip> for progesterone, 0.432 µM, measured by <Tooltip text="A lab method that measures binding by the heat it gives off.">isothermal titration calorimetry (</Tooltip><Ref target="fig-z9s4i" /><Tooltip text="A lab method that measures binding by the heat it gives off.">)</Tooltip> (<Citation reference="arp-et-al-2025" narrative={false} />).
 
 We therefore **propose** to use our docking results to estimate the missing values. Docking gives a binding energy ΔG, which relates to <Formula latex="Kd = exp(ΔG/RT)" /> (<Citation reference="gilson-et-al-2007" narrative={false} />). Here R is the gas constant and RT = 0.616 kcal/mol at 37 °C, so a more **negative ΔG** means tighter binding and a **smaller Kd**. Docking scores are not reliable as absolute energies, since Vina can deviate from experiment by 1 to 2 kcal/mol (<Citation reference="eberhardt-et-al-2021" narrative={false} />; <Citation reference="trott-et-al-2010" narrative={false} />), so we used only the differences between scores calculated with the same protocol.
 
