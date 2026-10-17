@@ -93,13 +93,7 @@ The domain covers the N-terminal half of the 642-residue protein, and all annota
 </TableWithCaption>
 
 <Card>
-  &#x20;
-
-  <CardTitle image="CD Search Visualisation">
-
-  </CardTitle>
-
-  &#x20;&#x20;
+  &#x20;**CD Search Visualisation**  &#x20;
 
   <Expandable defaultOpen={false}>
     <Layout2>
@@ -151,12 +145,12 @@ fpocket identified 22 candidate pockets in the AKR1D1 structure. Cross-referenci
 Similarly, fpocket identified 38 candidate pockets in the predicted ci2350 model. Pocket 1 was the clearest match, containing 9 of the 12 annotated residues, including H165 and Y167. Two further pockets carried catalytic residues: Pocket 5 contained N166 and S171, and Pocket 37 contained Y167 (<Ref target="tab-18wzr" />).
 
 <TableWithCaption caption="fpocket results for ci2350 cross-referenced against CD Search and Arp et al. (2025)." refId="tab-18wzr">
-  | **Pocket** | **Annotated residues found**                             | **Catalytic residues** |
-  | ---------- | -------------------------------------------------------- | ---------------------- |
-  | Pocket 1   | 9/12 – A24, G26, V59, Q100, H165, Y167, R215, G315, R316 | 2/4 – H165, Y167       |
-  | Pocket 5   | 2/12 – N166, S171                                        | 2/4 – N166, S171       |
-  | Pocket 37  | 1/12 – Y167                                              | 1/4 – Y167             |
-  | Pocket 3   | 1/12 – R316                                              | 0/4                    |
+  | **Pocket**    | **Annotated residues found**                             | **Catalytic residues** |
+  | ------------- | -------------------------------------------------------- | ---------------------- |
+  | **Pocket 1**  | 9/12 – A24, G26, V59, Q100, H165, Y167, R215, G315, R316 | 2/4 – H165, Y167       |
+  | **Pocket 5**  | 2/12 – N166, S171                                        | 2/4 – N166, S171       |
+  | **Pocket 37** | 1/12 – Y167                                              | 1/4 – Y167             |
+  | **Pocket 3**  | 1/12 – R316                                              | 0/4                    |
 </TableWithCaption>
 
 In both enzymes Pocket 1 covered the majority of the annotated active site residues and was therefore used to define the docking search space. The box center was taken as the mean x, y and z coordinates of the pocket’s alpha spheres, and each dimension was set from the span of those coordinates along that axis (maximum – minimum) plus a 4 Å margin to ensure sufficient room for the ligand to sample orientations within a tightly enclosed pocket.
@@ -164,14 +158,14 @@ In both enzymes Pocket 1 covered the majority of the annotated active site resid
 Because Pocket 1 did not capture every annotated residue in either enzyme, the box was then expanded as required so that all CD Search positions fell within the search space. After expanding, the final search box parameters for both AKR1D1 and ci2350 are given in <Ref target="tab-25ega" />.
 
 <TableWithCaption caption="Docking search box parameters." refId="tab-25ega">
-  | **Parameter** | **AKR1D1** | **ci2350** |
-  | ------------- | ---------- | ---------- |
-  | Centre x (Å)  | 5.182      | 3.793      |
-  | Centre y (Å)  | 27.798     | 4.007      |
-  | Centre z (Å)  | −35.527    | 3.619      |
-  | Size x (Å)    | 22.0       | 30.0       |
-  | Size y (Å)    | 29.0       | 20.0       |
-  | Size z (Å)    | 20.0       | 22.0       |
+  | **Parameter**    | **AKR1D1** | **ci2350** |
+  | ---------------- | ---------- | ---------- |
+  | **Centre x (Å)** | 5.182      | 3.793      |
+  | **Centre y (Å)** | 27.798     | 4.007      |
+  | **Centre z (Å)** | −35.527    | 3.619      |
+  | **Size x (Å)**   | 22.0       | 30.0       |
+  | **Size y (Å)**   | 29.0       | 20.0       |
+  | **Size z (Å)**   | 20.0       | 22.0       |
 </TableWithCaption>
 
 ### Molecular docking&#x20;
