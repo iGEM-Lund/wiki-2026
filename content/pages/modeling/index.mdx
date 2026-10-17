@@ -562,23 +562,29 @@ We therefore **propose** to use our docking results to estimate the missing valu
 We took the wild type with progesterone as the reference point and gave it the measured value, **0.432 µM**, as its Km. This treats **Km as proportional to Kd**, which is a **good approximation** when catalysis (kcat) is slower than the release of the steroid from the enzyme (Wilhelmová, 1996). Whether this holds for ci2350 is not known, because no kcat has been measured. From the reference, the Km values of all variants follow in two steps:
 
 1. Km for progesterone is scaled from the wild-type value by the difference between the progesterone scores of the variant and the wild type (<Ref target="tab-xr0un" />).
-2. Testosterone has no measured value at all; its Km is calculated from the progesterone Km of the same variant, shifted by the difference between the two steroid scores of that variant (<Ref target="tab-xr0un" />.
+2. Testosterone has no measured value at all; its Km is calculated from the progesterone Km of the same variant, shifted by the difference between the two steroid scores of that variant (<Ref target="tab-xr0un" />.&#x20;
 
-Km,P(variant) = 0.432 µM · exp\[(ΔG\_P,variant − ΔG\_P,wild type) / RT]
+<FormulaBlock
+  latex="Km,P(variant) = 0.432 µM · exp[(ΔG_P,variant − ΔG_P,wild type) / RT]
+"
+/>
 
-Km,T(variant) = Km,P(variant) · exp(ΔΔG\_T–P / RT);   ΔΔG\_T–P = ΔG\_T − ΔG\_P
+<FormulaBlock
+  latex="Km,T(variant) = Km,P(variant) · exp(ΔΔG_T–P / RT); ΔΔG_T–P = ΔG_T − ΔG_P
+"
+/>
 
 A negative ΔΔG\_T–P means that the variant binds testosterone more tightly than progesterone, which gives testosterone the lower Km. We assumed the same kcat for both steroids because docking describes binding and not catalysis. The Km values obtained this way are predictions that guide the experiments, not measured constants. The assumptions behind them (Km proportional to Kd, equal kcat) are tested in the sensitivity analysis and are the first targets of the planned kinetic measurements.
 
 <TableWithCaption caption="Docking scores of the wild type and top 5 variants of ci2350, with the Michaelis constants (Km) calculated from them" refId="tab-xr0un">
-  | **Variant**           | **ΔG progesterone (kcal/mol)** | **ΔG testosterone (kcal/mol)** | **ΔΔG (kcal/mol)\[ΔG\_T** − **ΔG \_P]** | **Km,P (µM)** | **Km,T (µM)** |
-  | --------------------- | ------------------------------ | ------------------------------ | --------------------------------------- | ------------- | ------------- |
-  | Wild type             | −9.1                           | −9.2                           | −0.1                                    | 0.43          | 0.37          |
-  | R215A + V263I         | −8.5                           | −9.4                           | −0.9                                    | 1.14          | 0.27          |
-  | V263K                 | −6.9                           | −7.4                           | −0.5                                    | 15.3          | 6.8           |
-  | R215A + V263I + Q100T | −8.0                           | −8.5                           | −0.5                                    | 2.57          | 1.14          |
-  | R215E + V263I         | −7.4                           | −7.7                           | −0.3                                    | 6.8           | 4.2           |
-  | V263D                 | −9.1                           | −9.3                           | −0.2                                    | 0.43          | 0.31          |
+  | **Variant**               | **ΔG progesterone (kcal/mol)** | **ΔG testosterone (kcal/mol)** | **ΔΔG (kcal/mol)\[ΔG\_T** − **ΔG \_P]** | **Km,P (µM)** | **Km,T (µM)** |
+  | ------------------------- | ------------------------------ | ------------------------------ | --------------------------------------- | ------------- | ------------- |
+  | **Wild type**             | −9.1                           | −9.2                           | −0.1                                    | 0.43          | 0.37          |
+  | **R215A + V263I**         | −8.5                           | −9.4                           | −0.9                                    | 1.14          | 0.27          |
+  | **V263K**                 | −6.9                           | −7.4                           | −0.5                                    | 15.3          | 6.8           |
+  | **R215A + V263I + Q100T** | −8.0                           | −8.5                           | −0.5                                    | 2.57          | 1.14          |
+  | **R215E + V263I**         | −7.4                           | −7.7                           | −0.3                                    | 6.8           | 4.2           |
+  | **V263D**                 | −9.1                           | −9.3                           | −0.2                                    | 0.43          | 0.31          |
 </TableWithCaption>
 
 #### Sensitivity analysis of activity model
