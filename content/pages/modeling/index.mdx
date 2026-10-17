@@ -92,35 +92,29 @@ The domain covers the N-terminal half of the 642-residue protein, and all annota
   | A24, G26, V59, Q100, H165, N166, Y167, S171, R215, N253, G315, R316 | H165, N166, Y167, S171, N253               |
 </TableWithCaption>
 
-<Layout2>
-  <LayoutColumn>
-    &#x20; AKR1D1
+<Card>
+  <Expandable defaultOpen={false}>
+    <Layout2>
+      <LayoutColumn>
+        &#x20; AKR1D1
 
-    <Expandable defaultOpen={false}>
-      &#x20;&#x20;
+        <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/cdsearch-akr1d1.avif" alt="CD search image" caption="NCBI CD Search result for AKR1D1 (NP_005980.1), assigning the sequence to the AKR_AKR1D1-3 family within the aldo-keto reductase superfamily." numbered refId="fig-rqmx8" scale={100} plain={false} noZoom={false} />
 
-      <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/cdsearch-akr1d1.avif" alt="CD search image" caption="NCBI CD Search result for AKR1D1 (NP_005980.1), assigning the sequence to the AKR_AKR1D1-3 family within the aldo-keto reductase superfamily." numbered refId="fig-rqmx8" scale={100} plain={false} noZoom={false} />
+        &#x20;&#x20;
+      </LayoutColumn>
 
-      &#x20;&#x20;
-    </Expandable>
+      <LayoutColumn>
+        ci2350&#x20;
 
-    &#x20;&#x20;
-  </LayoutColumn>
+        &#x20;&#x20;
 
-  <LayoutColumn>
-    &#x20; ci2350
+        <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/cdsearch-ci2350.avif" alt="CD search image" caption="NCBI CD Search result for ci2350, assigning the sequence to the OYE_like_FMN_family within the TIM barrel superfamily." numbered refId="fig-f2bmm" scale={100} plain={false} noZoom={false} />
 
-    <Expandable defaultOpen={false}>
-      &#x20;&#x20;
-
-      <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/cdsearch-ci2350.avif" alt="CD search image" caption="NCBI CD Search result for ci2350, assigning the sequence to the OYE_like_FMN_family within the TIM barrel superfamily." numbered refId="fig-f2bmm" scale={100} plain={false} noZoom={false} />
-
-      &#x20;&#x20;
-    </Expandable>
-
-    &#x20;&#x20;
-  </LayoutColumn>
-</Layout2>
+        &#x20;&#x20;
+      </LayoutColumn>
+    </Layout2>
+  </Expandable>
+</Card>
 
 ### Active site identification
 
@@ -176,26 +170,28 @@ Docking was performed using AutoDock Vina 1.2 (<Citation reference="eberhardt-et
 
 Each ligand was docked independently into each prepared enzyme structure, and the top-ranked pose was recorded along with its predicted binding affinity in kcal/mol. To establish a selectivity baseline, we defined a selectivity score as the difference in predicted affinity between testosterone and progesterone, **ΔG(testosterone) – ΔG(progesterone)**. A **negative value indicates that testosterone** is preferred by the enzyme. The inherent stochastic variability of the Vina scoring function, approximately ±0.5 kcal/mol, was treated as the noise threshold (<Citation reference="eberhardt-et-al-2021" narrative={false} />), and selectivity differences below this value were not considered meaningful.
 
-After docking, the two enzymes gave comparable absolute affinities but opposite directions of preference.
+After docking, the two enzymes gave comparable absolute affinities but opposite directions of preference (<Ref target="tab-sznaf" />).&#x20;
 
-<TableWithCaption caption="Docking affinities and selectivity scores." refId="tab-l017y">
+<TableWithCaption caption="Docking affinities and selectivity scores." refId="tab-sznaf">
   | **Enzyme** | **Progesterone(kcal/mol)** | **Testosterone(kcal/mol)** | **Selectivity(Test − Prog)** | **Preference** |
   | ---------- | -------------------------- | -------------------------- | ---------------------------- | -------------- |
   | **AKR1D1** | −9.8                       | −9.3                       | +0.5                         | Progesterone   |
   | **ci2350** | −9.1                       | −9.2                       | −0.1                         | Testosterone   |
 </TableWithCaption>
 
-AKR1D1 bound progesterone 0.5 kcal/mol more tightly than testosterone. Converting this through ΔΔG (|ΔGT – ΔGP|) = RT ln(ratio), with RT = 0.616 kcal/mol at 310 K, gives approximately 2.3-fold selectivity for progesterone. This is consistent with AKR1D1's biological role, where progesterone intermediates are the primary physiological substrates.
+AKR1D1 bound progesterone 0.5 kcal/mol more tightly than testosterone. Converting this through ΔΔG (|ΔGT – ΔGP|) = RT ln(ratio), with RT = 0.616 kcal/mol at 310 K, gives approximately 2.3-fold selectivity for progesterone. This is consistent with AKR1D1's biological role, where progesterone intermediates are the primary physiological substrates. The docking visualisation is shown below (<Ref target="fig-vtl4k" /> and <Ref target="fig-6676c" />).&#x20;
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-testosterone-view.avif" alt="Image of AKR1D1-testosterone" caption="Top-ranked docking pose of testosterone in the AKR1D1 active site (−9.3 kcal/mol), with NADPH and the catalytic tetrad Y58 labelled." numbered refId="fig-780fc" scale={100} plain={false} noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-testosterone-view.avif" alt="Image of AKR1D1-testosterone" caption="Top-ranked docking pose of testosterone in the AKR1D1 active site (−9.3 kcal/mol), with NADPH and the catalytic tetrad Y58 labelled." numbered refId="fig-vtl4k" scale={100} plain={false} noZoom={false} />
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-progesterone.avif" alt="Image of AKR1D1-progesterone" caption="Top-ranked docking pose of progesterone in the AKR1D1 active site (−9.8 kcal/mol), with NADPH and the catalytic tetrad Y58 labelled." numbered refId="fig-xajrx" scale={100} plain={false} noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-progesterone.avif" alt="Image of AKR1D1-progesterone" caption="Top-ranked docking pose of progesterone in the AKR1D1 active site (−9.8 kcal/mol), with NADPH and the catalytic tetrad Y58 labelled." numbered refId="fig-6676c" scale={100} plain={false} noZoom={false} />
 
-ci2350 showed a marginal preference for testosterone (−0.1 kcal/mol, \~1.2-fold), well within the noise floor and cannot be read as meaningful selectivity. The useful conclusion is negative, which makes ci2350 a workable starting point for engineering a preference in the required direction, since selectivity must be increased rather than reversed.
+ci2350 showed a marginal preference for testosterone (−0.1 kcal/mol, \~1.2-fold), well within the noise floor and cannot be read as meaningful selectivity (<Ref target="tab-sznaf" />). The useful conclusion is negative, which makes ci2350 a workable starting point for engineering a preference in the required direction, since selectivity must be increased rather than reversed.  The docking visualisation is shown below ( <Ref target="fig-i27k7" /> , <Ref target="fig-uddfd" />)
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/ci2350-testosterone-view.avif" alt="Image of ci2350-testosterone" caption="Top-ranked docking pose of testosterone in the ci2350 active site (−9.2 kcal/mol), with catalytic residue Y167 labelled" numbered refId="fig-an5iz" scale={100} plain={false} noZoom={false} />
+&#x20;&#x20;
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/ci2350-progesterone-view.avif" alt="Image of ci2350-progesterone" caption="Top-ranked docking pose of progesterone in the ci2350 active site (−9.1 kcal/mol), with catalytic residue Y167 labelled." numbered refId="fig-1mvn2" scale={100} plain={false} noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/ci2350-testosterone-view.avif" alt="Image of ci2350-testosterone" caption="Top-ranked docking pose of testosterone in the ci2350 active site (−9.2 kcal/mol), with catalytic residue Y167 labelled" numbered refId="fig-i27k7" scale={100} plain={false} noZoom={false} />
+
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/ci2350-progesterone-view.avif" alt="Image of ci2350-progesterone" caption="Top-ranked docking pose of progesterone in the ci2350 active site (−9.1 kcal/mol), with catalytic residue Y167 labelled." numbered refId="fig-uddfd" scale={100} plain={false} noZoom={false} />
 
 Neither wild-type meets the selectivity requirement, and both were taken forward to contact analysis.&#x20;
 
