@@ -177,6 +177,16 @@ Because this layer depends on binding, it is tied to the specificity work. Since
 
 Most parameters are literature values rather than measurements from our own strain, so the model was tested rather than taken at face value. Each was varied by ±20% one at a time to see which ones the output depends on, and a Monte Carlo analysis drew all of them at random together to check whether the conclusions hold across the plausible range. The results of both analyses were reported below.
 
+The full description of the three layers, their equations, and assumptions is on the Modelling page (link the integrated growth and expression model).
+
+### Prediction of integrated enzyme production model
+
+#### Baseline behaviour
+
+With the baseline parameters, the culture reaches OD600 = 0.5 at 1.58 hr, which is the induction point, and 99% of its carrying capacity (K = 15) at 6.96 hr. mRNA rises almost immediately after induction and reaches 99% of its steady state (m\* = α/δm = 0.525) within 0.48 hr. Enzyme builds up more slowly. Per cell, it reaches 4.9 relative units when growth saturates and then keeps rising almost linearly to 31.7 at 24 hr. After growth stops, dilution is almost zero, so everything translated from the still-present mRNA stays in the cell (Figure 1).
+
+This baseline result shapes the sweeps that follow. The enzyme level is set mainly by the mRNA supply (α, δm) and the translation rate (β), while growth acts mostly through dilution.
+
 ## **Establishing expression constructs**&#x20;
 
 ## **Comparing AKR1D1 tag configurations**
