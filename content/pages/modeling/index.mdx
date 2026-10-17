@@ -481,11 +481,11 @@ Five assumptions:
 Bacterial messages break down within minutes of being made (<Citation reference="bernstein-et-al-2002" narrative={false} />). We used a half-life (3 to 8 mins) to predict the decay constants (δ = ln2 / t½) range and used their average of 9.53 h⁻¹. The transcription rate (α) and translation rate (β) are placeholders, as neither has been measured for ci2350.
 
 <TableWithCaption caption="Parameters of the expression model" refId="tab-o6z4w">
-  | **Parameter**            | **Value**              | **Source**                               |
-  | ------------------------ | ---------------------- | ---------------------------------------- |
-  | Transcription rate (α)   | 5 (relative units h⁻¹) | Placeholder                              |
-  | mRNA decay constant (δm) | 9.53 h⁻¹               | (ask Elenora) Literature range, midpoint |
-  | Translation rate (β)     | 3 h⁻¹                  | Placeholder                              |
+  | **Parameter**                | **Value**              | **Source**                               |
+  | ---------------------------- | ---------------------- | ---------------------------------------- |
+  | **Transcription rate (α)**   | 5 (relative units h⁻¹) | Placeholder                              |
+  | **mRNA decay constant (δm)** | 9.53 h⁻¹               | (ask Elenora) Literature range, midpoint |
+  | **Translation rate (β)**     | 3 h⁻¹                  | Placeholder                              |
 </TableWithCaption>
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/mrna-enzyme-timecourse.avif" alt="Image of mRNA and enzyme time course" caption="Baseline mRNA and enzyme time-course. mRNA reaches its steady state (0.525) within 0.48 hr. Enzyme keeps accumulating after growth saturates (6.96 hr), reaching 31.7 relative units at 24 hr, because dilution by growth stops. α and β are placeholders, so enzyme is in relative units.)" numbered refId="fig-qgy4n" scale={100} plain={false} noZoom={false} />
@@ -506,17 +506,25 @@ The results of both per-parameter sweep and Monte Carlo analyses of enzyme produ
 
 #### Activity model
 
-Testosterone and progesterone are close in shape and compete for the same active site of ci2350, so each slows down the conversion of the other. This is described by <Tooltip text="A model of how fast an enzyme works as the amount of substrate changes.">Michaelis–Menten kinetics</Tooltip> for two competing substrates. Each substrate has its own turnover rate, but the two rates share the same denominator, which makes the substrates compete (<Citation reference="michaelis-et-al-1913" narrative={false} />).
+Testosterone and progesterone are close in shape and compete for the same active site of ci2350, so each slows down the conversion of the other. This is described by <Tooltip text="A model of how fast an enzyme works as the amount of substrate changes.">Michaelis–Menten kinetics</Tooltip> for two competing substrates. Each substrate has its own turnover rate, but the two rates share the same denominator, which makes the substrates compete (<Citation reference="michaelis-et-al-1913" narrative={false} />).&#x20;
 
-v\_T = (kcat,T / Km,T) · E\_tot · T / (1 + T/Km,T + P/Km,P)
+<FormulaBlock
+  latex="v_T = (kcat,T / Km,T) · E_tot · T / (1 + T/Km,T + P/Km,P)
+"
+/>
 
-v\_P = (kcat,P / Km,P) · E\_tot · P / (1 + T/Km,T + P/Km,P)
+<FormulaBlock
+  latex="v_P = (kcat,P / Km,P) · E_tot · P / (1 + T/Km,T + P/Km,P)
+"
+/>
 
 T and P are the testosterone and progesterone concentrations (µM), and v\_T and v\_P are their rates of consumption (µM per hour). E\_tot is the enzyme concentration in the culture; Km,T and Km,P are the <Tooltip text="The substrate concentration at which an enzyme works at half its top speed. Lower means tighter binding.">Michaelis constants</Tooltip> (estimated from docking, see <Ref target="tab-xr0un" />), and kcat,T and kcat,P are the <Tooltip text="The number of substrate molecules one enzyme converts per second when fully busy.">turnover numbers</Tooltip>. The ratio kcat/Km measures how efficiently each substrate is used, so the preference of a variant is the ratio of kcat,T/Km,T to kcat,P/Km,P.
 
-The enzyme availability comes from the integrated model of enzyme production: enzyme per cell multiplied by culture density, converted to a concentration by a single scaling factor (model assumption). The enzyme in the flask therefore rises as the culture grows, and continues to rise more slowly once growth stops, because the enzyme is no longer diluted.
+The enzyme availability comes from the integrated model of enzyme production: enzyme per cell multiplied by culture density, converted to a concentration by a single scaling factor (model assumption). The enzyme in the flask therefore rises as the culture grows, and continues to rise more slowly once growth stops, because the enzyme is no longer diluted.&#x20;
 
-E\_tot = E\_scale · E · X (model assumption)
+**Model Assumption**
+
+<FormulaBlock latex="E_tot = E_scale · E · X " />
 
 **The three layers run together as one system of five equations:**&#x20;
 
