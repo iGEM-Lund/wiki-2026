@@ -25,3 +25,6 @@ npm-debug.log*
 
 CLAUDE.md
 .claude/
+
+# npm cache used by .gitlab-ci.yml
+/.npm/
