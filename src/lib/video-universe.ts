@@ -64,7 +64,11 @@ export const resolveVideo = cache(async (raw: string): Promise<ResolvedVideo> =>
     if (!response.ok) throw new Error(`Video Universe answered ${response.status}`);
     const video = (await response.json()) as PeerTubeVideo;
     return {
-      embedSrc: `https://${VIDEO_UNIVERSE}/videos/embed/${video.uuid}?api=1&controls=0&loop=1&muted=1&title=0&warningTitle=0&peertubeLink=0`,
+      // autoplay=1: some clips (e.g. ones with a subtitle track) never load
+      // their stream until the player has been told to autoplay, and then
+      // ignore a later play command. The feed pauses all but the current
+      // clip as soon as each player reports ready.
+      embedSrc: `https://${VIDEO_UNIVERSE}/videos/embed/${video.uuid}?api=1&controls=0&loop=1&muted=1&autoplay=1&title=0&warningTitle=0&peertubeLink=0`,
       poster: video.previewPath ? `https://${VIDEO_UNIVERSE}${video.previewPath}` : undefined,
       href: video.url ?? raw,
       videoUniverseId: video.uuid,

@@ -24,6 +24,9 @@ const FLICK_VELOCITY = 0.5;
 const FLICK_WINDOW_MS = 100;
 // Fallback for browsers without the scrollend event.
 const SETTLE_FALLBACK_MS = 600;
+// How long a clip gets to start after we ask it to before we conclude the
+// browser refused (see `passthrough`).
+const PLAY_CHECK_MS = 2500;
 
 // Two taps within this window are a double tap (like); a single tap only
 // toggles play once the window has passed without a second one.
@@ -120,6 +123,11 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
   const [wantPlay, setWantPlay] = useState(false);
   const [onScreen, setOnScreen] = useState(false);
   const [playing, setPlaying] = useState(false);
+  // Firefox only lets an embedded player start from a click made inside the
+  // player's own frame; a play command sent from this page is refused
+  // ("Autoplay is only allowed when approved by the user"). When a clip
+  // doesn't start, the tap layer lets clicks through to the player itself.
+  const [passthrough, setPassthrough] = useState(false);
   const [muted, setMuted] = useState(true);
   // Scroll snapping is switched off while a mouse drag moves the clips
   // (it would fight every scrollTop write) and until the release has
@@ -198,15 +206,22 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
   }, []);
 
   useEffect(() => {
+    let check: ReturnType<typeof setTimeout> | undefined;
     playersRef.current.forEach((player, index) => {
       if (!player) return;
       if (index === active && wantPlay && onScreen) {
         player.play().catch(() => {});
+        if (readyRef.current[index]) {
+          check = setTimeout(() => {
+            if (!playingRef.current[index]) setPassthrough(true);
+          }, PLAY_CHECK_MS);
+        }
       } else {
         player.pause().catch(() => {});
         if (index !== active) player.seek(0).catch(() => {});
       }
     });
+    return () => clearTimeout(check);
   }, [active, wantPlay, onScreen, readyTick]);
 
   useEffect(() => {
@@ -242,6 +257,12 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
   // in the browser, never while the page is rendered on the server.
   async function attachPlayer(iframe: HTMLIFrameElement, index: number) {
     const { PeerTubePlayer } = await import('@peertube/embed-api');
+    // Only one channel can be bound to an iframe, so a second attach (the
+    // iframe's load event after an early one) first drops the earlier,
+    // possibly never-answered one. Firefox swaps the iframe's initial blank
+    // window for the loaded page, which loses a handshake sent too early.
+    (playersRef.current[index] as unknown as { channel?: { destroy(): void } } | null)?.channel?.destroy();
+    playersRef.current[index] = null;
     const player = new PeerTubePlayer(iframe);
     player.addEventListener('play', () => {
       playingRef.current[index] = true;
@@ -487,7 +508,7 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
                   ) : null}
                   <button
                     type="button"
-                    className="short-feed__tap"
+                    className={`short-feed__tap${passthrough ? ' short-feed__tap--passthrough' : ''}`}
                     aria-label={index === active && playing ? 'Pause video' : 'Play video'}
                     tabIndex={index === active ? 0 : -1}
                     onClick={(event) => onTap(event, index)}

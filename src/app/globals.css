@@ -3452,6 +3452,11 @@ a.inline-icon--link:focus-visible {
   color: #fff;
   cursor: pointer;
 }
+/* Clicks reach the embedded player itself; see `passthrough` in
+   ShortVideoFeedClient.tsx. */
+.short-feed__tap--passthrough {
+  pointer-events: none;
+}
 .short-feed__tap:focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: -3px;
