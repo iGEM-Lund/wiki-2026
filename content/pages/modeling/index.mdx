@@ -293,13 +293,13 @@ For testosterone, F71Y adds a hydroxyl to an aromatic ring already in contact wi
 
 Structural stability was evaluated using PyRosetta (<Citation reference="chaudhury-et-al-2010" narrative={false} />) with the ref2015 scoring function (<Citation reference="alford-et-al-2017" narrative={false} />). The ref2015 function returns a single score summing van der Waals packing, hydrogen bonding, electrostatics, implicit solvation and backbone and sidechain torsional strain, with lower, more negative values corresponding to a better-packed and more stable structure.
 
-Local <Tooltip text="Re-optimising the positions of nearby amino acid side chains after a mutation.">sidechain repacking</Tooltip> was performed within a 5.0 Å radius of the mutated position, capturing the first layer of residues most likely to be directly affected by the substitution (Chaudhury et al., 2010). Stability was expressed as the difference between mutant and wild-type (ΔΔG = E(mutant) − E(wild-type)), cancelling the common baseline and isolating the effect of the substitution. A high positive ΔΔG indicates that the mutation destabilizes the structure (<Citation reference="alford-et-al-2017" narrative={false} />).
+Local <Tooltip text="Re-optimising the positions of nearby amino acid side chains after a mutation.">sidechain repacking</Tooltip> was performed within a 5.0 Å radius of the mutated position, capturing the first layer of residues most likely to be directly affected by the substitution (<Citation reference="chaudhury-et-al-2010" narrative={false} />). Stability was expressed as the difference between mutant and wild-type **(ΔΔG = E(mutant) − E(wild-type))**, cancelling the common baseline and isolating the effect of the substitution. A high positive ΔΔG indicates that the mutation destabilizes the structure (<Citation reference="alford-et-al-2017" narrative={false} />).
 
 Variants with ΔΔG above +5 <Tooltip text="Rosetta Energy Units, the score PyRosetta uses. Lower means more stable.">REU</Tooltip> were excluded; those below this threshold were considered structurally acceptable and advanced to docking (<Citation reference="alford-et-al-2017" narrative={false} />; <Citation reference="kellogg-et-al-2011" narrative={false} />). The threshold is deliberately permissive. It is set to reject severely destabilized variants, such as unresolvable steric clashes or lost buried hydrogen bonds.
 
 #### **For AKR1D1:**
 
-24 designed variants were evaluated for stability checks, where 13 passed the +5 REU threshold and were carried forward; 11 were excluded (<Ref target="tab-74y2k" />).
+24 designed variants were evaluated for stability checks, where **13 passed the +5 REU threshold** and were carried forward; 11 were excluded (<Ref target="tab-74y2k" />).
 
 <TableWithCaption caption="Stability screening results for AKR1D1 calculated using ΔΔG = E(mutant) − E(wild-type), with a threshold of +5 REU." refId="tab-74y2k">
   | **Variant**                       | **ΔΔG (REU)** | **Outcome** |
@@ -334,7 +334,7 @@ V309 is tightly packed and rejected every aromatic substitution, with tyrosine a
 
 #### **For ci2350:**
 
-31 designed variants were evaluated, where 17 passed the +5 REU threshold and were carried forward; 14 were excluded (<Ref target="tab-m5xzn" />).
+31 designed variants were evaluated, where **17 passed the +5 REU threshold** and were carried forward; 14 were excluded (<Ref target="tab-m5xzn" />).
 
 <TableWithCaption caption="Stability screening results for ci2350 calculated using ΔΔG = E(mutant) − E(wild-type), with a threshold of +5 REU." refId="tab-m5xzn">
   | **Variant**                         | **ΔΔG (REU)** | **Outcome**       |
@@ -380,7 +380,7 @@ All variants passing the stability threshold were subjected to the same docking 
 
 #### **For AKR1D1:**
 
-<TableWithCaption caption="Mutant docking results for AKR1D1 (top-ranked variants)." refId="tab-bbtpv">
+<TableWithCaption caption="Mutant docking results for AKR1D1 (top-ranked variants)." refId="tab-h4s3i">
   | **Variant**                       | **Progesterone(kcal/mol)** | **Testosterone(kcal/mol)** | **Selectivity(Test − Prog)** | **Outcome**          |
   | --------------------------------- | -------------------------- | -------------------------- | ---------------------------- | -------------------- |
   | **Wild-type**                     | −9.8                       | −9.3                       | +0.5                         | Reference            |
@@ -391,11 +391,11 @@ All variants passing the stability threshold were subjected to the same docking 
   | **Combo 6: V309T + L311S + I57S** | −10.4                      | −9.8                       | +0.6                         | Favored progesterone |
 </TableWithCaption>
 
-No AKR1D1 variant shifted selectivity meaningfully. The three best mutants, V309S, V309E and I57Y moved the score by just 0.1 kcal/mol, well within the noise threshold, and every variant kept a positive score, so progesterone remained preferred throughout. None of the substitutions tested was able to redirect AKR1D1 towards testosterone.
+No AKR1D1 variant shifted selectivity meaningfully. The three best mutants, V309S, V309E and I57Y moved the score by just 0.1 kcal/mol (<Ref target="tab-h4s3i" />), well within the noise threshold, and every variant kept a positive score, so progesterone remained preferred throughout. None of the substitutions tested was able to redirect AKR1D1 towards testosterone.
 
 #### **For ci2350:**
 
-<TableWithCaption caption="Mutant docking results for ci2350 (top-ranked variants)." refId="tab-p4rq5">
+<TableWithCaption caption="Mutant docking results for ci2350 (top-ranked variants)." refId="tab-abuyo">
   | **Variant**                         | **Progesterone(kcal/mol)** | **Testosterone(kcal/mol)** | **Selectivity(Test − Prog)** | **Outcome**                                |
   | ----------------------------------- | -------------------------- | -------------------------- | ---------------------------- | ------------------------------------------ |
   | **Wild-type**                       | −9.1                       | −9.2                       | −0.1                         | Reference                                  |
@@ -406,7 +406,13 @@ No AKR1D1 variant shifted selectivity meaningfully. The three best mutants, V309
   | **V263D**                           | −9.1                       | −9.3                       | −0.2                         | Favored testosterone                       |
 </TableWithCaption>
 
-The combination mutation of **R215A + V263I** is the clear leading candidate, with a selectivity score of **−0.9 kcal/mol** and a shift of **−0.8** against the wild-type, and the only variant to exceed the noise threshold. It is also the only one where testosterone binding improved in absolute terms while progesterone binding weakened, so the gain comes from both directions at once. The other candidates gained selectivity by losing affinity. R215A + V263I was therefore selected as one of the candidates for experimental characterization. The detailed analysis of variant specificity towards testosterone is presented on the [Results](/results) page.
+The combination mutation of **R215A + V263I** is the clear leading candidate, with a selectivity score of **−0.9 kcal/mol** and a shift of **−0.8** against the wild-type, and the only variant to exceed the noise threshold (<Ref target="tab-abuyo" />). It is also the only one where testosterone binding improved in absolute terms while progesterone binding weakened, so the gain comes from both directions at once. The other candidates gained selectivity by losing affinity. &#x20;
+
+<Card>
+  R215A + V263I was therefore selected as one of the candidates for experimental characterization. The detailed analysis of variant specificity towards testosterone is presented on the [Results](/results) page.
+
+  &#x20;&#x20;
+</Card>
 
 **The complete implementation of the pipeline for enzyme specificity analysis is available on GitLab (Link)**
 
