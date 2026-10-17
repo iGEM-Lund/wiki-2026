@@ -66,21 +66,21 @@ Our effector should be expressed only when testosterone levels exceed a threshol
 
 The sensor is TeiR, a transcription factor from *Comamonas testosteroni*, a bacterium that uses testosterone as a carbon source (<Citation reference="pruneda-paz-et-al-2004" narrative={false} />). TeiR is not specific tTo testosterone: it also responded to eight other steroids (<Citation reference="goehler-et-al-2008" narrative={false} />). If we implement it, TeiR would therefore have to be engineered and tested so that it responds to testosterone and not to other steroids, including non-androgens. The binding region identified in that study (around residues 189 to 209) is the natural place to start. This is our plan and has not been tested yet.&#x20;
 
-<Ref target="fig-1x28d" />shows how the gut gate and TeiR will be engineered to work together and the <Ref target="tab-dh4yy" /> explains the steps followed.&#x20;
+<Ref target="fig-mrxqu" />shows how the gut gate and TeiR will be engineered to work together and the <Ref target="tab-dh4yy" /> explains the steps followed.&#x20;
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/biosafety/gut-gate-and-feedback-loop.svg" alt="Flowchart of the gut gate and feedback loop: low oxygen switches on TeiR, testosterone-bound TeiR activates sip48, and the effector enzyme lowers testosterone." caption="Gut gate and feedback loop. Low oxygen switches on TeiR expression; testosterone-bound TeiR activates the sip48 promoter, which drives the effector enzyme that lowers testosterone and closes the loop." numbered refId="fig-fistg" scale={60} plain noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/biosafety/gut-gate-and-feedback-loop.svg" alt="Flowchart of the gut gate and feedback loop: low oxygen switches on TeiR, testosterone-bound TeiR activates sip48, and the effector enzyme lowers testosterone." caption="Gut gate and feedback loop. Low oxygen switches on TeiR expression; testosterone-bound TeiR activates the sip48 promoter, which drives the effector enzyme that lowers testosterone and closes the loop." numbered refId="fig-mrxqu" scale={60} plain noZoom={false} />
 
 <TableWithCaption caption="Steps of the Gut gate and Feedback loop." refId="tab-dh4yy">
   &#x20;&#x20;
 
-  | **Step**                                   | **What happens**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-  | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | 1. Hypoxia promoter switches on            | Under low-oxygen conditions in the gut, the hypoxia promoter (PfnrS) becomes active.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-  | 2. TeiR production                         | The active promoter drives expression of TeiR. A *teiR*-knockout strain lost chemotaxis toward testosterone as well as testosterone binding and uptake, and no longer induced the steroid-degrading enzyme hsdA (<Citation reference="goehler-et-al-2008" narrative={false} />).TeiR has been cloned and expressed in *E. coli*, our own <Tooltip text="The host organism that carries the engineered genes, here E. coli.">chassis</Tooltip>: under two different inducible promoters (tac and lacZ), TeiR activated expression of its target gene, with protein levels reported at 1.42–1.80 μg/mg after <Tooltip text="A lab chemical used to switch on genes controlled by certain promoters.">IPTG</Tooltip> induction, reported as evidence that TeiR retains regulatory function outside its native organism (<Citation reference="chen-et-al-2009" narrative={false} />). |
-  | 3. TeiR binds testosterone above threshold | TeiR is a membrane-associated protein whose steroid-binding region lies around residues 189–209. Purified TeiR transfers phosphate from GTP (not ATP) to cytosolic proteins, consistent with a <Tooltip text="An enzyme that transfers phosphate groups to proteins, often as part of a signalling pathway.">histidine kinase</Tooltip> (<Citation reference="goehler-et-al-2008" narrative={false} />). The testosterone concentration at which TeiR becomes active has not been measured, so the threshold in our design is a target to be tested, not a literature value.                                                                                                                                                                                                                                                                                                      |
-  | 4. sip48 promoter turns on                 | In our design, activated TeiR switches on the sip48 promoter, proposed as its natural target in *C. testosteroni* (<Citation reference="pruneda-paz-et-al-2004" narrative={false} /> ; <Citation reference="goehler-et-al-2008" narrative />) shows that TeiR driving expression of the testosterone-degrading enzyme hsdA but do not show TeiR binding DNA, so whether and how TeiR acts on sip48 directly has not yet been confirmed from the primary papers. This is the least well-established step of the circuit and must be checked before construction.                                                                                                                                                                                                                                                                                                                   |
-  | 5. Enzyme production                       | sip48 drives expression of our effector enzyme, reducing elevated testosterone levels.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-  | 6. Feedback                                | As testosterone levels fall, less remains available to activate TeiR, and expression is expected to decrease accordingly, closing the loop.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+  | **Step**                                       | **What happens**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+  | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | **1. Hypoxia promoter switches on**            | Under low-oxygen conditions in the gut, the hypoxia promoter (PfnrS) becomes active.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+  | **2. TeiR production**                         | The active promoter drives expression of TeiR. A *teiR*-knockout strain lost chemotaxis toward testosterone as well as testosterone binding and uptake, and no longer induced the steroid-degrading enzyme hsdA (<Citation reference="goehler-et-al-2008" narrative={false} />).TeiR has been cloned and expressed in *E. coli*, our own <Tooltip text="The host organism that carries the engineered genes, here E. coli.">chassis</Tooltip>: under two different inducible promoters (tac and lacZ), TeiR activated expression of its target gene, with protein levels reported at 1.42–1.80 μg/mg after <Tooltip text="A lab chemical used to switch on genes controlled by certain promoters.">IPTG</Tooltip> induction, reported as evidence that TeiR retains regulatory function outside its native organism (<Citation reference="chen-et-al-2009" narrative={false} />). |
+  | **3. TeiR binds testosterone above threshold** | TeiR is a membrane-associated protein whose steroid-binding region lies around residues 189–209. Purified TeiR transfers phosphate from GTP (not ATP) to cytosolic proteins, consistent with a <Tooltip text="An enzyme that transfers phosphate groups to proteins, often as part of a signalling pathway.">histidine kinase</Tooltip> (<Citation reference="goehler-et-al-2008" narrative={false} />). The testosterone concentration at which TeiR becomes active has not been measured, so the threshold in our design is a target to be tested, not a literature value.                                                                                                                                                                                                                                                                                                      |
+  | **4. sip48 promoter turns on**                 | In our design, activated TeiR switches on the sip48 promoter, proposed as its natural target in *C. testosteroni* (<Citation reference="pruneda-paz-et-al-2004" narrative={false} /> ; <Citation reference="goehler-et-al-2008" narrative />) shows that TeiR driving expression of the testosterone-degrading enzyme hsdA but do not show TeiR binding DNA, so whether and how TeiR acts on sip48 directly has not yet been confirmed from the primary papers. This is the least well-established step of the circuit and must be checked before construction.                                                                                                                                                                                                                                                                                                                   |
+  | **5. Enzyme production**                       | sip48 drives expression of our effector enzyme, reducing elevated testosterone levels.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+  | **6. Feedback**                                | As testosterone levels fall, less remains available to activate TeiR, and expression is expected to decrease accordingly, closing the loop.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
   &#x20;&#x20;
 </TableWithCaption>
@@ -97,8 +97,7 @@ Colonization control is the decision about how long our probiotic should remain 
       Transient Design (relies on natural clearance)
     </CardTitle>
 
-    Wild-type *E. coli* Nissle 1917 (EcN) is not reliably transient in humans. Natural clearance alone is not a dependable limit.\
-
+    Wild-type *E. coli* Nissle 1917 (EcN) is not reliably transient in humans. Natural clearance alone is not a dependable limit.
 
     In a placebo-controlled study of 48 healthy volunteers dosed for 17 days, 45 of 48 tested positive for EcN during dosing. After dosing stopped, the share still testing positive fell only gradually, to 4 of 20 (placebo group) and 7 of 20 (mesalamine group) by week 12. (<Citation reference="joeres-nguyen-xuan-et-al-2010" narrative={false} />)
   </LayoutColumn>
@@ -110,9 +109,9 @@ Colonization control is the decision about how long our probiotic should remain 
 
     In a first-in-human study of a ΔdapA EcN strain, no stool sample was above the detection limit 4 days after the last dose. &#x20;
 
-    The strain (SYNB1618) carries a *dapA* deletion and depends on exogenous DAP. **<Citation reference="isabella-et-al-2018" narrative={false} />** found it cleared from the mouse gut and feces within 48 h and undetectable in monkey stool within 7 days. \
+    The strain (SYNB1618) carries a *dapA* deletion and depends on exogenous DAP. <Citation reference="isabella-et-al-2018" narrative={false} /> found it cleared from the mouse gut and feces within 48 h and undetectable in monkey stool within 7 days. \
     \
-    In the human study, participants received repeated doses and no evidence of colonization was found **(<Citation reference="puurunen-et-al-2021" narrative={false} />)**.These results come from different strains, doses and populations than the wild-type EcN study, so they are not a controlled comparison. The mouse and monkey data are not human data.
+    In the human study, participants received repeated doses and no evidence of colonization was found **(**<Citation reference="puurunen-et-al-2021" narrative={false} />**)**.These results come from different strains, doses and populations than the wild-type EcN study, so they are not a controlled comparison. The mouse and monkey data are not human data.
   </LayoutColumn>
 </Layout2>
 
@@ -120,34 +119,34 @@ Colonization control is the decision about how long our probiotic should remain 
 
 ### **Resident Gut Communities**
 
-Resident gut communities are the native bacterial communities present in the gut. A living biotherapeutic is not alone in the gut, so we considered how it might affect this community.
+Resident gut communities are the native bacterial communities present in the gut. A living biotherapeutic is not alone in the gut, so we considered how it might affect this community.&#x20;
 
-<Card>
-  <CardTitle>
-    The Bacterium itself&#x20;
-  </CardTitle>
+<Layout2>
+  <LayoutColumn>
+    &#x20;&#x20;
 
-  \
-  In a mouse model, wild-type EcN changed the community composition after four weeks.
+    <CardTitle>
+      The Bacterium itself&#x20;
+    </CardTitle>
 
-  <Expandable defaultOpen={false}>
+    In a mouse model, wild-type EcN changed the community composition after four weeks.&#x20;
+
     In a DHEA-induced PMOS (PCOS) mouse model, four weeks of EcN changed the gut community composition (<Citation reference="luo-et-al-2023" narrative={false} />). This was a hormone-driven disease model and may not apply to healthy hosts, but it suggests that EcN itself may shift the community.
-  </Expandable>
-</Card>
+  </LayoutColumn>
 
-<Card>
-  <CardTitle>
-    Lowering Testosterone
-  </CardTitle>
+  <LayoutColumn>
+    &#x20;&#x20;
 
-  Lowering gut testosterone may also have an effect on the gut microbial community.
+    <CardTitle>
+      Lowering Testosterone
+    </CardTitle>
 
-  <Expandable defaultOpen={false}>
+    Lowering gut testosterone may also have an effect on the gut microbial community.&#x20;
+
     In another mouse study, testosterone treatment changed the overall gut community composition in both sexes (<Citation reference="moadi-et-al-2024" narrative={false} />), although the effect of lowering testosterone was not tested.
-  </Expandable>
-</Card>
+  </LayoutColumn>
+</Layout2>
 
-\
 In conclusion, we found no study that profiled the gut community in humans dosed with an engineered EcN, so we cannot say how large any effect would be. We therefore treat the effect on resident communities as an open question.
 
 ## Environmental Biocontainment
