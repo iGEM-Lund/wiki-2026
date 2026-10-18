@@ -175,13 +175,13 @@ V263K also reaches −0.5 kcal/mol selectivity, but by a different route. The lo
 
 ### **Overview**
 
-The aim was to predict how much enzyme a culture produces, and what that enzyme does once both steroids are present. Three layers were built and run as one system: a growth model for the culture, an expression model for how much enzyme each cell carries, and an activity model for how the enzyme divides its time between testosterone and progesterone.
+The aim was to predict how much enzyme a culture produces, and what that enzyme does once both steroids are present. Three layers were built and run as one system: a **growth model** for the culture, an **expression model** for how much enzyme each cell carries, and an **activity model** for how the enzyme divides its time between testosterone and progesterone.
 
 Growth follows a logistic curve fitted to our own OD600 measurements, which sets the maximum growth rate, the carrying capacity and the starting density. Expression covers transcription, translation and dilution by growth. The activity layer treats the two steroids as competing for a single active site, so the preference predicted from docking determines which one is turned over.
 
-Because this layer depends on binding, it is tied to the specificity work. Since AKR1D1 showed no useful shift in preference, the activity model was run for ci2350 and its variants, using Michaelis constants derived from the docking scores.
+Because this layer depends on binding, it is tied to the specificity work. Since AKR1D1 showed no useful shift in preference, the **activity model was run for ci2350 and its variants**, using Michaelis constants derived from the docking scores.
 
-Most parameters are literature values rather than measurements from our own strain, so the model was tested rather than taken at face value. Each was varied by ±20% one at a time to see which ones the output depends on, and a Monte Carlo analysis drew all of them at random together to check whether the conclusions hold across the plausible range. The results of both analyses were reported below.
+Most parameters are literature values rather than measurements from our own strain, so the model was tested rather than taken at face value. Each was varied by **±20% one at a time** to see which ones the output depends on, and a Monte Carlo analysis drew all of them at random together to check whether the conclusions hold across the plausible range. The results of both analyses were reported below.
 
 The full description of the three layers, their equations, and assumptions is on the [Modelling page](https://wiki.igemlund.org/modeling#:~:text=Integrated%20growth%20and%20expression%20model).
 
@@ -189,7 +189,7 @@ The full description of the three layers, their equations, and assumptions is on
 
 #### **Baseline behaviour**
 
-With the baseline parameters, the culture reaches OD600 = 0.5 at 1.58 hr, which is the induction point, and 99% of its carrying capacity (K = 15) at 6.96 hr. mRNA rises almost immediately after induction and reaches 99% of its steady state (m\* = α/δm = 0.525) within 0.48 hr. Enzyme builds up more slowly. Per cell, it reaches 4.9 relative units when growth saturates and then keeps rising almost linearly to 31.7 at 24 hr. After growth stops, dilution is almost zero, so everything translated from the still-present mRNA stays in the cell (<Ref target="fig-njrcu" />).
+With the baseline parameters, the culture reaches **OD600 = 0.5 at 1.58 h**, which is the induction point, and 99% of its carrying capacity (K = 15) at 6.96 hr. mRNA rises almost immediately after induction and reaches 99% of its steady state (<Formula latex="m* = α/δm = 0.525" />) within 0.48 hr. Enzyme builds up more slowly. Per cell, it reaches 4.9 relative units when growth saturates and then keeps rising almost linearly to 31.7 at 24 hr. After growth stops, dilution is almost zero, so everything translated from the still-present mRNA stays in the cell (<Ref target="fig-njrcu" />).
 
 This baseline result shapes the sweeps that follow. The enzyme level is set mainly by the mRNA supply (α, δm) and the translation rate (β), while growth acts mostly through dilution.
 
