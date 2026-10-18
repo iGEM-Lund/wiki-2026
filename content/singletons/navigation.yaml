@@ -6,6 +6,7 @@ items:
     linkMode:
       discriminant: dropdown
       value:
+        - project-description
         - background
         - solution-and-project-design
         - outlook
