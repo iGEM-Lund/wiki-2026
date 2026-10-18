@@ -376,11 +376,11 @@ Following these results, ci2350-MBP-6xHis sequences with mutation V236I were tra
 
 <Layout2>
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/ci2350-263-mutation-seq.avif" alt="Sequencing result confirming ci2350-MBP-6xHis V263I mutation" caption="Sequencing result confirming ci2350 V263I mutation, in ci2350-MBP-6xHis double mutant construct. Viewed using Snapgene." numbered refId="fig-0tzgr" scale={100} plain={false} noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/ci2350-263-mutation-seq.avif" alt="Sequencing result confirming ci2350-MBP-6xHis V263I mutation - original sequence (mutant variant) is the same as sequenced" caption="Sequencing result confirming ci2350 V263I mutation, in ci2350-MBP-6xHis double mutant construct. Viewed using Snapgene." numbered refId="fig-0tzgr" scale={100} plain={false} noZoom={false} />
   </LayoutColumn>
 
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/ci2350-215-mutation-seq.avif" alt="MISSING" caption="Sequencing result confirming ci2350 R215A mutation, in ci2350-MBP-6xHis double mutant construct. Viewed using Snapgene." numbered refId="fig-m0oxe" scale={100} plain={false} noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/ci2350-215-mutation-seq.avif" alt="Sequencing result confirming ci2350-MBP-6xHis R215A mutation - original sequence (mutant variant) is the same as sequenced" caption="Sequencing result confirming ci2350 R215A mutation, in ci2350-MBP-6xHis double mutant construct. Viewed using Snapgene." numbered refId="fig-m0oxe" scale={100} plain={false} noZoom={false} />
   </LayoutColumn>
 </Layout2>
 
@@ -565,7 +565,23 @@ Overall, our experiments established a more reliable spectrophotometric measurem
 
 Further work will require improved protein purification, appropriately matched controls, and direct analysis of steroid substrates and products, for example using LC–MS/MS. Complementary androgen-receptor assays would then be necessary to determine whether any confirmed transformation affects androgenic activity.
 
-## **Initial work with hypoxia-responsive promoter**&#x20;
+## **Initial work with hypoxia-responsive promoter**
+
+To implement a safety mechanism that restricts enzyme production to the anaerobic gut environment, we designed hypoxia-inducible constructs for AKR1D1-SUMO-6xHis and ci2350-MBP-6xHis. These constructs placed enzyme expression under the control of the hypoxia-responsive promoter **pFnrS** ([BBa\_25DMNRIB](https://registry.igem.org/parts/bba-25dmnrib)), followed by a lambda t0 terminator ([BBa\_26P9V9ID](https://registry.igem.org/parts/bba-26p9v9id)), ensuring production would only occur in low-oxygen conditions typical of the intestinal tract.
+
+To prevent protein truncation observed at poly-T regions in previous experiments (Week ), we eliminated poly-adenine stretches (≥6 consecutive A's) from the ci2350-MBP coding sequence through codon optimization.
+
+Both constructs were ordered as clonal genes from Twist Bioscience, synthesized directly into the pET-Blank-Amp backbone with pFnrS and insertion point being custom promoter-RBS (<Ref />).
+
+<Layout2>
+  <LayoutColumn>
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/pfnrs-akr1d1-sumo-map.avif" alt="pfnrs akr1d1-sumo-6xHis lambda t0 terminator construct in pET Blank-Amp backbone. Insertion point set at custom promoter-RBS" caption="Plasmid vector pET-Blank-Amp_pFnrS_AKR1D1-SUMO-6xHis_Lambda t0 ter (Insertion point: custom promoter-RBS). Visualized using SnapGene." numbered refId="fig-wzks1" scale={100} plain noZoom />
+  </LayoutColumn>
+
+  <LayoutColumn>
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/pfnrs-ci-mbp-map.avif" alt="pfnrs ci2350-MBP-6xHis lambda t0 terminator construct in pET Blank-Amp backbone. Insertion point set at custom promoter-RBS" caption="Plasmid vector pET-Blank-Amp_pFnrS_ci2350-MBP-6xHis_Lambda t0 ter (Insertion point: custom promoter-RBS). Visualized using SnapGene." numbered={false} refId="fig-wzks1" scale={100} plain={false} noZoom={false} />
+  </LayoutColumn>
+</Layout2>
 
 ## **Future Experiments**
 
