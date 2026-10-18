@@ -432,7 +432,7 @@ Biological systems combine processes that run at different speeds and affect one
 
 The specificity analysis found no AKR1D1 variant that shifted preference towards testosterone, while ci2350 produced several promising candidates, so the **model was built around ci2350 alone**. These findings are described on the [Results page](https://wiki.igemlund.org/results#enzyme-specificity-engineering).
 
-### Integrated growth and expression model
+### **Integrated growth and expression model**
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/integrated-model.avif" alt="Image of workflow" caption="Workflow of the integrated growth and expression model. Growth data and literature values define the parameters of two coupled layers, which are solved numerically and then tested by parameter sweeps and Monte Carlo sampling." numbered refId="fig-ldjtv" scale={100} plain={false} noZoom={false} />
 
@@ -476,7 +476,7 @@ Since mRNA and the enzyme behave differently inside the cell, we examined them s
 "
 />
 
-**Steady-state maintenance**
+**At steady-state maintenance**
 
 <FormulaBlock
   latex="m* = α / δm 
@@ -522,7 +522,7 @@ The analysis was run three times: with only the growth parameters (K, µmax) var
 
 The results of both per-parameter sweep and Monte Carlo analyses of enzyme production are presented on the [Results page](https://wiki.igemlund.org/results#mathematical-modelling-of-enzyme-production-and-activity). The scripts for the integrated model are available on GitLab (Link).
 
-### Enzyme activity model
+### **Enzyme activity model**
 
 #### **Activity model**
 
@@ -604,7 +604,7 @@ The first three are the growth and expression layers described in the integrated
   | **Km,P (wild type) – Km of the wild type for progesterone** | 0.432 µM            | (Arp et al., 2025)  (ITC Kₔ of the wild type)           |
 </TableWithCaption>
 
-#### Linking docking to Km
+#### **Linking docking to Km**
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/docking-to-km.avif" alt="Image of docking to Km" caption="From docking score to Km. Each docking score (ΔG) is converted to a binding constant, Kd = exp(ΔG/RT), and Km is assumed to follow Kd. The wild-type progesterone score is anchored to its measured Kd (0.432 µM), and each variant’s Km shifts by its score difference from wild type. A variant with a lower Km for testosterone than for progesterone prefers testosterone. This link between Km and Kd is an assumption, and docking errors are larger than most differences between variants." numbered refId="fig-z9s4i" scale={100} plain={false} noZoom={false} />
 
