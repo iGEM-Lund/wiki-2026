@@ -9,11 +9,11 @@ insert overall main findings per part
 
 ### **Overview**
 
-Two Δ4-3-ketosteroid 5β-reductases were taken forward for engineering: human **AKR1D1** and the bacterial enzyme **ci2350** from *Clostridium innocuum*. The aim was to shift substrate preference towards testosterone and away from progesterone, two steroids that differ only at the **C17 substituent**.
+Two Δ4-3-ketosteroid 5β-reductases were taken forward for engineering: human **AKR1D1** and the bacterial enzyme **ci2350** from *Clostridium innocuum*. The aim was to shift substrate preference towards testosterone and away from progesterone, two steroids that differ only at the **<Tooltip text="The chemical group attached to carbon 17 of the steroid ring system, where testosterone and progesterone differ.">C17 substituent</Tooltip>**.
 
-Structures were obtained from the PDB (AKR1D1, [**3CAV**](https://www.rcsb.org/structure/3CAV)) and from **AlphaFold** (ci2350), and the functional pocket in each was located with **fpocket** and confirmed against **NCBI CD Search** annotations. Docking both substrates into the wild-type enzymes gave similar absolute affinities but opposite preferences: **AKR1D1 favoured progesterone by 0.5 kcal/mol,** while **ci2350 showed a marginal testosterone preference of 0.1 kcal/mol,** within the scoring noise.
+Structures were obtained from the <Tooltip text="Protein Data Bank, a public database of experimentally determined protein structures.">PDB</Tooltip> (AKR1D1, [**3CAV**](https://www.rcsb.org/structure/3CAV)) and from **<Tooltip text="An AI program that predicts a protein's 3D structure from its amino acid sequence.">AlphaFold</Tooltip>** (ci2350), and the functional pocket in each was located with **<Tooltip text="Software that finds cavities (pockets) on a protein's surface where molecules could bind.">fpocket</Tooltip>** and confirmed against **<Tooltip text="A tool that matches a protein sequence to known protein domains and marks their key positions.">NCBI CD Search</Tooltip>** annotations. <Tooltip text="A computer simulation that predicts how well a molecule fits into a protein's binding site.">Docking</Tooltip> both substrates into the <Tooltip text="The natural, unmodified version of an enzyme.">wild-type</Tooltip> enzymes gave similar absolute affinities but opposite preferences: **AKR1D1 favoured progesterone by 0.5 kcal/mol,** while **ci2350 showed a marginal testosterone preference of 0.1 kcal/mol,** within the scoring noise.
 
-Residues within **4 <Tooltip text="Angstrom: unit of length equaling 10^−10 m">Å</Tooltip>** of each docked ligand were sorted by which substrate they contacted. This identified three specificity determinants in AKR1D1 (**V309, L311, I57**) and six in ci2350 (**A107, R215, V263, V59, F71, Q100**). Substitutions at these positions were designed to weaken progesterone binding or strengthen testosterone binding, then screened for structural stability in **PyRosetta**. Of 24 AKR1D1 variants, 13 passed the **+5 REU** threshold; of 31 ci2350 variants, 17 passed. These variants were then docked with both substrates to assess their specificity towards testosterone.
+Residues within **4 <Tooltip text="Angstrom: unit of length equaling 10^−10 m">Å</Tooltip>** of each docked ligand were sorted by which substrate they contacted. This identified three specificity determinants in AKR1D1 (**V309, L311, I57**) and six in ci2350 (**A107, R215, V263, V59, F71, Q100**). Substitutions at these positions were designed to weaken progesterone binding or strengthen testosterone binding, then screened for structural stability in **<Tooltip text="Software for modelling protein structures and predicting how mutations change their stability.">PyRosetta</Tooltip>**. Of 24 AKR1D1 variants, 13 passed the **+5 REU** threshold; of 31 ci2350 variants, 17 passed. These variants were then docked with both substrates to assess their specificity towards testosterone.
 
 The full workflow for both AKR1D1 and ci2350, from protein structure acquisition through to stability screening, is described on the [Model page](/model#enzyme-specificity-engineering).&#x20;
 
@@ -40,11 +40,11 @@ Thirteen stable AKR1D1 variants were docked with both steroids. Selectivity is r
   | Combo 6: V309T + L311S + I57S | −10.4                       | −9.8                        | +0.6                        | +0.80         |
 </TableWithCaption>
 
-No variants shifted the preference. The largest gain was 0.1 kcal/mol, far below the ±0.5 kcal/mol noise of the scoring function, so V309S, V309E and I57Y cannot be called improvements. The only changes large enough to read as real went the wrong way: I57N moved the preference 0.4 kcal/mol further towards progesterone.&#x20;
+No variants shifted the preference. The largest gain was 0.1 kcal/mol, far below the ±0.5 kcal/mol noise of the <Tooltip text="The formula the docking software uses to estimate how strongly a molecule binds.">scoring function</Tooltip>, so V309S, V309E and I57Y cannot be called improvements. The only changes large enough to read as real went the wrong way: I57N moved the preference 0.4 kcal/mol further towards progesterone.&#x20;
 
 The mutations alter how well the pocket holds a steroid, not which steroid it holds. Testosterone and progesterone differ only at C17, and if a substitution cannot distinguish that one group, it will always move both ligands together.
 
-Two substitutions were examined in detail: V309T, which replaces a valine methyl group with the hydroxyl of threonine, and L311S, which trims a leucine side chain down to serine. Both were intended to introduce polarity near the steroid and make the pocket less comfortable for progesterone’s acetyl group. Both sit above the plane of the progesterone, over the B and C rings, while the C17 substituent extends past them into the open end of the pocket (<Ref target="fig-tonmw" />, <Ref target="fig-bifbg" />, <Ref target="fig-m5401" /> and <Ref target="fig-4z0rf" />).
+Two substitutions were examined in detail: V309T, which replaces a valine methyl group with the <Tooltip text="An -OH group: an oxygen atom bonded to a hydrogen atom.">hydroxyl</Tooltip> of threonine, and L311S, which trims a leucine side chain down to serine. Both were intended to introduce polarity near the steroid and make the pocket less comfortable for progesterone’s <Tooltip text="A small group of atoms (CH3-C=O) attached at C17 in progesterone.">acetyl group</Tooltip>. Both sit above the plane of the progesterone, over the B and C rings, while the C17 substituent extends past them into the open end of the pocket (<Ref target="fig-tonmw" />, <Ref target="fig-bifbg" />, <Ref target="fig-m5401" /> and <Ref target="fig-4z0rf" />).
 
 Since neither mutated side chain reaches the C17 group, there is no direct contact. So, an acetyl group and a hydroxyl look the same to the enzyme, which matches the docking scores: every substitution at these positions moved both substrates by the same amount, leaving the selectivity gap at +0.5 kcal/mol.
 
@@ -97,7 +97,7 @@ Seventeen stable ci2350 variants were docked with both steroids. Selectivity is 
   &#x20;
 </TableWithCaption>
 
-**Combo 8 (R215A + V263I)** is the only variant that moved the preference by more than the **±0.5 kcal/mol** noise, shifting it **0.8 kcal/mol** from the wild type, and the combination is structurally well tolerated (**ΔΔG = +1.42 REU**). It is also the only one that does so without giving up affinity (<Ref target="tab-nn49s" />): **progesterone at −8.5** and **testosterone at −9.4** are close to the wild-type values, so the gap comes from holding testosterone more tightly rather than from binding everything more weakly.
+**Combo 8 (R215A + V263I)** is the only variant that moved the preference by more than the **±0.5 kcal/mol** noise, shifting it **0.8 kcal/mol** from the wild type, and the combination is structurally well tolerated (**ΔΔG = +1.42 <Tooltip text="Rosetta Energy Units, the score for how stable a protein structure is. Lower is more stable.">REU</Tooltip>**). It is also the only one that does so without giving up affinity (<Ref target="tab-nn49s" />): **progesterone at −8.5** and **testosterone at −9.4** are close to the wild-type values, so the gap comes from holding testosterone more tightly rather than from binding everything more weakly.
 
 **R215** makes a **direct contact** with the **C17 acetyl tail** of progesterone, so replacing it with alanine removes a stabilising interaction that only progesterone uses (<Ref target="fig-6qd5d" /> and <Ref target="fig-t5egj" />). **V263I** works on the same region from the other side: isoleucine is bulkier than valine and appears to **crowd the acetyl tail**, while testosterone, which carries only a compact 17β-hydroxyl at that position, fits the branched side chain more comfortably and binds slightly better.
 
@@ -155,7 +155,7 @@ The two mutations behave very differently on their own. V263I shifts the prefere
   </LayoutColumn>
 </Layout2>
 
-V263K also reaches −0.5 kcal/mol selectivity, but by a different route. The long lysine side chain is poorly suited to the hydrophobic end of the pocket and weakens binding of both steroids substantially (<Ref target="fig-anmg7" /> and <Ref target="fig-6yxfn" />), progesterone from −9.1 to −6.9 and testosterone from −9.2 to −7.4, with progesterone penalized more. The preference comes from making the pocket worse for everything rather than from distinguishing the two substituents. As a single substitution, it is simple to make and characterize, which keeps it on the list, but the affinity loss limits its usefulness.
+V263K also reaches −0.5 kcal/mol selectivity, but by a different route. The long lysine side chain is poorly suited to the <Tooltip text="Water-repelling: such groups prefer to sit next to other nonpolar groups.">hydrophobic</Tooltip> end of the pocket and weakens binding of both steroids substantially (<Ref target="fig-anmg7" /> and <Ref target="fig-6yxfn" />), progesterone from −9.1 to −6.9 and testosterone from −9.2 to −7.4, with progesterone penalized more. The preference comes from making the pocket worse for everything rather than from distinguishing the two substituents. As a single substitution, it is simple to make and characterize, which keeps it on the list, but the affinity loss limits its usefulness.
 
 <Layout2>
   <LayoutColumn>
@@ -177,9 +177,9 @@ V263K also reaches −0.5 kcal/mol selectivity, but by a different route. The lo
 
 The aim was to predict how much enzyme a culture produces, and what that enzyme does once both steroids are present. Three layers were built and run as one system: a **growth model** for the culture, an **expression model** for how much enzyme each cell carries, and an **activity model** for how the enzyme divides its time between testosterone and progesterone.
 
-Growth follows a logistic curve fitted to our own OD600 measurements, which sets the maximum growth rate, the carrying capacity and the starting density. Expression covers transcription, translation and dilution by growth. The activity layer treats the two steroids as competing for a single active site, so the preference predicted from docking determines which one is turned over.
+Growth follows a <Tooltip text="A growth curve that starts exponential and levels off as the culture fills its container.">logistic curve</Tooltip> fitted to our own OD600 measurements, which sets the maximum growth rate, the <Tooltip text="The maximum culture density that the medium can support.">carrying capacity</Tooltip> and the starting density. Expression covers transcription, translation and <Tooltip text="As cells divide, the enzyme in each cell is shared between the two daughters, which lowers its concentration.">dilution by growth</Tooltip>. The activity layer treats the two steroids as competing for a single active site, so the preference predicted from docking determines which one is turned over.
 
-Because this layer depends on binding, it is tied to the specificity work. Since AKR1D1 showed no useful shift in preference, the **activity model was run for ci2350 and its variants**, using Michaelis constants derived from the docking scores.
+Because this layer depends on binding, it is tied to the specificity work. Since AKR1D1 showed no useful shift in preference, the **activity model was run for ci2350 and its variants**, using <Tooltip text="The substrate concentration at which an enzyme works at half its top speed (Km). Lower means tighter binding.">Michaelis constants</Tooltip> derived from the docking scores.
 
 Most parameters are literature values rather than measurements from our own strain, so the model was tested rather than taken at face value. Each was varied by **±20% one at a time** to see which ones the output depends on, and a Monte Carlo analysis drew all of them at random together to check whether the conclusions hold across the plausible range. The results of both analyses were reported below.
 
@@ -263,7 +263,7 @@ Biologically, **how much enzyme each cell makes depends mainly on how much mRNA 
 
 ### **Prediction of activity model**
 
-To predict how the engineered enzyme would behave in the cell, the **expression model was linked to a competitive Michaelis–Menten model** of testosterone and progesterone conversion This section tests **R215A + V263I**, the variant selected in the [Enzyme specificity engineering results](/results#enzyme-specificity-engineering). We first show the baseline run and then test how robust it is to the expression and growth settings, the kcat ratio, the docking scores, and random errors in all of them together. Throughout, the speed ratio<Formula latex="t50(P)/t50(T)" /> measures which steroid is converted first.
+To predict how the engineered enzyme would behave in the cell, the **expression model was linked to a competitive Michaelis–Menten model** of testosterone and progesterone conversion This section tests **R215A + V263I**, the variant selected in the [Enzyme specificity engineering results](/results#enzyme-specificity-engineering). We first show the baseline run and then test how robust it is to the expression and growth settings, the <Tooltip text="The turnover number: how many substrate molecules one enzyme converts per second when fully busy.">kcat</Tooltip> ratio, the docking scores, and random errors in all of them together. Throughout, the speed ratio<Formula latex="t50(P)/t50(T)" /> measures which steroid is converted first.
 
 #### **Baseline and sweep effect on enzyme activity**
 
@@ -303,7 +303,7 @@ But what changes the preference of a steroid by an enzyme is the binding energy 
 
 Each docking score (progesterone and testosterone) was drawn with a standard deviation of 0.5 or 1.0 kcal/mol, together with broad random draws of the expression and kinetic parameters (α, β, E\_scale, kcat and the Km anchor), 200 draws per enzyme. Every draw was compared with the wild type from the same draw, and the wild type itself served as a noise-only control.
 
-The distributions of both speed ratio and selectivity score of docking <Formula latex="ΔΔG = ΔG_T − ΔG_P" /> of the R215A + V263I variant favoured testosterone a lot compared to other variants and wild type (<Ref target="fig-q38j7" /> and <Ref target="fig-6qq7p" />). V263K has a long tail towards high ratios (95th percentile 6.7 at 1.0 kcal/mol), because its Km values are large and uncertain (<Ref target="fig-q38j7" />).
+The distributions of both speed ratio and selectivity score of docking <Formula latex="ΔΔG = ΔG_T − ΔG_P" /> of the R215A + V263I variant favoured testosterone a lot compared to other variants and wild type (<Ref target="fig-q38j7" /> and <Ref target="fig-6qq7p" />). V263K has a long tail towards high ratios (<Tooltip text="The value below which 95% of the results fall.">95th percentile</Tooltip> 6.7 at 1.0 kcal/mol), because its Km values are large and uncertain (<Ref target="fig-q38j7" />).
 
 <Layout2>
   <LayoutColumn>
@@ -332,7 +332,7 @@ The distributions of both speed ratio and selectivity score of docking <Formula 
 To produce our 5β-reductases in *Escherichia* *coli* BL21(DE3), we first <Tooltip text="Redesigned the DNA sequences for expression in a new host organism while matching the relative translation speed and rare codon pauses of the original source organisms
 ">codon harmonized</Tooltip> both AKR1D1 (human origin) and ci2350 (from *Clostridium innocuum*).
 
-We then ordered the following parts as gBlocks from IDT:&#x20;
+We then ordered the following parts as <Tooltip text="Synthetic double-stranded DNA fragments ordered from a supplier.">gBlocks</Tooltip> from IDT:&#x20;
 
 * ci2350-6xHis ([BBa\_26BLGGCH](https://registry.igem.org/parts/bba-26blggch))
 * AKR1D1-6xHis ([BBa\_267YYAV3](https://registry.igem.org/parts/bba-267yyav3))
@@ -346,7 +346,7 @@ Because the ci2350-MBP-6xHis ([BBa\_26P2621O](https://registry.igem.org/parts/bb
 
 Note: in the text, the -6xHis part is sometimes omitted as shorthand, e.g. ci2350-MBP means ci2350-MBP-6xHis
 
-The parts were originally intended for insertion into the **pET-11a** vector. Despite multiple rounds of restriction digestion (BamHI, NdeI), ligation, transformation, and troubleshooting (detailed in Notebook Summaries, Weeks <Ref target="card-teoxx" linkText="25" />, <Ref target="card-93sb4" linkText="26" />, <Ref target="card-nrupl" linkText="27" />), **only ci2350-6xHis was successfully cloned into pET-11a** and transformed into *E. coli* TG1, as confirmed by colony PCR (<Ref target="fig-i9xvl" />). The results from Eurofins sequencing confirmed that the construct contained no mutations.
+The parts were originally intended for insertion into the **<Tooltip text="A plasmid commonly used to produce proteins in E. coli.">pET-11a</Tooltip>** vector. Despite multiple rounds of restriction digestion (BamHI, NdeI), ligation, transformation, and troubleshooting (detailed in Notebook Summaries, Weeks <Ref target="card-teoxx" linkText="25" />, <Ref target="card-93sb4" linkText="26" />, <Ref target="card-nrupl" linkText="27" />), **only ci2350-6xHis was successfully cloned into pET-11a** and transformed into *E. coli* TG1, as confirmed by <Tooltip text="A quick check of bacterial colonies for the right insert: a PCR run directly on a small sample of each colony.">colony PCR</Tooltip> (<Ref target="fig-i9xvl" />). The results from Eurofins sequencing confirmed that the construct contained no mutations.
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/agarose-gel-electrophoresis-of-colony-pcr-screening-of-ci2350-6xhis.avif" alt="Agarose gel image showing colony PCR results with DNA ladder in upper lanes 1, 10, 14, and lower lane 15. Lanes 2-9 show bright band at approximately 2000 bp indicating successful ci2350-6xHis cloning. Negative control lanes show no bands: lanes 11-13 (empty vector control), lanes 16-18 (ligation negative control), and lane 19 (PCR negative control)" caption="Agarose gel electrophoresis of colony PCR screening after ci2350-6xHis ligation into pET-11a and transformation into *E. coli* TG1. Lanes: (1, 10, 14, 15) Ampliqon High Range DNA Ladder; (2-9) colonies containing ci2350-6xHis (with the expected 1956 bp fragment); (11-13) empty pET-11a transformation control; (16-18) ligation negative control; (19) negative PCR control." numbered refId="fig-i9xvl" scale={100} plain noZoom={false} />
 
@@ -354,7 +354,7 @@ After several more cycles of trying and failing, **pET-11a-AKR1D1-6xHis** became
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/07-23-gel.avif" alt="Agarose gel image showing colony PCR results with DNA ladders in lanes 1, 8, and 14. Positive bands at approximately 1000 bp, marked with red arrows, appear in lanes 3, 4, 5, 7, 10 and 13 indicating successful AKR1D1-6xHis cloning. Lanes 11, 17, 18 have band of incorrect size (around 600 to 800 bp). Other tested colonies and the negative control (lane 20) show no correct-sized bands. " caption="Agarose gel electrophoresis of colony PCR screening after AKR1D1-6xHis ligation into pET-11a and transformation into *E. coli* TG1. Lanes: (1, 8, 14) Ampliqon High Range DNA Ladder; (2-7, 9-13, 15, 19) AKR1D1-His colonies; (20) negative PCR control. AKR1D1 band of correct size (~1000 bp) appears in lanes 3, 4, 5, 7, 10 and 13, as indicated by the red arrow." numbered refId="fig-eyy02" scale={100} plain noZoom={false} />
 
-After multiple unsuccessful attempts at restriction digestion, along with the difficulty of verifying that pET-11a was actually cut with both NdeI and BamHI (due to the cutout being very small), we decided to approach restriction digestion from a different angle. We already had a ready-made plasmid vector pET-Blank-Amp-ci2350-MBP-6xHis, synthesized by Twist Bioscience, with NdeI and BamHI sites flanking the insert. Double digestion of this plasmid released a 3081 bp ci2350-MBP-6xHis fragment, significantly larger than the 40 bp pET-11a fragment, making it easy to distinguish single from double-digested plasmid on agarose gels and enabling clean gel extraction of the linearized vector backbone, pET-Blank-Amp (<Ref target="fig-i9xvl" />).
+After multiple unsuccessful attempts at restriction digestion, along with the difficulty of verifying that pET-11a was actually cut with both NdeI and BamHI (due to the cutout being very small), we decided to approach restriction digestion from a different angle. We already had a ready-made plasmid vector pET-Blank-Amp-ci2350-MBP-6xHis, synthesized by Twist Bioscience, with NdeI and BamHI sites flanking the insert. <Tooltip text="Cutting DNA with two restriction enzymes at once.">Double digestion</Tooltip> of this plasmid released a 3081 bp ci2350-MBP-6xHis fragment, significantly larger than the 40 bp pET-11a fragment, making it easy to distinguish single from double-digested plasmid on agarose gels and enabling clean gel extraction of the linearized vector backbone, pET-Blank-Amp (<Ref target="fig-i9xvl" />).
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/restriction-digestion-of-pet-blank-amp-containing-ci2350-mbp.avif" alt="Agarose gel image showing restriction digest analysis with DNA ladders in lanes 1, 16, and 30. Single digest controls in lanes 2 (NdeI) and 3 (BamHI) show single bands around 8000 bp. Undigested sample in lane 4 shows two bands, one at around 8000 bp, and other above the range limit of ladder, >12000 bp. Double-digested samples in lanes 5-15 and 17-29 show three bands: approximately 3000 bp (excised insert), 5000 bp (linearized vector), and 8000 bp (residual undigested plasmid), indicating more time needed for digestion." caption="Restriction digestion of pET-Blank-Amp containing ci2350-MBP with NdeI and BamHI. Lanes: (1, 16, 30) Ampliqon High Range DNA Ladder; (2) NdeI control; (3) BamHI control; (4) Undigested sample; (5-15, 17-29) double digested sample. The three bands in 5-15, 17-29 correspond to ~3000 bp (the cut ci2350-MBP-6xHis), ~5000 bp (pET-Blank-Amp linearized backbone) and ~8000 bp (undigested pETBlank-ci-MBP-6xHis)." numbered refId="fig-m28p5" scale={100} plain={false} noZoom={false} />
 
@@ -406,7 +406,7 @@ Following these results, ci2350-MBP-6xHis sequences with mutation V236I were tra
 
 **TrxA gave the most soluble AKR1D1, and a lower IPTG concentration gave a higher soluble fraction.**
 
-AKR1D1-6xHis (\~38 kDa, pET-11a), AKR1D1-SUMO (\~49 kDa) and AKR1D1-TrxA (\~50 kDa, both pET-Blank) were expressed in E. coli BL21(DE3) at 37 °C for 3 h with 1 mM IPTG. Each construct had three induced cultures, plus uninduced and empty-vector controls. Whole-cell samples were adjusted to OD 20 and loaded equally. Solubility is the soluble band volume divided by the total band volume. The target band was visible in all induced cultures, mostly in the whole-cell fraction (<Ref target="fig-okojk" />, <Ref target="fig-kczpm" />, <Ref target="fig-71v52" />). Solubility was 17 ± 4% for His, 10 ± 5% for SUMO, and 26 ± 1% for TrxA (see <Ref target="tab-2owsw" />, <Ref target="fig-frcni" />). SUMO gave the lowest value, although its range overlaps with 6xHis. The uninduced controls gave impossible values (42% to 245%) and were excluded.
+AKR1D1-6xHis (\~38 <Tooltip text="Kilodalton, a unit of protein size. 1 kDa is 1,000 daltons.">kDa</Tooltip>, pET-11a), AKR1D1-SUMO (\~49 kDa) and AKR1D1-TrxA (\~50 kDa, both pET-Blank) were expressed in E. coli BL21(DE3) at 37 °C for 3 h with 1 mM IPTG. Each construct had three induced cultures, plus uninduced and <Tooltip text="Controls with the plasmid but without the gene, showing what the host cells do on their own.">empty-vector controls</Tooltip>. Whole-cell samples were adjusted to OD 20 and loaded equally. Solubility is the soluble band volume divided by the total band volume. The target band was visible in all induced cultures, mostly in the whole-cell fraction (<Ref target="fig-okojk" />, <Ref target="fig-kczpm" />, <Ref target="fig-71v52" />). Solubility was 17 ± 4% for His, 10 ± 5% for SUMO, and 26 ± 1% for TrxA (see <Ref target="tab-2owsw" />, <Ref target="fig-frcni" />). SUMO gave the lowest value, although its range overlaps with 6xHis. The uninduced controls gave impossible values (42% to 245%) and were excluded.
 
 <TableWithCaption caption="Soluble fraction of AKR1D1 constructs at 1 mM IPTG. Three induced cultures per construct (3 h, 37 °C). Solubility is soluble band volume ÷ total band volume × 100 (SDS-PAGE, whole-cell samples at OD 20, loaded equally). Mean ± SD (n = 3)." refId="tab-2owsw">
   | **Construct** | **Replicate 1 (%)** | **Replicate 2 (%)** | **Replicate 3 (%)** | **Mean ± SD** |
@@ -416,7 +416,7 @@ AKR1D1-6xHis (\~38 kDa, pET-11a), AKR1D1-SUMO (\~49 kDa) and AKR1D1-TrxA (\~50 k
   | AKR1D1-TrxA   | 27.4                | 24.6                | 26.3                | 26.0 ± 1.4    |
 </TableWithCaption>
 
-Lowering the IPTG concentration increased the soluble fraction of AKR1D1-TrxA. Three cultures per concentration were induced at 37 °C for 3 h and lysed with B-PER. Solubility was 37 ± 4% at 0.2 mM and 28 ± 4% at 0.4 mM (<Ref target="tab-ais2u" />, <Ref target="fig-gw6xr" />). The earlier 1 mM experiment gave 26%, so most of the gain came at 0.2 mM. Each value comes from three cultures (n = 3) in one experiment and the gels differ, so these values are only indicative.
+Lowering the IPTG concentration increased the soluble fraction of AKR1D1-TrxA. Three cultures per concentration were induced at 37 °C for 3 h and lysed with <Tooltip text="A reagent that breaks open bacterial cells to release their proteins.">B-PER</Tooltip>. Solubility was 37 ± 4% at 0.2 mM and 28 ± 4% at 0.4 mM (<Ref target="tab-ais2u" />, <Ref target="fig-gw6xr" />). The earlier 1 mM experiment gave 26%, so most of the gain came at 0.2 mM. Each value comes from three cultures (n = 3) in one experiment and the gels differ, so these values are only indicative.
 
 <TableWithCaption caption="Soluble fraction of AKR1D1-TrxA at lower IPTG concentrations. Three cultures per concentration (3 h, 37 °C, B-PER lysis). Mean ± SD (n = 3)." refId="tab-ais2u">
   | **IPTG (mM)** | **Replicates (%)** | **Mean ± SD (%)** |
@@ -437,11 +437,11 @@ AKR1D1-TrxA was therefore the most promising construct, but even at 0.2 mM about
 
 ## ci2350: Expression, Purification and Purity
 
-ci2350 was expressed as an N-terminal fusion (6xHis, MBP, ci2350; \~112 kDa). ci2350-MBP was expressed and captured by IMAC, but every eluate contained other bands, mainly at \~38 and \~70 kDa. Our preparations were therefore not pure. Each SDS-gel was a single experiment without replicates, so the differences are observations and not tested conclusions.
+ci2350 was expressed as an N-terminal fusion (6xHis, MBP, ci2350; \~112 kDa). ci2350-MBP was expressed and captured by <Tooltip text="Immobilized metal affinity chromatography: purifying His-tagged proteins by binding them to nickel beads.">IMAC</Tooltip>, but every <Tooltip text="The liquid that comes off a column after the protein has been released from it.">eluate</Tooltip> contained other bands, mainly at \~38 and \~70 kDa. Our preparations were therefore not pure. Each SDS-gel was a single experiment without replicates, so the differences are observations and not tested conclusions.
 
 ### Expression in whole cells
 
-ci2350-6xHis (\~70 kDa) showed no visible band at 0, 0.25 or 0.4 mM IPTG, after 3 h or overnight at 37 °C (<Ref target="fig-e658y" />). ci2350-MBP showed a band at the expected \~112 kDa in all lanes. It was faint at 0 mM after 3 h and strongest at 0.25 and 0.4 mM after 3 h. A standard curve from this gel put the band at \~114 kDa (five lanes, 111.8 to 117.0 kDa; <Ref target="fig-5l3za" />).
+ci2350-6xHis (\~70 kDa) showed no visible band at 0, 0.25 or 0.4 mM IPTG, after 3 h or overnight at 37 °C (<Ref target="fig-e658y" />). ci2350-MBP showed a band at the expected \~112 kDa in all lanes. It was faint at 0 mM after 3 h and strongest at 0.25 and 0.4 mM after 3 h. A <Tooltip text="A line fitted to bands or samples of known size or amount, used to estimate unknown ones.">standard curve</Tooltip> from this gel put the band at \~114 kDa (five lanes, 111.8 to 117.0 kDa; <Ref target="fig-5l3za" />).
 
 At 0.4 mM IPTG, ci2350-MBP expression was strongest after 3 h at 37 °C and weaker after overnight growth at 25 °C. No 112 kDa band was visible before induction (<Ref target="fig-f0ilx" />).
 
@@ -449,7 +449,7 @@ At 0.4 mM IPTG, ci2350-MBP expression was strongest after 3 h at 37 °C and weak
 
 ci2350-6xHis (0.8 mM, 3 h, 37 °C) showed a \~70 kDa band in the flow-through, and the eluate was empty (<Ref target="fig-6dgv4" />). The protein was expressed but did not bind the column. We did not test why. This run is not matched to the MBP runs, which used other temperatures and times.
 
-For ci2350-MBP, the eluate from 0.8 mM IPTG at 17 °C overnight had a thick \~112 kDa band. The eluate from 0.4 mM at 37 °C overnight had none (<Ref target="fig-1x3gz" />). Concentrating the 17 °C eluate on a Vivaspin column (30 kDa cut-off) removed most of the 112 kDa band.&#x20;
+For ci2350-MBP, the eluate from 0.8 mM IPTG at 17 °C overnight had a thick \~112 kDa band. The eluate from 0.4 mM at 37 °C overnight had none (<Ref target="fig-1x3gz" />). Concentrating the 17 °C eluate on a <Tooltip text="A spin filter that concentrates a protein sample by pushing liquid through a membrane that holds the protein back.">Vivaspin column</Tooltip> (30 kDa cut-off) removed most of the 112 kDa band.&#x20;
 
 In a second run, 37 °C for 3 h and 25 °C overnight (both 0.4 mM IPTG) were purified one after the other on the same column, with a wash in between (<Ref target="fig-nwl0y" />). Each eluate was run on the gel before and after concentration on a Vivaspin column. Bands read from the gel can be found in <Ref target="tab-h8top" />.
 
@@ -462,7 +462,7 @@ In a second run, 37 °C for 3 h and 25 °C overnight (both 0.4 mM IPTG) were pur
   | 25 °C, after vivaspin | present            | present           | present           |
 </TableWithCaption>
 
-The 37 °C sample therefore contained ci2350-MBP before the Vivaspin step, but lost it there. The 25 °C sample kept it. We did not identify the cause. The two samples were also treated differently: the 25 °C sample was sonicated in 7 rounds against 4.
+The 37 °C sample therefore contained ci2350-MBP before the Vivaspin step, but lost it there. The 25 °C sample kept it. We did not identify the cause. The two samples were also treated differently: the 25 °C sample was <Tooltip text="Broken open using ultrasound.">sonicated</Tooltip> in 7 rounds against 4.
 
 ### Purity
 
@@ -477,7 +477,7 @@ All eluates contained a \~38 kDa band, and a \~70 kDa band of varying strength (
   | pET-11a empty vector     | uninduced, 17 °C overnight   | 0.266               |
 </TableWithCaption>
 
-The induced empty-vector control gave about three quarters as much protein as ci2350-MBP. Much of the protein in our eluates is therefore not full-length ci2350, and Bradford overstates it. The control was in pET-11a and ci2350-MBP in pET-Blank, so the backbones do not match. We ran no SDS-PAGE on these preparations.
+The induced empty-vector control gave about three quarters as much protein as ci2350-MBP. Much of the protein in our eluates is therefore not full-length ci2350, and <Tooltip text="A colour-based test for measuring how much protein is in a sample.">Bradford</Tooltip> overstates it. The control was in pET-11a and ci2350-MBP in pET-Blank, so the backbones do not match. We ran no SDS-PAGE on these preparations.
 
 ### Double mutant
 
@@ -503,7 +503,7 @@ To investigate the testosterone-transforming activity of our candidate enzymes, 
 
 Our initial experiments used CI2350–MBP preparations in a microplate format. However, the resulting absorbance traces showed abrupt fluctuations and considerable variability between replicates. Some reactions without protein exhibited larger absorbance decreases than enzyme-containing samples, and increasing protein concentration did not produce a consistent response. Multiple troubleshooting iteration identified errors in reaction preparation, including a tenfold stock-concentration calculation error and visible testosterone precipitation. We corrected the assay composition and improved substrate preparation, after which no visible crystals were observed and the absorbance traces became more stable.&#x20;
 
-NADPH calibration experiments carried in microplates <Ref target="fig-77hua" /> failed to establish a reproducible and logical relationship between cofactor concentration and absorbance readout. Preparing fresh cofactor did not fully resolve this issue. We therefore switched to a different spectrophotometer and UV-transparent microcuvettes. Wavelength scans revealed the expected absorbance peak near 340 nm, confirming that the reduced-cofactor signal could be detected under the revised measurement conditions. Based on these observations, subsequent measurements were performed using cuvettes rather than microplates.
+NADPH calibration experiments carried in microplates <Ref target="fig-77hua" /> failed to establish a reproducible and logical relationship between cofactor concentration and absorbance readout. Preparing fresh cofactor did not fully resolve this issue. We therefore switched to a different spectrophotometer and <Tooltip text="Tiny sample holders that let ultraviolet light through, so absorbance at 340 nm can be measured.">UV-transparent microcuvettes</Tooltip>. <Tooltip text="Measuring how much light a sample absorbs across a range of wavelengths.">Wavelength scans</Tooltip> revealed the expected absorbance peak near 340 nm, confirming that the reduced-cofactor signal could be detected under the revised measurement conditions. Based on these observations, subsequent measurements were performed using cuvettes rather than microplates.
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/absorbance-spectra-1-5-1.pdf" alt="Absorbance spectra microplate" caption="Absorbance spectra obtained during microplate assay development and evaluation of the reduced-cofactor signal." numbered refId="fig-77hua" scale={100} plain noZoom={false} />
 
@@ -563,13 +563,13 @@ However, the available measurements could not identify the source of this backgr
 
 Overall, our experiments established a more reliable spectrophotometric measurement format and identified important limitations in interpreting cofactor consumption. **The final assay did not provide sufficient evidence to confirm ci2350-dependent testosterone conversion.**
 
-Further work will require improved protein purification, appropriately matched controls, and direct analysis of steroid substrates and products, for example using LC–MS/MS. Complementary androgen-receptor assays would then be necessary to determine whether any confirmed transformation affects androgenic activity.
+Further work will require improved protein purification, appropriately matched controls, and direct analysis of steroid substrates and products, for example using <Tooltip text="Liquid chromatography with tandem mass spectrometry: separates molecules and identifies them by mass, to measure steroids directly.">LC–MS/MS</Tooltip>. Complementary <Tooltip text="Tests in cells carrying the androgen receptor and a reporter gene that switches on when a molecule activates the receptor.">androgen-receptor assays</Tooltip> would then be necessary to determine whether any confirmed transformation affects androgenic activity.
 
 ## **Initial work with hypoxia-responsive promoter**
 
-To implement a safety mechanism that restricts enzyme production to the anaerobic gut environment, we designed hypoxia-inducible constructs for AKR1D1-SUMO-6xHis and ci2350-MBP-6xHis. These constructs placed enzyme expression under the control of the hypoxia-responsive promoter **pFnrS** ([BBa\_25DMNRIB](https://registry.igem.org/parts/bba-25dmnrib)), followed by a lambda t0 terminator ([BBa\_26P9V9ID](https://registry.igem.org/parts/bba-26p9v9id)), ensuring production would only occur in low-oxygen conditions typical of the intestinal tract.
+To implement a safety mechanism that restricts enzyme production to the anaerobic gut environment, we designed hypoxia-inducible constructs for AKR1D1-SUMO-6xHis and ci2350-MBP-6xHis. These constructs placed enzyme expression under the control of the hypoxia-responsive promoter **pFnrS** ([BBa\_25DMNRIB](https://registry.igem.org/parts/bba-25dmnrib)), followed by a <Tooltip text="A DNA sequence that tells the cell's machinery to stop copying the gene.">lambda t0 terminator</Tooltip> ([BBa\_26P9V9ID](https://registry.igem.org/parts/bba-26p9v9id)), ensuring production would only occur in low-oxygen conditions typical of the intestinal tract.
 
-Both constructs were ordered as clonal genes from Twist Bioscience, synthesized directly into the pET-Blank-Amp backbone with a custom promoter-RBS region containing pFnrS, spacer after it, and RBS (<Ref target="fig-wzks1" />, <Ref target="fig-rc36p" />).
+Both constructs were ordered as clonal genes from Twist Bioscience, synthesized directly into the pET-Blank-Amp backbone with a custom promoter-RBS region containing pFnrS, spacer after it, and <Tooltip text="Ribosome binding site: where the ribosome attaches to the mRNA to start making protein.">RBS</Tooltip> (<Ref target="fig-wzks1" />, <Ref target="fig-rc36p" />).
 
 <Layout2>
   <LayoutColumn>
@@ -585,11 +585,11 @@ We successfully transformed both constructs into *E. coli* BL21(DE3). However, d
 
 ## **Future Experiments**
 
-Future work regarding enzyme activity include going back to protein purification and trying to obtain pure protein samples, adding ELISA, LC/MS-MS and androgen receptors assays in such a way testosterone quantities can be identified directly, even when enzyme kinetic is not clear enough.
+Future work regarding enzyme activity include going back to protein purification and trying to obtain pure protein samples, adding <Tooltip text="A plate-based test that detects and measures a molecule using antibodies.">ELISA</Tooltip>, LC/MS-MS and androgen receptors assays in such a way testosterone quantities can be identified directly, even when enzyme kinetic is not clear enough.
 
 Next steps in In-Silico experiments:
 
-* **Consensus docking:** Re-dock the top variants with a second tool (e.g. GNINA or DiffDock) and keep only the variants that rank well in both.
+* **Consensus docking:** Re-dock the top variants with a second tool (e.g. <Tooltip text="Docking programs that use deep learning to place and score the molecule.">GNINA or DiffDock</Tooltip>) and keep only the variants that rank well in both.
 * **Other steroids:** Dock the top variants against related steroids that could compete in the cell, to see whether the testosterone preference holds beyond progesterone.
 * **Cofactor in the model:** Add NADPH supply to the activity model, since the reaction depends on it.
 * **Dose and conditions:** Run the integrated model for different starting steroid concentrations, culture densities and induction timings, to find the conditions where the preference is largest.
