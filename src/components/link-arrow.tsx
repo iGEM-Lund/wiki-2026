@@ -3,6 +3,7 @@
 import { Globe } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { isOnScreen, NUMBERED_OBJECT } from '@/lib/on-screen';
+import { brandForHost, LINK_BRANDS } from '@/lib/link-brands';
 
 // Gap left between the line's ends and the link and target it joins.
 const END_GAP = 6;
@@ -51,7 +52,8 @@ type Origin = { left: number; right: number; top: number; bottom: number; inset:
 // - another page in the nav: a sign with that page's name dropped under
 //   its nav tag (the tag itself, or the group holding it), like the
 //   current page's sign (only above 48rem, where the nav is a bar);
-// - another site: a globe that pops up just beside the link;
+// - another site: a globe that pops up just beside the link, or the logo
+//   of the site where it is one we know (src/lib/link-brands.ts);
 // - a figure, table, 3D model or card of the same page that is on screen
 //   (a Ref's target; see src/lib/numbering.ts): the object itself, the
 //   arrowhead drawn just over its nearest edge. A card that is not on
@@ -102,13 +104,29 @@ export function LinkArrow() {
   const lineRef = useRef<SVGPathElement>(null);
   const revealRef = useRef<SVGPathElement>(null);
   const globeRef = useRef<HTMLSpanElement>(null);
+  const brandRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    // Fetch the logos once the page is idle, so a hovered link's is there
+    // when its patch pops up.
+    const warm = () => {
+      for (const { src } of LINK_BRANDS) new Image().src = src;
+    };
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(warm);
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = setTimeout(warm, 1500);
+    return () => clearTimeout(id);
+  }, []);
 
   useEffect(() => {
     const svg = svgRef.current;
     const line = lineRef.current;
     const reveal = revealRef.current;
     const globe = globeRef.current;
-    if (!svg || !line || !reveal || !globe) return;
+    const logo = brandRef.current;
+    if (!svg || !line || !reveal || !globe || !logo) return;
     let link: HTMLElement | null = null;
     let target: Target | null = null;
     let frame = 0;
@@ -194,7 +212,12 @@ export function LinkArrow() {
       return { el, end: 'object', onto: -4, rect: words };
     }
 
-    function globeFor(): Target {
+    function globeFor(a: HTMLAnchorElement): Target {
+      const brand = brandForHost(a.hostname);
+      if (brand) {
+        logo!.src = brand.src;
+        globe!.dataset.brand = brand.mono ? 'mono' : 'colour';
+      }
       globe!.dataset.shown = '';
       svg!.dataset.external = '';
       return {
@@ -202,6 +225,7 @@ export function LinkArrow() {
         end: 'globe',
         cleanup: () => {
           delete globe!.dataset.shown;
+          delete globe!.dataset.brand;
           delete svg!.dataset.external;
         },
       };
@@ -265,7 +289,7 @@ export function LinkArrow() {
             ? Object.assign(document.createElement('a'), { href: el.dataset.arrowHref })
             : null;
       if (!a) return null;
-      if (a.origin !== location.origin) return /^https?:$/.test(a.protocol) ? globeFor() : null;
+      if (a.origin !== location.origin) return /^https?:$/.test(a.protocol) ? globeFor(a) : null;
       if (normalize(a.pathname) === normalize(location.pathname)) return a.hash ? (objectFor(a) ?? headingFor(a) ?? knotFor(a)) : null;
       return signFor(a, el);
     }
@@ -439,6 +463,7 @@ export function LinkArrow() {
           fabric patch like the Badges component's. */}
       <span ref={globeRef} className="badge badge--crimson link-arrow__globe" aria-hidden="true">
         <Globe size={18} strokeWidth={1.75} />
+        <img ref={brandRef} className="link-arrow__brand" alt="" width={18} height={18} />
       </span>
     </>
   );

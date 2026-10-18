@@ -57,19 +57,19 @@ sponsors:
 socials:
   - label: Instagram
     icon:
-      discriminant: library
-      value: at-sign
+      discriminant: custom
+      value: https://static.igem.wiki/teams/6160/wiki/logos/instagram.svg
     url: https://www.instagram.com/igem_lund/
-  - label: Website (placeholder)
+  - label: Facebook
     icon:
-      discriminant: library
-      value: globe
-    url: https://example.org
-  - label: Email (placeholder)
+      discriminant: custom
+      value: https://static.igem.wiki/teams/6160/wiki/logos/facebook.svg
+    url: https://www.facebook.com/profile.php?id=61580148950409
+  - label: LinkedIn
     icon:
-      discriminant: library
-      value: mail
-    url: mailto:contact@example.org
+      discriminant: custom
+      value: https://static.igem.wiki/teams/6160/wiki/logos/linkedin.svg
+    url: https://se.linkedin.com/company/igem-lund
 contact:
   email: information@igemlund.org
   address: |-

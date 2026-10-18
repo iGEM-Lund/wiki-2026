@@ -1685,7 +1685,11 @@ body {
   padding: 0;
   list-style: none;
 }
+.site-footer__tint {
+  position: absolute;
+}
 .site-footer__socials a {
+  color: var(--heading);
   display: inline-flex;
   border-radius: 8px;
   transition: transform 0.15s ease;
@@ -5713,8 +5717,26 @@ article .layout__column p {
   );
   mask: radial-gradient(closest-side, transparent calc(100% - 4px), #000 calc(100% - 3.5px));
 }
-.link-arrow__globe svg {
+.link-arrow__globe svg,
+.link-arrow__brand {
   filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.25));
+}
+/* A known site's logo in place of the globe (src/lib/link-brands.ts). The
+   single-colour ones are black files, turned to the thread's light. */
+.link-arrow__brand {
+  display: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  object-fit: contain;
+}
+.link-arrow__globe[data-brand] svg {
+  display: none;
+}
+.link-arrow__globe[data-brand] .link-arrow__brand {
+  display: block;
+}
+.link-arrow__globe[data-brand='mono'] .link-arrow__brand {
+  filter: brightness(0) invert(1) drop-shadow(0 1px 0 rgb(0 0 0 / 0.25));
 }
 .badge.link-arrow__globe[data-shown] {
   scale: 1;

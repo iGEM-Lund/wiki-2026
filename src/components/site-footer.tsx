@@ -23,10 +23,20 @@ export async function SiteFooter() {
           {socials.length > 0 && (
             <section className="site-footer__section" aria-label="Links">
               <h2 className="site-footer__heading">Links</h2>
+              {/* Paints the logos (black image files, which CSS colour can't reach)
+                  in the heading colour: the flood, cut to each image's shape.
+                  Applied inline on the links: from a stylesheet, the url(#id)
+                  would resolve against the CSS file, not this page. */}
+              <svg width="0" height="0" aria-hidden="true" className="site-footer__tint">
+                <filter id="site-footer-tint" colorInterpolationFilters="sRGB">
+                  <feFlood style={{ floodColor: 'var(--heading)' }} />
+                  <feComposite in2="SourceAlpha" operator="in" />
+                </filter>
+              </svg>
               <ul className="site-footer__socials">
                 {socials.map((social) => (
                   <li key={social.url}>
-                    <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.label} title={social.label}>
+                    <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.label} title={social.label} style={{ filter: 'url(#site-footer-tint)' }}>
                       <NavIcon icon={social.icon} size={32} />
                     </a>
                   </li>
