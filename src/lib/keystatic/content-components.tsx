@@ -7,6 +7,7 @@ import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/ch
 import { renderCaption } from '@/lib/caption-text';
 import { refIdField } from './ref-id-field';
 import { altTextField } from './alt-text-field';
+import { bubblesField } from './bubbles-field';
 import { readAlt } from '@/components/content/MissingAltBanner';
 
 // Editor-side registration only: these govern what writers can insert in the
@@ -62,6 +63,7 @@ export const contentComponents = {
         defaultValue: false,
       }),
       refId: refIdField('fig'),
+      bubbles: bubblesField(),
       link: fields.url({
         label: 'Link (optional)',
         description: 'Makes the whole figure a link that opens in a new tab, hinted by a small icon in the lower left corner. The image no longer enlarges on click.',

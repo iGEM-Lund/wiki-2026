@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, MessageCircle } from 'lucide-react';
 import { ZoomableImage } from './ZoomableImage';
 import { SmallFigureWatcher } from './SmallFigureWatcher';
 import { MissingAltBanner, readAlt, type AltProp } from './MissingAltBanner';
@@ -13,6 +13,9 @@ type FigureWithCaptionProps = {
   // Optional external URL: makes the whole figure a link, hinted by a small
   // icon in the image's lower left corner.
   link?: string | null;
+  // Speech bubbles laid over the image, each a link out (x and y are percent
+  // of the image). Takes over the figure's own link and enlarge-on-click.
+  bubbles?: { name: string; url: string; x: number; y: number }[] | null;
   // Percentage of the column width the figure may occupy (10 to 100).
   scale?: number | null;
   // No polaroid: the image and caption sit straight on the page, without
@@ -32,7 +35,9 @@ type FigureWithCaptionProps = {
 // ZoomableImage adds the hover zoom and click-to-enlarge lightbox; with a
 // link the whole figure (image and caption) is that link instead, and with
 // noZoom the image is just an image.
-export function FigureWithCaption({ src, alt, caption, link, scale, plain, noZoom, refId, number }: FigureWithCaptionProps) {
+export function FigureWithCaption({ src, alt, caption, link: figureLink, bubbles, scale, plain, noZoom, refId, number }: FigureWithCaptionProps) {
+  const hasBubbles = !!bubbles?.length;
+  const link = hasBubbles ? null : figureLink;
   // A Figure block inserted but never filled in: nothing to show.
   if (!src && !caption) return null;
   // The enlarged view's caption takes the number too, as plain caption text.
@@ -40,8 +45,24 @@ export function FigureWithCaption({ src, alt, caption, link, scale, plain, noZoo
   const pct = scale != null && scale > 0 && scale < 100 ? scale : null;
   const media = src ? (
     <div className="figure-with-caption__media">
-      <ZoomableImage src={src} alt={readAlt(alt).alt} caption={lightboxCaption} enlargeable={!link && !noZoom} />
+      <ZoomableImage src={src} alt={readAlt(alt).alt} caption={lightboxCaption} enlargeable={!link && !noZoom && !hasBubbles} />
       <MissingAltBanner alt={alt} />
+      {bubbles?.map((b, i) => (
+        <a
+          key={i}
+          className="figure-with-caption__bubble"
+          href={b.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ left: `${b.x}%`, top: `${b.y}%` }}
+          aria-label={`Listen to ${b.name}'s episode on Spotify (opens in a new tab)`}
+        >
+          <MessageCircle aria-hidden size={20} />
+          <span className="figure-with-caption__bubble-name" aria-hidden>
+            {b.name}
+          </span>
+        </a>
+      ))}
       {link ? <ExternalLink className="figure-with-caption__link-icon" aria-hidden size={18} /> : null}
     </div>
   ) : null;
