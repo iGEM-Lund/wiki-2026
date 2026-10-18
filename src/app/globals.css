@@ -4065,6 +4065,13 @@ a.inline-icon--link:focus-visible {
   stroke-width: 1;
   stroke-linejoin: round;
 }
+.slice-wheel__arrow--active .slice-wheel__arrow-shaft {
+  stroke: var(--heading-minor);
+}
+.slice-wheel__arrow--active .slice-wheel__arrow-head {
+  fill: var(--heading-minor);
+  stroke: var(--heading-minor);
+}
 .slice-wheel__hub {
   fill: var(--wheel-line);
   pointer-events: none;

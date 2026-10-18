@@ -182,7 +182,10 @@ export function SliceWheelClient({ radius, overlockWidth, stitchRadius, slices }
               {active ? <path className="slice-wheel__piece slice-wheel__piece--active" d={active.path} /> : null}
               {slices.map((slice) =>
                 slice.arrow ? (
-                  <g key={slice.id} className="slice-wheel__arrow">
+                  <g
+                    key={slice.id}
+                    className={`slice-wheel__arrow${active === slice ? ' slice-wheel__arrow--active' : ''}`}
+                  >
                     <path className="slice-wheel__arrow-shaft" d={slice.arrow.shaft} />
                     <path className="slice-wheel__arrow-head" d={slice.arrow.head} />
                   </g>
