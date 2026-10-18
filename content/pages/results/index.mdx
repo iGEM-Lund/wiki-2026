@@ -569,7 +569,7 @@ Further work will require improved protein purification, appropriately matched c
 
 To implement a safety mechanism that restricts enzyme production to the anaerobic gut environment, we designed hypoxia-inducible constructs for AKR1D1-SUMO-6xHis and ci2350-MBP-6xHis. These constructs placed enzyme expression under the control of the hypoxia-responsive promoter **pFnrS** ([BBa\_25DMNRIB](https://registry.igem.org/parts/bba-25dmnrib)), followed by a lambda t0 terminator ([BBa\_26P9V9ID](https://registry.igem.org/parts/bba-26p9v9id)), ensuring production would only occur in low-oxygen conditions typical of the intestinal tract.
 
-Both constructs were ordered as clonal genes from Twist Bioscience, synthesized directly into the pET-Blank-Amp backbone with pFnrS and insertion point being custom promoter-RBS (<Ref />).
+Both constructs were ordered as clonal genes from Twist Bioscience, synthesized directly into the pET-Blank-Amp backbone with a custom promoter-RBS region containing pFnrS, spacer after it, and RBS (<Ref target="fig-0j54d" />, <Ref target="fig-rc36p" />).
 
 <Layout2>
   <LayoutColumn>
@@ -577,9 +577,11 @@ Both constructs were ordered as clonal genes from Twist Bioscience, synthesized 
   </LayoutColumn>
 
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/pfnrs-ci-mbp-map.avif" alt="pfnrs ci2350-MBP-6xHis lambda t0 terminator construct in pET Blank-Amp backbone. Insertion point set at custom promoter-RBS" caption="Plasmid vector pET-Blank-Amp_pFnrS_ci2350-MBP-6xHis_Lambda t0 ter (Insertion point: custom promoter-RBS). Visualized using SnapGene." numbered={false} refId="fig-wzks1" scale={100} plain={false} noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/pfnrs-ci-mbp-map.avif" alt="pfnrs ci2350-MBP-6xHis lambda t0 terminator construct in pET Blank-Amp backbone. Insertion point set at custom promoter-RBS" caption="Plasmid vector pET-Blank-Amp_pFnrS_ci2350-MBP-6xHis_Lambda t0 ter (Insertion point: custom promoter-RBS). Visualized using SnapGene." numbered={false} refId="fig-rc36p" scale={100} plain noZoom />
   </LayoutColumn>
 </Layout2>
+
+We successfully transformed both constructs into *E. coli* BL21(DE3). However, due to time constraints, we were unable to perform protein expression analysis or test hypoxia-induced production.
 
 ## **Future Experiments**
 
