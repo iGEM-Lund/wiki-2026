@@ -14,23 +14,26 @@
 # .woff2 files listed first in each @font-face are used by all current browsers.
 image: node:20-alpine
 
-# Both caches are best effort: if the runner doesn't share a cache between
-# jobs they are simply empty, and the job does the full install and build as
-# before. `when: always` saves them even when the job later fails or times out,
-# so a slow first run still speeds up the next one. The npm cache is keyed on
-# the lockfile; Next's build cache (.next/cache) is reused across commits.
+# The cache is best effort: if the runner doesn't share a cache between jobs it
+# is simply empty, and the job does the full install and build as before.
+# `when: always` saves it even when the job later fails or times out. Only
+# Next's build cache (.next/cache) is kept, reused across commits. The npm
+# cache is deliberately not cached: restoring it next to a fresh node_modules
+# (~700 MB) ran the runner out of disk (ENOSPC during `npm ci`). The `v2`
+# prefix abandons the old cache archive, which still contained `.npm`.
 cache:
   key:
+    prefix: v2
     files:
       - package-lock.json
   paths:
-    - .npm
     - .next/cache
   when: always
 
 pages:
   script:
-    - npm ci --cache .npm --prefer-offline --no-audit --no-fund
+    - npm ci --cache .npm --no-audit --no-fund
+    - rm -rf .npm
     - npm run build
     - node scripts/verify-export.mjs
     - find out -type f \( -name '*.woff' -o -name '*.ttf' \) -delete
