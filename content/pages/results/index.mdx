@@ -15,7 +15,7 @@ Structures were obtained from the PDB (AKR1D1, **3CAV**) and from **AlphaFold** 
 
 Residues within **4 <Tooltip text="Angstrom: unit of length equaling 10^−10 m">Å</Tooltip>** of each docked ligand were sorted by which substrate they contacted. This identified three specificity determinants in AKR1D1 (**V309, L311, I57**) and six in ci2350 (**A107, R215, V263, V59, F71, Q100**). Substitutions at these positions were designed to weaken progesterone binding or strengthen testosterone binding, then screened for structural stability in **PyRosetta**. Of 24 AKR1D1 variants, 13 passed the **+5 REU** threshold; of 31 ci2350 variants, 17 passed. These variants were then docked with both substrates to assess their specificity towards testosterone.
 
-The full workflow for both AKR1D1 and ci2350, from protein structure acquisition through to stability screening, is described on the [Modeling page](/modeling#enzyme-specificity-engineering-towards-testosterone).&#x20;
+The full workflow for both AKR1D1 and ci2350, from protein structure acquisition through to stability screening, is described on the [Modeling page](/modeling#enzyme-specificity-engineering).&#x20;
 
 ### **Docked poses of the AKR1D1 variants**
 
@@ -356,7 +356,7 @@ After several more cycles of trying and failing, **pET-11a-AKR1D1-6xHis** became
 
 After multiple unsuccessful attempts at restriction digestion, along with the difficulty of verifying that pET-11a was actually cut with both NdeI and BamHI (due to the cutout being very small), we decided to approach restriction digestion from a different angle. We already had a ready-made plasmid vector pET-Blank-Amp-ci2350-MBP-6xHis, synthesized by Twist Bioscience, with NdeI and BamHI sites flanking the insert. Double digestion of this plasmid released a 3081 bp ci2350-MBP-6xHis fragment, significantly larger than the 40 bp pET-11a fragment, making it easy to distinguish single from double-digested plasmid on agarose gels and enabling clean gel extraction of the linearized vector backbone, pET-Blank-Amp (<Ref target="fig-i9xvl" />).
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/restriction-digestion-of-pet-blank-amp-containing-ci2350-mbp.avif" alt="Agarose gel image showing restriction digest analysis with DNA ladders in lanes 1, 16, and 30. Single digest controls in lanes 2 (NdeI) and 3 (BamHI) show single bands around 8000 bp. Undigested sample in lane 4 shows two bands, one at around 8000 bp, and other above the range limit of ladder, >12000 bp. Double-digested samples in lanes 5-15 and 17-29 show three bands: approximately 3000 bp (excised insert), 5000 bp (linearized vector), and 8000 bp (residual undigested plasmid), indicating more time needed for digestion." caption="Restriction digestion of pET-Blank-Amp containing ci2350-MBP with NdeI and BamHI. Lanes: (1, 16, 30) Ampliqon High Range DNA Ladder; (2) NdeI control; (3) BamHI control; (4) Undigested sample; (5-15, 17-29) double digested sample. The three bands in 5-15, 17-29 correspond to ~3000 bp (the cut ci2350-MBP-6xHis), ~5000 bp (pET-Blank-Amp linearized backbone) and ~8000 bp (undigested pETBlank-ci-MBP-6xHis)." numbered refId="fig-i9xvl" scale={100} plain={false} noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/restriction-digestion-of-pet-blank-amp-containing-ci2350-mbp.avif" alt="Agarose gel image showing restriction digest analysis with DNA ladders in lanes 1, 16, and 30. Single digest controls in lanes 2 (NdeI) and 3 (BamHI) show single bands around 8000 bp. Undigested sample in lane 4 shows two bands, one at around 8000 bp, and other above the range limit of ladder, >12000 bp. Double-digested samples in lanes 5-15 and 17-29 show three bands: approximately 3000 bp (excised insert), 5000 bp (linearized vector), and 8000 bp (residual undigested plasmid), indicating more time needed for digestion." caption="Restriction digestion of pET-Blank-Amp containing ci2350-MBP with NdeI and BamHI. Lanes: (1, 16, 30) Ampliqon High Range DNA Ladder; (2) NdeI control; (3) BamHI control; (4) Undigested sample; (5-15, 17-29) double digested sample. The three bands in 5-15, 17-29 correspond to ~3000 bp (the cut ci2350-MBP-6xHis), ~5000 bp (pET-Blank-Amp linearized backbone) and ~8000 bp (undigested pETBlank-ci-MBP-6xHis)." numbered refId="fig-m28p5" scale={100} plain={false} noZoom={false} />
 
 We tested this method and adopted it for further cloning, as it proved more reliable than direct pET-11a digestion, allowing us to **successfully clone AKR1D1-SUMO-6xHis, and AKR1D1-Trx-6xHis into pET-Blank-Amp** by [Week 31](/notebooks-and-protocols#:~:text=Week%2031), as indicated by colony PCR (<Ref target="fig-xom8c" />) and subsequential sequencing.
 
@@ -501,11 +501,11 @@ Following the inconsistent results obtained in microplates, we performed further
 
 <Layout2>
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/absorbance-spectra-1-5-3.pdf" alt="Akrsumo" numbered refId="fig-77hua" scale={100} plain noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/absorbance-spectra-1-5-3.pdf" alt="Akrsumo" numbered refId="fig-zd6ju" scale={100} plain noZoom={false} />
   </LayoutColumn>
 
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/absorbance-spectra-1-5-4.pdf" alt="akrtrx" numbered refId="fig-77hua" scale={100} plain noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/absorbance-spectra-1-5-4.pdf" alt="akrtrx" numbered refId="fig-l8eau" scale={100} plain noZoom={false} />
   </LayoutColumn>
 </Layout2>
 
@@ -517,11 +517,11 @@ An important challenge during assay development was determining whether the obse
 
 <Layout2>
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/absorbance-spectra-1-5-2.pdf" alt="Heat Inactivated cimbp" caption="(A) Heat-inactivated Assay Mix Control. Blue line represents data acquired at time point 0, red line represents data at time point = 30 min. Y-axis shows absorbance values while X-axis difference absorbance values, the peaks at 340nm corresponds to the presence of NADPH. The graphs shows successful inactivation via heating of enzymes present in the assay mix." numbered refId="fig-77hua" scale={100} plain noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/absorbance-spectra-1-5-2.pdf" alt="Heat Inactivated cimbp" caption="(A) Heat-inactivated Assay Mix Control. Blue line represents data acquired at time point 0, red line represents data at time point = 30 min. Y-axis shows absorbance values while X-axis difference absorbance values, the peaks at 340nm corresponds to the presence of NADPH. The graphs shows successful inactivation via heating of enzymes present in the assay mix." numbered refId="fig-dk7gu" scale={100} plain noZoom={false} />
   </LayoutColumn>
 
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/absorbance-spectra-1-5-5.pdf" alt="empty vector" caption="(B) Empty Vector Control. Blue line represents data acquired at time point 0, red line represents data at time point = 30 min. Y-axis shows absorbance values while X-axis difference absorbance values, the peaks at 340nm corresponds to the presence of NADPH. Empty vector underwent the same purification workflow of our candidate enzymes, the expected output would be no decrease in NADPH absorbance. The graph shows decrease in absorbance between the two timepoints, suggesting possible technical problems during the purification step." numbered refId="fig-77hua" scale={100} plain noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/absorbance-spectra-1-5-5.pdf" alt="empty vector" caption="(B) Empty Vector Control. Blue line represents data acquired at time point 0, red line represents data at time point = 30 min. Y-axis shows absorbance values while X-axis difference absorbance values, the peaks at 340nm corresponds to the presence of NADPH. Empty vector underwent the same purification workflow of our candidate enzymes, the expected output would be no decrease in NADPH absorbance. The graph shows decrease in absorbance between the two timepoints, suggesting possible technical problems during the purification step." numbered refId="fig-yhq4i" scale={100} plain noZoom={false} />
   </LayoutColumn>
 </Layout2>
 
@@ -537,7 +537,7 @@ As reported in figure () the testosterone-containing reaction showed a 12.6% dec
   </LayoutColumn>
 
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/enzyme-assays-3.avif" alt="delta from raw data cimbp nadh" caption="(B) The same measurements expressed as the change from each condition’s initial absorbance, calculated as ΔA₃₄₀(t) = A₃₄₀(t) − A₃₄₀(0). This transformation removes starting offsets without subtracting control signals. The reactions with and without testosterone showed similar overall absorbance decreases, providing no clear evidence of additional cofactor consumption associated with testosterone addition under the tested conditions. " numbered refId="fig-rw51p" scale={100} plain noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/enzyme-assays-3.avif" alt="delta from raw data cimbp nadh" caption="(B) The same measurements expressed as the change from each condition’s initial absorbance, calculated as ΔA₃₄₀(t) = A₃₄₀(t) − A₃₄₀(0). This transformation removes starting offsets without subtracting control signals. The reactions with and without testosterone showed similar overall absorbance decreases, providing no clear evidence of additional cofactor consumption associated with testosterone addition under the tested conditions. " numbered refId="fig-rc8eu" scale={100} plain noZoom={false} />
   </LayoutColumn>
 </Layout2>
 
