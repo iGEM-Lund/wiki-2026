@@ -18,8 +18,6 @@ As our engineered probiotic is a <Tooltip text="A medicine made of live microorg
 \
 These measures reduce several important risks, but AnTigone is still a proof-of-concept design rather than a clinically validated product. Further preclinical testing would be required before its safety could be assessed for human use.&#x20;
 
-
-
 <TableWithCaption caption="Overview of AnTigone’s biosafety layers" refId="tab-ug5r2">
   | **Layer**                        | **Question it answers**                                                          | **What we did**                                                                                                                                                                                                                                                                                            |
   | -------------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -41,11 +39,11 @@ For each strategy, we researched multiple possible approaches, compared them aga
 Our effector should only be active when our engineered probiotic is in the gut. The distinct physicochemical signals in the gut vary from both the outside environment and between different compartments within the gut itself, and these signals can be used to build a location-based switch. <Citation reference="chien-et-al-2022" narrative /> built oxygen, pH and lactate biosensors that control essential genes (*asd, glms) in E. coli* and S.Typhimurium, so that growth depends on the gut-like signal, and tested them in gut-mimicking media and in mice. The three sensing options are compared in <Ref target="tab-7ovp3" />. We chose hypoxia sensing for our proof of concept.
 
 <TableWithCaption caption="Sensing options compared for the gut gate" refId="tab-7ovp3">
-  | **Option**                      | **How it works**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | **Registry part**                                                                                                         |
-  | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+  | **Option**                      | **How it works**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | **Registry part**                                                                                |
+  | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
   | **Hypoxia sensing**             | A <Tooltip text="The DNA sequence in front of a gene that controls when it is switched on.">promoter</Tooltip> (e.g. PfnrS: hypoxia-induced, <Tooltip text="A bacterial protein that switches genes on or off depending on oxygen.">FNR</Tooltip>-regulated) is only active under low-oxygen conditions. The gut <Tooltip text="The hollow inside of the gut, where food and bacteria are.">lumen</Tooltip> is <Tooltip text="Without oxygen.">anaerobic</Tooltip> while conditions outside are aerobic. | [**BBa\_25DMNRIB**](/parts) : sequence-verified match to the PfnrS promoter in our own construct |
-  | **pH sensing**                  | A promoter responds to the gut's pH gradient (small intestine \~pH 6.3, colon \~pH 7).                                                                                                                                                                                                                                                                                                                                                                                                                   | —                                                                                                                         |
-  | **Lactate / bile acid sensing** | A promoter responds to gut-specific metabolites like lactate or bile acids, present at much higher concentration in the gut than elsewhere.                                                                                                                                                                                                                                                                                                                                                              | —                                                                                                                         |
+  | **pH sensing**                  | A promoter responds to the gut's pH gradient (small intestine \~pH 6.3, colon \~pH 7).                                                                                                                                                                                                                                                                                                                                                                                                                   | —                                                                                                |
+  | **Lactate / bile acid sensing** | A promoter responds to gut-specific metabolites like lactate or bile acids, present at much higher concentration in the gut than elsewhere.                                                                                                                                                                                                                                                                                                                                                              | —                                                                                                |
 </TableWithCaption>
 
 **Why Hypoxia Sensing ?**
@@ -88,12 +86,26 @@ Colonization control is the decision about how long our probiotic should remain 
 <Layout2>
   <LayoutColumn>
     <CardTitle>
-      Transient Design (relies on natural clearance)
+      Transient Design (relies on natural clearance)&#x20;
+
+      <Expandable defaultOpen={false}>
+        Wild-type *E. coli* Nissle 1917 (EcN) is not reliably transient in humans. Natural clearance alone is not a dependable limit.
+
+        In a placebo-controlled study of 48 healthy volunteers dosed for 17 days, 45 of 48 tested positive for EcN during dosing. After dosing stopped, the share still testing positive fell only gradually, to 4 of 20 (placebo group) and 7 of 20 (mesalamine group) by week 12 (<Citation reference="joeres-nguyen-xuan-et-al-2010" narrative={false} />) .
+      </Expandable>
     </CardTitle>
 
-    Wild-type *E. coli* Nissle 1917 (EcN) is not reliably transient in humans. Natural clearance alone is not a dependable limit.
 
-    In a placebo-controlled study of 48 healthy volunteers dosed for 17 days, 45 of 48 tested positive for EcN during dosing. After dosing stopped, the share still testing positive fell only gradually, to 4 of 20 (placebo group) and 7 of 20 (mesalamine group) by week 12. (<Citation reference="joeres-nguyen-xuan-et-al-2010" narrative={false} />)
+  </LayoutColumn>
+
+  <LayoutColumn>
+    &#x20;
+  </LayoutColumn>
+</Layout2>
+
+<Layout2>
+  <LayoutColumn>
+
   </LayoutColumn>
 
   <LayoutColumn>
