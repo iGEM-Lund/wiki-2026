@@ -13,7 +13,7 @@ Two Δ4-3-ketosteroid 5β-reductases were taken forward for engineering: human *
 
 Structures were obtained from the PDB (AKR1D1, **3CAV**) and from **AlphaFold** (ci2350), and the functional pocket in each was located with **fpocket** and confirmed against **NCBI CD Search** annotations. Docking both substrates into the wild-type enzymes gave similar absolute affinities but opposite preferences: **AKR1D1 favoured progesterone by 0.5 kcal/mol,** while **ci2350 showed a marginal testosterone preference of 0.1 kcal/mol,** within the scoring noise.
 
-Residues within **4 Å** of each docked ligand were sorted by which substrate they contacted. This identified three specificity determinants in AKR1D1 (**V309, L311, I57**) and six in ci2350 (**A107, R215, V263, V59, F71, Q100**). Substitutions at these positions were designed to weaken progesterone binding or strengthen testosterone binding, then screened for structural stability in **PyRosetta**. Of 24 AKR1D1 variants, 13 passed the **+5 REU** threshold; of 31 ci2350 variants, 17 passed. These variants were then docked with both substrates to assess their specificity towards testosterone.
+Residues within **4 <Tooltip text="Angstrom: unit of length equaling 10^−10 m">Å</Tooltip>** of each docked ligand were sorted by which substrate they contacted. This identified three specificity determinants in AKR1D1 (**V309, L311, I57**) and six in ci2350 (**A107, R215, V263, V59, F71, Q100**). Substitutions at these positions were designed to weaken progesterone binding or strengthen testosterone binding, then screened for structural stability in **PyRosetta**. Of 24 AKR1D1 variants, 13 passed the **+5 REU** threshold; of 31 ci2350 variants, 17 passed. These variants were then docked with both substrates to assess their specificity towards testosterone.
 
 The full workflow for both AKR1D1 and ci2350, from protein structure acquisition through to stability screening, is described on the [Modeling page](/modeling#enzyme-specificity-engineering-towards-testosterone).&#x20;
 
@@ -372,17 +372,19 @@ The mutagenesis was done sequentially, first performing inverse PCR with one pri
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/mutagenesis-gel-result-for-v263i.avif" alt="Agarose gel image showing inverse PCR mutagenesis results with DNA ladder in lane 1. Lanes 2-3 (V263I mutation) show bright bands at approximately 8400 bp, indicating successful amplification. Lanes 4-5 (R215A mutation) have smearing over all the DNA range. Negative Control lane 6 (V263I) shows smears near the bottom (less than 400 bp), while lane 7 with negative R215A control shows smearing in the whole ladder range (similar to lanes 4-5)." caption="Agarose gel electrophoresis of inverse PCR site-directed mutagenesis of pET-Blank-ci2350-MBP. Lanes: (1) Ampliqon High Range DNA Ladder; (2, 3) mutation V236I; (4, 5) mutation R215A; (6) control V2361; (7) control R215A. The expected band size for successful inverse PCR was 8421 bp." numbered refId="fig-p4wta" scale={100} plain noZoom={false} />
 
-Following these results, ci2350-MBP-6xHis sequences with mutation V236I were transformed into *E.coli* TG1 and sequenced by [**Microsynth**](https://www.microsynth.com/home-ch.html)), which confirmed to have the correct mutation. Then this whole process was repeated, to introduce the R215A mutation, and double mutated ci2350-MBP-6xHis was confirmed by sequencing (<Ref target="fig-0tzgr" />, <Ref target="fig-m0oxe" /> ).&#x20;
+Following these results, ci2350-MBP-6xHis sequences with mutation V236I were transformed into *E.coli* TG1 and sequenced by [**Microsynth**](https://www.microsynth.com/home-ch.html)), which confirmed to have the correct mutation. Then this whole process was repeated, to introduce the R215A mutation, and double mutated ci2350-MBP-6xHis was confirmed by sequencing (<Ref target="fig-0tzgr" />, <Ref target="fig-m0oxe" />).&#x20;
 
 <Layout2>
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/ci2350-263-mutation-seq.avif" alt="MISSING" caption="Sequencing result confirming ci2350-MBP-6xHis V263I mutation, in ci2350-MBP-6xHis double mutant construct." numbered refId="fig-0tzgr" scale={100} plain={false} noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/ci2350-263-mutation-seq.avif" alt="Sequencing result confirming ci2350-MBP-6xHis V263I mutation" caption="Sequencing result confirming ci2350 V263I mutation, in ci2350-MBP-6xHis double mutant construct. Viewed using Snapgene." numbered refId="fig-0tzgr" scale={100} plain={false} noZoom={false} />
   </LayoutColumn>
 
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/ci2350-215-mutation-seq.avif" alt="MISSING" caption="Sequencing result confirming ci2350 R215A mutation, in ci2350-MBP-6xHis double mutant construct." numbered refId="fig-m0oxe" scale={100} plain={false} noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/ci2350-215-mutation-seq.avif" alt="MISSING" caption="Sequencing result confirming ci2350 R215A mutation, in ci2350-MBP-6xHis double mutant construct. Viewed using Snapgene." numbered refId="fig-m0oxe" scale={100} plain={false} noZoom={false} />
   </LayoutColumn>
 </Layout2>
+
+### Plasmid maps of expression constructs
 
 ## AKR1D1: Fusion Tag and Induction Strength
 
