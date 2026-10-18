@@ -19,7 +19,7 @@ items:
       discriminant: dropdown
       value:
         - engineering
-        - modeling
+        - model
         - notebooks-and-protocols
         - results
         - parts
