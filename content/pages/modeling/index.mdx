@@ -495,11 +495,13 @@ The enzyme is the opposite. It is built from those messages at rate β. We assum
 <Card>
   **Five assumptions:**
 
-  * ci2350’s mRNA turns over like a typical *E. coli* transcript, since its half-life has not been measured.
-  * The promoter is fully induced at 0.8 mM IPTG, so transcription runs at a constant rate.
-  * The enzyme is stable, so dilution by growth is its only loss.
-  * Expression does not burden the cell, so it does not slow growth.
-  * mRNA and enzyme are in relative units, since absolute counts would require data we do not have.
+  1. ci2350’s mRNA turns over like a typical *E. coli* transcript, since its half-life has not been measured.
+  2. The promoter is fully induced at 0.8 mM IPTG, so transcription runs at a constant rate.
+  3. The enzyme is stable, so dilution by growth is its only loss.
+  4. Expression does not burden the cell, so it does not slow growth.
+  5. mRNA and enzyme are in relative units, since absolute counts would require data we do not have.
+
+
 </Card>
 
 Bacterial messages break down within minutes of being made (<Citation reference="bernstein-et-al-2002" narrative={false} />). We used a half-life (3 to 8 mins) to predict the decay constants <Formula latex="(δ = ln2 / t½)" /> range and used their average of 9.53 h⁻¹. The transcription rate (α) and translation rate (β) are placeholders, as neither has been measured for ci2350 (<Ref target="tab-aqmwv" />).
@@ -585,8 +587,6 @@ The first three are the growth and expression layers described in the integrated
   5. The steroids are available to the enzyme at their added concentrations, without limits from uptake into the cells or from solubility.
   6. Product inhibition is not included.
   7. The ci2350 variants do not change folding or stability.
-
-
 </Card>
 
 <TableWithCaption caption="Parameters of activity model" refId="tab-i8ink">
