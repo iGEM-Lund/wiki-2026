@@ -596,6 +596,7 @@ body {
 }
 
 .site__brand {
+  --brand-speed: 0.6;
   display: flex;
   flex: 1 1 0;
   min-width: max-content;
@@ -624,26 +625,107 @@ body {
   color: var(--title);
 }
 
+@property --wipe-p {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 100%;
+}
+@property --wipe-b {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 100%;
+}
+@property --wipe-c {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
 /* AnTigone brand mark: the line traces itself in like it's being hand-drawn,
    then the gear/knot at its tail pops into place right as it finishes.
    `pathLength="1"` on the traced path (antigone-logo.tsx) lets the dash math
-   below stay resolution-independent instead of needing getTotalLength(). */
+   below stay resolution-independent instead of needing getTotalLength().
+   On hover a Rose copy of the line is drawn over the Peacock one with a
+   Crimson copy following a beat behind it (so the drawing edge reads as a
+   Peacock to Rose to Crimson gradient), then the wordmark is wiped the same
+   way; on unhover the Rose and Peacock copies draw back over the crimson.
+   Layers per stroke, bottom to top (antigone-logo.tsx): base, rose-hover,
+   crimson, rose-back, peacock. Unscaled, the line takes 1725ms (the last
+   stroke's delay + duration + the 120ms Crimson lag) and the wordmark wipe
+   500ms; --brand-speed scales all of it (lower is faster). */
 .antigone-logo__line {
   stroke-dasharray: 1;
   stroke-dashoffset: 0;
 }
+.antigone-logo__line--rose-hover,
+.antigone-logo__line--rose-back {
+  stroke: var(--color-rose);
+}
+.antigone-logo__line--crimson {
+  stroke: var(--color-crimson);
+}
+.antigone-logo__line--peacock {
+  stroke: var(--title);
+}
+.antigone-logo__line--rose-hover,
+.antigone-logo__line--crimson {
+  stroke-dashoffset: 1;
+}
 .antigone-logo__knot {
   opacity: 1;
+  color: var(--title);
   transform-box: fill-box;
   transform-origin: center;
 }
+/* The wordmark is three background layers clipped to the glyphs: Peacock
+   wiping in on unhover (--wipe-p), Crimson wiping in on hover (--wipe-c),
+   and the plain Peacock fill underneath (--wipe-b, only used on load). The
+   moving layers are 300% wide gradients with a Rose fringe, slid across by
+   background-position; 100% = fully covering, 0% = hidden. */
+.site__brand-name {
+  --wipe-p: 100%;
+  --wipe-c: 0%;
+  --wipe-b: 100%;
+  color: transparent;
+  background-image:
+    linear-gradient(90deg, var(--title) 0 33.33%, var(--color-rose) 44%, transparent 55%),
+    linear-gradient(90deg, var(--color-crimson) 0 33.33%, var(--color-rose) 44%, transparent 55%),
+    linear-gradient(var(--title), var(--title));
+  background-repeat: no-repeat;
+  background-size: 300% 100%, 300% 100%, var(--wipe-b) 100%;
+  background-position:
+    calc(100% - var(--wipe-p)) 0,
+    calc(100% - var(--wipe-c)) 0,
+    0 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  /* line-height: 1 would clip descenders and side bearings; the padding
+     gives the clip box room and the negative margin cancels it out. */
+  padding: 0.2em 0.1em;
+  margin: -0.2em -0.1em;
+}
+.site__brand:is(:hover, :focus-visible) .antigone-logo__line--rose-hover,
+.site__brand:is(:hover, :focus-visible) .antigone-logo__line--crimson {
+  stroke-dashoffset: 0;
+}
+.site__brand:is(:hover, :focus-visible) .antigone-logo__line--rose-back,
+.site__brand:is(:hover, :focus-visible) .antigone-logo__line--peacock {
+  stroke-dashoffset: 1;
+}
+.site__brand:is(:hover, :focus-visible) .antigone-logo__knot {
+  color: var(--color-crimson);
+}
+.site__brand:is(:hover, :focus-visible) .site__brand-name {
+  --wipe-p: 0%;
+  --wipe-c: 100%;
+}
 
 @media (prefers-reduced-motion: no-preference) {
-  .antigone-logo__line {
+  .antigone-logo__line:not([class*='--']) {
     stroke-dashoffset: 1;
     animation-name: antigone-draw;
-    animation-duration: var(--stroke-duration);
-    animation-delay: var(--stroke-delay);
+    animation-duration: calc(var(--stroke-duration) * var(--brand-speed));
+    animation-delay: calc(var(--stroke-delay) * var(--brand-speed));
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
   }
@@ -651,16 +733,53 @@ body {
     opacity: 0;
     /* Starts right as the last stroke (the small loop) closes; overshoot
        easing gives it a small "pop". */
-    animation: antigone-knot-in 0.55s cubic-bezier(0.34, 1.9, 0.64, 1) 1.6s forwards;
+    animation: antigone-knot-in calc(0.55s * var(--brand-speed)) cubic-bezier(0.34, 1.9, 0.64, 1) calc(1.6s * var(--brand-speed)) forwards;
+    transition: color calc(0.25s * var(--brand-speed)) ease-in-out calc(1.45s * var(--brand-speed));
   }
-  /* Changing animation-name on :hover restarts the animation even though the
-     keyframes are identical to the mount-time ones; replay without JS. */
-  .site__brand:hover .antigone-logo__line {
-    animation-name: antigone-draw-replay;
+  /* The covering copies (resting state: drawn) only appear once the base line
+     has finished drawing in, so they don't hide the load animation. */
+  .antigone-logo__line--rose-back,
+  .antigone-logo__line--peacock {
+    animation: antigone-cover-in 0s linear calc(1.605s * var(--brand-speed)) backwards;
   }
-  .site__brand:hover .antigone-logo__knot {
-    animation-name: antigone-knot-in-replay;
-    animation-delay: 1.6s;
+  /* Unhover: the crimson copies stay until the covering ones have drawn over
+     them, then snap away. */
+  .antigone-logo__line--rose-hover,
+  .antigone-logo__line--crimson {
+    transition: stroke-dashoffset 0s linear calc(1.725s * var(--brand-speed));
+  }
+  .antigone-logo__line--rose-back {
+    transition: stroke-dashoffset calc(var(--stroke-duration) * var(--brand-speed)) ease-in-out calc(var(--stroke-delay) * var(--brand-speed));
+  }
+  .antigone-logo__line--peacock {
+    transition: stroke-dashoffset calc(var(--stroke-duration) * var(--brand-speed)) ease-in-out calc((var(--stroke-delay) + 120ms) * var(--brand-speed));
+  }
+  .site__brand:is(:hover, :focus-visible) .antigone-logo__line--rose-hover {
+    transition: stroke-dashoffset calc(var(--stroke-duration) * var(--brand-speed)) ease-in-out calc(var(--stroke-delay) * var(--brand-speed));
+  }
+  .site__brand:is(:hover, :focus-visible) .antigone-logo__line--crimson {
+    transition: stroke-dashoffset calc(var(--stroke-duration) * var(--brand-speed)) ease-in-out calc((var(--stroke-delay) + 120ms) * var(--brand-speed));
+  }
+  .site__brand:is(:hover, :focus-visible) .antigone-logo__line--rose-back,
+  .site__brand:is(:hover, :focus-visible) .antigone-logo__line--peacock {
+    transition: none;
+  }
+  /* Unhover: the Peacock wipe runs after the line, then the crimson one is
+     dropped from under it. */
+  .site__brand-name {
+    /* On load the plain fill wipes in once the line has finished drawing; the
+       fringed Peacock layer (the resting state) then pops in on top of it. */
+    animation:
+      antigone-wipe-in calc(0.5s * var(--brand-speed)) ease-in-out calc(1.605s * var(--brand-speed)) backwards,
+      antigone-cover-in-wipe 0s linear calc(2.105s * var(--brand-speed)) backwards;
+    transition:
+      --wipe-p calc(0.5s * var(--brand-speed)) ease-in-out calc(1.725s * var(--brand-speed)),
+      --wipe-c 0s linear calc(2.225s * var(--brand-speed));
+  }
+  .site__brand:is(:hover, :focus-visible) .site__brand-name {
+    transition:
+      --wipe-p 0s,
+      --wipe-c calc(0.5s * var(--brand-speed)) ease-in-out calc(1.725s * var(--brand-speed));
   }
 }
 
@@ -672,25 +791,22 @@ body {
     stroke-dashoffset: 0;
   }
 }
-@keyframes antigone-draw-replay {
+@keyframes antigone-wipe-in {
   from {
-    stroke-dashoffset: 1;
+    --wipe-b: 0%;
   }
-  to {
-    stroke-dashoffset: 0;
+}
+@keyframes antigone-cover-in-wipe {
+  from {
+    --wipe-p: 0%;
+  }
+}
+@keyframes antigone-cover-in {
+  from {
+    opacity: 0;
   }
 }
 @keyframes antigone-knot-in {
-  from {
-    opacity: 0;
-    transform: scale(0.4) rotate(-25deg);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-  }
-}
-@keyframes antigone-knot-in-replay {
   from {
     opacity: 0;
     transform: scale(0.4) rotate(-25deg);
@@ -1905,54 +2021,6 @@ body {
   position: relative;
   width: fit-content;
   max-width: 100%;
-}
-/* Speech bubbles over a figure (the team photo's podcast episodes): a pale
-   patch with a depths outline and a dashed stitch inside it, anchored by its
-   tail (bottom centre) to the point the writer clicked. The name opens on
-   hover and focus. */
-.figure-with-caption__bubble {
-  position: absolute;
-  transform: translate(-50%, -100%);
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-width: 2rem;
-  min-height: 2rem;
-  padding: 0.25rem 0.4rem;
-  justify-content: center;
-  border: 2px solid var(--color-depths);
-  border-radius: 999px;
-  background: var(--color-shallows);
-  color: var(--color-depths);
-  font: 600 0.8rem/1 var(--font-heading);
-  text-decoration: none;
-  box-shadow: inset 0 0 0 2px var(--color-shallows), inset 0 0 0 3px color-mix(in srgb, var(--color-depths) 55%, transparent);
-  transition: transform 0.2s cubic-bezier(0.34, 1.4, 0.64, 1), background 0.2s ease;
-}
-.figure-with-caption__bubble:hover,
-.figure-with-caption__bubble:focus-visible {
-  z-index: 2;
-  transform: translate(-50%, -100%) scale(1.12);
-  background: var(--color-blush);
-  outline: none;
-}
-.figure-with-caption__bubble:focus-visible {
-  outline: 2px solid var(--color-crimson);
-  outline-offset: 2px;
-}
-.figure-with-caption__bubble-name {
-  display: none;
-  white-space: nowrap;
-}
-.figure-with-caption__bubble:hover .figure-with-caption__bubble-name,
-.figure-with-caption__bubble:focus-visible .figure-with-caption__bubble-name {
-  display: inline;
-}
-@media (pointer: coarse) {
-  .figure-with-caption__bubble {
-    min-width: 2.5rem;
-    min-height: 2.5rem;
-  }
 }
 .figure-with-caption__link-icon {
   position: absolute;
@@ -4012,7 +4080,7 @@ a.inline-icon--link:focus-visible {
   font-size: 1rem;
 }
 :root[data-theme='dark'] .site .world-map__popup-title {
-  color: var(--color-rose);
+  color: var(--color-crimson);
 }
 .world-map__popup-body {
   font-size: 0.9rem;

@@ -54,20 +54,26 @@ export const STROKES = [
 export function AntigoneLogoMark({ className }: { className?: string }) {
   return (
     <svg viewBox="49 67 112 115" className={className} aria-hidden="true">
-      {STROKES.map((stroke, i) => (
-        <path
-          key={i}
-          className="antigone-logo__line"
-          style={{ '--stroke-delay': `${stroke.delay}ms`, '--stroke-duration': `${stroke.duration}ms` } as CSSProperties}
-          pathLength={1}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d={stroke.d}
-        />
-      ))}
+      {/* Five copies of every stroke: the base line (draws in on load), then a
+          Rose and a Crimson one that draw over it on hover, and a Rose and a
+          Peacock one that draw back over the crimson on unhover (see "AnTigone
+          brand mark" in globals.css). */}
+      {(['', '--rose-hover', '--crimson', '--rose-back', '--peacock'] as const).map((layer) =>
+        STROKES.map((stroke, i) => (
+          <path
+            key={`${layer}${i}`}
+            className={`antigone-logo__line${layer ? ` antigone-logo__line${layer}` : ''}`}
+            style={{ '--stroke-delay': `${stroke.delay}ms`, '--stroke-duration': `${stroke.duration}ms` } as CSSProperties}
+            pathLength={1}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d={stroke.d}
+          />
+        )),
+      )}
       <LogoKnot className="antigone-logo__knot" />
     </svg>
   );
