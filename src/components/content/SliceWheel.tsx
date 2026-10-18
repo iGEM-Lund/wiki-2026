@@ -13,9 +13,9 @@ type SliceWheelProps = {
   referenceLookup?: ReferenceLookup;
 };
 
-// The wheel is drawn in a viewBox centred on the origin, so a hovered
-// slice's scale (see .slice-wheel__lifted in globals.css) grows it straight
-// out from the hub. It is a round patch, made the same way as the pillars'
+// The wheel is drawn in a viewBox centred on the origin, so turning it to a
+// chosen slice (see .slice-wheel__spin in globals.css) is a rotation about
+// the hub. It is a round patch, made the same way as the pillars'
 // (.pillars__link): an overlocked edge out to RADIUS, a running stitch just
 // inside it, and the slices sewn on inside that, out to SLICE_RADIUS.
 const RADIUS = 90;
@@ -107,133 +107,7 @@ function arcPath(start: number, end: number, radius: number, bottom: boolean): s
     : `M ${round(x0)} ${round(y0)} A ${r} ${r} 0 ${largeArc} 1 ${round(x1)} ${round(y1)}`;
 }
 
-// How far the text keeps off the lifted slice's outline, in wheel units.
-const TEXT_MARGIN = 5;
-// The text's size and leading, in wheel units (see .slice-wheel__text-content
-// in globals.css), and a rough average letter width for it: enough to guess
-// how much of the wedge a slice's text will fill.
-const TEXT_FONT_SIZE = 6;
-const TEXT_LINE_HEIGHT = 1.35;
-const TEXT_CHAR_WIDTH = 0.55;
-// Height of each step of the staircase the text is wrapped to.
-const TEXT_ROW = 2;
-
-// Where a horizontal line at `y` enters and leaves a convex polygon, or
-// null if it misses it.
-function span(polygon: [number, number][], y: number): [number, number] | null {
-  let left = Infinity;
-  let right = -Infinity;
-  for (let i = 0; i < polygon.length; i++) {
-    const [x0, y0] = polygon[i];
-    const [x1, y1] = polygon[(i + 1) % polygon.length];
-    if ((y < Math.min(y0, y1)) || (y > Math.max(y0, y1)) || y0 === y1) continue;
-    const x = x0 + ((y - y0) / (y1 - y0)) * (x1 - x0);
-    left = Math.min(left, x);
-    right = Math.max(right, x);
-  }
-  return left <= right ? [left, right] : null;
-}
-
-// The box the text goes in, and the staircase of floats down either side
-// of it that wrap the text to the wedge between `inner` and `outer` (less
-// TEXT_MARGIN off its straight sides). CSS can only wrap text around
-// floats, and a float's shape-outside is clipped to its own box, so the
-// shape is built from one thin pair of floats per TEXT_ROW: each as wide as
-// the part of that row outside the wedge (see SliceWheelClient).
-// Rows before `top` are blocked off whole, which moves the text down to sit
-// around the middle of the wedge rather than at its top: how far is a guess
-// from the length of the slice's text, measured against the room each row
-// has.
-function textRegion(start: number, end: number, inner: number, outer: number, body: string) {
-  const outerTrim = Math.asin(TEXT_MARGIN / outer);
-  const offset = (angle: number, radius: number, side: 1 | -1): [number, number] => {
-    const [x, y] = point(angle, radius);
-    // Inward, square to the wedge's straight side at `angle`.
-    return [x - side * Math.sin(angle) * TEXT_MARGIN, y + side * Math.cos(angle) * TEXT_MARGIN];
-  };
-  // The wedge, its inner edge a straight chord. With one or two slices it
-  // would be half the wheel or more, and no longer convex: there the text
-  // takes the part of the circle past a chord `inner` out from the hub,
-  // square to the slice's middle, which keeps it clear of the straight,
-  // centred title.
-  const samples = 16;
-  const polygon: [number, number][] = [];
-  if (end - start < Math.PI - 1e-6) {
-    polygon.push(offset(start, inner, 1));
-    for (let i = 0; i <= samples; i++) {
-      polygon.push(point(start + outerTrim + ((end - start - 2 * outerTrim) * i) / samples, outer));
-    }
-    polygon.push(offset(end, inner, -1));
-  } else {
-    const middle = (start + end) / 2;
-    const half = Math.acos(Math.min(1, inner / outer));
-    for (let i = 0; i <= samples; i++) {
-      polygon.push(point(middle - half + (2 * half * i) / samples, outer));
-    }
-  }
-
-  const xs = polygon.map(([x]) => x);
-  const ys = polygon.map(([, y]) => y);
-  const x = Math.min(...xs);
-  const y = Math.min(...ys);
-  const width = Math.max(...xs) - x;
-  const height = Math.max(...ys) - y;
-
-  // Each row's room is what's left at both its top and its bottom edge,
-  // so no line of text pokes out where the wedge narrows.
-  const rowCount = Math.ceil(height / TEXT_ROW);
-  const rooms: [number, number][] = [];
-  for (let row = 0; row < rowCount; row++) {
-    const top = span(polygon, y + row * TEXT_ROW);
-    const bottom = span(polygon, y + Math.min((row + 1) * TEXT_ROW, height));
-    const left = Math.max(top?.[0] ?? Infinity, bottom?.[0] ?? Infinity) - x;
-    const right = x + width - Math.min(top?.[1] ?? -Infinity, bottom?.[1] ?? -Infinity);
-    rooms.push(left + right < width ? [left, right] : [width / 2, width / 2]);
-  }
-
-  // How much area the text needs: its letters at their average width over
-  // a full line height, plus a quarter for ragged line ends and breaks.
-  const letters = body.replace(/<[^>]*>|[*_#`>\[\]()-]/g, '').length;
-  const needed = letters * TEXT_FONT_SIZE * TEXT_CHAR_WIDTH * TEXT_FONT_SIZE * TEXT_LINE_HEIGHT * 1.25;
-  const area = (row: number) => Math.max(0, width - rooms[row][0] - rooms[row][1]) * TEXT_ROW;
-  // The first and last rows with any room at all, and the row the wedge's
-  // area is centred on: the text's block is centred there, as far as the
-  // wedge's own ends allow.
-  const open = rooms.map((_, row) => area(row) > 0);
-  const first = open.indexOf(true);
-  const last = open.lastIndexOf(true);
-  let total = 0;
-  let weighted = 0;
-  for (let row = first; row <= last; row++) {
-    total += area(row);
-    weighted += area(row) * row;
-  }
-  const centre = total > 0 ? weighted / total : (first + last) / 2;
-  let top = first;
-  if (needed < total) {
-    // Grow a window of rows out from the centre, a row at a time on
-    // whichever side keeps it closer to centred, until it holds the text.
-    let from = Math.round(centre);
-    let to = from;
-    let held = area(from);
-    while (held < needed && (from > first || to < last)) {
-      const growUp = from > first && (to >= last || centre - from <= to - centre);
-      if (growUp) held += area(--from);
-      else held += area(++to);
-    }
-    top = from;
-  }
-  const rows = rooms.map(([left, right], row) =>
-    row < top ? { left: round(width / 2), right: round(width / 2) } : { left: round(left), right: round(right) },
-  );
-
-  return { x: round(x), y: round(y), width: round(width), height: round(height), row: TEXT_ROW, rows };
-}
-
 const LINE_HEIGHT = 1.2;
-// On hover a slice's title scales down toward the hub by this much, to leave
-// the rest of the slice to the text (see .slice-wheel__lifted-title).
-const TITLE_SCALE = 0.7;
 const MAX_LINES = 3;
 const MIN_FONT_SIZE = 4;
 
@@ -242,9 +116,6 @@ export async function SliceWheel({ slices = [], cycle = false, referenceLookup =
   if (count === 0) return null;
 
   const step = (2 * Math.PI) / count;
-  // How far past the patch a hovered slice reaches: more slices, narrower
-  // wedges, so a longer reach to keep the same room for text.
-  const extension = count <= 5 ? 100 : count <= 8 ? 115 : 130;
   // With one or two slices an arc would be a half circle or more and the
   // text would run sideways, so those keep straight, centred labels.
   const curved = count >= 3;
@@ -304,34 +175,26 @@ export async function SliceWheel({ slices = [], cycle = false, referenceLookup =
     const middle = start + step / 2;
     // Past MIN_FONT_SIZE a title that still doesn't fit just overflows.
     const lines = wrapped[index] ?? wrapTitle(slice.title ?? '', 1);
-    const bottom = Math.sin(middle) > 1e-6;
     const lineGap = LINE_HEIGHT * fontSize;
-    const arcs = curved
-      ? lines.map((_, line) => {
-          // Line 0 is outermost on the top half; on the bottom half, where
-          // the text's top faces the hub, the last line is.
-          const depth = bottom ? lines.length - 1 - line : line;
-          return arcPath(start, start + step, outerLineRadius(fontSize) - depth * lineGap, bottom);
-        })
-      : null;
-    // Hovering lifts the slice off the patch and stretches it out past the
-    // edge; its text sits in the stretched part. The title shrinks toward
-    // the hub (TITLE_SCALE), and the text takes everything from just outside
-    // it to the end of the slice, wrapped to the wedge's own shape (see
-    // textRegion).
-    const textInner = (curved ? SLICE_RADIUS - 6 : straightRadius + (lines.length * lineGap) / 2) * TITLE_SCALE + 10;
-    const text = textRegion(start, start + step, textInner, RADIUS + extension - TEXT_MARGIN, slice.body ?? '');
+    // Both ways round, since the wheel turns: the title is set for the top
+    // half, or for the bottom half, depending on where the slice ends up.
+    const arcsFor = (bottom: boolean) =>
+      lines.map((_, line) => {
+        // Line 0 is outermost on the top half; on the bottom half, where
+        // the text's top faces the hub, the last line is.
+        const depth = bottom ? lines.length - 1 - line : line;
+        return arcPath(start, start + step, outerLineRadius(fontSize) - depth * lineGap, bottom);
+      });
+    const arcs = curved ? { top: arcsFor(false), bottom: arcsFor(true) } : null;
     const [labelX, labelY] = point(middle, straightRadius);
     const Body = await compileMdxSnippet(slice.body ?? '', referenceLookup, 'slice-wheel__error', 'slice');
     rendered.push({
       id: `slice-${index}`,
       title: slice.title,
       path: sectorPath(start, start + step, SLICE_RADIUS, count === 1),
-      hitPath: sectorPath(start, start + step, RADIUS + 10, count === 1),
-      liftedPath: sectorPath(start, start + step, RADIUS + extension, count === 1),
+      middle: round((middle * 180) / Math.PI),
       arrow: arrowRadius > 0 ? cycleArrow(start, start + step, arrowRadius) : null,
       label: { x: round(labelX), y: round(labelY), lines, arcs, fontSize },
-      text,
       body: <Body />,
     });
   }

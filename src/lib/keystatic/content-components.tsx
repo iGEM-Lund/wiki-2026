@@ -649,22 +649,22 @@ export const contentComponents = {
     ContentView: (props) => <div>[World Map: {(props.value.pins ?? []).length} pin(s)]</div>,
   }),
 
-  // A pie of clickable slices, each opening a popup. Same schema shape as
+  // A pie of clickable slices, each with a sign of text. Same schema shape as
   // WorldMap's pins above, for the same reasons: `body` is raw MDX in a
   // fields.text, since a fields.mdx can't be nested inside fields.array.
   SliceWheel: block({
     label: 'Slice Wheel',
-    description: 'A circle divided into slices, each with a title. Clicking a slice opens a popup with its text.',
+    description: 'A circle divided into slices, each with a title. Choosing a slice turns the circle to put it at the bottom and drops a sign under it with the text for that slice.',
     schema: {
       slices: fields.array(
         fields.object({
           title: fields.text({
             label: 'Title',
-            description: 'Shown on the slice and as the popup heading. Keep it to a few words.',
+            description: 'Shown on the slice and as the heading of its sign. Keep it to a few words.',
             validation: { isRequired: true },
           }),
           body: fields.text({
-            label: 'Popup body (MDX)',
+            label: 'Sign text (MDX)',
             multiline: true,
             description:
               'Raw MDX: plain formatting, or hand-embed other components, e.g. <Citation reference="slug" />.',

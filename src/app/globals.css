@@ -3992,10 +3992,10 @@ a.inline-icon--link:focus-visible {
    (markup). The wheel is a round patch made like the pillars' (see
    .pillars__link): twill cloth with an overlocked edge, a crimson running
    stitch just inside it, and the slices sewn on in the default pillar's Shallows
-   fill and Peacock line, their shared sides one seam. A hovered slice
-   lights up in Crimson on Blush (the crimson pillar's colours), lifted off the
-   patch and stretched out past its edge to hold the slice's text. Like the
-   pillars, the patch keeps its light cloth in dark mode. */
+   fill and Peacock line, their shared sides one seam. A chosen slice
+   spins to the bottom and lights up in Crimson on Blush (the crimson pillar's
+   colours), and a sign in the same colours drops under the wheel with its
+   text. Like the pillars, the patch keeps its light cloth in dark mode. */
 .slice-wheel {
   --wheel-line: var(--color-peacock);
   --wheel-fill: var(--color-shallows);
@@ -4004,22 +4004,14 @@ a.inline-icon--link:focus-visible {
   --wheel-ink: var(--color-depths);
   --selection: var(--color-depths);
   --selection-text: var(--color-pearl);
-  /* Lifted slices reach outside the wheel, over whatever sits next to it. */
-  position: relative;
-  z-index: 3;
   margin: 2.5rem auto;
-  width: min(100%, 30rem);
-}
-/* An open slice reaches well past the wheel, so while one is open the wheel
-   also goes over the figure carousel (39) and the outline's string (38),
-   though still under the header. */
-.slice-wheel:has(.slice-wheel__slice:is(:hover, :focus-within)) {
-  z-index: 40;
+  width: min(100%, 36rem);
 }
 .slice-wheel__disc {
   display: block;
-  width: 100%;
+  width: min(100%, 28rem);
   height: auto;
+  margin: 0 auto;
   overflow: visible;
 }
 .slice-wheel__patch {
@@ -4076,123 +4068,140 @@ a.inline-icon--link:focus-visible {
   font-family: var(--font-heading);
   font-weight: 500;
   text-anchor: middle;
-  /* Curved labels sit centred on their arc, not on top of it. */
-  dominant-baseline: central;
+  /* Centring on the arc is done with a dy in SliceWheelClient: Safari and
+     Firefox disagree on dominant-baseline for text on a path. */
   pointer-events: none;
   user-select: none;
 }
-.slice-wheel__slice {
-  cursor: default;
-  outline: none;
-}
-/* The only part of a slice that takes the pointer; see SliceWheelClient. */
+/* Each slice's button: an invisible copy of the slice, over everything. */
 .slice-wheel__hit {
   fill: transparent;
+  cursor: pointer;
+  outline: none;
 }
-/* A slice's lifted copy: hidden until its slice is hovered or focused, then
-   grown out from the hub (SVG transforms scale about the viewBox origin,
-   which is the hub) and raised off the patch like a hovered pillar. Inside
-   the slice's group, so hover holds while the pointer is over it. */
-.slice-wheel__lifted {
-  visibility: hidden;
-  pointer-events: none;
-  opacity: 0;
-  transform: scale(0.9);
-  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.08)) drop-shadow(0 4px 4px rgb(0 40 40 / 0.35));
-  /* Hold on briefly after the pointer leaves. */
-  transition:
-    transform 0.2s ease-in,
-    opacity 0.15s ease,
-    visibility 0s 0.2s;
-}
-.slice-wheel__slice:is(:hover, :focus-within) .slice-wheel__lifted {
-  visibility: visible;
-  pointer-events: auto;
-  opacity: 1;
-  transform: scale(1);
-  transition:
-    transform 0.3s cubic-bezier(0.34, 1.3, 0.64, 1),
-    opacity 0.1s ease,
-    visibility 0s;
-}
-.slice-wheel__lifted-piece {
-  fill: var(--color-blush);
+.slice-wheel__hit:focus-visible {
   stroke: var(--color-crimson);
-  stroke-width: 2;
+  stroke-width: 3;
   stroke-linejoin: round;
 }
-.slice-wheel__slice:focus-visible .slice-wheel__lifted-piece {
-  stroke-width: 3;
+/* Choosing a slice turns everything sewn on the cloth about the hub (SVG
+   transforms scale and turn about the viewBox origin, which is the hub). */
+.slice-wheel__spin {
+  transform-origin: 0 0;
+  transition: transform 0.7s cubic-bezier(0.45, 0, 0.2, 1);
 }
-.slice-wheel__label--lifted {
+.slice-wheel__label--straight {
+  transition: transform 0.7s cubic-bezier(0.45, 0, 0.2, 1);
+}
+/* The chosen slice lights up in Crimson on Blush, like a hovered pillar. */
+.slice-wheel__piece--active {
+  fill: var(--color-blush);
+  stroke: var(--color-crimson);
+}
+.slice-wheel__label--active {
   fill: var(--color-crimson);
 }
-/* The title draws in toward the hub, scaling about it so curved lines stay
-   concentric, which frees the rest of the slice for the text. */
-.slice-wheel__lifted-title {
-  transition: transform 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
-}
-.slice-wheel__slice:is(:hover, :focus-within) .slice-wheel__lifted-title {
-  transform: scale(0.7);
-}
-.slice-wheel__text {
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.1s ease;
-}
-.slice-wheel__slice:is(:hover, :focus-within) .slice-wheel__text {
-  opacity: 1;
-  pointer-events: auto;
-  transition: opacity 0.2s ease 0.18s;
-}
-/* Sized in the wheel's own units (it's inside the SVG), so it scales with
-   the wheel. Its text wraps to the slice's shape around the floats below,
-   so it is a plain block, not a flex box (whose children can't float).
-   Never a scroll container: WebKit gives one inside a foreignObject its own
-   layer, which drops the SVG's scaling and offset, so in Safari the text
-   drew tiny at the wheel's top-left corner instead of in its slice. The
-   foreignObject clips anything that overflows. */
-.slice-wheel__text-content {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  /* Text on Blush is always Crimson, and so is its selection. */
-  --selection: var(--color-crimson);
-  color: var(--color-crimson);
-  font-size: 6px;
-  line-height: 1.35;
+.slice-wheel__hint {
+  margin: 1rem 0 0;
   text-align: center;
+  font-size: 0.9em;
+  opacity: 0.7;
 }
-.slice-wheel__text-edge {
-  display: block;
+.slice-wheel__sign-slot {
+  display: grid;
 }
-.slice-wheel__text-edge--left {
-  float: left;
-  clear: left;
+.slice-wheel__sign-slot > * {
+  grid-area: 1 / 1;
+  align-self: start;
 }
-.slice-wheel__text-edge--right {
-  float: right;
-  clear: right;
+.slice-wheel__hint[data-shown='false'],
+.slice-wheel__sign[data-shown='false'] {
+  visibility: hidden;
 }
-/* The text's first block, which comes right after the floats. */
-.slice-wheel__text-edge + :not(.slice-wheel__text-edge) {
+/* The sign is the wiki's paper tag (see .citation__sign): hung from the
+   chosen slice, now at the bottom, on one string (::before) tied through a
+   punched hole (::after). It swings in from a tilt about the string's top,
+   overshoots and settles a little askew, once the wheel has stopped turning.
+   --string is how far the card hangs below the wheel. */
+.slice-wheel__sign {
+  --string: 1.6rem;
+  position: relative;
+  box-sizing: border-box;
+  width: min(calc(100% - 1rem), 30rem);
+  margin: var(--string) auto 0;
+  padding: 1.35rem 1.1rem 0.9rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: var(--lift-high);
+  text-align: left;
+  rotate: 1.5deg;
+  transform-origin: 50% calc(-1 * var(--string));
+}
+.slice-wheel__sign::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  /* Up past the card's edge and the hole, to just inside the patch's rim. */
+  bottom: calc(100% - 0.75rem);
+  height: calc(var(--string) + 0.75rem + 0.3rem);
+  border-left: 2px solid var(--pin-string);
+  translate: -1px 0;
+}
+.slice-wheel__sign::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0.45rem;
+  width: 7px;
+  height: 7px;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--eyelet);
+  box-shadow: var(--eyelet-shadow);
+}
+.slice-wheel__sign-title {
+  margin: 0 0 0.5rem;
+  color: var(--color-crimson);
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+.slice-wheel__sign-body {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.slice-wheel__sign-body > :first-child {
   margin-top: 0;
 }
-.slice-wheel__text-content > :last-child {
+.slice-wheel__sign-body > :last-child {
   margin-bottom: 0;
 }
-.slice-wheel__text-content p,
-.slice-wheel__text-content ul,
-.slice-wheel__text-content ol {
-  margin: 0.4em 0 0;
+.slice-wheel__sign-body p,
+.slice-wheel__sign-body ul,
+.slice-wheel__sign-body ol {
+  margin: 0.5em 0 0;
   padding: 0;
-  text-align: center;
   list-style-position: inside;
 }
-.site .slice-wheel__text-content a,
-.page-layout article .slice-wheel__text-content :is(p, li) :is(strong, b) {
-  color: var(--color-crimson);
+@media (prefers-reduced-motion: no-preference) {
+  .slice-wheel__sign[data-shown='true'] {
+    /* The same swing as the other tags, after the wheel has turned. */
+    animation: slice-wheel-sign-in 0.6s cubic-bezier(0.3, 1.7, 0.5, 1) 0.6s backwards;
+  }
+}
+@keyframes slice-wheel-sign-in {
+  from {
+    opacity: 0;
+    rotate: -6deg;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slice-wheel__spin,
+  .slice-wheel__label--straight {
+    transition: none;
+  }
 }
 .slice-wheel__error {
   color: var(--error);
