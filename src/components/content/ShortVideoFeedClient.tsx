@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react';
+import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react';
 import type { PeerTubePlayer } from '@peertube/embed-api';
 import { Eye, Heart, Play, Volume2, VolumeX } from 'lucide-react';
 import { renderCaption } from '@/lib/caption-text';
@@ -38,6 +38,9 @@ const BURST_MS = 900;
 // may only talk to igem.org domains, so there's nowhere to store a shared
 // like, and liking on Video Universe itself needs a Video Universe login.
 const LIKES_STORAGE_KEY = 'short-feed-likes';
+// Fired on window when a feed is unmuted, so other feeds on the page mute
+// themselves and only one clip is ever audible.
+const UNMUTE_EVENT = 'short-feed-unmute';
 
 const compactNumber = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
 
@@ -106,6 +109,7 @@ function prefersReducedMotion() {
 // visitor's browser and adds 1 to the like count shown to that visitor
 // only.
 export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
+  const feedId = useId();
   const viewportRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const playersRef = useRef<(PeerTubePlayer | null)[]>([]);
@@ -236,9 +240,26 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
     }
   }, [muted, soundLoaded]);
 
+  // Only the current clip is ever audible: its neighbours are loaded (and
+  // may autoplay once the players are reloaded unmuted) but stay silent.
   useEffect(() => {
-    playersRef.current.forEach((player) => player?.setVolume(muted ? 0 : 1).catch(() => {}));
-  }, [muted, readyTick]);
+    playersRef.current.forEach((player, index) =>
+      player?.setVolume(muted || index !== active ? 0 : 1).catch(() => {}),
+    );
+  }, [muted, active, readyTick]);
+
+  // Unmuting this feed mutes any other feed on the page, and vice versa.
+  useEffect(() => {
+    const onOtherUnmute = (event: Event) => {
+      if ((event as CustomEvent).detail !== feedId) setMuted(true);
+    };
+    window.addEventListener(UNMUTE_EVENT, onOtherUnmute);
+    return () => window.removeEventListener(UNMUTE_EVENT, onOtherUnmute);
+  }, [feedId]);
+
+  useEffect(() => {
+    if (!muted) window.dispatchEvent(new CustomEvent(UNMUTE_EVENT, { detail: feedId }));
+  }, [muted, feedId]);
 
   // A new clip starts with an empty bar; the players' status events fill it.
   useEffect(() => {
