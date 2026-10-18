@@ -65,8 +65,12 @@ export function CitationLink({ href, children, pointTo, alwaysSign, crossPage }:
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
       return;
     }
-
+    // Only tear off a sign that is really hung under the link. One that
+    // isn't open (or has no box) sits at the screen's corner, and the copy
+    // would fall from there.
     const box = sign.getBoundingClientRect();
+    const hung = typeof sign.showPopover !== 'function' || sign.matches(':popover-open');
+    if (!hung || box.width === 0 || box.height === 0) return;
     // The copy hangs in a holder that carries its shadow, which the copy's
     // own clip-path (the tear) would cut off.
     const holder = document.createElement('div');

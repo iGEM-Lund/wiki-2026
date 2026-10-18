@@ -45,7 +45,8 @@ export function useHangingPopover(tagSelector: string, shownWhile: string) {
   function open(event: PointerEvent<HTMLElement> | FocusEvent<HTMLElement>) {
     const anchor = event.currentTarget;
     const tag = anchor.querySelector<HTMLElement>(tagSelector);
-    if (!tag) return;
+    // No Popover API (Safari before 17): the tag is shown by CSS alone.
+    if (!tag || typeof tag.showPopover !== 'function') return;
     window.clearTimeout(closing.current);
     pointer.current = 'clientX' in event ? { x: event.clientX, y: event.clientY } : undefined;
     if (tag.matches(':popover-open')) return;

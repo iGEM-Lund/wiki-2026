@@ -853,7 +853,13 @@ body {
     align-items: flex-start;
     gap: 0.6rem;
     padding: 0 0.75rem;
-    /* One soft shadow for the string, the tags and any open dropdown. */
+  }
+  /* A soft shadow for the string and each tag. Not one filter on the whole
+     nav: Safari clips a filtered element's overflowing, rotated children
+     (the open dropdown lost its left edge), and the dropdown and sign carry
+     their own box-shadow anyway. */
+  .site__nav-string,
+  .site__nav-item {
     filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.16));
   }
   /* The string's ends are tied off at the very top of the screen, above
@@ -6170,6 +6176,13 @@ article .layout__column p {
   align-items: center;
   gap: 4px;
   text-decoration: none;
+}
+/* Not positioned: WebKit paints a position: relative element inside a
+   foreignObject away from where it is laid out (the symptom drifted up over
+   the heading). The tag is a fixed-position popover, so it needs no
+   positioned parent. */
+.symptom-ring__item .term-tip {
+  position: static;
 }
 .symptom-ring__label {
   display: flex;
