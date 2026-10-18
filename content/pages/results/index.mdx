@@ -265,7 +265,7 @@ Biologically, how much enzyme each cell makes depends mainly on how much mRNA it
 
 To predict how the engineered enzyme would behave in the cell, the expression model was linked to a competitive Michaelis–Menten model of testosterone and progesterone conversion This section tests R215A + V263I, the variant selected in the [Enzyme specificity engineering results](https://wiki.igemlund.org/results#enzyme-specificity-engineering). We first show the baseline run and then test how robust it is to the expression and growth settings, the kcat ratio, the docking scores, and random errors in all of them together. Throughout, the speed ratio (t50 of progesterone divided by t50 of testosterone) measures which steroid is converted first.
 
-### Baseline and sweep effect on enzyme activity
+#### **Baseline and sweep effect on enzyme activity**
 
 For R215A + V263I, the culture reaches OD 0.5 and is induced at 1.58 hr. Enzyme per cell then rises to about 3 relative units by 5.58 hr, when both steroids are added at 50 µM. By then the culture is close to its maximum density (about OD 14). After substrate addition, testosterone is consumed first and is nearly gone within about 1.1 hr, with progesterone following within about 1.4 hr (<Ref target="fig-1sg1g" />). The half-times (t50) are 29.1 min for testosterone and 58.5 min for progesterone, a speed ratio (<Formula latex="t50(P) / t50(T)" />) of 2.0 in favour of testosterone.
 
@@ -316,10 +316,10 @@ The distributions of both speed ratio \[t50(P) / t50(T)] and selectivity score o
 </Layout2>
 
 <Card>
-  R215A + V263I is the most promising variant. Its docking-based Km values predict a testosterone preference. This preference is the least affected by a ±0.3 kcal/mol docking shift, and the variant survives the random-error draws against the WT control. Expression and growth settings change how fast the steroids are consumed but barely change which one is consumed first. The ranking is still a prediction, because the kcat ratio is unknown and docking error is larger than most differences between variants.
+  **R215A + V263I is the most promising variant. Its docking-based Km values predict a testosterone preference.** This preference is the least affected by a ±0.3 kcal/mol docking shift, and the variant survives the random-error draws against the WT control. **Expression and growth settings change how fast the steroids are consumed, but binding energy shows which steroid is preferred first.** The ranking is still a prediction, because the kcat ratio is unknown and docking error is larger than most differences between variants.
 </Card>
 
-**Overall findings:**
+#### **Overall findings:**
 
 * **Target selection:** Of the two enzymes, only ci2350 offered a way to favour testosterone, since in AKR1D1 the mutated residues sit too far from C17 to tell the two steroids apart.
 * **Best candidate:** R215A + V263I is the strongest design. It works by weakening progesterone binding while testosterone binding stays strong, and the enzyme stays stable.
