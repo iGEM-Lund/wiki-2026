@@ -1,7 +1,7 @@
 ---
 title: Modeling
 ---
-## Overview
+## **Overview**
 
 **AnTigone** targets hyperandrogenism driven by the gut-androgen axis, a pathway in which colonic bacteria convert steroid precursors into bioactive androgens, particularly testosterone, which are then reabsorbed into circulation. Our dry-lab work asks which engineered enzyme variants are worth building to reduce testosterone, and how those variants would be expected to behave once placed in a living bacterial system.&#x20;
 
@@ -19,7 +19,7 @@ This problem cannot be addressed experimentally without first knowing which vari
 
 Binding affinity alone, however, does not predict how a variant would behave in a bacterial system. **Cell growth, enzyme expression levels, and competition between substrates all shape the outcome**, and a variant that binds testosterone well in isolation may still perform poorly when those factors are considered.
 
-## Our approach
+## **Our approach**
 
 Our dry lab work addresses both challenges through two integrated strands.
 
@@ -34,7 +34,9 @@ Our dry lab work addresses both challenges through two integrated strands.
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/specificity-modelling.avif" alt="Pipeline showing how to increase specificity towards testosterone" caption="Computational pipeline for engineering steroid substrate specificity. Structures from the PDB (AKR1D1, 3CAV) or AlphaFold (ci2350) were prepared for docking; the functional pocket was confirmed with fpocket v4.0 and CD Search; testosterone and progesterone were docked in AutoDock Vina 1.2 to identify residues within 4 Å of C17; mutants there were screened in PyRosetta (ΔΔG > +5 REU excluded) and re-docked for selectivity." numbered refId="fig-2ti4x" scale={100} plain={false} noZoom={false} />
 
-### Protein structure acquisition
+### **Structural Analysis and Active-Site Mapping**
+
+#### **Protein structure acquisition**
 
 Three-dimensional structures for the two candidate enzymes were obtained through different routes, reflecting the availability of experimental data for each. The human AKR1D1 structure was retrieved from the RCSB Protein Data Bank ([PDB entry 3CAV](https://www.rcsb.org/structure/3CAV)) (<Citation reference="berman-et-al-2000" narrative={false} />), resolved at 1.90 Å in complex with NADPH (<Citation reference="faucher-et-al-2008" narrative={false} />).&#x20;
 
@@ -44,13 +46,13 @@ No experimentally determined structure was available for ci2350. A three-dimensi
 
 <MoleculeViewer modelUrl="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/c12350.glb" format="glb" style="cartoon" caption="AlphaFold v2.2.0 model of ci2350 from *Clostridium innocuum*. Per-residue confidence exceeded 90 (very high) across the model." refId="mod-iwdp3" />
 
-### Structure preparation
+#### **Structure preparation**
 
 All structures were prepared following the standard AutoDock receptor preparation protocol (<Citation reference="eberhardt-et-al-2021" narrative={false} />; <Citation reference="morris-et-al-2009" narrative={false} />). Water molecules and non-essential heteroatoms were removed. NADPH was present in the PDB structure of AKR1D1 and was retained to preserve the biologically relevant binding geometry. For ci2350, no cofactor is present, since it is a predicted structure.&#x20;
 
 Hydrogen atoms were added, and <Tooltip text="Whether each chemical group carries an extra hydrogen ion at a given pH.">protonation states</Tooltip> were assigned at **physiological pH (7.4)**, consistent with standard receptor preparation for molecular docking (<Citation reference="morris-et-al-2009" narrative={false} />). Structures were then converted to <Tooltip text="The file format AutoDock uses for docking inputs, storing atom positions, charges and rotatable bonds.">PDBQT</Tooltip> format using MGLTools (prepare\_receptor4.py) (<Citation reference="morris-et-al-2009" narrative={false} />), which assigns <Tooltip text="A fast method for estimating the electric charge on each atom.">Gasteiger partial charges</Tooltip> and defines rotatable bonds for the docking software.
 
-### Ligand preparation
+#### **Ligand preparation**
 
 Testosterone and progesterone share the four-ring steroid scaffold, with rings labeled A to D from the end bearing the C3 ketone (<Citation reference="the-nomenclature-of-steroids-1989" narrative={false} />). They are identical across rings A to C, including the Δ4-3-keto motif on the A ring that is the site of reduction, and differ only at the C17 substituent on the D ring, with 17β-hydroxyl in testosterone and an acetyl group in progesterone (<Ref target="mod-zqfnc" /> and <Ref target="mod-az7ct" />, below).
 
@@ -66,11 +68,11 @@ Testosterone and progesterone share the four-ring steroid scaffold, with rings l
 
 Both ligands were retrieved from PubChem ([CID 6013](https://pubchem.ncbi.nlm.nih.gov/compound/6013) and [CID 5994](https://pubchem.ncbi.nlm.nih.gov/compound/5994), respectively) (<Citation reference="kim-et-al-2025" narrative={false} />) as three-dimensional SDF structures. Each ligand was processed using MGLTools (prepare\_ligand4.py) (<Citation reference="morris-et-al-2009" narrative={false} />) to assign partial charges and define rotatable bonds, generating PDBQT files for docking input. No additional energy minimization was performed prior to docking, as AutoDock Vina performs internal conformational sampling through multiple independent search runs during the docking process (<Citation reference="eberhardt-et-al-2021" narrative={false} />).
 
-### Conserved domain analysis
+#### **Conserved domain analysis**
 
 The sequence of each candidate enzyme was submitted to the NCBI [Conserved Domain Search (CD Search)](https://www.ncbi.nlm.nih.gov/Structure/cdd/wrpsb.cgi) (<Citation reference="marchler-bauer-et-al-2017" narrative={false} />), which compares a query sequence against the Conserved Domain Database (CDD) to identify evolutionarily <Tooltip text="Stretches of protein found across a family of related proteins, usually because they matter for function.">conserved functional domains</Tooltip> and their annotated residue positions. These annotations cover substrate binding, cofactor coordination and catalytic function, and are inferred from structurally and biochemically characterized members of the same protein family. They provided a sequence-level map of the expected functional site and served as the reference for interpreting and validating the predicted active site pockets.
 
-#### &#x20;**For AKR1D1:**&#x20;
+#### &#x20;For AKR1D1:&#x20;
 
 CD Search assigned the query sequence ([NP\_005980.1](https://www.ncbi.nlm.nih.gov/protein/NP_005980.1/)) to the AKR\_AKR1D1-3 family within the aldo-keto reductase superfamily, returning 32 annotated active site positions and a separately annotated <Tooltip text="The four residues that together carry out the chemical reaction.">catalytic tetrad (</Tooltip><Ref target="fig-rqmx8" /> and <Ref target="tab-vaps6" />).
 
@@ -82,7 +84,7 @@ The enzyme uses NADPH and a conserved catalytic tetrad of D53, Y58, K87 and E120
   | G24, T25, Y26, D53, Y58, K87, W89, E120, Y132, S169, N170, Q193, Y219, S220, P221, L222, G223, T224, S225, W230, L239, A256, I271, P272, K273, S274, F275, N276, R279, E282, N283, W314 | D53, Y58, K87, E120  |
 </TableWithCaption>
 
-#### **For ci2350:**&#x20;
+#### For ci2350:&#x20;
 
 For ci2350, CD Search assigned the query sequence to the **OYE\_like\_FMN\_family** within the TIM barrel superfamily (<Ref target="tab-wyozm" />), returning annotated tracks for the active site, substrate binding site, FMN binding site and a putative catalytic residue (<Ref target="fig-f2bmm" />).
 
@@ -110,8 +112,6 @@ The domain covers the N-terminal half of the 642-residue protein, and all annota
       <LayoutColumn>
         **ci2350**&#x20;
 
-        &#x20;&#x20;
-
         <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/cdsearch-ci2350.avif" alt="CD search image" caption="NCBI CD Search result for ci2350, assigning the sequence to the OYE_like_FMN_family within the TIM barrel superfamily." numbered refId="fig-f2bmm" scale={100} plain={false} noZoom={false} />
 
         &#x20;&#x20;
@@ -122,11 +122,11 @@ The domain covers the N-terminal half of the 642-residue protein, and all annota
   &#x20;&#x20;
 </Card>
 
-### Active site identification
+#### **Active site identification**
 
 Binding pockets were identified computationally using fpocket v4.0 (<Citation reference="le-guilloux-et-al-2009" narrative={false} />), which detects cavities through Voronoi tessellation and alpha-sphere clustering and returns a ranked list of candidate pockets, each described by geometric and physicochemical descriptors. These predicted pockets were then cross-referenced against residue annotations from NCBI CD Search to identify which pocket best corresponded to the known catalytic and substrate-binding residues of each enzyme family. The pocket showing the greatest agreement with the annotated functional site was selected.
 
-#### **For AKR1D1:**
+#### For AKR1D1:
 
 fpocket identified 22 candidate pockets in the AKR1D1 structure. Cross-referencing against the CD Search annotations showed a single dominant match: Pocket 1 contained 29 of the 32 annotated active site residues and all four members of the catalytic tetrad (<Ref target="tab-ogugt" />). The remaining pockets carried five or fewer annotated residues each, and twelve contained none. Pocket 1 was therefore selected as the functional active site.
 
@@ -170,11 +170,13 @@ Because Pocket 1 did not capture every annotated residue in either enzyme, the b
   | **Size z (Å)**   | 20.0       | 22.0       |
 </TableWithCaption>
 
-### Molecular docking&#x20;
+### **Establishing the Selectivity Baseline** &#x20;
+
+#### **Molecular docking**&#x20;
 
 Docking was performed using AutoDock Vina 1.2 (<Citation reference="eberhardt-et-al-2021" narrative={false} />) with an <Tooltip text="A docking setting: higher values search more thoroughly.">exhaustiveness</Tooltip> setting of 32 and an energy range of 4 kcal/mol. Vina combines a stochastic global search for scoring, which samples ligand position, orientation and torsion angles, with local gradient-based optimization that refines promising candidates into nearby energy minima.
 
-Each ligand was docked independently into each prepared enzyme structure, and the top-ranked pose was recorded along with its predicted binding affinity in kcal/mol. To establish a selectivity baseline, we defined a selectivity score as the difference in predicted affinity between testosterone and progesterone, **ΔG(testosterone) – ΔG(progesterone)**. A **negative value indicates that testosterone** is preferred by the enzyme. The inherent stochastic variability of the Vina scoring function, approximately ±0.5 kcal/mol, was treated as the noise threshold (<Citation reference="eberhardt-et-al-2021" narrative={false} />), and selectivity differences below this value were not considered meaningful.
+Each ligand was docked independently into each prepared enzyme structure, and the top-ranked pose was recorded along with its predicted binding affinity in kcal/mol. To establish a selectivity baseline, we defined a **selectivity score** as the difference in predicted affinity between testosterone and progesterone, **ΔG(testosterone) – ΔG(progesterone)**. A **negative value indicates that testosterone** is preferred by the enzyme. The inherent stochastic variability of the Vina scoring function, approximately ±0.5 kcal/mol, was treated as the noise threshold (<Citation reference="eberhardt-et-al-2021" narrative={false} />), and selectivity differences below this value were not considered meaningful.
 
 After docking, the two enzymes gave comparable absolute affinities but opposite directions of preference (<Ref target="tab-sznaf" />).&#x20;
 
@@ -227,13 +229,15 @@ ci2350 showed a marginal preference for testosterone (−0.1 kcal/mol, \~1.2-fol
   </LayoutColumn>
 </Layout2>
 
-**Neither wild-type meets the selectivity requirement, and both were taken forward to contact analysis.**&#x20;
+<Card>
+  **Neither wild-type meets the selectivity requirement, and both were taken forward to contact analysis.**&#x20;
+</Card>
 
-### Contact analysis and residue identification
+#### **Contact analysis and residue identification**
 
 From the top-ranked docking pose, all enzyme residues within 4 Å of each docked ligand were identified. This is a standard cut-off for direct protein–ligand contacts and captures residues involved in <Tooltip text="Weak attractions between atoms that are very close to each other.">van der Waals</Tooltip> interactions and short-range <Tooltip text="Attraction or repulsion between electrically charged groups.">electrostatics</Tooltip> (<Citation reference="le-guilloux-et-al-2009" narrative={false} />). Residues in proximity to the C17 position were given particular attention, as this is the only position at which the two substrates differ, as discussed previously in the ligand preparation (<Citation reference="chen-et-al-2014" narrative={false} />).
 
-#### **For AKR1D1:**
+#### For AKR1D1:
 
 Both substrates share an identical Δ4-3-keto motif on the A ring, so the residues recognizing that end cannot distinguish between them. Hence, the six shared contacts, two of which (Y58, E120) are the catalytic tetrad (<Ref target="tab-53c3s" />), confirm that both ligands dock in a catalytically productive orientation.
 
@@ -247,7 +251,7 @@ Progesterone contacts two hydrophobic residues, **V309** and **L311**, which can
   | **Testosterone only**      | I57                              | 17β-hydroxyl contacts – targeted to favor testosterone                                                    |
 </TableWithCaption>
 
-#### **For ci2350:**
+#### For ci2350:
 
 As in AKR1D1, the shared contacts cluster around the conserved Δ4-3-keto end of the molecule and include the catalytic residue, indicating that both ligands adopt a productive orientation. Y167 was excluded from mutagenesis, since altering it would be expected to compromise catalysis rather than selectivity.
 
@@ -261,13 +265,13 @@ As in AKR1D1, the shared contacts cluster around the conserved Δ4-3-keto end of
   | **Testosterone only**      | V59, F71, Q100, M254, L259                        | 17β-hydroxyl contacts – targeted to favor testosterone                                                             |
 </TableWithCaption>
 
-### Rational mutagenesis
+#### **Rational mutagenesis**
 
 Rational mutagenesis is a protein engineering approach in which specific amino acid substitutions are chosen in advance from structural and mechanistic knowledge of the enzyme, rather than generating them at random and screening (<Citation reference="lutz-et-al-2010" narrative={false} />).
 
 The residues in <Ref target="tab-53c3s" /> and <Ref target="tab-zkjil" /> were substituted on physicochemical grounds, altering the size, polarity or hydrogen-bonding capacity of the pocket near C17 in a direction consistent with a shift towards testosterone (<Citation reference="alford-et-al-2017" narrative={false} />). Both single-point variants and multi-residue combinations were designed for both enzymes.
 
-#### **For AKR1D1:**
+#### For AKR1D1:
 
 At V309 and L311, the substitutions cover three different mechanisms: serine (S) and threonine (T) shrink the side chain and add polarity to the pocket; tyrosine (Y), phenylalanine (F) and tryptophan (W) fill the cavity so the acetyl group has less room; and glutamate (E) and lysine (K) place a charge against a neutral substituent (<Ref target="tab-6z476" />). Comparing them should indicate which property actually governs discrimination towards progesterone.
 
@@ -281,7 +285,7 @@ At I57, all five substitutions replace an aliphatic side chain with one capable 
   | **Combinations**                            | V309 + L311,V309 + L311 + I57 | Various combination              | Test additive effect of multiple substitutions                    |
 </TableWithCaption>
 
-#### **For ci2350:**
+#### For ci2350:
 
 At A107 and V263, the substitutions add volume, narrowing the space progesterone’s acetyl group occupies. For R215, the approach is removal rather than bulk. R215A and R215G strip the side chain back, which would eliminate any hydrogen bond it forms with the acetyl carbonyl (<Ref target="tab-0fpp0" />).
 
@@ -295,7 +299,9 @@ For testosterone, F71Y adds a hydroxyl to an aromatic ring already in contact wi
   | **Combinations**                            | Multiple positions | Various combination                 | Test additive effects across both strategies                                                                      |
 </TableWithCaption>
 
-### Stability screening
+### **Screening and mutant analysis**
+
+#### **Stability screening**
 
 Structural stability was evaluated using PyRosetta (<Citation reference="chaudhury-et-al-2010" narrative={false} />) with the ref2015 scoring function (<Citation reference="alford-et-al-2017" narrative={false} />). The ref2015 function returns a single score summing van der Waals packing, hydrogen bonding, electrostatics, implicit solvation and backbone and sidechain torsional strain, with lower, more negative values corresponding to a better-packed and more stable structure.
 
@@ -303,7 +309,7 @@ Local <Tooltip text="Re-optimising the positions of nearby amino acid side chain
 
 Variants with ΔΔG above +5 <Tooltip text="Rosetta Energy Units, the score PyRosetta uses. Lower means more stable.">REU</Tooltip> were excluded; those below this threshold were considered structurally acceptable and advanced to docking (<Citation reference="alford-et-al-2017" narrative={false} />; <Citation reference="kellogg-et-al-2011" narrative={false} />). The threshold is deliberately permissive. It is set to reject severely destabilized variants, such as unresolvable steric clashes or lost buried hydrogen bonds.
 
-#### **For AKR1D1:**
+#### For AKR1D1:
 
 24 designed variants were evaluated for stability checks, where **13 passed the +5 REU threshold** and were carried forward; 11 were excluded (<Ref target="tab-74y2k" />).
 
@@ -338,7 +344,7 @@ Variants with ΔΔG above +5 <Tooltip text="Rosetta Energy Units, the score PyRo
 
 V309 is tightly packed and rejected every aromatic substitution, with tyrosine and phenylalanine returning values above +770 REU, resulting in clashes. L311 tolerated every substitution, including tyrosine and phenylalanine, making it the better position for adding bulkier ones. At I57, only short polar side chains passed, threonine failing where serine succeeded. Combinations containing V309Y or V309W were excluded regardless of their partner.&#x20;
 
-#### **For ci2350:**
+#### For ci2350:
 
 31 designed variants were evaluated, where **17 passed the +5 REU threshold** and were carried forward; 14 were excluded (<Ref target="tab-m5xzn" />).
 
@@ -380,11 +386,11 @@ V309 is tightly packed and rejected every aromatic substitution, with tyrosine a
 
 A107 failed at every substitution, with values from +18 to +57 REU, so the alanine cannot absorb any added bulk, and even every combination containing A107 failed, regardless of its partner. R215 was the opposite: all three substitutions passed, and R215A was mildly stabilizing, meaning the arginine can be removed without structural cost. Among the testosterone-directed designs, Q100S, Q100T and V59S were clearly stabilizing, while F71Y and V59T fell just outside the threshold. The combinations that survived are those built on R215 and V263.
 
-### Mutant docking and candidate prioritization
+#### **Mutant docking and candidate prioritization**
 
 All variants passing the stability threshold were subjected to the same docking protocol as the wild-type enzyme, with testosterone and progesterone docked independently and selectivity scores calculated as before. Variants demonstrating a consistent selectivity shift beyond the noise threshold were identified as priority candidates for experimental characterization.&#x20;
 
-#### **For AKR1D1:**
+#### For AKR1D1:
 
 <TableWithCaption caption="Mutant docking results for AKR1D1 (top-ranked variants)." refId="tab-h4s3i">
   | **Variant**                       | **Progesterone(kcal/mol)** | **Testosterone(kcal/mol)** | **Selectivity(ΔGT − ΔGP)** | **Outcome**          |
@@ -399,7 +405,7 @@ All variants passing the stability threshold were subjected to the same docking 
 
 No AKR1D1 variant shifted selectivity meaningfully. The three best mutants, V309S, V309E and I57Y moved the score by just 0.1 kcal/mol (<Ref target="tab-h4s3i" />), well within the noise threshold, and every variant kept a positive score, so progesterone remained preferred throughout. None of the substitutions tested was able to redirect AKR1D1 towards testosterone.
 
-#### **For ci2350:**
+#### For ci2350:
 
 <TableWithCaption caption="Mutant docking results for ci2350 (top-ranked variants)." refId="tab-abuyo">
   | **Variant**                         | **Progesterone(kcal/mol)** | **Testosterone(kcal/mol)** | **Selectivity(ΔGT − ΔGP)** | **Outcome**                                |
@@ -415,9 +421,7 @@ No AKR1D1 variant shifted selectivity meaningfully. The three best mutants, V309
 The combination mutation of **R215A + V263I** is the clear leading candidate, with a selectivity score of **−0.9 kcal/mol** and a shift of **−0.8** against the wild-type, and the only variant to exceed the noise threshold (<Ref target="tab-abuyo" />). It is also the only one where testosterone binding improved in absolute terms while progesterone binding weakened, so the gain comes from both directions at once. The other candidates gained selectivity by losing affinity. &#x20;
 
 <Card>
-  R215A + V263I was therefore selected as one of the candidates for experimental characterization. The detailed analysis of variant specificity towards testosterone is presented on the [Results](/results) page.
-
-  &#x20;&#x20;
+  **R215A + V263I was therefore selected as one of the candidates for experimental characterisation.** The detailed analysis of variant specificity towards testosterone is presented on the [Results](/results) page.
 </Card>
 
 **The complete implementation of the pipeline for enzyme specificity analysis is available on GitLab (Link)**
