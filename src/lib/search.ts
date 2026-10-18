@@ -68,6 +68,13 @@ function countOccurrences(haystack: string, needle: string): number {
   return count;
 }
 
+function startsWord(haystack: string, needle: string): boolean {
+  for (let i = haystack.indexOf(needle); i !== -1; i = haystack.indexOf(needle, i + 1)) {
+    if (i === 0 || !/[\p{L}\p{N}]/u.test(haystack[i - 1])) return true;
+  }
+  return false;
+}
+
 function score(record: SearchRecord, terms: string[], phrase: string): number {
   const { pageTitle, heading, text } = record.folded;
   let total = 0;
@@ -78,6 +85,8 @@ function score(record: SearchRecord, terms: string[], phrase: string): number {
     // Every term has to appear somewhere in the section or its page title.
     if (!inTitle && !inHeading && hits === 0) return 0;
     total += (inTitle ? 8 : 0) + (inHeading ? 6 : 0) + Math.min(hits, 5);
+    // A match starting a word beats one buried inside another ("cell" over "excellent").
+    if (startsWord(text, term) || startsWord(heading, term)) total += 3;
   }
   if (terms.length > 1 && (heading.includes(phrase) || text.includes(phrase))) total += 6;
   return total;

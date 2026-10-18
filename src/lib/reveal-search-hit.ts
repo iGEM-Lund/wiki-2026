@@ -13,7 +13,7 @@ const EXPANDABLE_OPEN_MS = 450;
 
 // Text that's on the page but not in the search index, so a match in it
 // isn't the one the result showed.
-const SKIP = 'script, style, svg, .page-title, .citation, .katex';
+const SKIP = 'script, style, svg, .page-title, .citation__sign, .katex';
 const HEADINGS = 'h1, h2, h3, h4, h5, h6';
 
 // Outline headings delimit sections in the index; headings inside an

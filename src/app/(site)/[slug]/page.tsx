@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { reader } from '@/lib/keystatic/reader';
 import { renderMdx } from '@/lib/mdx/render';
-import { resolveCitedReferences, toReferenceLookup } from '@/lib/references';
+import { REFERENCES_ID, resolveCitedReferences, toReferenceLookup } from '@/lib/references';
 import { buildHeadingTree } from '@/lib/headings';
 import { TableOfContents } from '@/components/table-of-contents';
 import { SectionHeading } from '@/components/section-heading';
@@ -55,7 +55,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
         {nextPage ? <NextPageLink page={nextPage} /> : null}
         {citedReferences.length > 0 ? (
           <section className="references">
-            <SectionHeading>References</SectionHeading>
+            <SectionHeading id={REFERENCES_ID}>References</SectionHeading>
             <ol>
               {citedReferences.map((ref) => (
                 <li key={ref.slug} id={`ref-${ref.slug}`}>

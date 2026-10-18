@@ -434,7 +434,7 @@ The combination mutation of **R215A + V263I** is the clear leading candidate, wi
 
 Biological systems combine processes that run at different speeds and affect one another, so the outcome of an experiment is rarely obvious from the individual parts. Mathematical models address this by describing each process with an equation whose terms correspond to defined biological events (<Citation reference="kraikivski-et-al-2023" narrative={false} />). These equations are <Tooltip text="Equations describing how quantities change continuously over time.">Ordinary Differential Equations (ODEs)</Tooltip>, solved numerically. Writing the system this way states every assumption openly and lets us change one parameter at a time, which is rarely practical at the bench (<Citation reference="alon-et-al-2006" narrative={false} />).
 
-The specificity analysis found no AKR1D1 variant that shifted preference towards testosterone, while ci2350 produced several promising candidates, so the **model was built around ci2350 alone**. These findings are described on the [Results page](https://wiki.igemlund.org/results#enzyme-specificity-engineering).
+The specificity analysis found no AKR1D1 variant that shifted preference towards testosterone, while ci2350 produced several promising candidates, so the **model was built around ci2350 alone**. These findings are described on the [Results page](/results#enzyme-specificity-engineering).
 
 ### **Integrated growth and expression model**
 
@@ -522,7 +522,7 @@ Sweeps change one parameter at a time, whereas in practice all of them are uncer
 
 The analysis was run three times: with only the growth parameters (K, µmax) varied, with only the expression parameters (α, δm) varied, and with all four varied together. Comparing the three shows which layer contributes most to the uncertainty in the enzyme level and we reported the mean and the 95% interval.
 
-The results of both per-parameter sweep and Monte Carlo analyses of enzyme production are presented on the [Results page](https://wiki.igemlund.org/results#mathematical-modelling-of-enzyme-production-and-activity). The scripts for the integrated model are available on GitLab (Link).
+The results of both per-parameter sweep and Monte Carlo analyses of enzyme production are presented on the [Results page](/results#mathematical-modelling-of-enzyme-production-and-activity). The scripts for the integrated model are available on GitLab (Link).
 
 ### **Enzyme activity model**
 
@@ -640,7 +640,7 @@ A negative ΔΔG\_T–P means that the variant binds testosterone more tightly t
 
 The activity layer adds more uncertain values, such as kcat, E\_scale, the wild-type Km,P and the docking scores, on top of the uncertain expression parameters, so two checks were run.
 
-For the variant with the largest predicted preference, R215A + V263I (see [Result page](https://wiki.igemlund.org/results#enzyme-specificity-engineering)), each parameter was varied by ±20% with the others held at baseline, and the progesterone docking score was shifted by ±0.3 kcal/mol to see how a small docking error changes the outcome. The expression settings were swept more widely: α from 0.25 to 4 times baseline, β from 0.4 to 12 times, and the induction point from OD600 0.3 to 1.0.
+For the variant with the largest predicted preference, R215A + V263I (see [Results page](/results#enzyme-specificity-engineering)), each parameter was varied by ±20% with the others held at baseline, and the progesterone docking score was shifted by ±0.3 kcal/mol to see how a small docking error changes the outcome. The expression settings were swept more widely: α from 0.25 to 4 times baseline, β from 0.4 to 12 times, and the induction point from OD600 0.3 to 1.0.
 
 #### **Uncertainty analysis of activity**
 
@@ -650,7 +650,7 @@ Each variant was compared against a wild type given the same random expression a
 
 What comes out is a percentage for each variant: how often testosterone is preferred, and how often the variant beats the wild type. The wild type was also compared against a second random copy of itself, which shows how often a difference appears purely by chance when there is no real one.
 
-The results of activity modeling are presented on the [Results page](/model#enzyme-activity-model). The scripts for the integrated model are available on GitLab (Link).
+The results of activity modeling are presented on the [Results page](/results#prediction-of-activity-model). The scripts for the integrated model are available on GitLab (Link).
 
 ## Limitations&#x20;
 

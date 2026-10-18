@@ -1,5 +1,8 @@
 import { reader } from '@/lib/keystatic/reader';
 
+// The References heading's anchor, which search results for the list link to.
+export const REFERENCES_ID = 'page-references';
+
 export type CitedReference = { slug: string; shortForm: string; longForm: string };
 
 // fields.mdx() stores raw MDX source text, not a parsed AST, so cited
@@ -11,7 +14,7 @@ export type CitedReference = { slug: string; shortForm: string; longForm: string
 const CITATION_TAG = /<Citation\b[^>]*\/>/g;
 const REFERENCE_ATTR = /reference\s*=\s*"([^"]*)"/;
 
-function extractCitedSlugs(source: string): string[] {
+export function extractCitedSlugs(source: string): string[] {
   const slugs = new Set<string>();
   for (const [tag] of source.matchAll(CITATION_TAG)) {
     const match = REFERENCE_ATTR.exec(tag);

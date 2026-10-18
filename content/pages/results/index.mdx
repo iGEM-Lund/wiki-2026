@@ -15,7 +15,7 @@ Structures were obtained from the PDB (AKR1D1, [**3CAV**](https://www.rcsb.org/s
 
 Residues within **4 <Tooltip text="Angstrom: unit of length equaling 10^−10 m">Å</Tooltip>** of each docked ligand were sorted by which substrate they contacted. This identified three specificity determinants in AKR1D1 (**V309, L311, I57**) and six in ci2350 (**A107, R215, V263, V59, F71, Q100**). Substitutions at these positions were designed to weaken progesterone binding or strengthen testosterone binding, then screened for structural stability in **PyRosetta**. Of 24 AKR1D1 variants, 13 passed the **+5 REU** threshold; of 31 ci2350 variants, 17 passed. These variants were then docked with both substrates to assess their specificity towards testosterone.
 
-The full workflow for both AKR1D1 and ci2350, from protein structure acquisition through to stability screening, is described on the [Modeling page](/model#enzyme-specificity-engineering).&#x20;
+The full workflow for both AKR1D1 and ci2350, from protein structure acquisition through to stability screening, is described on the [Model page](/model#enzyme-specificity-engineering).&#x20;
 
 ### **Docked poses of the AKR1D1 variants**
 
@@ -168,7 +168,7 @@ V263K also reaches −0.5 kcal/mol selectivity, but by a different route. The lo
 </Layout2>
 
 <Card refId="card-7vrvs">
-  **Overall, docking showed that AKR1D1 cannot be engineered towards testosterone with the positions identified. Every substitution moved both steroids by the same amount, because none of the mutated side chains reaches the C17 group, and the selectivity stayed at about +0.5 kcal/mol. In ci2350, R215A + V263I was the only variant to shift the preference beyond the scoring noise (−0.1 to −0.9 kcal/mol), with testosterone affinity kept and stability neutral. R215A + V263I + Q100T is the more stable fallback, and V263K is a simple single-point option that loses affinity. R215A + V263I was therefore taken into the activity model** [(Modeling)](/model#enzyme-activity-model).
+  **Overall, docking showed that AKR1D1 cannot be engineered towards testosterone with the positions identified. Every substitution moved both steroids by the same amount, because none of the mutated side chains reaches the C17 group, and the selectivity stayed at about +0.5 kcal/mol. In ci2350, R215A + V263I was the only variant to shift the preference beyond the scoring noise (−0.1 to −0.9 kcal/mol), with testosterone affinity kept and stability neutral. R215A + V263I + Q100T is the more stable fallback, and V263K is a simple single-point option that loses affinity. R215A + V263I was therefore taken into the activity model** [(Model)](/model#enzyme-activity-model).
 </Card>
 
 ## **Mathematical modelling of enzyme production and activity**
@@ -183,7 +183,7 @@ Because this layer depends on binding, it is tied to the specificity work. Since
 
 Most parameters are literature values rather than measurements from our own strain, so the model was tested rather than taken at face value. Each was varied by **±20% one at a time** to see which ones the output depends on, and a Monte Carlo analysis drew all of them at random together to check whether the conclusions hold across the plausible range. The results of both analyses were reported below.
 
-The full description of the three layers, their equations, and assumptions is on the [Modelling page](https://wiki.igemlund.org/model#mathematical-modeling-of-enzyme-production-and-activity).
+The full description of the three layers, their equations, and assumptions is on the [Model page](https://wiki.igemlund.org/model#mathematical-modeling-of-enzyme-production-and-activity).
 
 ### **Prediction of integrated enzyme production model**
 
@@ -263,7 +263,7 @@ Biologically, **how much enzyme each cell makes depends mainly on how much mRNA 
 
 ### **Prediction of activity model**
 
-To predict how the engineered enzyme would behave in the cell, the **expression model was linked to a competitive Michaelis–Menten model** of testosterone and progesterone conversion This section tests **R215A + V263I**, the variant selected in the [Enzyme specificity engineering results](https://wiki.igemlund.org/results#enzyme-specificity-engineering). We first show the baseline run and then test how robust it is to the expression and growth settings, the kcat ratio, the docking scores, and random errors in all of them together. Throughout, the speed ratio<Formula latex="t50(P)/t50(T)" /> measures which steroid is converted first.
+To predict how the engineered enzyme would behave in the cell, the **expression model was linked to a competitive Michaelis–Menten model** of testosterone and progesterone conversion This section tests **R215A + V263I**, the variant selected in the [Enzyme specificity engineering results](/results#enzyme-specificity-engineering). We first show the baseline run and then test how robust it is to the expression and growth settings, the kcat ratio, the docking scores, and random errors in all of them together. Throughout, the speed ratio<Formula latex="t50(P)/t50(T)" /> measures which steroid is converted first.
 
 #### **Baseline and sweep effect on enzyme activity**
 
