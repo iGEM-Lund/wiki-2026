@@ -505,20 +505,20 @@ The enzyme is the opposite. It is built from those messages at rate β. We assum
 Bacterial messages break down within minutes of being made (<Citation reference="bernstein-et-al-2002" narrative={false} />). We used a half-life (3 to 8 mins) to predict the decay constants <Formula latex="(δ = ln2 / t½)" /> range and used their average of 9.53 h⁻¹. The transcription rate (α) and translation rate (β) are placeholders, as neither has been measured for ci2350 (<Ref target="tab-aqmwv" />).
 
 <TableWithCaption caption="Parameters of the expression model" refId="tab-aqmwv">
-  | **Parameter**                | **Value**              | **Source**                               |
-  | ---------------------------- | ---------------------- | ---------------------------------------- |
-  | **Transcription rate (α)**   | 5 (relative units h⁻¹) | Placeholder                              |
-  | **mRNA decay constant (δm)** | 9.53 h⁻¹               | (ask Elenora) Literature range, midpoint |
-  | **Translation rate (β)**     | 3 h⁻¹                  | Placeholder                              |
+  | **Parameter**                | **Value**              | **Source**                |
+  | ---------------------------- | ---------------------- | ------------------------- |
+  | **Transcription rate (α)**   | 5 (relative units h⁻¹) | Placeholder               |
+  | **mRNA decay constant (δm)** | 9.53 h⁻¹               | Half-life range, midpoint |
+  | **Translation rate (β)**     | 3 h⁻¹                  | Placeholder               |
 </TableWithCaption>
 
 #### **Mathematical simulation and sensitivity of the enzyme level**
 
-The integrated three-equation system was solved in R using the deSolve package (<Citation reference="soetaert-et-al-2010" narrative={false} />), with the <Tooltip text="A standard numerical method for solving differential equations.">Runge–Kutta</Tooltip> method ode45 over 24 h in 100 time steps, starting from X = 0.05, m = 0 and E = 0. Since several parameters are assumptions or literature ranges rather than measurements, we then asked how much the result depends on them, and which the experiments should pin down first (<Citation reference="saltelli-et-al-2008" narrative={false} />). Each of K, µmax, α and δm was swept by **±20% around its baseline** individually, a standard window for local sensitivity, and the whole system was re-run at every step, recording culture density, mRNA level and enzyme level after 24 h as a percentage change from baseline. Because all three are recorded together, a single run shows how much the enzyme level moves and how a growth parameter affects expression, and vice versa. β was not varied separately since the enzyme level depends on α and β only through their product.
+The integrated three-equation system was solved in R using the deSolve package (<Citation reference="soetaert-et-al-2010" narrative={false} />), with the <Tooltip text="A standard numerical method for solving differential equations.">Runge–Kutta</Tooltip> method ode45 over **24 h in 100 time steps**, starting from **X = 0.05, m = 0** and **E = 0**. Since several parameters are assumptions or literature ranges rather than measurements, we then asked how much the result depends on them, and which the experiments should pin down first (<Citation reference="saltelli-et-al-2008" narrative={false} />). Each of K, µmax, α and δm was swept by **±20% around its baseline** individually, a standard window for local sensitivity, and the whole system was re-run at every step, recording culture density, mRNA level and enzyme level after 24 h as a percentage change from baseline. Because all three are recorded together, a single run shows how much the enzyme level moves and how a growth parameter affects expression, and vice versa. β was not varied separately since the enzyme level depends on α and β only through their product.
 
 #### **Uncertainty analysis of the enzyme level**
 
-Sweeps change one parameter at a time, whereas in practice all of them are uncertain together. We therefore ran a <Tooltip text="Repeating a calculation many times with randomly drawn inputs to see how uncertain the result is.">Monte Carlo analysis</Tooltip> (<Citation reference="saltelli-et-al-2008" narrative={false} />), drawing **500 parameter sets at random**, each value taken from a distribution centred on its baseline with a spread of 10%, and recorded the enzyme level after 24 h for each. The 10% is an assumed level of uncertainty, not a measured one.
+Sweeps change one parameter at a time, whereas in practice all of them are uncertain together. We therefore ran a <Tooltip text="Repeating a calculation many times with randomly drawn inputs to see how uncertain the result is.">Monte Carlo analysis</Tooltip> (<Citation reference="saltelli-et-al-2008" narrative={false} />), drawing **500 parameter sets at random**, each value taken from a distribution centred on its baseline with a spread of 10%, and recorded the enzyme level after 24 h for each. The **10% is an assumed level of uncertainty**, not a measured one.
 
 The analysis was run three times: with only the growth parameters (K, µmax) varied, with only the expression parameters (α, δm) varied, and with all four varied together. Comparing the three shows which layer contributes most to the uncertainty in the enzyme level and we reported the mean and the 95% interval.
 
