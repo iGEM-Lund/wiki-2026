@@ -117,7 +117,7 @@ Seventeen stable ci2350 variants were docked with both steroids. Selectivity is 
   </LayoutColumn>
 
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/ci2350-r215a-v263i-testosterone-view.avif" alt="ci2350_R215A_V263I_testosterone_view" caption="Testosterone (cyan) docked into the ci2350 Combo 8 variant (R215A + V263I), with the wild-type arginine and valine in grey and the substituted alanine and isoleucine in pink." numbered={false} refId="fig-r8k2q" scale={100} plain={false} noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/ci2350-r215a-v263i-testosterone-view.avif" alt="ci2350_R215A_V263I_testosterone_view" caption="Testosterone (cyan) docked into the ci2350 Combo 8 variant (R215A + V263I), with the wild-type arginine and valine in grey and the substituted alanine and isoleucine in pink." numbered refId="fig-r8k2q" scale={100} plain={false} noZoom={false} />
   </LayoutColumn>
 </Layout2>
 
@@ -173,7 +173,7 @@ V263K also reaches −0.5 kcal/mol selectivity, but by a different route. The lo
 
 ## **Mathematical modelling of enzyme production and activity**
 
-### Overview
+### **Overview**
 
 The aim was to predict how much enzyme a culture produces, and what that enzyme does once both steroids are present. Three layers were built and run as one system: a growth model for the culture, an expression model for how much enzyme each cell carries, and an activity model for how the enzyme divides its time between testosterone and progesterone.
 
@@ -185,9 +185,9 @@ Most parameters are literature values rather than measurements from our own stra
 
 The full description of the three layers, their equations, and assumptions is on the [Modelling page](https://wiki.igemlund.org/modeling#:~:text=Integrated%20growth%20and%20expression%20model).
 
-### Prediction of integrated enzyme production model
+### **Prediction of integrated enzyme production model**
 
-#### Baseline behaviour
+#### **Baseline behaviour**
 
 With the baseline parameters, the culture reaches OD600 = 0.5 at 1.58 hr, which is the induction point, and 99% of its carrying capacity (K = 15) at 6.96 hr. mRNA rises almost immediately after induction and reaches 99% of its steady state (m\* = α/δm = 0.525) within 0.48 hr. Enzyme builds up more slowly. Per cell, it reaches 4.9 relative units when growth saturates and then keeps rising almost linearly to 31.7 at 24 hr. After growth stops, dilution is almost zero, so everything translated from the still-present mRNA stays in the cell (<Ref target="fig-njrcu" />).
 
@@ -195,11 +195,11 @@ This baseline result shapes the sweeps that follow. The enzyme level is set main
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/baseline-timecourse-labeled.avif" alt="baseline_timecourse image" caption="Baseline time-course of biomass, mRNA and enzyme - Biomass reaches saturation at 6.96 hr, mRNA reaches its steady state (0.525) within 0.48 hr, and enzyme keeps rising after growth stops, reaching 31.7 relative units at 24 hr" numbered refId="fig-njrcu" scale={70} plain={false} noZoom={false} />
 
-### Sensitivity to individual parameters
+#### **Sensitivity to individual parameters**
 
-Each parameter was swept by ±20% with all others held at baseline, and the change in the final value at 24 hr was recorded and compared with the baseline result.
+Each parameter was swept by ±20% with all others held at baseline, and the change in the final value at 24 hr was recorded and compared with the baseline result (<Ref target="tab-n9je3" />).
 
-<TableWithCaption caption="Effect of a ±20% change in each parameter on biomass, mRNA and enzyme per cell" refId="tab-8pa6k">
+<TableWithCaption caption="Effect of a ±20% change in each parameter on biomass, mRNA and enzyme per cell" refId="tab-n9je3">
   | **Parameter**     | **Biomass** | **mRNA**    | **Enzyme per cell** |
   | ----------------- | ----------- | ----------- | ------------------- |
   | α (transcription) | 0%          | ±20%        | ±20%                |
@@ -209,7 +209,7 @@ Each parameter was swept by ±20% with all others held at baseline, and the chan
   | K                 | ±20%        | 0%          | +0.7% / −0.6%       |
 </TableWithCaption>
 
-In the sweeps, the amount of enzyme in each cell follows the mRNA supply, while the growth parameters mostly decide how many cells there are. Transcription (α) and mRNA decay (δm) set the mRNA pool through m\* = α/δm, and the enzyme follows that pool. A 20% change in α changes mRNA and enzyme by the same 20%, and biomass is unaffected (<Ref target="fig-3zpvt" /> and <Ref target="fig-tq7xd" />). The response to δm is not symmetric, because mRNA falls as 1/δm: a 20% lower decay rate raises the enzyme by 25%, while a 20% higher one lowers it by 17%.
+In the sweeps, the amount of enzyme in each cell follows the mRNA supply, while the growth parameters mostly decide how many cells there are. Transcription (α) and mRNA decay (δm) set the mRNA pool through <Formula latex="m* = α/δm" />, and the enzyme follows that pool. A 20% change in α changes mRNA and enzyme by the same 20%, and biomass is unaffected (<Ref target="fig-3zpvt" /> and <Ref target="fig-tq7xd" />). The response to δm is not symmetric, because mRNA falls as 1/δm: a 20% lower decay rate raises the enzyme by 25%, while a 20% higher one lowers it by 17%.
 
 <Layout2>
   <LayoutColumn>
