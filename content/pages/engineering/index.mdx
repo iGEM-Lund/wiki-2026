@@ -19,9 +19,47 @@ Our main challenges and small DBTL cycles refers to:
 
 In parallel, **computational enzyme engineering informed our choice of variants** for experimental investigation.
 
-<Pillars pillars={[{"title":"Cycle 1 -  Cloning","heading":"Improving the cloning workflow","color":"teal"},{"title":"Cycle 2 - Fusion tags and Induction strength","heading":"Selecting an AKR1D1 fusion tag for soluble expression and adjusting induction strength","color":"kraft"},{"title":"Cycle 3 - Enzymatic Assay","heading":"Developing a Reliable Enzyme Activity Assay","color":"depths"}]} />
+<Pillars pillars={[{"title":"Cycle 1 - Rational Engineering of Enzyme Specificity","color":"teal"},{"title":"Cycle 2 -  Cloning","heading":"Improving the cloning workflow","color":"teal"},{"title":"Cycle 3 - Fusion tags and Induction strength","heading":"Selecting an AKR1D1 fusion tag for soluble expression and adjusting induction strength","color":"kraft"},{"title":"Cycle 4 - Enzymatic Assay","heading":"Developing a Reliable Enzyme Activity Assay","color":"depths"}]} />
 
 All cycles are interconnected: improvements in cloning allowed the production of alternative enzyme constructs, while expression and activity experiments revealed additional requirements for future optimisations.
+
+## Rational Engineering of Enzyme Specificity
+
+<Card refId="card-tsiat">
+  <CardTitle>
+    Challenge
+  </CardTitle>
+
+  Our project aims to investigate testosterone transformation while **limiting unwanted activity toward other substrates**, particularly progesterone. Because these molecules share a similar steroid structure, modifying enzyme substrate preference represents an important engineering challenge.
+</Card>
+
+### D*esign*
+
+We investigated the active sites of human AKR1D1 and bacterial CI2350 to identify residues that could influence interactions with the C17 substituents of testosterone and progesterone.
+
+> Check out our [designs](https://wiki.igemlund.org/parts) and [models](https://wiki.igemlund.org/modeling).
+
+Candidate substitutions were designed to favor testosterone binding or weaken progesterone interactions.
+
+### B*uild*
+
+We generated 24 computational AKR1D1 variants and 31 CI2350 variants. Structural stability was evaluated using PyRosetta, followed by molecular docking of testosterone and progesterone for variants passing the selected stability threshold.
+
+Thirteen AKR1D1 and seventeen CI2350 variants passed the initial stability screening.
+
+### T*est*
+
+For AKR1D1, none of the stable variants showed a meaningful improvement in predicted testosterone selectivity beyond the uncertainty of the docking scoring function.
+
+For CI2350, the R215A/V263I double mutant showed the strongest predicted shift toward testosterone, changing the selectivity score from −0.1 kcal/mol in wild type to −0.9 kcal/mol.
+
+> Check our results [here](https://wiki.igemlund.org/modeling).
+
+The double mutant also passed the computational stability filter, with a predicted ΔΔG of +1.42 REU.
+
+### L*earn*
+
+The AKR1D1 mutations investigated did not produce meaningful predicted specificity improvements, suggesting that the selected residues were insufficient to discriminate between the two steroid substrates.
 
 ## Improving the cloning workflow
 
@@ -30,7 +68,7 @@ All cycles are interconnected: improvements in cloning allowed the production of
     Challenge
   </CardTitle>
 
-  Our **first engineering challenge** was **assembling correct expression constructs** for the candidate enzymes, AKR1D1 and CI2350. Our initial restriction-cloning workflow using pET-11a repeatedly produced low DNA recovery and unsuccessful transformation. In addition, incomplete restriction digestion could not be reliably identified as NdeI and BamHI restriction sites differs only by approximately 40 base pairs (bp).
+  One of our main **engineering challenge** was **assembling correct expression constructs** for the candidate enzymes, AKR1D1 and CI2350. Our initial restriction-cloning workflow using pET-11a repeatedly produced low DNA recovery and unsuccessful transformation. In addition, incomplete restriction digestion could not be reliably identified as NdeI and BamHI restriction sites differs only by approximately 40 base pairs (bp).
 </Card>
 
 ### D*esign*
