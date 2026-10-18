@@ -7,7 +7,7 @@ insert overall main findings per part
 
 ## <Formula />**Enzyme specificity engineering**
 
-### Overview
+### **Overview**
 
 Two Δ4-3-ketosteroid 5β-reductases were taken forward for engineering: human **AKR1D1** and the bacterial enzyme **ci2350** from *Clostridium innocuum*. The aim was to shift substrate preference towards testosterone and away from progesterone, two steroids that differ only at the **C17 substituent**.
 
@@ -17,7 +17,7 @@ Residues within **4 Å** of each docked ligand were sorted by which substrate th
 
 The full workflow for both AKR1D1 and ci2350, from protein structure acquisition through to stability screening, is described on the [Modeling page](/modeling#enzyme-specificity-engineering-towards-testosterone).&#x20;
 
-### Docked poses of the AKR1D1 variants
+### **Docked poses of the AKR1D1 variants**
 
 Thirteen stable AKR1D1 variants were docked with both steroids. Selectivity is reported as ΔG(testosterone) − ΔG(progesterone), so a positive value means progesterone is bound more tightly; the wild type sits at +0.5 kcal/mol. A variant improves only if this value falls.
 
@@ -167,7 +167,9 @@ V263K also reaches −0.5 kcal/mol selectivity, but by a different route. The lo
   </LayoutColumn>
 </Layout2>
 
-Docking showed that AKR1D1 cannot be engineered towards testosterone with the positions identified. Every substitution moved both steroids by the same amount, because none of the mutated side chains reaches the C17 group, and the selectivity stayed at about +0.5 kcal/mol. In ci2350, R215A + V263I was the only variant to shift the preference beyond the scoring noise (−0.1 to −0.9 kcal/mol), with testosterone affinity kept and stability neutral. R215A + V263I + Q100T is the more stable fallback, and V263K is a simple single-point option that loses affinity. R215A + V263I was therefore taken into the activity model [(Modeling)](https://wiki.igemlund.org/modeling#:~:text=Enzyme%20activity%20model).&#x20;
+<Card>
+  Docking showed that AKR1D1 cannot be engineered towards testosterone with the positions identified. Every substitution moved both steroids by the same amount, because none of the mutated side chains reaches the C17 group, and the selectivity stayed at about +0.5 kcal/mol. In ci2350, R215A + V263I was the only variant to shift the preference beyond the scoring noise (−0.1 to −0.9 kcal/mol), with testosterone affinity kept and stability neutral. R215A + V263I + Q100T is the more stable fallback, and V263K is a simple single-point option that loses affinity. R215A + V263I was therefore taken into the activity model [(Modeling)](https://wiki.igemlund.org/modeling#:~:text=Enzyme%20activity%20model).
+</Card>
 
 ## **Mathematical modelling of enzyme production and activity**
 
