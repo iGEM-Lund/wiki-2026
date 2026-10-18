@@ -9,7 +9,7 @@ Our project can be viewed as an **overarching <Tooltip text="A repeating enginee
 
 Each cycle generated observations that informed subsequent experiments, prompted design modifications, and changed how we interpreted our results. As we  had limited access and time in the lab, some DBTL cycles were carried in parallel and some, mentioned in this section, are still open and we invite future researchers and students to carry out and build on what we assessed with our project.
 
-<SliceWheel slices={[{"title":"Design","body":"We designed AnTigone around the testosterone-transforming enzymes, AKR1D1 and CI2350. Our initial genetic designs evolved to include alternative fusion tags (MBP, SUMO, and TrxA), CI2350 variants carrying the R215A and V263I mutations, and hypoxia-responsive regulatory elements intended to control enzyme expression under oxygen-limited conditions."},{"title":"Build","body":"We assembled our expression constructs using restriction cloning, transformed them into E. coli, and produced recombinant enzymes for characterization. Repeated difficulties with pET-11a digestion and cloning led us to adopt the pET-BLANK strategy. We also constructed alternative AKR1D1 and CI2350 fusion-tag variants and introduced targeted CI2350 mutations to investigate additional enzyme configurations."},{"title":"Test","body":"We evaluated cloning outcomes through colony PCR and sequencing, compared AKR1D1 fusion tags and IPTG concentrations using SDS-PAGE, and investigated protein recovery through IMAC. To assess testosterone-transforming activity, we developed NAD(P)H-based assays with testosterone."},{"title":"Learn","body":"Our experiments led us to revise our cloning strategy, prioritize CI2350–MBP for biochemical characterization, and select AKR1D1–TrxA for further solubility optimization. Unexpected NADPH consumption in control preparations revealed that additional analytical validation was needed before claiming testosterone conversion."}]} cycle />
+<SliceWheel slices={[{"title":"Design","body":"We designed AnTigone around the testosterone-transforming enzymes, AKR1D1 and CI2350. Our initial genetic designs evolved to include alternative fusion tags (MBP, SUMO, and TrxA), Ci2350 variants carrying the R215A and V263I mutations, and hypoxia-responsive regulatory elements intended to control enzyme expression under oxygen-limited conditions."},{"title":"Build","body":"We assembled our expression constructs using restriction cloning, transformed them into E. coli, and produced recombinant enzymes for characterization. Repeated difficulties with pET-11a digestion and cloning led us to adopt the pET-BLANK strategy. We also constructed alternative AKR1D1 and CI2350 fusion-tag variants and introduced targeted Ci2350 mutations to investigate additional enzyme configurations."},{"title":"Test","body":"We evaluated cloning outcomes through colony PCR and sequencing, compared AKR1D1 fusion tags and IPTG concentrations using SDS-PAGE, and investigated protein recovery through IMAC. To assess testosterone-transforming activity, we developed NAD(P)H-based assays with testosterone."},{"title":"Learn","body":"Our experiments led us to revise our cloning strategy, prioritize Ci2350–MBP for biochemical characterization, and select AKR1D1–TrxA for further solubility optimization. Unexpected NADPH consumption in control preparations revealed that additional analytical validation was needed before claiming testosterone conversion."}]} cycle />
 
 Our main challenges and small DBTL cycles refer to:
 
@@ -36,17 +36,17 @@ All **cycles are interconnected**: improvements in cloning allowed the productio
 
 ### D*esign*
 
-We **investigated the active sites** of human **AKR1D1** and bacterial **CI2350** to identify <Tooltip text="The individual amino acids that make up a protein.">residues</Tooltip> that could influence interactions with the <Tooltip text="The chemical groups attached to carbon 17 of the steroid, where testosterone and progesterone differ.">C17 substituents</Tooltip> of testosterone and progesterone.
+We **investigated the active sites** of human **AKR1D1** and bacterial **Ci2350** to identify <Tooltip text="The individual amino acids that make up a protein.">residues</Tooltip> that could influence interactions with the <Tooltip text="The chemical groups attached to carbon 17 of the steroid, where testosterone and progesterone differ.">C17 substituents</Tooltip> of testosterone and progesterone.
 
 > Check out our [designs](/parts) and [models](/model).
 
-Candidate substitutions were **designed to favor testosterone binding** or weaken progesterone interactions.
+Candidate point mutations were **designed to favor testosterone binding** or weaken progesterone interactions.
 
 ### B*uild*
 
-We generated 24 computational AKR1D1 variants and 31 CI2350 variants. Structural stability was evaluated using <Tooltip text="A software package for modelling protein structures and predicting how mutations change their stability.">PyRosetta</Tooltip>, and both testosterone and progesterone were independently <Tooltip text="Simulated on a computer to predict how well a molecule fits into a protein's binding site.">docked</Tooltip> against variants that passed the selected stability threshold.
+We generated 24 computational AKR1D1 variants and 31 Ci2350 variants. Structural stability was evaluated using <Tooltip text="A software package for modelling protein structures and predicting how mutations change their stability.">PyRosetta</Tooltip>, and both testosterone and progesterone were independently <Tooltip text="Simulated on a computer to predict how well a molecule fits into a protein's binding site.">docked</Tooltip> against variants that passed the selected stability threshold.
 
-Thirteen AKR1D1 and seventeen CI2350 variants passed the initial stability screening.
+Thirteen AKR1D1 and seventeen Ci2350 variants passed the initial stability screening.
 
 ### T*est*
 
@@ -67,7 +67,7 @@ The AKR1D1 mutations investigated did not produce meaningful predicted specifici
     Challenge
   </CardTitle>
 
-  One of our main **engineering challenge** was **assembling correct expression constructs** for the candidate enzymes, AKR1D1 and CI2350. Our initial <Tooltip text="Cutting DNA with restriction enzymes at specific sequences and joining the pieces together to build a new construct.">restriction-cloning</Tooltip> workflow using <Tooltip text="A plasmid commonly used to produce proteins in E. coli.">pET-11a</Tooltip> repeatedly produced low DNA recovery and unsuccessful transformation. In addition, incomplete restriction digestion could not be reliably identified as <Tooltip text="Two restriction enzymes, each cutting DNA at its own specific sequence. Together they excise a gene so it can be inserted into a plasmid.">NdeI and BamHI</Tooltip> restriction sites differs only by approximately 40 <Tooltip text="The unit for measuring DNA length: one pair of matching DNA letters.">base pairs (bp)</Tooltip>.
+  One of our main **engineering challenge** was **assembling correct expression constructs** for the candidate enzymes, AKR1D1 and Ci2350. Our initial <Tooltip text="Cutting DNA with restriction enzymes at specific sequences and joining the pieces together to build a new construct.">restriction-cloning</Tooltip> workflow using <Tooltip text="A plasmid commonly used to produce proteins in E. coli.">pET-11a</Tooltip> repeatedly produced low DNA recovery and unsuccessful transformation. In addition, incomplete restriction digestion could not be reliably identified as <Tooltip text="Two restriction enzymes, each cutting DNA at its own specific sequence. Together they excise a gene so it can be inserted into a plasmid.">NdeI and BamHI</Tooltip> restriction sites differs only by approximately 40 <Tooltip text="The unit for measuring DNA length: one pair of matching DNA letters.">base pairs (bp)</Tooltip>.
 </Card>
 
 ### D*esign*
@@ -76,7 +76,7 @@ Our initial restriction-ligation strategy used NdeI and BamHI to insert the gene
 
 > [Check out our designs.](/parts)
 
-We subsequently **redesigned the workflow using pET-BLANK**, a pET-derived construct containing CI2350–MBP. Digestion was expected to release an approximately 3 kb insert, leaving a vector backbone of approximately 5.4 kb. Unlike the original strategy, this would allow the backbone to be separated from the released insert by <Tooltip text="A method that separates DNA fragments by size by pulling them through a gel with an electric current.">agarose gel electrophoresis</Tooltip>.
+We subsequently **redesigned the workflow using pET-BLANK**, a pET-derived construct containing Ci2350–MBP. Digestion was expected to release an approximately 3 kb insert, leaving a vector backbone of approximately 5.4 kb. Unlike the original strategy, this would allow the backbone to be separated from the released insert by <Tooltip text="A method that separates DNA fragments by size by pulling them through a gel with an electric current.">agarose gel electrophoresis</Tooltip>.
 
 ### B*uild*
 
@@ -86,7 +86,7 @@ We first extracted pET-11a using the Jena Bioscience <Tooltip text="A kit for pu
 
 **Iteration 2 — Redesigning the backbone preparation strategy**
 
-Following persistent cloning difficulties, the **revised strategy** involved digesting pET-BLANK, <Tooltip text="Cutting a DNA band out of a gel and purifying the DNA from it.">gel-extracting</Tooltip> the approximately 5.4 kb <Tooltip text="The plasmid vector without the gene, into which a new gene is inserted.">backbone</Tooltip>, and <Tooltip text="Joining DNA pieces together using the enzyme ligase.">ligating</Tooltip> it with the selected AKR1D1 and CI2350 inserts. Following **unsuccessful initial <Tooltip text="Getting bacteria to take up DNA.">transformations</Tooltip>**, we also repeated ligation using an extended overnight incubation at 16°C.
+Following persistent cloning difficulties, the **revised strategy** involved digesting pET-BLANK, <Tooltip text="Cutting a DNA band out of a gel and purifying the DNA from it.">gel-extracting</Tooltip> the approximately 5.4 kb <Tooltip text="The plasmid vector without the gene, into which a new gene is inserted.">backbone</Tooltip>, and <Tooltip text="Joining DNA pieces together using the enzyme ligase.">ligating</Tooltip> it with the selected AKR1D1 and Ci2350 inserts. Following **unsuccessful initial <Tooltip text="Getting bacteria to take up DNA.">transformations</Tooltip>**, we also repeated ligation using an extended overnight incubation at 16°C.
 
 <Expandable defaultOpen>
   [Protocols Used in this Building Phase](/notebooks-and-protocols)
