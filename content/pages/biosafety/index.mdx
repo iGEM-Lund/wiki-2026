@@ -176,9 +176,11 @@ We compared six auxotrophy options before selecting this one. Each row states wh
 | Double / multiplexed auxotrophy                | Combine two independent essential dependencies                       | Reduces <Tooltip text="The fraction of cells that survive despite a containment measure.">escape frequency</Tooltip>; double insurance | More complex to build; repeated editing can make the strain more fragile                                                                                     | <Citation reference="chien-et-al-2022" narrative={false} />: A hypoxia–lactate AND gate achieved an escapee rate of \~10⁻⁸ in vitro and was later tested for tumour targeting in *Salmonella enterica* serovar Typhimurium.                                                                                          |
 | Synthetic auxotrophy (non-standard amino acid) | Recode essential proteins/codons to require a non-natural amino acid | Strongest theoretical containment; stable long-term                                                                                    | Too complex for current project scope                                                                                                                        | Described as the strongest containment option, but needs extensive genome recoding <Citation reference="kunjapur-et-al-2021" narrative={false} />.                                                                                                                                                                   |
 
-We chose ΔdapA-mediated DAP auxotrophy to permit brief metabolic activity while restricting long-term proliferation.
+After comparing six auxotrophy strategies, we selected Δ*dapA*-mediated DAP auxotrophy because of its direct link to peptidoglycan synthesis, precedent in engineered bacterial therapeutics, and relatively simple design. By disrupting DAP biosynthesis, this approach aims to allow temporary metabolic activity while restricting long-term proliferation in DAP-limited environments.
 
 #### **How ΔdapA auxotrophy works**
+
+The three steps below illustrate how *dapA* deletion disrupts DAP biosynthesis, affects cell-wall formation, and ultimately restricts bacterial growth in the absence of external DAP.
 
 <Layout3 centerFilled={false}>
   <LayoutColumn>
