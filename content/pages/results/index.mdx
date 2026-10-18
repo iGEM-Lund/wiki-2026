@@ -323,16 +323,47 @@ R215A + V263I is the most promising variant. Its docking-based Km values predict
 
 ## **Establishing expression constructs**&#x20;
 
+To produce our 5β-reductases in *Escherichia* *coli* BL21(DE3), we first <Tooltip text="Redesigned the DNA sequences for expression in a new host organism while matching the relative translation speed and rare codon pauses of the original source organisms
+">codon harmonized</Tooltip> both AKR1D1 (human origin) and ci2350 (from *Clostridium innocuum*).
+
+We then ordered the following parts as gBlocks from IDT:&#x20;
+
+* ci2350-6xHis ([BBa\_26BLGGCH](https://registry.igem.org/parts/bba-26blggch))
+* AKR1D1-6xHis ([BBa\_267YYAV3](https://registry.igem.org/parts/bba-267yyav3))
+* ci2350-SUMO-6xHis ([BBa\_262WHKTK](https://registry.igem.org/parts/bba-262whktk))
+* ci2350-Trx-6xHis ([BBa\_262Y2YB5](https://registry.igem.org/parts/bba-262y2yb5))
+* AKR1D1-MBP-6xHis ([BBa\_26FG0OLP](https://registry.igem.org/parts/bba-26fg0olp))
+* AKR1D1-SUMO-6xHis ([BBa\_269RW54U](https://registry.igem.org/parts/bba-269rw54u))
+* AKR1D1-Trx-6xHis ([BBa\_26EE7O9A](https://registry.igem.org/parts/bba-26ee7o9a))
+
+Because the ci2350-MBP-6xHis ([BBa\_26P2621O](https://registry.igem.org/parts/bba-26p2621o)) exceeded the size limit for IDT gBlocks, it was ordered as a clonal gene from Twist Biosciences, directly cloned into their pET-Blank-Amp expression vector (with T7 promoter).
+
+Note: in the text, the -6xHis part is sometimes omitted as shorthand, e.g. ci2350-MBP means ci2350-MBP-6xHis
+
+The parts were originally intended for insertion into the **pET-11a** vector. Despite multiple rounds of restriction digestion (BamHI, NdeI), ligation, transformation, and troubleshooting (detailed in Notebook Summaries, Weeks [25](/notebooks-and-protocols#summer-lab:~:text=Week%2025), [26](/notebooks-and-protocols#summer-lab:~:text=Week%2026), [27](/notebooks-and-protocols#summer-lab:~:text=Week%2027)), **only ci2350-6xHis was successfully cloned into pET-11a** and transformed into *E. coli* TG1, as confirmed by colony PCR (<Ref target="fig-i9xvl" />). The results from Eurofins sequencing confirmed that the construct contained no mutations.
+
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/agarose-gel-electrophoresis-of-colony-pcr-screening-of-ci2350-6xhis.avif" alt="Agarose gel image showing colony PCR results with DNA ladder in upper lanes 1, 10, 14, and lower lane 15. Lanes 2-9 show bright band at approximately 2000 bp indicating successful ci2350-6xHis cloning. Negative control lanes show no bands: lanes 11-13 (empty vector control), lanes 16-18 (ligation negative control), and lane 19 (PCR negative control)" caption="Agarose gel electrophoresis of colony PCR screening after ci2350-6xHis ligation into pET-11a and transformation into *E. coli* TG1. Lanes: (1, 10, 14, 15) Ampliqon High Range DNA Ladder; (2-9) colonies containing ci2350-6xHis (with the expected 1956 bp fragment); (11-13) empty pET-11a transformation control; (16-18) ligation negative control; (19) negative PCR control." numbered refId="fig-i9xvl" scale={100} plain noZoom={false} />
+
+After several more cycles of trying and failing, **pET-11a-AKR1D1-6xHis** became the second construct to be successfully created and transformed into *E. coli* TG1 on [Week 30](/notebooks-and-protocols#:~:text=Week%2030), confirmed by colony PCR (<Ref target="fig-eyy02" />) and sequencing results.
+
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/07-23-gel.avif" alt="Agarose gel image showing colony PCR results with DNA ladders in lanes 1, 8, and 14. Positive bands at approximately 1000 bp, marked with red arrows, appear in lanes 3, 4, 5, 7, 10 and 13 indicating successful AKR1D1-6xHis cloning. Lanes 11, 17, 18 have band of incorrect size (around 600 to 800 bp). Other tested colonies and the negative control (lane 20) show no correct-sized bands. " caption="Agarose gel electrophoresis of colony PCR screening after AKR1D1-6xHis ligation into pET-11a and transformation into *E. coli* TG1. Lanes: (1, 8, 14) Ampliqon High Range DNA Ladder; (2-7, 9-13, 15, 19) AKR1D1-His colonies; (20) negative PCR control. AKR1D1 band of correct size (~1000 bp) appears in lanes 3, 4, 5, 7, 10 and 13, as indicated by the red arrow." numbered refId="fig-eyy02" scale={100} plain noZoom={false} />
+
+After multiple unsuccessful attempts at restriction digestion, along with the difficulty of verifying that pET-11a was actually cut with both NdeI and BamHI (due to the cutout being very small), we decided to approach restriction digestion from a different angle. We already had a ready-made plasmid vector pET-Blank-Amp-ci2350-MBP-6xHis, synthesized by Twist Bioscience, with NdeI and BamHI sites flanking the insert. Double digestion of this plasmid released a 3081 bp ci2350-MBP-6xHis fragment, significantly larger than the 40 bp pET-11a fragment, making it easy to distinguish single from double-digested plasmid on agarose gels and enabling clean gel extraction of the linearized vector backbone, pET-Blank-Amp (<Ref target="fig-i9xvl" />).
+
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/restriction-digestion-of-pet-blank-amp-containing-ci2350-mbp.avif" alt="Agarose gel image showing restriction digest analysis with DNA ladders in lanes 1, 16, and 30. Single digest controls in lanes 2 (NdeI) and 3 (BamHI) show single bands around 8000 bp. Undigested sample in lane 4 shows two bands, one at around 8000 bp, and other above the range limit of ladder, >12000 bp. Double-digested samples in lanes 5-15 and 17-29 show three bands: approximately 3000 bp (excised insert), 5000 bp (linearized vector), and 8000 bp (residual undigested plasmid), indicating more time needed for digestion." caption="Restriction digestion of pET-Blank-Amp containing ci2350-MBP with NdeI and BamHI. Lanes: (1, 16, 30) Ampliqon High Range DNA Ladder; (2) NdeI control; (3) BamHI control; (4) Undigested sample; (5-15, 17-29) double digested sample. The three bands in 5-15, 17-29 correspond to ~3000 bp (the cut ci2350-MBP-6xHis), ~5000 bp (pET-Blank-Amp linearized backbone) and ~8000 bp (undigested pETBlank-ci-MBP-6xHis)." numbered refId="fig-i9xvl" scale={100} plain={false} noZoom={false} />
+
+We tested this method and adopted it for further cloning, as it proved more reliable than direct pET-11a digestion, allowing us to **successfully clone AKR1D1-SUMO-6xHis, and AKR1D1-Trx-6xHis into pET-Blank-Amp** by Week 31, as indicated by colony PCR (Fig. 4) and subsequential sequencing. However, we still failed to clone ci2350-SUMO-6xHis, ci2350-Trx-6xHis, AKR1D1-MBP-6xHis into pET-Blank-Amp. Due to time constraints, we decided to proceed with protein expression using the successfully cloned constructs.
+
 ## AKR1D1: Fusion Tag and Induction Strength
 
 **TrxA gave the most soluble AKR1D1, and a lower IPTG concentration gave a higher soluble fraction.**
 
-AKR1D1-His (\~38 kDa, pET-11a), AKR1D1-SUMO (\~49 kDa) and AKR1D1-TrxA (\~50 kDa, both pET-BLANK) were expressed in E. coli BL21(DE3) at 37 °C for 3 h with 1 mM IPTG. Each construct had three induced cultures, plus uninduced and empty-vector controls. Whole-cell samples were adjusted to OD 20 and loaded equally. Solubility is the soluble band volume divided by the total band volume. The target band was visible in all induced cultures, mostly in the whole-cell fraction (<Ref target="fig-okojk" />, <Ref target="fig-kczpm" />, <Ref target="fig-71v52" />). Solubility was 17 ± 4% for His, 10 ± 5% for SUMO, and 26 ± 1% for TrxA (see <Ref target="tab-2owsw" />, <Ref target="fig-frcni" />). SUMO gave the lowest value, although its range overlaps with His. The uninduced controls gave impossible values (42% to 245%) and were excluded.
+AKR1D1-6xHis (\~38 kDa, pET-11a), AKR1D1-SUMO (\~49 kDa) and AKR1D1-TrxA (\~50 kDa, both pET-BLANK) were expressed in E. coli BL21(DE3) at 37 °C for 3 h with 1 mM IPTG. Each construct had three induced cultures, plus uninduced and empty-vector controls. Whole-cell samples were adjusted to OD 20 and loaded equally. Solubility is the soluble band volume divided by the total band volume. The target band was visible in all induced cultures, mostly in the whole-cell fraction (<Ref target="fig-okojk" />, <Ref target="fig-kczpm" />, <Ref target="fig-71v52" />). Solubility was 17 ± 4% for His, 10 ± 5% for SUMO, and 26 ± 1% for TrxA (see <Ref target="tab-2owsw" />, <Ref target="fig-frcni" />). SUMO gave the lowest value, although its range overlaps with 6xHis. The uninduced controls gave impossible values (42% to 245%) and were excluded.
 
 <TableWithCaption caption="Soluble fraction of AKR1D1 constructs at 1 mM IPTG. Three induced cultures per construct (3 h, 37 °C). Solubility is soluble band volume ÷ total band volume × 100 (SDS-PAGE, whole-cell samples at OD 20, loaded equally). Mean ± SD (n = 3)." refId="tab-2owsw">
   | **Construct** | **Replicate 1 (%)** | **Replicate 2 (%)** | **Replicate 3 (%)** | **Mean ± SD** |
   | ------------- | ------------------- | ------------------- | ------------------- | ------------- |
-  | AKR1D1-His    | 14.8                | 22.0                | 14.3                | 17.1 ± 4.3    |
+  | AKR1D1-6xHis  | 14.8                | 22.0                | 14.3                | 17.1 ± 4.3    |
   | AKR1D1-SUMO   | 4.5                 | 14.3                | 11.0                | 9.9 ± 5.0     |
   | AKR1D1-TrxA   | 27.4                | 24.6                | 26.3                | 26.0 ± 1.4    |
 </TableWithCaption>
@@ -346,7 +377,7 @@ Lowering the IPTG concentration increased the soluble fraction of AKR1D1-TrxA. T
   | 0.4           | 24.5, 32.9, 27.5   | 28.3 ± 4.3        |
 </TableWithCaption>
 
-AKR1D1-TrxA was therefore the most promising construct, but even at 0.2 mM about 60% of the protein stayed insoluble. It was expressed only aerobically and was not purified, so soluble yield and activity were not compared between tags. AKR1D1-MBP was never cloned successfully and was not tested. The tags were compared in two backbones (His in pET-11a, SUMO and TrxA in pET-BLANK), which may add to the differences.
+AKR1D1-TrxA was therefore the most promising construct, but even at 0.2 mM about 60% of the protein stayed insoluble. It was expressed only aerobically and was not purified, so soluble yield and activity were not compared between tags. AKR1D1-MBP was never cloned successfully and was not tested. The tags were compared in two backbones (6xHis in pET-11a, SUMO and TrxA in pET-BLANK), which may add to the differences.
 
 **Overall findings:**&#x20;
 
@@ -362,13 +393,13 @@ ci2350 was expressed as an N-terminal fusion (6xHis, MBP, ci2350; \~112 kDa). ci
 
 ### Expression in whole cells
 
-ci2350-His (\~70 kDa) showed no visible band at 0, 0.25 or 0.4 mM IPTG, after 3 h or overnight at 37 °C (<Ref target="fig-e658y" />). ci2350-MBP showed a band at the expected \~112 kDa in all lanes. It was faint at 0 mM after 3 h and strongest at 0.25 and 0.4 mM after 3 h. A standard curve from this gel put the band at \~114 kDa (five lanes, 111.8 to 117.0 kDa; <Ref target="fig-5l3za" />).
+ci2350-6xHis (\~70 kDa) showed no visible band at 0, 0.25 or 0.4 mM IPTG, after 3 h or overnight at 37 °C (<Ref target="fig-e658y" />). ci2350-MBP showed a band at the expected \~112 kDa in all lanes. It was faint at 0 mM after 3 h and strongest at 0.25 and 0.4 mM after 3 h. A standard curve from this gel put the band at \~114 kDa (five lanes, 111.8 to 117.0 kDa; <Ref target="fig-5l3za" />).
 
 At 0.4 mM IPTG, ci2350-MBP expression was strongest after 3 h at 37 °C and weaker after overnight growth at 25 °C. No 112 kDa band was visible before induction (<Ref target="fig-f0ilx" />).
 
 ### IMAC purification
 
-ci2350-His (0.8 mM, 3 h, 37 °C) showed a \~70 kDa band in the flow-through, and the eluate was empty (<Ref target="fig-6dgv4" />). The protein was expressed but did not bind the column. We did not test why. This run is not matched to the MBP runs, which used other temperatures and times.
+ci2350-6xHis (0.8 mM, 3 h, 37 °C) showed a \~70 kDa band in the flow-through, and the eluate was empty (<Ref target="fig-6dgv4" />). The protein was expressed but did not bind the column. We did not test why. This run is not matched to the MBP runs, which used other temperatures and times.
 
 For ci2350-MBP, the eluate from 0.8 mM IPTG at 17 °C overnight had a thick \~112 kDa band. The eluate from 0.4 mM at 37 °C overnight had none (<Ref target="fig-1x3gz" />). Concentrating the 17 °C eluate on a Vivaspin column (30 kDa cut-off) removed most of the 112 kDa band.&#x20;
 
@@ -407,7 +438,7 @@ The single mutants V263I and R215A were made in Week 31 and sequence-verified in
 ### Overall Findings:
 
 * ci2350-MBP (\~112 kDa) was expressed in whole cells. A standard curve put the band at \~114 kDa (<Ref target="fig-5l3za" />).
-* ci2350-His (\~70 kDa) was not visible at ≤0.4 mM IPTG. At 0.8 mM it was expressed but did not bind the Ni column.
+* ci2350-6xHis (\~70 kDa) was not visible at ≤0.4 mM IPTG. At 0.8 mM it was expressed but did not bind the Ni column.
 * Total expression of ci2350-MBP was higher after 3 h at 37 °C than after overnight growth at 25 °C (0.4 mM IPTG).
 * A \~112 kDa band was recovered after IMAC at 17 °C (0.8 mM) and at 25 °C (0.4 mM), and in the 37 °C 3 h eluate. It was absent from the 37 °C overnight eluate (0.4 mM).
 * The Vivaspin step lost the \~112 kDa band in two gels (17 °C, and 37 °C for 3 h), but not for the 25 °C sample. We did not find the cause.
