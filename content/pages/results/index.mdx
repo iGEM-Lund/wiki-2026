@@ -68,7 +68,7 @@ Since neither mutated side chain reaches the C17 group, there is no direct conta
   </LayoutColumn>
 </Layout2>
 
-<Card>
+<Card refId="card-0ly64">
   **AKR1D1 was therefore not carried forward due to reduced specificity.** Engineering specificity here would need side chains long enough to reach C17 from these positions, or a different set of positions closer to it.
 </Card>
 
@@ -167,8 +167,8 @@ V263K also reaches −0.5 kcal/mol selectivity, but by a different route. The lo
   </LayoutColumn>
 </Layout2>
 
-<Card>
-  **Overall, docking showed that AKR1D1 cannot be engineered towards testosterone with the positions identified. Every substitution moved both steroids by the same amount, because none of the mutated side chains reaches the C17 group, and the selectivity stayed at about +0.5 kcal/mol. In ci2350, R215A + V263I was the only variant to shift the preference beyond the scoring noise (−0.1 to −0.9 kcal/mol), with testosterone affinity kept and stability neutral. R215A + V263I + Q100T is the more stable fallback, and V263K is a simple single-point option that loses affinity. R215A + V263I was therefore taken into the activity model** [(Modeling)](https://wiki.igemlund.org/modeling#:~:text=Enzyme%20activity%20model).
+<Card refId="card-7vrvs">
+  **Overall, docking showed that AKR1D1 cannot be engineered towards testosterone with the positions identified. Every substitution moved both steroids by the same amount, because none of the mutated side chains reaches the C17 group, and the selectivity stayed at about +0.5 kcal/mol. In ci2350, R215A + V263I was the only variant to shift the preference beyond the scoring noise (−0.1 to −0.9 kcal/mol), with testosterone affinity kept and stability neutral. R215A + V263I + Q100T is the more stable fallback, and V263K is a simple single-point option that loses affinity. R215A + V263I was therefore taken into the activity model** [(Modeling)](/modeling#enzyme-activity-model).
 </Card>
 
 ## **Mathematical modelling of enzyme production and activity**
@@ -183,7 +183,7 @@ Because this layer depends on binding, it is tied to the specificity work. Since
 
 Most parameters are literature values rather than measurements from our own strain, so the model was tested rather than taken at face value. Each was varied by **±20% one at a time** to see which ones the output depends on, and a Monte Carlo analysis drew all of them at random together to check whether the conclusions hold across the plausible range. The results of both analyses were reported below.
 
-The full description of the three layers, their equations, and assumptions is on the [Modelling page](https://wiki.igemlund.org/modeling#:~:text=Integrated%20growth%20and%20expression%20model).
+The full description of the three layers, their equations, and assumptions is on the [Modelling page](/modeling#integrated-growth-and-expression-model).
 
 ### **Prediction of integrated enzyme production model**
 
@@ -257,7 +257,7 @@ When only the growth parameters (K, µmax) were varied, the final enzyme stayed 
 
 Biologically, **how much enzyme each cell makes depends mainly on how much mRNA it produces and how long that mRNA lasts**, while the size of the culture adds little uncertainty. Because a ±10% variation in the mRNA half-life is much narrower than the reported 3–8 min range, the real uncertainty is probably larger than shown here, so the enzyme values should be treated as relative until the expression parameters are measured.
 
-<Card>
+<Card refId="card-4oaob">
   Overall, **enzyme production is controlled mainly by the expression parameters (α, δm)**, not by growth, and the **mRNA half-life is the biggest uncertainty** (about 2.5-fold across 3–8 min), so expression conditions need careful control and measurement.
 </Card>
 
@@ -315,7 +315,7 @@ The distributions of both speed ratio and selectivity score of docking <Formula 
   </LayoutColumn>
 </Layout2>
 
-<Card>
+<Card refId="card-tz3r7">
   **R215A + V263I is the most promising variant. Its docking-based Km values predict a testosterone preference.** This preference is the least affected by a ±0.3 kcal/mol docking shift, and the variant survives the random-error draws against the WT control. **Expression and growth settings change how fast the steroids are consumed, but binding energy shows which steroid is preferred first.** The ranking is still a prediction, because the kcat ratio is unknown and docking error is larger than most differences between variants.
 </Card>
 
@@ -346,11 +346,11 @@ Because the ci2350-MBP-6xHis ([BBa\_26P2621O](https://registry.igem.org/parts/bb
 
 Note: in the text, the -6xHis part is sometimes omitted as shorthand, e.g. ci2350-MBP means ci2350-MBP-6xHis
 
-The parts were originally intended for insertion into the **pET-11a** vector. Despite multiple rounds of restriction digestion (BamHI, NdeI), ligation, transformation, and troubleshooting (detailed in Notebook Summaries, Weeks [25](/notebooks-and-protocols#summer-lab:~:text=Week%2025), [26](/notebooks-and-protocols#summer-lab:~:text=Week%2026), [27](/notebooks-and-protocols#summer-lab:~:text=Week%2027)), **only ci2350-6xHis was successfully cloned into pET-11a** and transformed into *E. coli* TG1, as confirmed by colony PCR (<Ref target="fig-i9xvl" />). The results from Eurofins sequencing confirmed that the construct contained no mutations.
+The parts were originally intended for insertion into the **pET-11a** vector. Despite multiple rounds of restriction digestion (BamHI, NdeI), ligation, transformation, and troubleshooting (detailed in Notebook Summaries, Weeks <Ref target="card-teoxx" linkText="25" />, <Ref target="card-93sb4" linkText="26" />, <Ref target="card-nrupl" linkText="27" />), **only ci2350-6xHis was successfully cloned into pET-11a** and transformed into *E. coli* TG1, as confirmed by colony PCR (<Ref target="fig-i9xvl" />). The results from Eurofins sequencing confirmed that the construct contained no mutations.
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/agarose-gel-electrophoresis-of-colony-pcr-screening-of-ci2350-6xhis.avif" alt="Agarose gel image showing colony PCR results with DNA ladder in upper lanes 1, 10, 14, and lower lane 15. Lanes 2-9 show bright band at approximately 2000 bp indicating successful ci2350-6xHis cloning. Negative control lanes show no bands: lanes 11-13 (empty vector control), lanes 16-18 (ligation negative control), and lane 19 (PCR negative control)" caption="Agarose gel electrophoresis of colony PCR screening after ci2350-6xHis ligation into pET-11a and transformation into *E. coli* TG1. Lanes: (1, 10, 14, 15) Ampliqon High Range DNA Ladder; (2-9) colonies containing ci2350-6xHis (with the expected 1956 bp fragment); (11-13) empty pET-11a transformation control; (16-18) ligation negative control; (19) negative PCR control." numbered refId="fig-i9xvl" scale={100} plain noZoom={false} />
 
-After several more cycles of trying and failing, **pET-11a-AKR1D1-6xHis** became the second construct to be successfully created and transformed into *E. coli* TG1 on [Week 30](/notebooks-and-protocols#:~:text=Week%2030), confirmed by colony PCR (<Ref target="fig-eyy02" />) and sequencing results.
+After several more cycles of trying and failing, **pET-11a-AKR1D1-6xHis** became the second construct to be successfully created and transformed into *E. coli* TG1 on <Ref target="card-a2so7" linkText="Week 30" />, confirmed by colony PCR (<Ref target="fig-eyy02" />) and sequencing results.
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/07-23-gel.avif" alt="Agarose gel image showing colony PCR results with DNA ladders in lanes 1, 8, and 14. Positive bands at approximately 1000 bp, marked with red arrows, appear in lanes 3, 4, 5, 7, 10 and 13 indicating successful AKR1D1-6xHis cloning. Lanes 11, 17, 18 have band of incorrect size (around 600 to 800 bp). Other tested colonies and the negative control (lane 20) show no correct-sized bands. " caption="Agarose gel electrophoresis of colony PCR screening after AKR1D1-6xHis ligation into pET-11a and transformation into *E. coli* TG1. Lanes: (1, 8, 14) Ampliqon High Range DNA Ladder; (2-7, 9-13, 15, 19) AKR1D1-His colonies; (20) negative PCR control. AKR1D1 band of correct size (~1000 bp) appears in lanes 3, 4, 5, 7, 10 and 13, as indicated by the red arrow." numbered refId="fig-eyy02" scale={100} plain noZoom={false} />
 
@@ -358,7 +358,7 @@ After multiple unsuccessful attempts at restriction digestion, along with the di
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/restriction-digestion-of-pet-blank-amp-containing-ci2350-mbp.avif" alt="Agarose gel image showing restriction digest analysis with DNA ladders in lanes 1, 16, and 30. Single digest controls in lanes 2 (NdeI) and 3 (BamHI) show single bands around 8000 bp. Undigested sample in lane 4 shows two bands, one at around 8000 bp, and other above the range limit of ladder, >12000 bp. Double-digested samples in lanes 5-15 and 17-29 show three bands: approximately 3000 bp (excised insert), 5000 bp (linearized vector), and 8000 bp (residual undigested plasmid), indicating more time needed for digestion." caption="Restriction digestion of pET-Blank-Amp containing ci2350-MBP with NdeI and BamHI. Lanes: (1, 16, 30) Ampliqon High Range DNA Ladder; (2) NdeI control; (3) BamHI control; (4) Undigested sample; (5-15, 17-29) double digested sample. The three bands in 5-15, 17-29 correspond to ~3000 bp (the cut ci2350-MBP-6xHis), ~5000 bp (pET-Blank-Amp linearized backbone) and ~8000 bp (undigested pETBlank-ci-MBP-6xHis)." numbered refId="fig-i9xvl" scale={100} plain={false} noZoom={false} />
 
-We tested this method and adopted it for further cloning, as it proved more reliable than direct pET-11a digestion, allowing us to **successfully clone AKR1D1-SUMO-6xHis, and AKR1D1-Trx-6xHis into pET-Blank-Amp** by [Week 31](/notebooks-and-protocols#:~:text=Week%2031), as indicated by colony PCR (<Ref target="fig-xom8c" />) and subsequential sequencing. However, we still failed to clone ci2350-SUMO-6xHis, ci2350-Trx-6xHis, AKR1D1-MBP-6xHis into pET-Blank-Amp. Due to time constraints, we **decided** to **proceed** **with protein expression** using the successfully cloned constructs.
+We tested this method and adopted it for further cloning, as it proved more reliable than direct pET-11a digestion, allowing us to **successfully clone AKR1D1-SUMO-6xHis, and AKR1D1-Trx-6xHis into pET-Blank-Amp** by <Ref target="card-bd46z" />, as indicated by colony PCR (<Ref target="fig-xom8c" />) and subsequential sequencing. However, we still failed to clone ci2350-SUMO-6xHis, ci2350-Trx-6xHis, AKR1D1-MBP-6xHis into pET-Blank-Amp. Due to time constraints, we **decided** to **proceed** **with protein expression** using the successfully cloned constructs.
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/colony-pcr-of-pet-blank-constructs.avif" alt="Agarose gel image with 30 upper and 30 lower lanes showing colony PCR screening results. DNA ladders in lanes 1 and 30 of upper and lower lanes. Red arrows mark positive results: lane 4 shows a band at 1335 bp for AKR1D1-SUMO-6xHis, and lanes 11 and 13 show bands at 1368 bp for AKR1D1-Trx-6xHis. Lanes tested for AKR1D1-MBP-6xHis, ci2350-SUMO-6xHis, and ci2350-Trx-6xHis show no bands at their expected sizes, 2142 bp, 2293 bp, and 2326 bp respectively." caption="Agarose gel electrophoresis of colony PCR screening after ligation of AKR1D1 and ci2350 fusion constructs into pET-Blank-Amp and transformation into *E. coli* TG1. Lanes: (1, 30) Ampliqon High Range DNA Ladder (upper and lower gels); construct identities labeled within gel. Red arrows indicate correct-sized bands: AKR1D1-SUMO-6xHis in lane 4 (1335 bp); AKR1D1-Trx-6xHis in lanes 11, 13 (1368 bp). No colonies showed expected correct band sizes for AKR1D1-MBP-6xHis (target 2142 bp), ci2350-SUMO-6xHis (target 2293 bp), or ci2350-Trx-6xHis (target 2326 bp)." numbered refId="fig-xom8c" scale={100} plain noZoom={false} />
 

@@ -219,7 +219,8 @@ export const contentComponents = {
   Card: wrapper({
     label: 'Card',
     description: 'A boxed card whose content is always visible. Add a Card Title as its first item for a header, and an Expandable for content that should stay hidden behind a "Read more" button.',
-    schema: {},
+    // Lets a Reference, on any page, mention this card (see Ref below).
+    schema: { refId: refIdField('card') },
     ContentView: ({ children }) => <div>{children}</div>,
   }),
 
@@ -338,13 +339,18 @@ export const contentComponents = {
   // reference code, never its number, so it survives renumbering (see
   // src/lib/numbering.ts).
   Ref: inline({
-    label: 'Reference (to a figure, table or 3D model)',
-    description: 'Shows as "Figure 3", "Table 2" or "Model 1", always with the current number.',
+    label: 'Reference (to a figure, table, 3D model or card)',
+    description:
+      'Shows as "Figure 3", "Table 2" or "Model 1", always with the current number, or as a card\'s title. Hovering a card reference previews the card and points the way to it.',
     schema: {
       target: fields.text({
         label: 'Reference code',
         description:
-          'Paste the code from the "Reference code" field of the figure, table or 3D model on this page you are mentioning.',
+          'Paste the code from the "Reference code" field of the figure, table or 3D model on this page, or of a card on any page, that you are mentioning.',
+      }),
+      linkText: fields.text({
+        label: 'Link text (optional, cards only)',
+        description: "Words to show instead of the card's title, e.g. \"our interview with Dr. Benrick\".",
       }),
     },
     ContentView: (props) => <span>[→ {props.value.target || 'no code yet'}]</span>,

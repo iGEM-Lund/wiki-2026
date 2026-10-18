@@ -4,7 +4,7 @@ import { RefIdInput } from './ref-id-input';
 // What a numbered object's code starts with, so a code pasted into a
 // Reference reads as what it points at. Only a reading aid: references are
 // resolved by the whole code (see src/lib/numbering.ts).
-export type RefIdPrefix = 'fig' | 'tab' | 'mod';
+export type RefIdPrefix = 'fig' | 'tab' | 'mod' | 'card';
 
 const ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
 
@@ -13,7 +13,7 @@ export function newRefId(prefix: RefIdPrefix): string {
   return `${prefix}-${Array.from(bytes, (b) => ALPHABET[b % ALPHABET.length]).join('')}`;
 }
 
-// A figure, table or 3D model's reference code: made up once when the
+// A figure, table, 3D model or card's reference code: made up once when the
 // object is inserted, and never derived from its number, so a reference
 // keeps pointing at the same object however the objects around it move.
 // No fields.* builtin can mint a value, hence a custom field.

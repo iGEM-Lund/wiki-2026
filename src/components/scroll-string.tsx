@@ -1,5 +1,6 @@
 'use client';
 
+import { scrollToMiddle } from '@/lib/scroll-to-middle';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { easeOut, taperedPath, type Cubic } from '@/lib/tapered-stroke';
@@ -306,7 +307,9 @@ export function ScrollString() {
       }
       const els = Array.from(nav.children) as HTMLElement[];
       if (els.length !== meta.length) return false;
-      const reading = window.scrollY + 2;
+      // A heading counts as being read once it has risen to the middle of
+      // the screen, not only when it reaches the top.
+      const reading = window.scrollY + window.innerHeight / 2 - scrollPad;
       let active = -1;
       meta.forEach((_, i) => {
         if (offsets[i] - scrollPad <= reading) active = i;
@@ -318,7 +321,7 @@ export function ScrollString() {
         if (meta[active].parent >= 0) chain.add(meta[active].parent);
       }
       const ys = meta.map((_, i) => {
-        const p = Math.min(1, Math.max(0, (offsets[i] - scrollPad) / max));
+        const p = Math.min(1, Math.max(0, (offsets[i] - window.innerHeight / 2) / max));
         return p * (trackHeight - KNOT_HEIGHT) + KNOT_HEIGHT / 2;
       });
       // Keep knots apart: forward from the top, then back from the bottom
@@ -354,7 +357,9 @@ export function ScrollString() {
       }
 
       anchorsRef.current = buildAnchors(
-        meta.map((_, i) => ({ s: offsets[i] - scrollPad, y: ys[i] })).filter((a) => isFinite(a.s)),
+        // The scroll position at which a heading counts as being read
+        // (see `reading`), where the big knot sits on its knot.
+        meta.map((_, i) => ({ s: offsets[i] - window.innerHeight / 2, y: ys[i] })).filter((a) => isFinite(a.s)),
         max,
         trackHeight,
       );
@@ -579,6 +584,7 @@ export function ScrollString() {
             key={n.id}
             href={`#${n.id}`}
             className="scroll-string__notch"
+            onClick={(e) => scrollToMiddle(e, n.id)}
             data-depth={n.depth}
             // Until the first layout pass places it.
             hidden

@@ -68,6 +68,10 @@ export function remarkNumberObjects() {
   return (tree: Root) => {
     const targets = new Map<string, Target>();
     const refs: { node: MdxJsxNode; order: number }[] = [];
+    // Cards on the page by code: only where they sit, for a Ref to one to
+    // point up or down. The rest of a card reference is resolved by
+    // src/lib/cards.ts, since a card may be on any page.
+    const cardOrders = new Map<string, number>();
     const counts: Record<NumberedKind, number> = { figure: 0, table: 0, model: 0 };
     let order = 0;
 
@@ -77,6 +81,11 @@ export function remarkNumberObjects() {
       order += 1;
       if (jsx.name === 'Ref') {
         refs.push({ node: jsx, order });
+        return;
+      }
+      if (jsx.name === 'Card') {
+        const cardId = stringAttr(jsx, 'refId');
+        if (cardId && !cardOrders.has(cardId)) cardOrders.set(cardId, order);
         return;
       }
       const kind = kindOf(jsx);
@@ -103,6 +112,13 @@ export function remarkNumberObjects() {
       const code = stringAttr(node, 'target')?.trim() ?? '';
       const target = targets.get(code);
       if (!target) {
+        const cardOrder = cardOrders.get(code);
+        if (cardOrder !== undefined) {
+          setAttr(node, 'direction', cardOrder < refOrder ? 'up' : 'down');
+          continue;
+        }
+        // A card on another page: resolved at render (see Ref.tsx).
+        if (code.startsWith('card-')) continue;
         console.warn(
           `[numbering] Reference to "${code}" matches no numbered figure, table or 3D model on its page.`,
         );

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { type FocusEvent, type MouseEvent, type PointerEvent, type ReactNode } from 'react';
 import { useHangingPopover } from '@/lib/use-hanging-popover';
 import { isOnScreen } from '@/lib/on-screen';
@@ -11,6 +12,11 @@ type CitationLinkProps = {
   // hovered or focused, no sign is hung; the content links' dashed line
   // points to it instead (src/components/link-arrow.tsx).
   pointTo?: string;
+  // The sign is hung even when the target is on screen (a card's preview).
+  alwaysSign?: boolean;
+  // The target is on another page: a plain page navigation, no tearing off
+  // of the sign (there is no page here to scroll).
+  crossPage?: boolean;
 };
 
 // The tug and tear at the start of citation-sign-rip (its first 30%, of 1s
@@ -34,13 +40,13 @@ function reducedMotion(): boolean {
 // of it (see .citation__sign--falling in globals.css). The original stays
 // hidden until the pointer leaves the link or it's focused again, so the
 // sign isn't hanging there again the instant it fell.
-export function CitationLink({ href, children, pointTo }: CitationLinkProps) {
+export function CitationLink({ href, children, pointTo, alwaysSign, crossPage }: CitationLinkProps) {
   const hanging = useHangingPopover('.citation__sign', ':hover, :focus-visible');
 
   function open(event: PointerEvent<HTMLAnchorElement> | FocusEvent<HTMLAnchorElement>) {
     const link = event.currentTarget;
     const target = pointTo ? document.getElementById(pointTo) : null;
-    if (target && isOnScreen(target)) {
+    if (!alwaysSign && target && isOnScreen(target)) {
       link.dataset.pointing = '';
       return;
     }
@@ -51,6 +57,7 @@ export function CitationLink({ href, children, pointTo }: CitationLinkProps) {
 
   function onClick(event: MouseEvent<HTMLAnchorElement>) {
     const link = event.currentTarget;
+    if (crossPage) return;
     // Pointing at an object on screen: no sign to tear, just the jump.
     if (link.dataset.pointing !== undefined) return;
     const sign = link.querySelector<HTMLElement>('.citation__sign');
@@ -98,6 +105,22 @@ export function CitationLink({ href, children, pointTo }: CitationLinkProps) {
     window.setTimeout(() => {
       window.location.hash = href;
     }, TEAR_MS);
+  }
+
+  if (crossPage) {
+    return (
+      <Link
+        className="citation"
+        href={href}
+        onPointerEnter={open}
+        onPointerMove={hanging.onPointerMove}
+        onPointerLeave={hanging.onPointerLeave}
+        onFocus={open}
+        onBlur={hanging.onBlur}
+      >
+        {children}
+      </Link>
+    );
   }
 
   return (

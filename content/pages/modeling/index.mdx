@@ -26,7 +26,7 @@ Our dry lab work addresses both challenges through two integrated strands.
 1. **Enzyme specificity:** Perform rational mutagenesis on ci2350 and AKR1D1 that make the enzyme prefer testosterone over progesterone, using <Tooltip text="A computer simulation that predicts how well a molecule fits into a protein's binding site.">molecular docking</Tooltip> to guide which residues to change.
 2. **Mathematical modeling:** Build a mechanistic model of bacterial growth, enzyme expression and competitive kinetics that uses the docking results to predict how each variant would perform in practice and which parameters most affect the prediction.
 
-<Card>
+<Card refId="card-uh7y8">
   Together, these form a connected predictive layer: the first narrows a **large design space to a small set of structurally plausible candidates**, and the second takes those candidates and asks **whether their effect would actually show up in a real bacterial system**.
 </Card>
 
@@ -96,7 +96,7 @@ The domain covers the N-terminal half of the 642-residue protein, and all annota
   | A24, G26, V59, Q100, H165, N166, Y167, S171, R215, N253, G315, R316 | H165, N166, Y167, S171, N253               |
 </TableWithCaption>
 
-<Card>
+<Card refId="card-imv7e">
   #### &#x20;**CD Search Visualisation**  &#x20;
 
   <Expandable defaultOpen={false}>
@@ -233,7 +233,7 @@ ci2350 showed a marginal preference for testosterone (−0.1 kcal/mol, \~1.2-fol
   </LayoutColumn>
 </Layout2>
 
-<Card>
+<Card refId="card-n5d1w">
   **Neither wild-type meets the selectivity requirement, and both were taken forward to contact analysis for rational mutagenesis.**&#x20;
 </Card>
 
@@ -424,7 +424,7 @@ No AKR1D1 variant shifted selectivity meaningfully. The three best mutants, V309
 
 The combination mutation of **R215A + V263I** is the clear leading candidate, with a selectivity score of **−0.9 kcal/mol** and a shift of **−0.8** against the wild-type, and the only variant to exceed the noise threshold (<Ref target="tab-abuyo" />). It is also the only one where testosterone binding improved in absolute terms while progesterone binding weakened, so the gain comes from both directions at once. The other candidates gained selectivity by losing affinity. &#x20;
 
-<Card>
+<Card refId="card-1gw9v">
   **R215A + V263I was therefore selected as one of the candidates for experimental characterisation and used for activity modeling.** The detailed analysis of variant specificity towards testosterone is presented on the [Results](/results) page.
 </Card>
 
@@ -492,7 +492,7 @@ The enzyme is the opposite. It is built from those messages at rate β. We assum
 "
 />
 
-<Card>
+<Card refId="card-q6eoq">
   **Five assumptions:**
 
   1. ci2350’s mRNA turns over like a typical *E. coli* transcript, since its half-life has not been measured.
@@ -575,7 +575,7 @@ The enzyme availability comes from the integrated model of enzyme production: en
 
 The first three are the growth and expression layers described in the integrated model of enzyme production; the last two are the substrates being consumed. In the earlier model, the expression started at time zero. Here α is multiplied by s\_ind, so that mRNA is made only after IPTG is added, and a second switch, s\_sub(t), allows the steroids to be consumed only after they have been added. These switches replicates the bench protocol: s\_ind(t) turns transcription on when the culture reaches **OD600 0.5**, which the **growth model identifies at 1.58 h**, and s\_sub(t) turns substrate consumption on **four hours** later, when substrate is added and enough enzyme has built up. Both steroids start at **50 µM**, and the reaction is followed for eight hours (<Ref target="tab-i8ink" />).&#x20;
 
-<Card>
+<Card refId="card-hc6wr">
   **Seven assumptions underlie these equations which are listed below:**
 
   1. Testosterone and progesterone bind the same site and exclude each other (competitive binding).
@@ -650,7 +650,7 @@ Each variant was compared against a wild type given the same random expression a
 
 What comes out is a percentage for each variant: how often testosterone is preferred, and how often the variant beats the wild type. The wild type was also compared against a second random copy of itself, which shows how often a difference appears purely by chance when there is no real one.
 
-The results of activity modeling are presented on the [Results page](https://wiki.igemlund.org/modeling#:~:text=Enzyme%20activity%20model). The scripts for the integrated model are available on GitLab (Link).
+The results of activity modeling are presented on the [Results page](/modeling#enzyme-activity-model). The scripts for the integrated model are available on GitLab (Link).
 
 ## Limitations&#x20;
 

@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import { createElement, type ComponentPropsWithoutRef, type ComponentType } from 'react';
 import { mdxComponents } from '@/components/content';
 import { Citation } from '@/components/content/Citation';
+import { Ref } from '@/components/content/Ref';
 import { Table } from '@/components/content/Table';
 import { ContentLink } from '@/components/content/ContentLink';
 import { WorldMap } from '@/components/content/WorldMap';
@@ -20,6 +21,7 @@ import {
 } from '@/lib/headings';
 import type { ReferenceLookup } from '@/lib/references';
 import { remarkNumberObjects } from '@/lib/numbering';
+import { getCardLookup } from '@/lib/cards';
 
 // fields.mdx() stores raw MDX source text; unlike the older fields.document,
 // there's no pre-parsed document tree to walk, so rendering requires actually
@@ -27,6 +29,7 @@ import { remarkNumberObjects } from '@/lib/numbering';
 export async function renderMdx(
   source: string,
   referenceLookup: ReferenceLookup = {},
+  slug?: string,
 ): Promise<{ Content: ComponentType; headings: HeadingItem[] }> {
   const headings: HeadingItem[] = [];
   const { default: MDXContent } = await evaluate(source, {
@@ -64,8 +67,11 @@ export async function renderMdx(
         });
   };
 
+  const cards = await getCardLookup();
   const components = {
     ...mdxComponents,
+    // A Ref to a card needs every page's cards, and which page this is.
+    Ref: (props: Parameters<typeof Ref>[0]) => Ref({ ...props, cards, slug }),
     table: Table,
     a: ContentLink,
     h2: Heading2,

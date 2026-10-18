@@ -1,5 +1,6 @@
 'use client';
 
+import { scrollToMiddle } from '@/lib/scroll-to-middle';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { List, X } from 'lucide-react';
 import type { HeadingNode } from '@/lib/headings';
@@ -32,7 +33,7 @@ function OutlineList({
     <ol data-open={nested ? open : undefined}>
       {nodes.map((node) => (
         <li key={node.id} data-depth={node.depth}>
-          <a href={`#${node.id}`} aria-current={node.id === activeId ? 'location' : undefined}>
+          <a href={`#${node.id}`} onClick={(e) => scrollToMiddle(e, node.id)} aria-current={node.id === activeId ? 'location' : undefined}>
             {node.text}
           </a>
           {node.children.length > 0 ? (

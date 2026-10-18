@@ -35,8 +35,8 @@ function plainText(node: ReactNode): string {
 // <CardTitle> child rather than a flat prop, so it can hold rich inline MDX
 // (emphasis, a <Citation>, ...); content that should stay hidden until the
 // reader asks for it goes in an <Expandable> child, which brings its own
-// "Read more" toggle.
-export function Card({ children }: { children?: ReactNode }) {
+// "Read more" toggle. Its reference code (refId) lets a <Ref> mention it.
+export function Card({ children, refId }: { children?: ReactNode; refId?: string }) {
   const items = Children.toArray(children);
   const isTitle = (child: ReactNode) => isValidElement(child) && child.type === CardTitle;
   const titleElement = items.find(isTitle);
@@ -52,6 +52,12 @@ export function Card({ children }: { children?: ReactNode }) {
     <section className="card" id={id}>
       {title ? (
         <header className="card__header">
+          {/* Where a Reference to this card lands, on this page or from
+              another (src/lib/cards.ts). The card's own id is its title's
+              slug, which the outline links to and which changes with the
+              title. Inside the header so it isn't the card's first child,
+              which the card's spacing rules key on. */}
+          {refId ? <span className="card__ref-anchor" id={refId} aria-hidden="true" /> : null}
           {title.image ? (
             <div className="card__figure">
               <ZoomableImage src={title.image} alt={portraitAlt.alt} enlargeable={!portraitAlt.decorative} />

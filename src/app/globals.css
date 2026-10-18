@@ -2751,6 +2751,36 @@ a.inline-icon--link:focus-visible {
     );
   }
 }
+.citation__sign-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.citation__sign-portrait {
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.citation__sign-card-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.citation__sign-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--heading);
+}
+.citation__sign-subtitle {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: pre-line;
+  color: var(--muted);
+}
 .citation__sign-go {
   display: flex;
   align-items: center;
@@ -2967,6 +2997,12 @@ a.inline-icon--link:focus-visible {
   padding: 0.5rem 1.75rem 0.75rem;
   border-bottom: 2px solid var(--index-header-rule);
   color: var(--heading);
+}
+.card__ref-anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
 }
 .card__figure {
   flex: 0 0 6rem;

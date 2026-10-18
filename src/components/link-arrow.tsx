@@ -52,9 +52,10 @@ type Origin = { left: number; right: number; top: number; bottom: number; inset:
 //   its nav tag (the tag itself, or the group holding it), like the
 //   current page's sign (only above 48rem, where the nav is a bar);
 // - another site: a globe that pops up just beside the link;
-// - a figure, table or 3D model of the same page that is on screen (a
-//   Ref's target; see src/lib/numbering.ts): the object itself, the
-//   arrowhead drawn just over its nearest edge.
+// - a figure, table, 3D model or card of the same page that is on screen
+//   (a Ref's target; see src/lib/numbering.ts): the object itself, the
+//   arrowhead drawn just over its nearest edge. A card that is not on
+//   screen is pointed at like a section: its knot in the outline.
 // Anything else (pages not in the nav) gets no line. The line is redrawn
 // as the page scrolls, since its ends move.
 //
@@ -120,7 +121,11 @@ export function LinkArrow() {
         return null;
       // Ignores a text fragment (#id:~:text=…), which only picks the text
       // to scroll to.
-      const id = a.hash.split(':~:')[0];
+      let id = a.hash.split(':~:')[0];
+      // A card reference lands on an anchor inside the card, whose
+      // outline entry is under the card's own id.
+      const card = document.getElementById(decodeURIComponent(id.slice(1)))?.closest<HTMLElement>('.card');
+      if (card?.id && document.getElementById(id.slice(1))?.matches('.card__ref-anchor')) id = `#${card.id}`;
       const notch = [...track.querySelectorAll<HTMLAnchorElement>('.scroll-string__notch')].find(
         (n) => n.hash === id,
       );
@@ -166,10 +171,12 @@ export function LinkArrow() {
     }
 
     // A Ref's object, while it is on screen (CitationLink hangs no sign
-    // then). A table is pointed at by its frame, not its caption above.
+    // then, except for a card's preview). A table is pointed at by its frame, not its caption above.
     function objectFor(a: HTMLAnchorElement): Target | null {
-      const el = document.getElementById(decodeURIComponent(a.hash.slice(1)));
-      if (!el?.matches(NUMBERED_OBJECT) || !isOnScreen(el)) return null;
+      const anchored = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+      // A card is pointed at through the anchor a card reference lands on.
+      const el = anchored?.matches('.card__ref-anchor') ? anchored.closest<HTMLElement>('.card') : anchored;
+      if (!el?.matches(NUMBERED_OBJECT + ', .card') || !isOnScreen(el)) return null;
       const frame = el.querySelector<HTMLElement>(':scope > .table-frame, :scope > .table-collapse');
       return { el: frame ?? el, end: 'object' };
     }
