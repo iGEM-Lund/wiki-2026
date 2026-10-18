@@ -1,6 +1,7 @@
 import { ArrowDown, ArrowRight, ArrowUp } from 'lucide-react';
 import type { NumberedKind } from '@/lib/caption-text';
-import type { CardLookup } from '@/lib/cards';
+import type { CardLookup, ObjectLookup } from '@/lib/cards';
+import { KIND_LABELS } from '@/lib/caption-text';
 import { CitationLink } from './CitationLink';
 
 type RefProps = {
@@ -16,6 +17,7 @@ type RefProps = {
   // Bound in by src/lib/mdx/render.ts: every card on the site, and the
   // page being rendered.
   cards?: CardLookup;
+  objects?: ObjectLookup;
   slug?: string;
 };
 
@@ -36,7 +38,7 @@ const GO_TO: Record<NumberedKind, string> = {
 // line (src/components/link-arrow.tsx) is drawn as well: to the card if it
 // is on screen, else to its place in the outline, or, on another page, to
 // that page in the nav.
-export function Ref({ target, kind, label, caption, direction, linkText, cards, slug }: RefProps) {
+export function Ref({ target, kind, label, caption, direction, linkText, cards, objects, slug }: RefProps) {
   const card = target && !kind ? cards?.[target] : undefined;
   if (card && target) {
     const samePage = card.slug === slug;
@@ -66,7 +68,28 @@ export function Ref({ target, kind, label, caption, direction, linkText, cards, 
       </CitationLink>
     );
   }
+  // A numbered figure, table or model on another page: "Page › Figure 3",
+  // its sign showing the object and the way to it.
+  const object = target && !kind ? objects?.[target] : undefined;
+  if (object && target && object.slug !== slug) {
+    const noun = KIND_LABELS[object.kind].toLowerCase();
+    const image = object.image && !/\.pdf(\?|$)/i.test(object.image) ? object.image : undefined;
+    return (
+      <CitationLink href={`/${object.slug}#${target}`} pointTo={target} alwaysSign crossPage>
+        {object.pageTitle} › {KIND_LABELS[object.kind]} {object.number}
+        <span className="citation__sign citation__sign--card" aria-hidden="true" popover="manual">
+          {image ? <img className="citation__sign-figure" src={image} alt="" /> : null}
+          {object.caption ? <span className="citation__sign-text">{object.caption}</span> : null}
+          <span className="citation__sign-go">
+            <ArrowRight size={14} />
+            Go to {noun} in {object.pageTitle}
+          </span>
+        </span>
+      </CitationLink>
+    );
+  }
   if (!target || !kind || !label) {
+    console.warn(`[numbering] Reference to "${target}" matches no card or numbered object on any page.`);
     return <span className="citation citation--missing">[missing reference]</span>;
   }
   const Arrow = direction === 'up' ? ArrowUp : ArrowDown;

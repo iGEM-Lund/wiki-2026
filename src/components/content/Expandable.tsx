@@ -4,6 +4,7 @@ import { useCallback, useId, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { ChevronDown } from 'lucide-react';
 import { useCollapseOffscreen } from '@/lib/use-collapse-offscreen';
+import { useOpenOnHash } from '@/lib/use-open-on-hash';
 
 type ExpandableProps = {
   defaultOpen?: boolean;
@@ -32,6 +33,12 @@ export function Expandable({ defaultOpen = false, children }: ExpandableProps) {
   const bodyId = useId();
   const close = useCallback(() => setOpen(false), []);
   useCollapseOffscreen(rootRef, open && openedByReader, close, '.card');
+  // A link to something inside opens it, as if the reader had.
+  const openForLink = useCallback(() => {
+    setOpenedByReader(true);
+    setOpen(true);
+  }, []);
+  useOpenOnHash(rootRef, open, openForLink);
 
   return (
     <div className="expandable" data-open={open} ref={rootRef}>

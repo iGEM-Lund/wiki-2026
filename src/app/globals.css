@@ -2767,6 +2767,13 @@ a.inline-icon--link:focus-visible {
   border-radius: 50%;
   object-fit: cover;
 }
+.citation__sign-figure {
+  display: block;
+  width: 100%;
+  max-height: 11rem;
+  margin-bottom: 0.4rem;
+  object-fit: contain;
+}
 .citation__sign-card-text {
   display: flex;
   flex-direction: column;

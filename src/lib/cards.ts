@@ -1,5 +1,6 @@
 import { reader } from '@/lib/keystatic/reader';
 import { extractCards, type ExtractedCard } from '@/lib/card-extract';
+import { extractObjects, type ExtractedObject } from '@/lib/object-extract';
 
 // A card as another part of the wiki sees it: what a Ref to it shows in its
 // hover preview, and which page it is on.
@@ -27,4 +28,28 @@ export function getCardLookup(): Promise<CardLookup> {
     return result;
   })();
   return lookup;
+}
+
+// A numbered figure, table or model as another page sees it: what a Ref to
+// it shows, and which page it is on.
+export type ObjectInfo = ExtractedObject & { slug: string; pageTitle: string };
+export type ObjectLookup = Record<string, ObjectInfo>;
+
+let objects: Promise<ObjectLookup> | undefined;
+
+// Every numbered object with a reference code, on every page, by code.
+// Codes repeated within a page are copies (a Ref goes to the first, as on
+// the page itself, which warns); one on two pages goes to the first page.
+export function getObjectLookup(): Promise<ObjectLookup> {
+  objects ??= (async () => {
+    const result: ObjectLookup = {};
+    for (const { slug, entry } of await reader.collections.pages.all()) {
+      for (const object of extractObjects(await entry.content())) {
+        if (object.refId in result) continue;
+        result[object.refId] = { ...object, slug, pageTitle: entry.title.trim() };
+      }
+    }
+    return result;
+  })();
+  return objects;
 }

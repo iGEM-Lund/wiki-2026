@@ -21,7 +21,7 @@ import {
 } from '@/lib/headings';
 import type { ReferenceLookup } from '@/lib/references';
 import { remarkNumberObjects } from '@/lib/numbering';
-import { getCardLookup } from '@/lib/cards';
+import { getCardLookup, getObjectLookup } from '@/lib/cards';
 
 // fields.mdx() stores raw MDX source text; unlike the older fields.document,
 // there's no pre-parsed document tree to walk, so rendering requires actually
@@ -68,10 +68,11 @@ export async function renderMdx(
   };
 
   const cards = await getCardLookup();
+  const objects = await getObjectLookup();
   const components = {
     ...mdxComponents,
     // A Ref to a card needs every page's cards, and which page this is.
-    Ref: (props: Parameters<typeof Ref>[0]) => Ref({ ...props, cards, slug }),
+    Ref: (props: Parameters<typeof Ref>[0]) => Ref({ ...props, cards, objects, slug }),
     table: Table,
     a: ContentLink,
     h2: Heading2,

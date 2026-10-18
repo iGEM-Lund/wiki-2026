@@ -19,7 +19,7 @@ import { captionPlainText, KIND_LABELS, type NumberedKind } from '@/lib/caption-
 // and need no per-page lookup bound in (unlike Citation).
 
 type Attribute = { type: string; name?: string; value?: unknown };
-type MdxJsxNode = {
+export type MdxJsxNode = {
   type: 'mdxJsxFlowElement' | 'mdxJsxTextElement';
   name: string | null;
   attributes: Attribute[];
@@ -29,7 +29,7 @@ function attr(node: MdxJsxNode, name: string): Attribute | undefined {
   return node.attributes.find((a) => a.type === 'mdxJsxAttribute' && a.name === name);
 }
 
-function stringAttr(node: MdxJsxNode, name: string): string | undefined {
+export function stringAttr(node: MdxJsxNode, name: string): string | undefined {
   const value = attr(node, name)?.value;
   return typeof value === 'string' ? value : undefined;
 }
@@ -49,7 +49,7 @@ function setAttr(node: MdxJsxNode, name: string, value: string) {
   node.attributes.push({ type: 'mdxJsxAttribute', name, value });
 }
 
-function kindOf(node: MdxJsxNode): NumberedKind | null {
+export function kindOf(node: MdxJsxNode): NumberedKind | null {
   switch (node.name) {
     case 'TableWithCaption':
       return 'table';
@@ -117,11 +117,8 @@ export function remarkNumberObjects() {
           setAttr(node, 'direction', cardOrder < refOrder ? 'up' : 'down');
           continue;
         }
-        // A card on another page: resolved at render (see Ref.tsx).
-        if (code.startsWith('card-')) continue;
-        console.warn(
-          `[numbering] Reference to "${code}" matches no numbered figure, table or 3D model on its page.`,
-        );
+        // A card or numbered object on another page: resolved at render,
+        // which also warns when it matches nothing anywhere (see Ref.tsx).
         continue;
       }
       setAttr(node, 'kind', target.kind);
