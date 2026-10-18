@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
+import type { AltProp } from './MissingAltBanner';
 
 export type CardTitleProps = {
   image?: string;
-  imageAlt?: string;
+  imageAlt?: AltProp;
   subtitle?: string;
   // The id of the heading typed as the title, set by rehypeCardTitleAnchors
   // (src/lib/headings.ts); Card puts it on itself for outline links.

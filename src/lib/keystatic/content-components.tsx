@@ -7,6 +7,7 @@ import { renderSmilesToStructureSvg, renderReactionSmilesToHtml } from '@/lib/ch
 import { renderCaption } from '@/lib/caption-text';
 import { refIdField } from './ref-id-field';
 import { altTextField } from './alt-text-field';
+import { readAlt } from '@/components/content/MissingAltBanner';
 
 // Editor-side registration only: these govern what writers can insert in the
 // MDX field's toolbar and how each component previews inside the Keystatic
@@ -231,10 +232,9 @@ export const contentComponents = {
         description:
           'A small round photo shown next to the title, e.g. of an interviewee. Upload via teams.igem.org/6160/deliverables/wiki/uploads, then paste the static.igem.wiki URL here.',
       }),
-      imageAlt: fields.text({
-        label: 'Portrait alt text (optional)',
-        description: 'Leave empty if the photo is just a portrait of the person named in the title. Describe it only if it shows something more.',
-      }),
+      imageAlt: altTextField(
+        'For a portrait of the person named in the title, tick Decorative. Decorative portraits cannot be enlarged. Otherwise describe what the image shows.',
+      ),
       subtitle: fields.text({
         label: 'Subtitle (optional)',
         description: 'Shown under the title, e.g. role and affiliation. Each line is kept as its own line.',
@@ -244,7 +244,7 @@ export const contentComponents = {
     ContentView: ({ children, value }) => (
       <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
         {value.image ? (
-          <img src={value.image} alt={value.imageAlt ?? ''} style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover' }} />
+          <img src={value.image} alt={readAlt(value.imageAlt).alt} style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover' }} />
         ) : null}
         <div>
           <strong style={{ fontSize: '1.2em' }}>{children}</strong>

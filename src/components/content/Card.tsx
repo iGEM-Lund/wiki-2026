@@ -2,6 +2,7 @@ import GithubSlugger from 'github-slugger';
 import { Children, isValidElement, type ReactNode } from 'react';
 import { CardTitle, type CardTitleProps } from './CardTitle';
 import { ZoomableImage } from './ZoomableImage';
+import { readAlt } from './MissingAltBanner';
 import { SectionHeading } from '@/components/section-heading';
 
 const HEADING_TAGS = new Set(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
@@ -44,6 +45,8 @@ export function Card({ children }: { children?: ReactNode }) {
   // Same slug rehype-slug would give the title as a heading.
   const text = title ? plainText(title.children).trim() : '';
   const id = title?.anchor ?? (text ? new GithubSlugger().slug(text) : undefined);
+  // A decorative portrait is just decoration: nothing to enlarge.
+  const portraitAlt = readAlt(title?.imageAlt);
 
   return (
     <section className="card" id={id}>
@@ -51,7 +54,7 @@ export function Card({ children }: { children?: ReactNode }) {
         <header className="card__header">
           {title.image ? (
             <div className="card__figure">
-              <ZoomableImage src={title.image} alt={title.imageAlt} />
+              <ZoomableImage src={title.image} alt={portraitAlt.alt} enlargeable={!portraitAlt.decorative} />
             </div>
           ) : null}
           <div className="card__heading">
