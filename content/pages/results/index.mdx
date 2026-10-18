@@ -221,7 +221,7 @@ In the sweeps, the amount of enzyme in each cell follows the mRNA supply, while 
   </LayoutColumn>
 </Layout2>
 
-Growth parameters play a much smaller role. K sets only how large the culture becomes, so the biomass changes by exactly ±20% while the enzyme per cell stays within 1%. µmax changes the enzyme per cell by only −4.8% to +3.2%, and it leaves final biomass and mRNA unchanged. These minor biomass effects are due to the dilution of enzyme with growth (<Ref target="fig-kklal" /><Ref target="fig-wum0w" />).
+Growth parameters play a much smaller role. K sets only how large the culture becomes, so the biomass changes by exactly ±20% while the enzyme per cell stays within 1%. µmax changes the enzyme per cell by only −4.8% to +3.2%, and it leaves final biomass and mRNA unchanged. These minor biomass effects are due to the dilution of enzyme with growth (<Ref target="fig-kklal" /> and <Ref target="fig-wum0w" />).
 
 <Layout2>
   <LayoutColumn>
@@ -235,7 +235,7 @@ Growth parameters play a much smaller role. K sets only how large the culture be
 
 Together, these results show that each cell’s own expression machinery (transcription, mRNA lifetime and translation) decides how much enzyme it holds, while growth decides how many cells there are. The total enzyme in the culture is enzyme per cell multiplied by biomass, which changes with K. Consequently, the expression parameters, especially the poorly known mRNA half-life, change enzyme production strongly by more than 2.5-fold during sweep analysis, which requires careful experimental design.
 
-### Expression uncertainty
+#### **Expression uncertainty**
 
 To ask how much the enzyme level could vary if all inputs are uncertain, three Monte Carlo analyses were run with 500 draws each, sampling parameters with a 10% standard deviation around their baseline values.
 
@@ -257,35 +257,37 @@ When only the growth parameters (K, µmax) were varied, the final enzyme stayed 
 
 Biologically, how much enzyme each cell makes depends mainly on how much mRNA it produces and how long that mRNA lasts, while the size of the culture adds little uncertainty. Because a ±10% variation in the mRNA half-life is much narrower than the reported 3–8 min range, the real uncertainty is probably larger than shown here, so the enzyme values should be treated as relative until the expression parameters are measured.
 
-Overall, enzyme production is controlled mainly by the expression parameters (α, δm), not by growth, and the mRNA half-life is the biggest uncertainty (about 2.5-fold across 3–8 min), so expression conditions need careful control and measurement.
+<Card>
+  Overall, enzyme production is controlled mainly by the expression parameters (α, δm), not by growth, and the mRNA half-life is the biggest uncertainty (about 2.5-fold across 3–8 min), so expression conditions need careful control and measurement.
+</Card>
 
-### Prediction of activity model
+### **Prediction of activity model**
 
 To predict how the engineered enzyme would behave in the cell, the expression model was linked to a competitive Michaelis–Menten model of testosterone and progesterone conversion This section tests R215A + V263I, the variant selected in the [Enzyme specificity engineering results](https://wiki.igemlund.org/results#enzyme-specificity-engineering). We first show the baseline run and then test how robust it is to the expression and growth settings, the kcat ratio, the docking scores, and random errors in all of them together. Throughout, the speed ratio (t50 of progesterone divided by t50 of testosterone) measures which steroid is converted first.
 
 ### Baseline and sweep effect on enzyme activity
 
-For R215A + V263I, the culture reaches OD 0.5 and is induced at 1.58 hr. Enzyme per cell then rises to about 3 relative units by 5.58 hr, when both steroids are added at 50 µM. By then the culture is close to its maximum density (about OD 14). After substrate addition, testosterone is consumed first and is nearly gone within about 1.1 hr, with progesterone following within about 1.4 hr (<Ref target="fig-1sg1g" />). The half-times (t50) are 29.1 min for testosterone and 58.5 min for progesterone, a speed ratio \[t50(P) / t50(T)] of 2.0 in favour of testosterone.
+For R215A + V263I, the culture reaches OD 0.5 and is induced at 1.58 hr. Enzyme per cell then rises to about 3 relative units by 5.58 hr, when both steroids are added at 50 µM. By then the culture is close to its maximum density (about OD 14). After substrate addition, testosterone is consumed first and is nearly gone within about 1.1 hr, with progesterone following within about 1.4 hr (<Ref target="fig-1sg1g" />). The half-times (t50) are 29.1 min for testosterone and 58.5 min for progesterone, a speed ratio (<Formula latex="t50(P) / t50(T)" />) of 2.0 in favour of testosterone.
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/layer3-baseline-t50.avif" alt="image of layer3_baseline_t50" caption="**Baseline simulation for R215A + V263I.** Biomass (top), enzyme per cell (middle) and the two steroids at 50 µM (bottom), with induction at 1.58 hr and substrate addition at 5.58 hr (dashed lines). Testosterone is consumed first (t50 29.1 min against 58.5 min)" numbered refId="fig-1sg1g" scale={100} plain={false} noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/layer3-baseline-t50.avif" alt="image of layer3_baseline_t50" caption="**Baseline simulation for R215A + V263I.** Biomass (top), enzyme per cell (middle) and the two steroids at 50 µM (bottom), with induction at 1.58 hr and substrate addition at 5.58 hr (dashed lines). Testosterone is consumed first (t50 29.1 min against 58.5 min)" numbered refId="fig-1sg1g" scale={75} plain={false} noZoom={false} />
 
 Anything that increases the total amount of enzyme in the flask makes both steroids disappear faster without changing which one goes first. The total enzyme depends on the number of cells, transcription (α), translation (β), kcat, E\_scale, growth rate (µmax), culture density (K) and later induction. So, while sweeping each parameter, the effects were shown in the <Ref target="tab-0xlty" />.
 
 <TableWithCaption caption="Effect of the expression and growth settings on the time to half-conversion and on the speed ratio " refId="tab-0xlty">
-  | **Parameter swept**          | **Range tested** | Testosterone t50 (min) | Progesterone t50 (min) | **Speed ratio (P/T)** |
-  | ---------------------------- | ---------------- | ---------------------- | ---------------------- | --------------------- |
-  | α (transcription)            | 1.25 → 20        | 92.5 → 8.0             | 166.8 → 17.2           | 1.80 – 2.16           |
-  | β (translation)              | 1.2 → 36         | 63.8 → 2.7             | 119.3 → 6.0            | 1.87 – 2.21           |
-  | µmax (growth rate, h⁻¹)      | 0.74 → 2.22      | 64.7 → 21.8            | 114.4 → 45.5           | 1.77 – 2.09           |
-  | K (carrying capacity, OD600) | 5 → 30           | 58.9 → 19.5            | 114.4 → 39.7           | 1.94 – 2.03           |
-  | Induction OD600              | 0.3 → 1.0        | 34.0 → 24.2            | 66.3 → 49.9            | 1.95 – 2.07           |
+  | **Parameter swept**          | **Range tested** | Testosterone t50 (min) | Progesterone t50 (min) | **Speed ratio \[t50(P)/t50(T)]** |
+  | ---------------------------- | ---------------- | ---------------------- | ---------------------- | -------------------------------- |
+  | α (transcription)            | 1.25 → 20        | 92.5 → 8.0             | 166.8 → 17.2           | 1.80 – 2.16                      |
+  | β (translation)              | 1.2 → 36         | 63.8 → 2.7             | 119.3 → 6.0            | 1.87 – 2.21                      |
+  | µmax (growth rate, h⁻¹)      | 0.74 → 2.22      | 64.7 → 21.8            | 114.4 → 45.5           | 1.77 – 2.09                      |
+  | K (carrying capacity, OD600) | 5 → 30           | 58.9 → 19.5            | 114.4 → 39.7           | 1.94 – 2.03                      |
+  | Induction OD600              | 0.3 → 1.0        | 34.0 → 24.2            | 66.3 → 49.9            | 1.95 – 2.07                      |
 </TableWithCaption>
 
 Across every sweep the testosterone t50 changed from 2.7 to 92.5 min, while the speed ratio stayed between 1.8 and 2.2 (<Ref target="tab-0xlty" />, <Ref target="fig-najc5" />). Here, growth mattered as much as expression because total enzyme depends on the culture density.
 
 <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/layer3-expression-sweeps.avif" alt="image of layer3_expression_sweeps" caption="Effect of expression and growth settings on the half-times (R215A +  V263I). Higher α, β, µmax and K, and later induction, shorten both t50 values, and testosterone stays faster throughout. The last panel shows the enzyme available at substrate addition." numbered refId="fig-najc5" scale={100} plain={false} noZoom={false} />
 
-But what changes the preference of a steroid by an enzyme is the binding energy and the turnover number (kcat). Considering a ±0.3 kcal/mol shift in the progesterone docking score changes the speed ratio \[t50(P) / t50(T)]. Among all the variants, R215A + V263I stayed the most testosterone-selective with minor variation (<Ref target="fig-e393t" />). Similarly, altering the turnover rate kcat ratio (kcatT / kcatP), the R215A + V263I favoured testosterone even at the lower ratio (<Ref target="fig-wp1j5" />).
+But what changes the preference of a steroid by an enzyme is the binding energy and the turnover number (kcat). Considering a ±0.3 kcal/mol shift in the progesterone docking score changes the speed ratio. Among all the variants, R215A + V263I stayed the most testosterone-selective with minor variation (<Ref target="fig-e393t" />). Similarly, altering the turnover rate kcat ratio (<Formula latex="kcatT / kcatP" />), the R215A + V263I favoured testosterone even at the lower ratio (<Ref target="fig-wp1j5" />).
 
 <Layout2>
   <LayoutColumn>
@@ -297,7 +299,7 @@ But what changes the preference of a steroid by an enzyme is the binding energy 
   </LayoutColumn>
 </Layout2>
 
-### Uncertainty of activity
+#### **Uncertainty of activity**
 
 Each docking score (progesterone and testosterone) was drawn with a standard deviation of 0.5 or 1.0 kcal/mol, together with broad random draws of the expression and kinetic parameters (α, β, E\_scale, kcat and the Km anchor), 200 draws per enzyme. Every draw was compared with the wild type from the same draw, and the wild type itself served as a noise-only control.
 
@@ -313,7 +315,9 @@ The distributions of both speed ratio \[t50(P) / t50(T)] and selectivity score o
   </LayoutColumn>
 </Layout2>
 
-R215A + V263I is the most promising variant. Its docking-based Km values predict a testosterone preference. This preference is the least affected by a ±0.3 kcal/mol docking shift, and the variant survives the random-error draws against the WT control. Expression and growth settings change how fast the steroids are consumed but barely change which one is consumed first. The ranking is still a prediction, because the kcat ratio is unknown and docking error is larger than most differences between variants.
+<Card>
+  R215A + V263I is the most promising variant. Its docking-based Km values predict a testosterone preference. This preference is the least affected by a ±0.3 kcal/mol docking shift, and the variant survives the random-error draws against the WT control. Expression and growth settings change how fast the steroids are consumed but barely change which one is consumed first. The ranking is still a prediction, because the kcat ratio is unknown and docking error is larger than most differences between variants.
+</Card>
 
 **Overall findings:**
 
