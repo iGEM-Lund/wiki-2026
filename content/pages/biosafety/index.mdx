@@ -36,7 +36,7 @@ For each strategy, we researched multiple possible approaches, compared them aga
 
 ### **Gut Gate**
 
-Our effector should only be active when our engineered probiotic is in the gut. The distinct physicochemical signals in the gut vary from both the outside environment and between different compartments within the gut itself, and these signals can be used to build a location-based switch. <Citation reference="chien-et-al-2022" narrative /> built oxygen, pH and lactate <Tooltip text="Genetic circuits that detect a signal, such as oxygen, and respond to it.">biosensors</Tooltip> that control essential genes (*asd, glms) in E. coli* and S.Typhimurium, so that growth depends on the gut-like signal, and tested them in gut-mimicking media and in mice. The three sensing options are compared in <Ref target="tab-7ovp3" />. We chose hypoxia sensing for our proof of concept.
+Our effector should only be active when our engineered probiotic is in the gut. The distinct physicochemical signals in the gut vary from both the outside environment and between different compartments within the gut itself, and these signals can be used to build a location-based switch. <Citation reference="chien-et-al-2022" narrative /> built oxygen, pH and lactate <Tooltip text="Genetic circuits that detect a signal, such as oxygen, and respond to it.">biosensors</Tooltip> that control essential genes (*asd, glms) in E. coli* and *S.typhimurium*, so that growth depends on the gut-like signal, and tested them in gut-mimicking media and in mice. The three sensing options are compared in <Ref target="tab-7ovp3" />. We chose hypoxia sensing for our proof of concept.
 
 <TableWithCaption caption="Sensing options compared for the gut gate" refId="tab-7ovp3">
   | **Option**                      | **How it works**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | **Registry part**                                                                                |
@@ -177,8 +177,6 @@ We compared six auxotrophy options before selecting this one. Each row states wh
 | Synthetic auxotrophy (non-standard amino acid) | Recode essential proteins/codons to require a non-natural amino acid | Strongest theoretical containment; stable long-term                                                                                    | Too complex for current project scope                                                                                                                        | Described as the strongest containment option, but needs extensive genome recoding <Citation reference="kunjapur-et-al-2021" narrative={false} />.                                                                                                                                                                   |
 
 We chose ΔdapA-mediated DAP auxotrophy to permit brief metabolic activity while restricting long-term proliferation.
-
-
 
 How ΔdapA auxotrophy works
 
