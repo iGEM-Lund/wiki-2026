@@ -573,7 +573,7 @@ The enzyme availability comes from the integrated model of enzyme production: en
 
 <FormulaBlock latex="dP/dt = −v_P · s_sub(t)" />
 
-The first three are the growth and expression layers described in the integrated model of enzyme production; the last two are the substrates being consumed. In the earlier model, the expression started at time zero. Here α is multiplied by s\_ind, so that mRNA is made only after IPTG is added, and a second switch, s\_sub(t), allows the steroids to be consumed only after they have been added. The switches reproduce the bench protocol: s\_ind(t) turns transcription on when the culture reaches OD600 0.5, which the growth model identifies at 1.58 h, and s\_sub(t) turns substrate consumption on four hours later, when substrate is added and enough enzyme has built up. Both steroids start at 50 µM, and the reaction is followed for eight hours (<Ref target="tab-i8ink" />).&#x20;
+The first three are the growth and expression layers described in the integrated model of enzyme production; the last two are the substrates being consumed. In the earlier model, the expression started at time zero. Here α is multiplied by s\_ind, so that mRNA is made only after IPTG is added, and a second switch, s\_sub(t), allows the steroids to be consumed only after they have been added. These switches replicates the bench protocol: s\_ind(t) turns transcription on when the culture reaches **OD600 0.5**, which the **growth model identifies at 1.58 h**, and s\_sub(t) turns substrate consumption on **four hours** later, when substrate is added and enough enzyme has built up. Both steroids start at **50 µM**, and the reaction is followed for eight hours (<Ref target="tab-i8ink" />).&#x20;
 
 <Card>
   **Seven assumptions underlie these equations which are listed below:**
@@ -594,7 +594,7 @@ The first three are the growth and expression layers described in the integrated
   | **tsub – time of substrate addition**                       | 4 h after induction | Assumed experimental design                             |
   | **T0, P0 – starting concentration of each steroid**         | 50 µM               | Assumed experimental design                             |
   | **Assay time – length of the simulated reaction**           | 8 h                 | Assumed experimental design                             |
-  | **kcat – turnover number**                                  | 3600 h⁻¹ (1 s⁻¹)    | Placeholder                                             |
+  | **kcat – turnover number**                                  | 3600 h⁻¹ (1 s⁻¹)    | Placeholder, 1 s⁻¹ (low catalysis)                      |
   | **kcat,T / kcat,P – ratio of turnover numbers**             | 1                   | Assumption                                              |
   | **Escale – enzyme concentration per relative unit per OD**  | 0.0004 µM           | Placeholder                                             |
   | **Km,P (wild type) – Km of the wild type for progesterone** | 0.432 µM            | (Arp et al., 2025)  (ITC Kₔ of the wild type)           |
