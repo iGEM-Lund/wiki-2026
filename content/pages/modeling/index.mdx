@@ -176,7 +176,7 @@ Because Pocket 1 did not capture every annotated residue in either enzyme, the b
 
 Docking was performed using AutoDock Vina 1.2 (<Citation reference="eberhardt-et-al-2021" narrative={false} />) with an <Tooltip text="A docking setting: higher values search more thoroughly.">exhaustiveness</Tooltip> setting of 32 and an energy range of 4 kcal/mol. Vina combines a stochastic global search for scoring, which samples ligand position, orientation and torsion angles, with local gradient-based optimization that refines promising candidates into nearby energy minima.
 
-Each ligand was docked independently into each prepared enzyme structure, and the top-ranked pose was recorded along with its predicted binding affinity in kcal/mol. To establish a selectivity baseline, we defined a **selectivity score** as the difference in predicted affinity between testosterone and progesterone, **<Formula latex="ΔG(testosterone) – ΔG(progesterone)" />**. A **negative value indicates that testosterone** is preferred by the enzyme. The inherent stochastic variability of the Vina scoring function, approximately ±0.5 kcal/mol, was treated as the noise threshold (<Citation reference="eberhardt-et-al-2021" narrative={false} />), and selectivity differences below this value were not considered meaningful.
+Each ligand was docked independently into each prepared enzyme structure, and the top-ranked pose was recorded along with its predicted binding affinity in kcal/mol. To establish a selectivity baseline, we defined a **selectivity score** as the difference in predicted affinity between testosterone and progesterone, <Formula latex="ΔG(testosterone) – ΔG(progesterone)" />. A **negative value indicates that testosterone** is preferred by the enzyme. The inherent stochastic variability of the Vina scoring function, approximately ±0.5 kcal/mol, was treated as the noise threshold (<Citation reference="eberhardt-et-al-2021" narrative={false} />), and selectivity differences below this value were not considered meaningful.
 
 After docking, the two enzymes gave comparable absolute affinities but opposite directions of preference (<Ref target="tab-sznaf" />).&#x20;
 
@@ -186,6 +186,8 @@ After docking, the two enzymes gave comparable absolute affinities but opposite 
   | **AKR1D1** | −9.8                       | −9.3                       | +0.5                        | Progesterone   |
   | **ci2350** | −9.1                       | −9.2                       | −0.1                        | Testosterone   |
 </TableWithCaption>
+
+#### For AKR1D1:
 
 AKR1D1 bound progesterone 0.5 kcal/mol more tightly than testosterone. Converting this through  <Formula latex="ΔΔG (|ΔGT – ΔGP|) = RT ln(ratio)" />, with RT = 0.616 kcal/mol at 310 K, gives approximately 2.3-fold selectivity for progesterone. This is consistent with AKR1D1's biological role, where progesterone intermediates are the primary physiological substrates. The docking visualisation is shown below (<Ref target="fig-vtl4k" /> and <Ref target="fig-6676c" />).&#x20;
 
@@ -206,6 +208,8 @@ AKR1D1 bound progesterone 0.5 kcal/mol more tightly than testosterone. Convertin
     &#x20;&#x20;
   </LayoutColumn>
 </Layout2>
+
+#### For ci2350:
 
 ci2350 showed a marginal preference for testosterone (−0.1 kcal/mol, \~1.2-fold), well within the noise floor and cannot be read as meaningful selectivity (<Ref target="tab-sznaf" />). The useful conclusion is negative, which makes ci2350 a workable starting point for engineering a preference in the required direction, since selectivity must be increased rather than reversed.  The docking visualisation is shown below ( <Ref target="fig-i27k7" /> and <Ref target="fig-uddfd" />)
 
