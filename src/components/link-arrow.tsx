@@ -26,7 +26,15 @@ const FIGURE_INSET = 0.2;
 
 const normalize = (path: string) => (path.length > 1 ? path.replace(/\/$/, '') : path);
 
-type Target = { el: HTMLElement; end: 'side' | 'bottom' | 'globe' | 'object'; cleanup?: () => void };
+type Target = {
+  el: HTMLElement;
+  end: 'side' | 'bottom' | 'globe' | 'object';
+  // How far the arrowhead reaches onto the target (see ONTO).
+  onto?: number;
+  // Where the target is, when that is not its whole box (a heading's text).
+  rect?: () => DOMRect;
+  cleanup?: () => void;
+};
 
 // What the globe's line leaves from: a box, how far in from its corner,
 // and where its top and bottom edges are (a tilted card's sit a little
@@ -35,6 +43,8 @@ type Origin = { left: number; right: number; top: number; bottom: number; inset:
 
 // While a link in the page content is hovered or focused, a dashed line
 // draws itself from the link to where the link goes:
+// - a heading of the same page that is on screen: its words, the line
+//   stopping just short of them;
 // - a section of the same page: that section's knot on the scroll string,
 //   whose name lights up (only where the string is on screen, wide screens,
 //   and only for sections it lists);
@@ -62,7 +72,7 @@ type Origin = { left: number; right: number; top: number; bottom: number; inset:
 // above or below it, or out of its facing end into the side of one beside
 // it, in one gentle curve arriving square to the edge and on over it a
 // little.
-function objectPath(from: DOMRect, to: DOMRect): string {
+function objectPath(from: DOMRect, to: DOMRect, onto = ONTO): string {
   const header = document.querySelector('.site__header')?.getBoundingClientRect().bottom ?? 0;
   const top = Math.max(to.top, header);
   const bottom = Math.min(to.bottom, window.innerHeight);
@@ -73,14 +83,14 @@ function objectPath(from: DOMRect, to: DOMRect): string {
     const down = top >= from.bottom;
     const y1 = down ? from.bottom + 2 : from.top - 2;
     const x2 = clamp(x1, to.left + 16, to.right - 16);
-    const y2 = down ? to.top + ONTO : to.bottom - ONTO;
+    const y2 = down ? to.top + onto : to.bottom - onto;
     const bend = Math.max(24, Math.abs(y2 - y1) / 2) * (down ? 1 : -1);
     return `M${x1} ${y1} C${x1} ${y1 + bend} ${x2} ${y2 - bend} ${x2} ${y2}`;
   }
   const right = to.left >= from.right;
   const sx = right ? from.right + END_GAP : from.left - END_GAP;
   const y1 = from.top + from.height / 2;
-  const x2 = right ? to.left + ONTO : to.right - ONTO;
+  const x2 = right ? to.left + onto : to.right - onto;
   const y2 = clamp(y1, top + 16, bottom - 16);
   const pull = Math.max(24, Math.abs(x2 - sx) / 2) * (right ? 1 : -1);
   return `M${sx} ${y1} C${sx + pull} ${y1} ${x2 - pull} ${y2} ${x2} ${y2}`;
@@ -164,6 +174,19 @@ export function LinkArrow() {
       return { el: frame ?? el, end: 'object' };
     }
 
+    // A heading of the same page, while it is on screen: the line goes to
+    // its words, stopping just short of them, rather than to the outline.
+    function headingFor(a: HTMLAnchorElement): Target | null {
+      const el = document.getElementById(decodeURIComponent(a.hash.slice(1).split(':~:')[0]));
+      if (!el?.matches('main :is(h1, h2, h3, h4, h5, h6)') || !isOnScreen(el)) return null;
+      const words = () => {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        return range.getBoundingClientRect();
+      };
+      return { el, end: 'object', onto: -4, rect: words };
+    }
+
     function globeFor(): Target {
       globe!.dataset.shown = '';
       svg!.dataset.external = '';
@@ -236,7 +259,7 @@ export function LinkArrow() {
             : null;
       if (!a) return null;
       if (a.origin !== location.origin) return /^https?:$/.test(a.protocol) ? globeFor() : null;
-      if (normalize(a.pathname) === normalize(location.pathname)) return a.hash ? (objectFor(a) ?? knotFor(a)) : null;
+      if (normalize(a.pathname) === normalize(location.pathname)) return a.hash ? (objectFor(a) ?? headingFor(a) ?? knotFor(a)) : null;
       return signFor(a, el);
     }
 
@@ -255,9 +278,9 @@ export function LinkArrow() {
         return;
       }
       const from = link.getBoundingClientRect();
-      const to = target.el.getBoundingClientRect();
+      const to = target.rect?.() ?? target.el.getBoundingClientRect();
       if (target.end === 'object') {
-        d = objectPath(from, to);
+        d = objectPath(from, to, target.onto);
       } else if (target.end === 'side') {
         // To the knot's right side (the string is always left of the
         // column), arriving horizontally like a thread pulled across.
