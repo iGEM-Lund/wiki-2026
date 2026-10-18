@@ -423,7 +423,9 @@ export function ScrollString() {
       // The headings' knots first: where they ended up places the big knot.
       if (!layoutNotches(max)) return;
       const knotTop =
-        centreFor(anchorsRef.current, window.scrollY, max, trackHeight) - KNOT_HEIGHT / 2;
+        // Clamped: Safari reports scrollY outside 0..max while rubber-banding.
+        centreFor(anchorsRef.current, Math.min(max, Math.max(0, window.scrollY)), max, trackHeight) -
+        KNOT_HEIGHT / 2;
       const p = knotTop / (trackHeight - KNOT_HEIGHT);
       if (linePath && Math.abs(trackHeight - linePathHeight) > 0.5) {
         linePath.setAttribute('d', stringPath(trackHeight));

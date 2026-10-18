@@ -3413,6 +3413,21 @@ a.inline-icon--link:focus-visible {
   margin-top: 0.5rem;
   font-size: 0.8125rem;
 }
+/* Touch-only devices: iOS shows just the first page of a PDF in an iframe
+   and can't scroll it (Android doesn't render one inline at all), so the
+   link to open it is the way to read it. */
+@media (hover: none) and (pointer: coarse) {
+  .pdf-embed__frame {
+    display: none;
+  }
+  .pdf-embed__open-link {
+    margin-top: 0;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+}
 .pdf-embed figcaption {
   color: var(--muted);
   font-size: 0.8125rem;
@@ -4085,6 +4100,7 @@ a.inline-icon--link:focus-visible {
      Firefox disagree on dominant-baseline for text on a path. */
   pointer-events: none;
   user-select: none;
+  -webkit-user-select: none;
 }
 /* Each slice's button: an invisible copy of the slice, over everything. */
 .slice-wheel__hit {
