@@ -308,8 +308,13 @@ export function LinkArrow() {
         reveal!.setAttribute('d', d);
         return;
       }
-      const from = link.getBoundingClientRect();
       const to = target.rect?.() ?? target.el.getBoundingClientRect();
+      // A link that wraps leaves from the line facing its target, not from
+      // the middle of its whole bounding box (which can sit off the words).
+      const whole = link.getBoundingClientRect();
+      const lines = [...link.getClientRects()].filter((r) => r.width > 0);
+      const facingUp = to.top + to.height / 2 < whole.top + whole.height / 2;
+      const from = (lines.length > 1 ? (facingUp ? lines[0] : lines[lines.length - 1]) : null) ?? whole;
       if (target.end === 'object') {
         d = objectPath(from, to, target.onto);
       } else if (target.end === 'side') {
