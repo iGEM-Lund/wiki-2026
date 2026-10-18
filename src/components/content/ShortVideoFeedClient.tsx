@@ -129,6 +129,11 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
   // doesn't start, the tap layer lets clicks through to the player itself.
   const [passthrough, setPassthrough] = useState(false);
   const [muted, setMuted] = useState(true);
+  // The embed address says muted=1, and the player keeps that flag whatever
+  // setVolume says. The first unmute therefore reloads the players with
+  // muted=0 (allowed to autoplay with sound: it follows the user's click);
+  // after that, muting is just volume 0.
+  const [soundLoaded, setSoundLoaded] = useState(false);
   // Scroll snapping is switched off while a mouse drag moves the clips
   // (it would fight every scrollTop write) and until the release has
   // settled.
@@ -223,6 +228,13 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
     });
     return () => clearTimeout(check);
   }, [active, wantPlay, onScreen, readyTick]);
+
+  useEffect(() => {
+    if (!muted && !soundLoaded) {
+      readyRef.current = readyRef.current.map(() => false);
+      setSoundLoaded(true);
+    }
+  }, [muted, soundLoaded]);
 
   useEffect(() => {
     playersRef.current.forEach((player) => player?.setVolume(muted ? 0 : 1).catch(() => {}));
@@ -493,7 +505,7 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
                   {Math.abs(index - active) <= 1 ? (
                     <iframe
                       className="short-feed__player"
-                      src={video.embedSrc}
+                      src={soundLoaded ? video.embedSrc.replace('muted=1', 'muted=0') : video.embedSrc}
                       title={video.title || `Video ${index + 1} of ${count}`}
                       allow="autoplay; fullscreen; picture-in-picture"
                       tabIndex={-1}
