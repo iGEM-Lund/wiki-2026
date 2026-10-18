@@ -7,6 +7,9 @@ import { useRef, type FocusEvent, type PointerEvent } from 'react';
 // layer.
 const FADE_MS = 200;
 
+// The least gap kept between a tag and the screen's side.
+const EDGE_GAP = 12;
+
 // Where the tag hangs: centred under its anchor, in viewport coordinates
 // (see the [popover] rule for .term-tip__bubble and .citation__sign in
 // globals.css). An anchor broken over several lines has one box per line;
@@ -23,7 +26,14 @@ function place(anchor: HTMLElement, tag: HTMLElement, point?: { x: number; y: nu
       );
     box = lines.reduce((best, r) => (distance(r) < distance(best) ? r : best));
   }
-  tag.style.setProperty('--anchor-x', `${box.left + box.width / 2}px`);
+  // Kept inside the screen (its width is 0 until it is open, so the first
+  // placing is unclamped); the string stays tied to the anchor, --knot being
+  // how far that is from the tag's middle.
+  const middle = box.left + box.width / 2;
+  const half = tag.offsetWidth / 2 + EDGE_GAP;
+  const x = Math.min(Math.max(middle, half), document.documentElement.clientWidth - half);
+  tag.style.setProperty('--anchor-x', `${x}px`);
+  tag.style.setProperty('--knot', `${middle - x}px`);
   tag.style.setProperty('--anchor-y', `${box.bottom}px`);
 }
 
@@ -52,6 +62,7 @@ export function useHangingPopover(tagSelector: string, shownWhile: string) {
     if (tag.matches(':popover-open')) return;
     place(anchor, tag, pointer.current);
     tag.showPopover();
+    place(anchor, tag, pointer.current);
     const follow = () => place(anchor, tag, pointer.current);
     window.addEventListener('scroll', follow, { capture: true, passive: true });
     window.addEventListener('resize', follow, { passive: true });

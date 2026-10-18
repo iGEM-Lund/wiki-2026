@@ -2603,7 +2603,7 @@ a.inline-icon--link:focus-visible {
   white-space: normal;
   translate: -50% 0;
   rotate: -6deg;
-  transform-origin: 50% -1.15rem;
+  transform-origin: calc(50% + var(--knot, 0px)) -1.15rem;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -2616,7 +2616,7 @@ a.inline-icon--link:focus-visible {
 .world-map__sign::before {
   content: '';
   position: absolute;
-  left: 50%;
+  left: calc(50% + var(--knot, 0px));
   bottom: calc(100% - 0.75rem);
   height: calc(1.15rem + 0.75rem);
   border-left: 2px solid var(--pin-string);
@@ -2627,7 +2627,7 @@ a.inline-icon--link:focus-visible {
 .world-map__sign::after {
   content: '';
   position: absolute;
-  left: 50%;
+  left: calc(50% + var(--knot, 0px));
   top: 0.45rem;
   width: 7px;
   height: 7px;
@@ -6236,10 +6236,63 @@ article .layout__column p {
   .women-line-scene__next:not(.women-line-scene__next--top) {
     left: calc(var(--edge) + 16px);
     /* Clear of the back-to-top tag in the corner: above it, and short of
-       it on the right. */
+       it on the right (its 3.5rem, its 1.5rem offset and a gap). */
     top: calc(86vh + var(--lift, 0vh));
-    width: calc(100vw - 32px - 3.5rem);
+    width: calc(100vw - 32px - 5.5rem);
     transform: translateY(-100%);
+  }
+}
+
+/* On a short screen, of any shape, the beats are kept small enough to stay
+   clear of her: those at the top end above her, those at the bottom start
+   below, and the ones at the top start a little higher, for the room. */
+@media (max-height: 44rem) {
+  .women-line-scene__next > strong {
+    font-size: min(clamp(2.5rem, 7 * var(--u), 5.5rem), max(1.25rem, 6vh));
+  }
+  .women-line-scene__next--phrase > strong {
+    font-size: min(clamp(1.75rem, 3.6 * var(--u), 3.25rem), max(1.25rem, 4.4vh));
+  }
+  .women-line-scene__next > span {
+    font-size: min(clamp(1rem, 1.8 * var(--u), 1.5rem), max(0.8rem, 3.4vh));
+  }
+  /* The ones at the top have her head close under them. */
+  .women-line-scene__next--top > strong {
+    font-size: min(clamp(1.75rem, 3.6 * var(--u), 3.25rem), max(1.25rem, 4vh));
+  }
+  .women-line-scene__next--top > span {
+    font-size: min(clamp(1rem, 1.8 * var(--u), 1.5rem), max(0.8rem, 2.9vh));
+  }
+  .women-line-scene__next--top {
+    top: calc(2vh + var(--lift, 0vh));
+  }
+}
+@media (orientation: landscape) and (max-height: 44rem) {
+  /* Wider, so there are fewer lines of it to fit above her. */
+  .women-line-scene__next--top {
+    width: min(56vw, 48rem);
+    margin-left: calc(min(56vw, 48rem) / -2);
+  }
+}
+
+/* On a short screen the statistic comes down to where the back-to-top tag
+   hangs, so it keeps to the left of it (as the beats above do). */
+@media (orientation: portrait) and (max-height: 44rem) {
+  .women-line-scene__stat {
+    width: calc(100vw - 32px - 5.5rem);
+    /* The scene slides to keep her in the middle of the screen, which is
+       where this starts from; it moves to the screen's left margin. */
+    transform: translateX(calc(16px - 50vw));
+    text-align: left;
+  }
+}
+
+/* On a phone the solution cards fill the screen, so the tag steps aside
+   while they are up rather than sit on one. */
+@media (max-width: 48rem) {
+  body:has(.women-line-scene__dark) .back-to-top {
+    opacity: 0;
+    pointer-events: none;
   }
 }
 

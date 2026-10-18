@@ -65,16 +65,19 @@ export function SymptomRing({
   cx,
   cy,
   span,
+  depth,
   shown,
 }: {
   cx: number;
   cy: number;
   span: number;
+  depth: number;
   shown: number;
 }) {
   if (!shown) return null;
   const rx = Math.min(RX, span / 2 - FIT_EDGE);
-  const ry = RY + (RX - rx) * 0.8;
+  // Shallower on a short screen, where she is let lower for the text above.
+  const ry = (RY + (RX - rx) * 0.8) * depth;
   const labels = Math.max(1, 0.75 * (1200 / span));
   return (
     <g

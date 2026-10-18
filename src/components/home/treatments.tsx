@@ -34,7 +34,15 @@ type Item = {
   // Reaches her where this spot is, by a line.
   reaches?: boolean;
 };
-type Cluster = { name: string; window: readonly [number, number]; items: Item[]; spot: Spot };
+type Cluster = {
+  name: string;
+  window: readonly [number, number];
+  items: Item[];
+  spot: Spot;
+  // How far it sits lower where the names are drawn larger (per unit of
+  // that), to stay clear of the cluster above it.
+  drop?: number;
+};
 
 // Coming in one after another over the beat's time (0 to 1): each cluster
 // first, then its line, then her taking its colour.
@@ -47,6 +55,7 @@ const CLUSTERS: Cluster[] = [
       { art: 'uterus', dx: -330, dy: 95, size: 150, reaches: true },
     ],
     spot: { dx: 0, dy: 30, r: 38 },
+    drop: 70,
   },
   {
     name: 'Metformin',
@@ -105,14 +114,25 @@ export function Treatments({ cx, cy, span, shown }: { cx: number; cy: number; sp
   // WomenOnLine), the clusters are drawn smaller and closer in, to stay on
   // it and clear of her, with the names larger to stay legible.
   const k = Math.min(1, (span / 2 - FIT_EDGE) / REACH);
-  const labels = Math.max(1, 0.75 * (1200 / span)) / Math.max(k, 0.01);
+  const labelScale = Math.max(1, 0.75 * (1200 / span));
+  const labels = labelScale / Math.max(k, 0.01);
   return (
     <g className="treatments" aria-hidden="true">
-      {CLUSTERS.map(({ name, window, items, spot }) => {
+      {CLUSTERS.map(({ name, window, items, spot, drop = 0 }) => {
         const arrive = smooth(phase(shown, [window[0], window[0] + (window[1] - window[0]) * 0.6]));
         if (!arrive) return null;
         const drawn = smooth(phase(shown, [window[0] + (window[1] - window[0]) * 0.4, window[1]]));
         const her = { x: cx + spot.dx, y: cy + spot.dy };
+        // Where the last name written in this cluster ends, so a drawing
+        // set below it is kept clear of it however large the names are drawn.
+        let labelEnd = -Infinity;
+        let labelSpan: [number, number] = [0, 0];
+        // A name kept on the screen takes its whole cluster along with it.
+        const reach = span / 2 - FIT_EDGE;
+        const named = items.find((item) => item.label);
+        const half = named ? (Math.max(...named.label!.map((line) => line.length)) * 0.56 * 17 * labelScale) / 2 : 0;
+        const at = named ? named.dx * k * (1 + (1 - arrive) * 0.12) : 0;
+        const shift = named ? Math.min(reach - half, Math.max(half - reach, at)) - at : 0;
         return (
           <g key={name}>
             {items.map(({ art, dx: ix, dy: iy, size: isize, label, reaches }) => {
@@ -120,8 +140,14 @@ export function Treatments({ cx, cy, span, shown }: { cx: number; cy: number; sp
               const [w, h] = ART[art] >= 1 ? [size, size / ART[art]] : [size * ART[art], size];
               // Each drifts in a little way from further out.
               const out = (1 - arrive) * 0.12;
-              const x = cx + dx * (1 + out);
-              const y = cy + dy * (1 + out);
+              const x = cx + dx * (1 + out) + shift;
+              const below = drop * (labelScale - 1);
+              const under = x > labelSpan[0] && x < labelSpan[1];
+              const y = Math.max(cy + dy * (1 + out) + below, under ? labelEnd + 8 + h / 2 : -Infinity);
+              if (label) {
+                labelEnd = y + h / 2 + (22 + 20 * (label.length - 1)) * labelScale + 4;
+                labelSpan = [x - half, x + half];
+              }
               return (
                 <g key={art} opacity={arrive}>
                   <image href={`${BASE}/${art}.avif`} x={x - w / 2} y={y - h / 2} width={w} height={h} />

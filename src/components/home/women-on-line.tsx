@@ -281,6 +281,13 @@ const DIP = 16;
 // Her middle, below where she hung from, in drawing units: what she turns
 // about as she floats, and what the symptoms ring.
 const HER_MIDDLE = 60;
+// The screen height (px) that the drawings round her are laid out for; on a
+// shorter one the ring of symptoms is shallower, and she is let lower while
+// text at the top is up.
+const DEPTH_PX = 900;
+// How far (in drawing units) she is let lower, at the least depth, while a
+// beat of text at the top of the screen is up, to leave room for it.
+const LOWER = 200;
 const FALL = 600;
 const FOLLOW = 660;
 const SINK = 380;
@@ -359,11 +366,14 @@ export function WomenOnLine() {
   // it, unless the stage is wider than the screen (on a tall, narrow one,
   // see --scene-w in globals.css), cropped either side.
   const [span, setSpan] = useState(WIDTH);
+  // How much of a full-height screen's depth there is (see DEPTH_PX).
+  const [depth, setDepth] = useState(1);
   useEffect(() => {
     const measure = () => {
       const stage = sectionRef.current?.querySelector<HTMLElement>('.women-line-scene__stage');
       if (!stage?.clientWidth) return;
       setSpan(Math.min(WIDTH, (document.documentElement.clientWidth / stage.clientWidth) * WIDTH));
+      setDepth(Math.min(1, Math.max(0.6, window.innerHeight / DEPTH_PX)));
     };
     measure();
     window.addEventListener('resize', measure);
@@ -472,7 +482,8 @@ export function WomenOnLine() {
   const panRoom = (WIDTH - span) / 2;
   const pan = Math.max(-panRoom, Math.min(panRoom, CENTRE_X - herNowX));
   // The symptoms ring where she is without her bob, so they stay still.
-  const herRingY = stringY(herX, dip, herX) + fall;
+  const lowered = Math.max(0, ...BEATS.map(({ top }, i) => (top ? beats[i] : 0)));
+  const herRingY = stringY(herX, dip, herX) + fall + LOWER * (1 - depth) * smooth(lowered);
   const herY = herRingY + 5 * Math.sin(time * 1.3) * float;
   const herTurn = 3 * Math.sin(time * 0.7) * float;
   const women = others.map((other, i) =>
@@ -584,7 +595,7 @@ export function WomenOnLine() {
                 );
               })}
             <g opacity={wordsOut * symptomsOut}>
-              <SymptomRing cx={herNowX} cy={herRingY + HER_MIDDLE} span={span} shown={wordsOut * symptomsOut ? symptoms : 0} />
+              <SymptomRing cx={herNowX} cy={herRingY + HER_MIDDLE} span={span} depth={depth} shown={wordsOut * symptomsOut ? symptoms : 0} />
             </g>
             <g opacity={wordsOut}>
               <Treatments cx={herNowX} cy={herRingY + HER_MIDDLE} span={span} shown={treat} />
