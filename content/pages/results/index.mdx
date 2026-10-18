@@ -19,7 +19,7 @@ The full workflow for both AKR1D1 and ci2350, from protein structure acquisition
 
 ### **Docked poses of the AKR1D1 variants**
 
-Thirteen stable AKR1D1 variants were docked with both steroids. Selectivity is reported as ΔG(testosterone) − ΔG(progesterone), so a positive value means progesterone is bound more tightly; the wild type sits at +0.5 kcal/mol. A variant improves only if this value falls.
+Thirteen stable AKR1D1 variants were docked with both steroids. Selectivity is reported as <Formula latex="ΔG(testosterone) − ΔG(progesterone)" />, so a **positive value means progesterone is bound more tightly**; the wild type sits at +0.5 kcal/mol. A variant improves only if this value falls.
 
 <TableWithCaption caption="Docking of stable AKR1D1 variants with progesterone and testosterone" refId="tab-uxy8w">
   | **Mutation**                  | **Progesterone (kcal/mol)** | **Testosterone (kcal/mol)** | **Selectivity (test − prog)** | ΔΔG (REU) |
@@ -44,7 +44,7 @@ No variants shifted the preference. The largest gain was 0.1 kcal/mol, far below
 
 The mutations alter how well the pocket holds a steroid, not which steroid it holds. Testosterone and progesterone differ only at C17, and if a substitution cannot distinguish that one group, it will always move both ligands together.
 
-Two substitutions were examined in detail: V309T, which replaces a valine methyl group with the hydroxyl of threonine, and L311S, which trims a leucine side chain down to serine. Both were intended to introduce polarity near the steroid and make the pocket less comfortable for progesterone’s acetyl group. Both sit above the plane of the progesterone, over the B and C rings, while the C17 substituent extends past them into the open end of the pocket (<Ref target="fig-tonmw" /> and <Ref target="fig-bifbg" />).
+Two substitutions were examined in detail: V309T, which replaces a valine methyl group with the hydroxyl of threonine, and L311S, which trims a leucine side chain down to serine. Both were intended to introduce polarity near the steroid and make the pocket less comfortable for progesterone’s acetyl group. Both sit above the plane of the progesterone, over the B and C rings, while the C17 substituent extends past them into the open end of the pocket (<Ref target="fig-tonmw" />, <Ref target="fig-bifbg" />, <Ref target="fig-m5401" /> and <Ref target="fig-4z0rf" />).
 
 Since neither mutated side chain reaches the C17 group, there is no direct contact. So, an acetyl group and a hydroxyl look the same to the enzyme, which matches the docking scores: every substitution at these positions moved both substrates by the same amount, leaving the selectivity gap at +0.5 kcal/mol.
 
@@ -60,11 +60,11 @@ Since neither mutated side chain reaches the C17 group, there is no direct conta
 
 <Layout2>
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-v309t-l311s-progesterone-view.avif" alt="AKR1D1_V309T_L311S_progesterone_view" caption="Progesterone in the V309T + L311S double mutant (pink) , with the C17 acetyl group extending into the open region beyond V309 and L311" numbered refId="fig-svh2y" scale={100} plain={false} noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-v309t-l311s-progesterone-view.avif" alt="AKR1D1_V309T_L311S_progesterone_view" caption="Progesterone in the V309T + L311S double mutant (pink) , with the C17 acetyl group extending into the open region beyond V309 and L311" numbered refId="fig-m5401" scale={100} plain={false} noZoom={false} />
   </LayoutColumn>
 
   <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-v309t-l311s-testosterone-view.avif" alt="AKR1D1_V309T_L311S_testosterone_view" caption="Testosterone in the V309T + L311S double mutant. Both mutated side chains (pink) sit on the same loop far from testosterone." numbered refId="fig-w52f3" scale={100} plain={false} noZoom={false} />
+    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/akr1d1-v309t-l311s-testosterone-view.avif" alt="AKR1D1_V309T_L311S_testosterone_view" caption="Testosterone in the V309T + L311S double mutant. Both mutated side chains (pink) sit on the same loop far from testosterone." numbered refId="fig-4z0rf" scale={100} plain={false} noZoom={false} />
   </LayoutColumn>
 </Layout2>
 
