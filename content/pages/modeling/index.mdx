@@ -449,9 +449,9 @@ A batch culture in a closed flask grows exponentially while nutrients are plenti
 "
 />
 
-X is the culture density (<Tooltip text="Light absorbance at 600 nm, used to measure how dense a bacterial culture is.">OD600</Tooltip>), µmax the maximum specific growth rate (per hour) and K the <Tooltip text="The maximum culture density the medium can support.">carrying capacity</Tooltip>, the OD600 at which growth stops. The factor (1 − X/K) falls from 1 to 0 as the culture fills, so it acts as the brake on growth (<Ref target="fig-8xckn" />). A <Tooltip text="The initial period before bacteria start growing.">lag phase</Tooltip> was not included, so the simulated culture starts to grow immediately from the starting density.
+X is the culture density (<Tooltip text="Light absorbance at 600 nm, used to measure how dense a bacterial culture is.">OD600</Tooltip>), µmax the maximum specific growth rate (per hour) and K the <Tooltip text="The maximum culture density the medium can support.">carrying capacity</Tooltip>, the OD600 at which growth stops. The factor (1 − X/K) falls from 1 to 0 as the culture fills, so it acts as the brake on growth. A <Tooltip text="The initial period before bacteria start growing.">lag phase</Tooltip> was not included, so the simulated culture starts to grow immediately from the starting density.
 
-From our experimental data, the cells **double** **every 28 minutes** (µmax = 1.48 h⁻¹). We did not measure the plateau, so K was set to OD600 15 (<Ref target="tab-vzdvj" />), a plausible density for a rich medium, and its influence is examined in the <Tooltip text="Changing one input at a time to see how much the result depends on it.">sensitivity analysis</Tooltip>. From these parameters, the growth saturates near 7 h (<Ref target="fig-8xckn" />).
+From our experimental data, the cells **double** **every 28 minutes** (µmax = 1.48 h⁻¹). We did not measure the plateau, so K was set to OD600 15 (<Ref target="tab-vzdvj" />), a plausible density for a rich medium, and its influence is examined in the <Tooltip text="Changing one input at a time to see how much the result depends on it.">sensitivity analysis</Tooltip>. From these parameters, the growth saturates near 7 h.
 
 <TableWithCaption
   caption="Parameters of the growth model
@@ -465,11 +465,9 @@ From our experimental data, the cells **double** **every 28 minutes** (µmax = 1
   | **Starting density (X₀)**               | 0.05 (OD600) | Starting value used in the simulation |
 </TableWithCaption>
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/growth-curve.avif" alt="Image of growth curve" caption="Logistic growth curve of the culture with µmax = 1.48 per hour and K = 15. The plateau is reached after about 7 h." numbered refId="fig-8xckn" scale={100} plain={false} noZoom={false} />
-
 #### **Expression model**
 
-Since mRNA and the enzyme behave differently inside the cell, we examined them separately. m is the mRNA level in the cell and E the enzyme level, both in relative units. mRNA is short-lived: messages are transcribed at rate α and degraded at rate δm, so the cell maintains a small working pool at a steady level (<Ref target="fig-qgy4n" />), giving the ribosomes a constant supply to work from (<Citation reference="alon-et-al-2006" narrative={false} />).&#x20;
+Since mRNA and the enzyme behave differently inside the cell, we examined them separately. m is the mRNA level in the cell and E the enzyme level, both in relative units. mRNA is short-lived: messages are transcribed at rate α and degraded at rate δm, so the cell maintains a small working pool at a steady level, giving the ribosomes a constant supply to work from (<Citation reference="alon-et-al-2006" narrative={false} />).&#x20;
 
 <FormulaBlock
   latex="dm/dt = α − δm · m
@@ -483,20 +481,22 @@ Since mRNA and the enzyme behave differently inside the cell, we examined them s
 "
 />
 
-The enzyme is the opposite. It is built from those messages at rate β. We assume it is stable, so nothing degrades it, and the only loss is growth itself. At each division, the enzyme already made is shared between two daughter cells, so the faster the culture grows, the more it dilutes its own protein (<Citation reference="klumpp-et-al-2009" narrative={false} />). This is where the two models are integrated: dilution takes the culture’s current growth rate, <Formula latex="µ(t) = µmax · (1 − X/K)" />, rather than a fixed value. Enzyme therefore stays low while the culture divides fast and accumulates as growth slows (<Ref target="fig-qgy4n" />) (<Citation reference="klumpp-et-al-2009" narrative={false} />).&#x20;
+The enzyme is the opposite. It is built from those messages at rate β. We assume it is stable, so nothing degrades it, and the only loss is growth itself. At each division, the enzyme already made is shared between two daughter cells, so the faster the culture grows, the more it dilutes its own protein (<Citation reference="klumpp-et-al-2009" narrative={false} />). This is where the two models are integrated: dilution takes the culture’s current growth rate, <Formula latex="µ(t) = µmax · (1 − X/K)" />, rather than a fixed value. Enzyme therefore stays low while the culture divides fast and accumulates as growth slows (<Citation reference="klumpp-et-al-2009" narrative={false} />).&#x20;
 
 <FormulaBlock
   latex="dE/dt = β · m − µ(t) · E = β · m − µmax · (1 − X/K) · E
 "
 />
 
-**Five assumptions:**
+<Card>
+  **Five assumptions:**
 
-* ci2350’s mRNA turns over like a typical *E. coli* transcript, since its half-life has not been measured.
-* The promoter is fully induced at 0.8 mM IPTG, so transcription runs at a constant rate.
-* The enzyme is stable, so dilution by growth is its only loss.
-* Expression does not burden the cell, so it does not slow growth.
-* mRNA and enzyme are in relative units, since absolute counts would require data we do not have.
+  * ci2350’s mRNA turns over like a typical *E. coli* transcript, since its half-life has not been measured.
+  * The promoter is fully induced at 0.8 mM IPTG, so transcription runs at a constant rate.
+  * The enzyme is stable, so dilution by growth is its only loss.
+  * Expression does not burden the cell, so it does not slow growth.
+  * mRNA and enzyme are in relative units, since absolute counts would require data we do not have.
+</Card>
 
 Bacterial messages break down within minutes of being made (<Citation reference="bernstein-et-al-2002" narrative={false} />). We used a half-life (3 to 8 mins) to predict the decay constants <Formula latex="(δ = ln2 / t½)" /> range and used their average of 9.53 h⁻¹. The transcription rate (α) and translation rate (β) are placeholders, as neither has been measured for ci2350 (<Ref target="tab-aqmwv" />).
 
