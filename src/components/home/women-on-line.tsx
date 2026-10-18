@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { useClock, useScrollProgress, useTimedToggle, useTimedToggles, type Hold } from './scroll-play';
+import { Tooltip } from '@/components/content/Tooltip';
 import { SymptomRing } from './symptom-ring';
 import { dimmed, SolutionPapers } from './solution-papers';
 import { SkipToEnd } from './skip-to-end';
@@ -114,8 +115,16 @@ const BEATS: Beat[] = [
     big: 'Polyendocrine Metabolic Ovarian Syndrome',
     small: (
       <>
-        is a multisystem disorder characterized by hormonal imbalance, metabolic dysfunction, and impaired ovarian
-        function, with <strong>hyperandrogenism</strong> being a major pathological driver.
+        is a multisystem disorder characterized by{' '}
+        <Tooltip text="Hormone levels that are too high or too low, or out of step with one another.">
+          hormonal imbalance
+        </Tooltip>
+        ,{' '}
+        <Tooltip text="Problems with how the body handles energy, such as processing sugar and fats.">
+          metabolic dysfunction
+        </Tooltip>
+        , and impaired ovarian function, with <strong>hyperandrogenism</strong> being a major{' '}
+        <Tooltip text="Something that causes or drives a disease.">pathological driver</Tooltip>.
       </>
     ),
     from: at(320),
@@ -124,8 +133,19 @@ const BEATS: Beat[] = [
   },
   {
     big: 'Hyperandrogenism',
-    small:
-      'is the excessive production or activity of androgens, particularly testosterone and dihydrotestosterone. It is one of the key pathological drivers of PMOS.',
+    small: (
+      <>
+        is the excessive production or activity of{' '}
+        <Tooltip text="A group of hormones, such as testosterone, that drive male traits. Everyone makes them, women in smaller amounts.">
+          androgens
+        </Tooltip>
+        , particularly testosterone and{' '}
+        <Tooltip text="A stronger androgen made from testosterone, which binds the androgen receptor more tightly.">
+          dihydrotestosterone
+        </Tooltip>
+        . It is one of the key pathological drivers of PMOS.
+      </>
+    ),
     from: at(460),
     to: at(600),
     phrase: true,
@@ -134,7 +154,15 @@ const BEATS: Beat[] = [
   // scrolls away.
   {
     big: 'Androgen excess',
-    small: 'leads to androgen receptor activation throughout the body, and shows as',
+    small: (
+      <>
+        leads to{' '}
+        <Tooltip text="The protein in cells that androgens bind to in order to have their effect. When it is switched on, it changes which genes the cell uses.">
+          androgen receptor
+        </Tooltip>{' '}
+        activation throughout the body, and shows as
+      </>
+    ),
     from: at(600),
     to: at(740),
     phrase: true,
@@ -144,8 +172,20 @@ const BEATS: Beat[] = [
   // not the end of it.
   {
     big: 'Current treatments',
-    small:
-      'Combined oral contraceptives regulate menstrual cycles and suppress ovarian androgen production. Metformin improves insulin sensitivity, but has limited effects on hyperandrogenism. Anti-androgens reduce androgen action, but require systemic exposure.',
+    small: (
+      <>
+        Combined oral contraceptives regulate menstrual cycles and suppress ovarian androgen production. Metformin
+        improves{' '}
+        <Tooltip text="How well the body's cells respond to insulin and take up sugar from the blood.">
+          insulin sensitivity
+        </Tooltip>
+        , but has limited effects on hyperandrogenism. Anti-androgens reduce androgen action, but require{' '}
+        <Tooltip text="Reaching the whole body through the bloodstream, rather than staying in one place.">
+          systemic exposure
+        </Tooltip>
+        .
+      </>
+    ),
     from: TREAT_AT,
     to: at(870),
     phrase: true,
@@ -153,8 +193,20 @@ const BEATS: Beat[] = [
   },
   {
     big: 'Symptoms, not the source',
-    small:
-      'These therapies relieve symptoms rather than addressing the underlying mechanism. They act on the whole body, cover only part of the problem, and some rule out pregnancy. We need a localized strategy that targets androgen regeneration.',
+    small: (
+      <>
+        These therapies relieve symptoms rather than addressing the underlying mechanism. They act on the whole body,
+        cover only part of the problem, and some rule out pregnancy. We need a{' '}
+        <Tooltip text="A treatment that acts at one site in the body, here the gut, instead of everywhere.">
+          localized strategy
+        </Tooltip>{' '}
+        that targets{' '}
+        <Tooltip text="Androgens that were on their way out of the body being turned back into their active form in the gut, so they can be reabsorbed.">
+          androgen regeneration
+        </Tooltip>
+        .
+      </>
+    ),
     from: at(870),
     to: Infinity,
     phrase: true,

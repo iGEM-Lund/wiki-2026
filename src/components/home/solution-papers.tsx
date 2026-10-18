@@ -17,7 +17,18 @@ const SOLUTION = [
     title: 'A gut-gated system',
     text: (
       <>
-        Under gut-like conditions, an engineered probiotic expresses an effector that modulates androgen bioactivity
+        Under gut-like conditions, an engineered{' '}
+        <Tooltip text="A live, beneficial bacterium taken by mouth. Ours is genetically modified to carry the enzyme.">
+          probiotic
+        </Tooltip>{' '}
+        expresses an{' '}
+        <Tooltip text="The molecule that does the work in our system. Here, an enzyme that converts testosterone.">
+          effector
+        </Tooltip>{' '}
+        that modulates{' '}
+        <Tooltip text="How strongly an androgen can switch on the androgen receptor and have an effect.">
+          androgen bioactivity
+        </Tooltip>{' '}
         locally, within the{' '}
         <Tooltip text="The gut bacteria that metabolise testosterone and other androgens, and so help regulate how much of them stays active in the body.">
           testobolome
@@ -28,15 +39,43 @@ const SOLUTION = [
   },
   {
     title: 'Local androgen conversion',
-    text: 'The effector converts testosterone into less androgenic metabolites through 5β-reduction or A-ring cleavage.',
+    text: (
+      <>
+        The effector converts testosterone into less androgenic metabolites through{' '}
+        <Tooltip text="An enzyme adds hydrogen to the first ring of the steroid, giving a shape that barely activates the androgen receptor.">
+          5β-reduction
+        </Tooltip>{' '}
+        or{' '}
+        <Tooltip text="An enzyme opens the first ring (the A-ring) of the steroid, breaking up its characteristic shape so it can no longer act as an androgen.">
+          A-ring cleavage
+        </Tooltip>
+        .
+      </>
+    ),
   },
   {
     title: 'Less regeneration',
-    text: 'It targets androgen regeneration in the gut, before enterohepatic reabsorption can return it to circulation.',
+    text: (
+      <>
+        It targets androgen regeneration in the gut, before{' '}
+        <Tooltip text="Substances released from the liver into the gut via bile are reabsorbed and carried back to the liver, instead of leaving the body.">
+          enterohepatic reabsorption
+        </Tooltip>{' '}
+        can return it to circulation.
+      </>
+    ),
   },
   {
     title: 'Lower systemic exposure',
-    text: 'Our approach aims to reduce systemic androgen exposure while limiting off-target effects.',
+    text: (
+      <>
+        Our approach aims to reduce systemic androgen exposure while limiting{' '}
+        <Tooltip text="Unwanted effects on parts of the body or processes other than the intended target.">
+          off-target effects
+        </Tooltip>
+        .
+      </>
+    ),
   },
 ];
 

@@ -14,12 +14,21 @@ const SYMPTOMS = [
     tip: "Excess growth of thick, dark hair in places where women usually have little or none, such as the face, chest and back.",
   },
   { icon: SYMPTOM_ICONS.acne, label: "Acne & oily skin" },
-  { icon: SYMPTOM_ICONS.hairLoss, label: ["Female-pattern", "hair loss"] },
+  {
+    icon: SYMPTOM_ICONS.hairLoss,
+    label: ["Female-pattern", "hair loss"],
+    tip: "Thinning of the hair on the top and front of the scalp, driven by androgens.",
+  },
   {
     icon: SYMPTOM_ICONS.irregularMenstruation,
     label: ["Irregular", "menstruation"],
+    tip: "Periods that come rarely, unpredictably or not at all, often because ovulation is irregular.",
   },
-  { icon: SYMPTOM_ICONS.metabolic, label: ["Metabolic", "abnormalities"] },
+  {
+    icon: SYMPTOM_ICONS.metabolic,
+    label: ["Metabolic", "abnormalities"],
+    tip: "Problems with how the body handles sugar and fats, such as insulin resistance and abnormal blood lipids.",
+  },
 ];
 
 // The ring: its radii, and where on it each goes, in degrees clockwise from
