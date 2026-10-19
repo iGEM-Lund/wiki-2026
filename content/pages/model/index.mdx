@@ -546,7 +546,7 @@ The enzyme availability comes from the integrated model of enzyme production: en
 
 **Model Assumption:**
 
-<FormulaBlock latex="E_tot = E_scale · E · X " />
+<FormulaBlock latex="E_tot = Escale · E · X " />
 
 **The three layers run together as one system of five equations:**&#x20;
 
@@ -557,7 +557,7 @@ The enzyme availability comes from the integrated model of enzyme production: en
 />
 
 <FormulaBlock
-  latex="dm/dt = α · s_ind(t) − δm · m
+  latex="dm/dt = α · sind(t) − δm · m
 "
 />
 
@@ -567,11 +567,11 @@ The enzyme availability comes from the integrated model of enzyme production: en
 />
 
 <FormulaBlock
-  latex="dT/dt = −v_T · s_sub(t)
+  latex="dT/dt = −v_T · ssub(t)
 "
 />
 
-<FormulaBlock latex="dP/dt = −v_P · s_sub(t)" />
+<FormulaBlock latex="dP/dt = −v_P · ssub(t)" />
 
 The first three are the growth and expression layers described in the integrated model of enzyme production; the last two are the substrates being consumed. In the earlier model, the expression started at time zero. Here α is multiplied by s\_ind, so that mRNA is made only after IPTG is added, and a second switch, s\_sub(t), allows the steroids to be consumed only after they have been added. These switches replicates the bench protocol: s\_ind(t) turns transcription on when the culture reaches **OD600 0.5**, which the **growth model identifies at 1.58 h**, and s\_sub(t) turns substrate consumption on **four hours** later, when substrate is added and enough enzyme has built up. Both steroids start at **50 µM**, and the reaction is followed for eight hours (<Ref target="tab-i8ink" />).&#x20;
 
