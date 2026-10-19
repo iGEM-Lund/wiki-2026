@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { Tooltip } from '@/components/content/Tooltip';
 import { Card } from '@/components/content/Card';
 import { CardTitle } from '@/components/content/CardTitle';
+import { threadWidth } from './thread-width';
 
 // The end of the home scene, in one go (`shown`, 0 to 1): the papers on the
 // team's table (see TeamRoom), plain white sheets, fly up off it and away
@@ -280,14 +281,14 @@ export function SolutionPapers({ shown }: { shown: number }) {
       })}
       {drawn > 0 && (
         <svg className="solution-papers__thread" viewBox={`0 0 ${w} ${h}`} aria-hidden="true">
-          {/* As thick as the string the women sat on, drawn 1200 wide across
-              the screen, the same as the section below carries it on. */}
+          {/* As thick as the string the women sat on, and as the section below
+              carries it on (see threadWidth). */}
           <path
             d={d}
             pathLength={1}
             strokeDasharray="1 1"
             strokeDashoffset={1 - drawn}
-            strokeWidth={(3.4 * vw) / ROOM_WIDTH}
+            strokeWidth={threadWidth(vw, h)}
           />
         </svg>
       )}

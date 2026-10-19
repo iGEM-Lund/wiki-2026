@@ -42,6 +42,10 @@ const RY = 205;
 const FIT_EDGE = 95;
 const ANGLES = [-30, 25, 90, 155, 210];
 const ICON = 96;
+// The least the symptom straight under her sits below her middle, however
+// shallow the ring: her feet reach about 90 below it, and half the icon
+// and a gap come on top.
+const BELOW_HER = 150;
 const LABEL_LINE = 18;
 const ITEM_W = 200;
 
@@ -91,7 +95,8 @@ export function SymptomRing({
         // Each drifts in a little way out from her as it comes.
         const out = 1 + (1 - t) * 0.12;
         const x = cx + Math.cos(a) * rx * out;
-        const y = cy + Math.sin(a) * ry * out;
+        const down = Math.sin(a) * ry;
+        const y = cy + (Math.abs(Math.cos(a)) < 0.3 ? Math.max(down, BELOW_HER) : down) * out;
         const lines = Array.isArray(label) ? label : [label];
         const { viewBox, line } = fitted(icon);
         return (

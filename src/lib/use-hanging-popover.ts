@@ -34,7 +34,43 @@ function place(anchor: HTMLElement, tag: HTMLElement, point?: { x: number; y: nu
   const x = Math.min(Math.max(middle, half), document.documentElement.clientWidth - half);
   tag.style.setProperty('--anchor-x', `${x}px`);
   tag.style.setProperty('--knot', `${middle - x}px`);
-  tag.style.setProperty('--anchor-y', `${box.bottom}px`);
+  // A Tooltip's tag that would run off the bottom of the screen hangs
+  // beside its anchor instead, on a string from its side (the side with
+  // room, the right first), or failing that above it (see [data-side] and
+  // [data-above] in globals.css).
+  const gap = 1.15 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const [width, height] = [tag.offsetWidth, tag.offsetHeight];
+  const overflows =
+    tag.classList.contains('term-tip__bubble') &&
+    height > 0 &&
+    box.bottom + gap + height > window.innerHeight - EDGE_GAP;
+  const screen = document.documentElement.clientWidth;
+  const side =
+    overflows && box.right + gap + width <= screen - EDGE_GAP
+      ? 'right'
+      : overflows && box.left - gap - width >= EDGE_GAP
+        ? 'left'
+        : undefined;
+  const above = overflows && !side && box.top - gap - height >= EDGE_GAP;
+  tag.toggleAttribute('data-above', above);
+  if (side) tag.dataset.side = side;
+  else delete tag.dataset.side;
+  if (side) {
+    // Tied to the end of the anchor's text, not its box: its longest line
+    // of a symptom's label (the icon over it being narrower), else the box.
+    const lines = Array.from(anchor.querySelectorAll('.symptom-ring__label > span'), (el) => el.getBoundingClientRect());
+    const edge = (r: DOMRect) => (side === 'right' ? r.right : -r.left);
+    const end = lines.length ? lines.reduce((best, r) => (edge(r) > edge(best) ? r : best)) : box;
+    // Level with it, kept on the screen; --knot is how far down the tag
+    // that string is tied from its middle.
+    const middleY = end.top + end.height / 2;
+    const y = Math.min(Math.max(middleY, height / 2 + EDGE_GAP), window.innerHeight - height / 2 - EDGE_GAP);
+    tag.style.setProperty('--anchor-x', `${side === 'right' ? end.right : end.left}px`);
+    tag.style.setProperty('--anchor-y', `${y}px`);
+    tag.style.setProperty('--knot', `${middleY - y}px`);
+  } else {
+    tag.style.setProperty('--anchor-y', `${above ? box.top : box.bottom}px`);
+  }
 }
 
 // A paper tag hung on a string under an inline anchor (a Tooltip's term, a

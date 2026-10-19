@@ -2782,6 +2782,68 @@ a.inline-icon--link:focus-visible {
   margin: 0;
   overflow: visible;
 }
+/* Hung beside the anchor instead, when it would run off the bottom of the
+   screen (see place() in use-hanging-popover.ts): the same tag turned on
+   its side, its string and eyelet at the edge facing the anchor, level with
+   it (--knot being how far below the tag's middle). */
+.term-tip__bubble[popover][data-side] {
+  top: var(--anchor-y, 0);
+  translate: 0 -50%;
+}
+.term-tip__bubble[popover][data-side='right'] {
+  left: calc(var(--anchor-x, 0) + 1.15rem);
+  padding: 0.7rem 0.8rem 0.7rem 1.35rem;
+  transform-origin: -1.15rem calc(50% + var(--knot, 0px));
+}
+.term-tip__bubble[popover][data-side='left'] {
+  left: calc(var(--anchor-x, 0) - 1.15rem);
+  translate: -100% -50%;
+  padding: 0.7rem 1.35rem 0.7rem 0.8rem;
+  transform-origin: calc(100% + 1.15rem) calc(50% + var(--knot, 0px));
+}
+.term-tip__bubble[popover][data-side]::before {
+  left: auto;
+  bottom: auto;
+  top: calc(50% + var(--knot, 0px));
+  width: calc(1.15rem + 0.75rem);
+  height: 0;
+  border-left: none;
+  border-top: 2px solid var(--pin-string);
+  translate: 0 -1px;
+}
+.term-tip__bubble[popover][data-side='right']::before {
+  right: calc(100% - 0.75rem);
+}
+.term-tip__bubble[popover][data-side='left']::before {
+  left: calc(100% - 0.75rem);
+}
+.term-tip__bubble[popover][data-side]::after {
+  top: calc(50% + var(--knot, 0px));
+  translate: 0 -50%;
+}
+.term-tip__bubble[popover][data-side='right']::after {
+  left: 0.45rem;
+}
+.term-tip__bubble[popover][data-side='left']::after {
+  left: auto;
+  right: 0.45rem;
+}
+/* Failing that, above it: the tag turned over, its string and eyelet at the
+   foot. */
+.term-tip__bubble[popover][data-above] {
+  top: calc(var(--anchor-y, 0) - 1.15rem);
+  translate: -50% -100%;
+  padding: 0.7rem 0.8rem 1.35rem;
+  transform-origin: calc(50% + var(--knot, 0px)) calc(100% + 1.15rem);
+}
+.term-tip__bubble[popover][data-above]::before {
+  top: calc(100% - 0.75rem);
+  bottom: auto;
+}
+.term-tip__bubble[popover][data-above]::after {
+  top: auto;
+  bottom: 0.45rem;
+}
 /* Opening takes them from display: none, so their swing in starts from
    here. */
 @starting-style {
@@ -6551,6 +6613,22 @@ article .layout__column p {
 }
 .antigone-reveal__her .women-line__tint-shape {
   fill: var(--her-tint);
+}
+
+/* The project in one sentence under the settled name, as in the title of
+   the scene above (.women-line-scene__title p). Wraps and shrinks to fit. */
+.antigone-reveal__tagline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  max-width: 40rem;
+  padding: 0 1.25rem;
+  text-align: center;
+  text-wrap: balance;
+  font-family: var(--font-heading);
+  font-size: clamp(0.95rem, 2.2vw, 1.75rem);
+  color: var(--heading);
 }
 
 /* A paper tag on a pin, like back-to-top's but in the flow of the page

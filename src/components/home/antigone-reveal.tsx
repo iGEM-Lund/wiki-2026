@@ -4,6 +4,7 @@ import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties
 import { LogoKnot, STROKES } from '@/components/antigone-logo';
 import { drawWoman, POSES, type Look, type Pose, type V3 } from '@/lib/women-on-line';
 import { THREAD_EXIT } from './solution-papers';
+import { LOGO_H, NAME_STEM, threadWidth } from './thread-width';
 import { useScrollProgress, useTimedToggle, type Hold } from './scroll-play';
 import { LayerArt } from './women-art';
 
@@ -44,9 +45,8 @@ const START_HREF = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/background`;
 // Where it is written, from that page's tag in the nav, in px: to its
 // left, and below the sign that drops from it.
 const START_FROM_TAG = { x: -260, y: 95 };
-// Where the mark sits, in vh: its top, and how tall it is.
+// Where the mark sits, in vh: its top (and how tall it is, LOGO_H).
 const LOGO_TOP = 12;
-const LOGO_H = 34;
 // The mark's own box (antigone-logo.tsx's viewBox), and where its first
 // stroke starts, which the thread runs into.
 const MARK = { x: 49, y: 67, w: 112, h: 115 };
@@ -54,9 +54,6 @@ const PEN: [number, number] = [130, 86];
 // How much bigger the name ends up than the words, so it sits under the
 // mark in about the brand's proportions.
 const NAME_GROWS = 1.7;
-// The width of the name's strokes, as a share of its size: Fredoka at
-// weight 400 (see .site__brand-name).
-const NAME_STEM = 0.08;
 // Where the words' top sits, in vh (in step with .antigone-reveal__words),
 // and how far under the mark the name ends up, in vh.
 const WORDS_TOP = 58;
@@ -213,7 +210,7 @@ export function AntigoneReveal() {
   const scale = ((LOGO_H / 100) * h) / MARK.h;
   const left = w / 2 - (MARK.w / 2) * scale;
   const top = (LOGO_TOP / 100) * h;
-  const line = (3.4 * w) / 1200;
+  const line = threadWidth(w, h);
   const pen: [number, number] = [left + (PEN[0] - MARK.x) * scale, top + (PEN[1] - MARK.y) * scale];
   // In from the top of the page where the scene left it, straight down at
   // first, then curving into the mark's first stroke, the way it starts.
@@ -222,16 +219,20 @@ export function AntigoneReveal() {
   const knot = clamp01((penMs - STROKES_MS) / KNOT_MS);
   // The mark's line: the thread's, filling out as it lets go of it to the
   // weight of the name's letters.
-  const markLine = mix(line, NAME_STEM * NAME_GROWS * font, settle);
+  // The name grows to match the thread, as far as it fits across the screen.
+  const nameGrows = Math.max(NAME_GROWS, line / (NAME_STEM * font));
+  const markLine = mix(line, NAME_STEM * nameGrows * font, settle);
   // Settling: the name closing up under the mark to NAME_GAP below it, and
   // the two together, from the top of the mark to the foot of the name's
   // g, moved to the middle of the page between the header and the bottom
   // of the screen.
   const wordsTop = (WORDS_TOP / 100) * h;
   const closeUp = wordsTop - (top + (LOGO_H / 100) * h) - (NAME_GAP / 100) * h;
-  const nameFoot = wordsTop - closeUp + NAME_GROWS * font * 1.25;
+  const nameFoot = wordsTop - closeUp + nameGrows * font * 1.25;
   const drop = settle * ((header + h) / 2 - (top + nameFoot) / 2);
   const nameDrop = drop - settle * closeUp;
+  // Where the settled name ends, for the one-line description under it.
+  const nameEnd = nameFoot + (header + h) / 2 - (top + nameFoot) / 2;
 
   // Her colour, from corner to corner: crimson at first, then fading from
   // the name's peacock at her top left (come to round the hue wheel the
@@ -321,7 +322,7 @@ export function AntigoneReveal() {
         <p
           className="antigone-reveal__words"
           style={{
-            scale: mix(1, NAME_GROWS, name).toFixed(3),
+            scale: mix(1, nameGrows, name).toFixed(3),
             translate: `0 ${nameDrop.toFixed(2)}px`,
             visibility: words ? undefined : 'hidden',
           }}
@@ -386,6 +387,16 @@ export function AntigoneReveal() {
             </span>
           </span>
           <span style={pieceStyle(3)}>one</span>
+        </p>
+        <p
+          className="antigone-reveal__tagline"
+          style={{
+            top: `${(nameEnd + 0.03 * h).toFixed(1)}px`,
+            opacity: start,
+            visibility: start ? undefined : 'hidden',
+          }}
+        >
+          A Living Biotherapeutic to Manage Hyperandrogenism in PMOS
         </p>
         <span
           ref={startRef}
