@@ -30,21 +30,21 @@ All **cycles are interconnected**: improvements in cloning allowed the productio
   Our project aims to investigate testosterone transformation while **limiting unwanted activity toward other <Tooltip text="The molecules an enzyme acts on and converts.">substrates</Tooltip>**, particularly progesterone. Because these molecules share a similar steroid structure, modifying enzyme substrate preference represents an important engineering challenge.
 </Card>
 
-### D*esign*
+### Design
 
 We **investigated the active sites** of human **AKR1D1** ([BBa\_26ZLKFI1](https://registry.igem.org/parts/bba-26zlkfi1)) and bacterial **Ci2350** ([BBa\_261I5W2C](https://registry.igem.org/parts/bba-261i5w2c)) to identify <Tooltip text="The individual amino acids that make up a protein.">residues</Tooltip> that could influence interactions with the <Tooltip text="The chemical groups attached to carbon 17 of the steroid, where testosterone and progesterone differ.">C17 substituents</Tooltip> of testosterone and progesterone.
 
-➜ Check out our [designs](/parts) and [models](/model).
+Check out our [designs](/parts) and [models](/model).
 
 Candidate point mutations were **designed to favor testosterone binding** or weaken progesterone interactions.
 
-### B*uild*
+### Build
 
 We generated 24 computational AKR1D1 variants and 31 Ci2350 variants. Structural stability was evaluated using <Tooltip text="A software package for modelling protein structures and predicting how mutations change their stability.">PyRosetta</Tooltip>, and both testosterone and progesterone were independently <Tooltip text="Simulated on a computer to predict how well a molecule fits into a protein's binding site.">docked</Tooltip> against variants that passed the selected stability threshold.
 
 Thirteen AKR1D1 and seventeen Ci2350 variants passed the initial stability screening.
 
-### T*est*
+### Test
 
 For AKR1D1, **none of the stable variants showed a meaningful improvement** in predicted testosterone selectivity beyond the uncertainty of the docking scoring function.
 
@@ -52,7 +52,7 @@ For CI2350, the **R215A+V263I double mutant (**[BBa\_262E3BYN](https://registry.
 
 ➜ Check our results [here](/results#enzyme-specificity-engineering).
 
-### L*earn*
+### Learn
 
 The AKR1D1 mutations investigated did not produce meaningful predicted specificity improvements, suggesting that the selected residues were insufficient to discriminate between the two steroid substrates.
 
@@ -66,7 +66,7 @@ The AKR1D1 mutations investigated did not produce meaningful predicted specifici
   One of our main **engineering challenge** was **assembling correct expression constructs** for the candidate enzymes, AKR1D1 and Ci2350. Our initial <Tooltip text="Cutting DNA with restriction enzymes at specific sequences and joining the pieces together to build a new construct.">restriction-cloning</Tooltip> workflow using <Tooltip text="A plasmid commonly used to produce proteins in E. coli.">pET-11a</Tooltip> repeatedly produced low DNA recovery and unsuccessful transformation. In addition, incomplete restriction digestion could not be reliably identified as <Tooltip text="Two restriction enzymes, each cutting DNA at its own specific sequence. Together they excise a gene so it can be inserted into a plasmid.">NdeI and BamHI</Tooltip> restriction sites differs only by approximately 40 <Tooltip text="The unit for measuring DNA length: one pair of matching DNA letters.">base pairs (bp)</Tooltip>.
 </Card>
 
-### D*esign*
+### Design
 
 Our initial restriction-ligation strategy used NdeI and BamHI to insert the genes into pET-11a. Following **inconsistent results** and **unsuccessful attempts**, we investigated whether plasmid purity, restriction efficiency, and vector preparation contributed to the cloning difficulties.
 
@@ -74,7 +74,7 @@ Our initial restriction-ligation strategy used NdeI and BamHI to insert the gene
 
 We subsequently **redesigned the workflow using pET-BLANK**, a pET-derived construct containing Ci2350–MBP. Digestion was expected to release an approximately 3 kb insert, leaving a vector backbone of approximately 5.4 kb. Unlike the original strategy, this would allow the backbone to be separated from the released insert by <Tooltip text="A method that separates DNA fragments by size by pulling them through a gel with an electric current.">agarose gel electrophoresis</Tooltip>.
 
-### B*uild*
+### Build
 
 #### **Iteration 1** - **Troubleshooting and improving plasmid preparation and restriction digestion**
 
@@ -84,7 +84,7 @@ We first extracted pET-11a using the Jena Bioscience <Tooltip text="A kit for pu
 
 Following persistent cloning difficulties, the **revised strategy** involved digesting pET-BLANK, <Tooltip text="Cutting a DNA band out of a gel and purifying the DNA from it.">gel-extracting</Tooltip> the approximately 5.4 kb <Tooltip text="The plasmid vector without the gene, into which a new gene is inserted.">backbone</Tooltip>, and <Tooltip text="Joining DNA pieces together using the enzyme ligase.">ligating</Tooltip> it with the selected AKR1D1 and Ci2350 inserts. Following **unsuccessful initial <Tooltip text="Getting bacteria to take up DNA.">transformations</Tooltip>**, we also repeated ligation using an extended overnight incubation at 16°C.
 
-### T*est*
+### Test
 
 We **improved first gel extraction yield and purity using different kits** and we evaluated the resulting constructs through careful choice of controls and screening of samples to include in <Tooltip text="A quick check of bacterial colonies for the right insert: a PCR run directly on a small sample of each colony.">colony PCR</Tooltip>, restriction digestion, sequencing. However, colony PCR still revealed unsuccessful cloning attempts. Further investigation **suggested incomplete NdeI digestion**. Because the two restriction sites in pET-11a were separated by only approximately 40 bp, conventional agarose gel electrophoresis could not reliably distinguish singly digested from fully digested vector.
 
@@ -103,7 +103,7 @@ In contrast, **pET-BLANK digestion produced distinguishable backbone and insert 
   | <Ref target="card-bd46z" linkText="31" /> | pET-BLANK ligation and transformation resulting in insert-positive colonies                                                 |
 </TableWithCaption>
 
-### L*earn*
+### Learn
 
 Our results highlighted **two limitations in the initial workflow**: potentially inaccurate plasmid DNA quantification and insufficient verification of complete vector digestion.
 
@@ -123,7 +123,7 @@ After having identified our problem and chosen the strategy to continue **we man
   </Card>
 </Card>
 
-### D*esign*
+### Design
 
 We designed AKR1D1 constructs incorporating alternative fusion tags, including SUMO, thioredoxin A (TrxA), and MBP, alongside the His-tagged configuration.
 
@@ -131,7 +131,7 @@ We designed AKR1D1 constructs incorporating alternative fusion tags, including S
 
 To compare their performance, we designed expression experiments under similar cultivation and induction conditions, followed by <Tooltip text="A method that separates proteins by size on a gel, to see which proteins a sample contains and how much.">SDS-PAGE</Tooltip> analysis of whole-cell and soluble fractions. Based on the results of the initial screening, we selected AKR1D1–TrxA for a second iteration investigating whether reduced <Tooltip text="A lab chemical that switches on gene expression from certain promoters.">IPTG</Tooltip> concentration could increase the relative soluble fraction. Lower induction strength was considered a potential way to reduce recombinant protein production rates and improve the balance between synthesis and folding.
 
-### B*uild*
+### Build
 
 #### **Iteration 1** - **Fusion-tag comparison**
 
