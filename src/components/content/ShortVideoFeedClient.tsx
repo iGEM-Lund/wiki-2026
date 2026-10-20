@@ -127,17 +127,30 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
   const [wantPlay, setWantPlay] = useState(false);
   const [onScreen, setOnScreen] = useState(false);
   const [playing, setPlaying] = useState(false);
-  // Firefox only lets an embedded player start from a click made inside the
-  // player's own frame; a play command sent from this page is refused
-  // ("Autoplay is only allowed when approved by the user"). When a clip
-  // doesn't start, the tap layer lets clicks through to the player itself.
+  // Some browsers only let an embedded player start from a click made inside
+  // the player's own frame, and refuse a play command sent from this page:
+  // Firefox at times ("Autoplay is only allowed when approved by the user"),
+  // Safari for every clip with sound, iOS in Low Power Mode for any clip.
+  // When a clip doesn't start, the tap layer lets clicks through to the
+  // player itself.
   const [passthrough, setPassthrough] = useState(false);
   const [muted, setMuted] = useState(true);
+  // What the players should be doing, read by the players' event handlers
+  // (see sync), which outlive any one render.
+  const wantPlayRef = useRef(false);
+  const onScreenRef = useRef(false);
+  const mutedRef = useRef(true);
+  const passthroughRef = useRef(false);
   // The embed address says muted=1, and the player keeps that flag whatever
-  // setVolume says. The first unmute therefore reloads the players with
-  // muted=0 (allowed to autoplay with sound: it follows the user's click);
-  // after that, muting is just volume 0.
-  const [soundLoaded, setSoundLoaded] = useState(false);
+  // setVolume says, so a clip can only make sound once it is reloaded with
+  // muted=0 (allowed to autoplay with sound: it follows the user's click).
+  // Only clips that have been the current one while sound was on get that
+  // address: a reloaded clip autoplays, and a neighbour doing so with sound
+  // would be heard until it's paused. Muting again is just volume 0.
+  const [loud, setLoud] = useState<ReadonlySet<number>>(() => new Set());
+  // The iframes are only rendered once mounted, so their load event always
+  // reaches React and each loaded page gets exactly one connection.
+  const [mounted, setMounted] = useState(false);
   // Scroll snapping is switched off while a mouse drag moves the clips
   // (it would fight every scrollTop write) and until the release has
   // settled.
@@ -158,6 +171,7 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
   useEffect(() => {
     setWantPlay(!prefersReducedMotion());
     setLiked(readLikes());
+    setMounted(true);
     return () => clearTimeout(tapTimerRef.current);
   }, []);
 
@@ -214,39 +228,78 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
     return () => observer.disconnect();
   }, []);
 
+  // Only the current clip plays, and only it is ever audible.
+  function shouldPlay(index: number) {
+    return index === activeRef.current && wantPlayRef.current && onScreenRef.current;
+  }
+
+  function volumeFor(index: number) {
+    return !mutedRef.current && index === activeRef.current ? 1 : 0;
+  }
+
+  // Tells one player what it should be doing. Commands alone can't be
+  // trusted to stick: a freshly loaded clip autoplays (autoplay=1) after a
+  // pause sent on ready, and the player restores its own saved volume, so
+  // the players' events also call this whenever they report something else.
+  function sync(index: number, { rewind = false } = {}) {
+    const player = playersRef.current[index];
+    if (!player || !readyRef.current[index]) return;
+    if (shouldPlay(index)) {
+      player.play().catch(() => {});
+    } else {
+      player.pause().catch(() => {});
+      if (rewind && index !== activeRef.current) player.seek(0).catch(() => {});
+    }
+    player.setVolume(volumeFor(index)).catch(() => {});
+  }
+
   useEffect(() => {
+    wantPlayRef.current = wantPlay;
+    onScreenRef.current = onScreen;
+    mutedRef.current = muted;
     let check: ReturnType<typeof setTimeout> | undefined;
-    playersRef.current.forEach((player, index) => {
-      if (!player) return;
-      if (index === active && wantPlay && onScreen) {
-        player.play().catch(() => {});
-        if (readyRef.current[index]) {
-          check = setTimeout(() => {
-            if (!playingRef.current[index]) setPassthrough(true);
-          }, PLAY_CHECK_MS);
-        }
-      } else {
-        player.pause().catch(() => {});
-        if (index !== active) player.seek(0).catch(() => {});
+    playersRef.current.forEach((_, index) => {
+      sync(index, { rewind: true });
+      if (shouldPlay(index) && readyRef.current[index]) {
+        check = setTimeout(() => {
+          if (!playingRef.current[index]) setPassthrough(true);
+        }, PLAY_CHECK_MS);
       }
     });
     return () => clearTimeout(check);
-  }, [active, wantPlay, onScreen, readyTick]);
+    // sync and shouldPlay only read refs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active, wantPlay, onScreen, muted, readyTick]);
 
   useEffect(() => {
-    if (!muted && !soundLoaded) {
-      readyRef.current = readyRef.current.map(() => false);
-      setSoundLoaded(true);
-    }
-  }, [muted, soundLoaded]);
+    passthroughRef.current = passthrough;
+  }, [passthrough]);
 
-  // Only the current clip is ever audible: its neighbours are loaded (and
-  // may autoplay once the players are reloaded unmuted) but stay silent.
+  // A tap let through to a player also focuses its frame, and the player's
+  // own hotkeys would then take the keys this feed uses (M there mutes the
+  // clip itself, which no command can undo), so focus comes straight back.
   useEffect(() => {
-    playersRef.current.forEach((player, index) =>
-      player?.setVolume(muted || index !== active ? 0 : 1).catch(() => {}),
-    );
-  }, [muted, active, readyTick]);
+    const onBlur = () =>
+      setTimeout(() => {
+        const viewport = viewportRef.current;
+        const focused = document.activeElement;
+        if (viewport && focused instanceof HTMLIFrameElement && viewport.contains(focused)) {
+          viewport.focus({ preventScroll: true });
+        }
+      });
+    window.addEventListener('blur', onBlur);
+    return () => window.removeEventListener('blur', onBlur);
+  }, []);
+
+  // The current clip gets the address that can make sound once sound is on
+  // (reloading it); clips that lose their iframe lose it again.
+  useEffect(() => {
+    setLoud((current) => {
+      const next = new Set([...current].filter((index) => Math.abs(index - active) <= 1));
+      if (!muted) next.add(active);
+      return next.size === current.size && [...next].every((index) => current.has(index)) ? current : next;
+    });
+  }, [muted, active]);
 
   // Unmuting this feed mutes any other feed on the page, and vice versa.
   useEffect(() => {
@@ -267,63 +320,81 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
     setPlaying(playingRef.current[active] ?? false);
   }, [active]);
 
-  // Connects the clips that have an iframe (the current one and its
-  // neighbours) as soon as it exists, and forgets the ones that lost theirs.
+  // Forgets the clips that lost their iframe (only the current one and its
+  // neighbours have one).
   useEffect(() => {
     slideRefs.current.slice(0, count).forEach((slide, index) => {
-      const iframe = slide?.querySelector('iframe');
-      if (!iframe) {
-        playersRef.current[index] = null;
-        readyRef.current[index] = false;
-      } else if (!playersRef.current[index]) {
-        attachPlayer(iframe, index);
-      }
+      if (slide?.querySelector('iframe')) return;
+      detachPlayer(index);
+      playingRef.current[index] = false;
     });
-    // attachPlayer only touches refs and state setters.
+    // detachPlayer only touches refs.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active, count]);
 
+  useEffect(() => () => playersRef.current.forEach((_, index) => detachPlayer(index)), []);
+
+  // Each player talks over a jschannel channel, and only one can be bound
+  // to a frame at a time.
+  function detachPlayer(index: number) {
+    (playersRef.current[index] as unknown as { channel?: { destroy(): void } } | null)?.channel?.destroy();
+    playersRef.current[index] = null;
+    readyRef.current[index] = false;
+  }
+
   // Connects a clip's embedded player (Video Universe's own, see
-  // resolveVideo) once its page has loaded: its play state and progress come
-  // back as events.
+  // resolveVideo) each time its iframe loads a page: its play state and
+  // progress come back as events. A channel connects to one page only: once
+  // the page's side has answered, it ignores any later channel (which would
+  // then never hear back and silently drop every command), and a reloaded
+  // page needs a new one.
   // The library touches `window` as it loads, so it is only imported here,
   // in the browser, never while the page is rendered on the server.
   async function attachPlayer(iframe: HTMLIFrameElement, index: number) {
+    detachPlayer(index);
     const { PeerTubePlayer } = await import('@peertube/embed-api');
-    // Only one channel can be bound to an iframe, so a second attach (the
-    // iframe's load event after an early one) first drops the earlier,
-    // possibly never-answered one. Firefox swaps the iframe's initial blank
-    // window for the loaded page, which loses a handshake sent too early.
-    (playersRef.current[index] as unknown as { channel?: { destroy(): void } } | null)?.channel?.destroy();
-    playersRef.current[index] = null;
+    // The frame may have been removed, or loaded again, during the import.
+    if (!iframe.isConnected || playersRef.current[index]) return;
     const player = new PeerTubePlayer(iframe);
-    player.addEventListener('play', () => {
-      playingRef.current[index] = true;
-      if (index === activeRef.current) setPlaying(true);
-    });
-    player.addEventListener('pause', () => {
-      playingRef.current[index] = false;
-      if (index === activeRef.current) setPlaying(false);
-    });
+    const current = () => playersRef.current[index] === player;
     const setPlayingState = (isPlaying: boolean) => {
+      if (!current()) return;
+      // A clip that starts when it shouldn't (its own autoplay, or a play
+      // that landed after a pause) is stopped again, unless it was the
+      // visitor starting it with a click inside the player (Firefox, see
+      // passthrough).
+      if (isPlaying && readyRef.current[index] && !shouldPlay(index)) {
+        if (passthroughRef.current && index === activeRef.current && onScreenRef.current) setWantPlay(true);
+        else sync(index);
+      }
       if (playingRef.current[index] === isPlaying) return;
       playingRef.current[index] = isPlaying;
       if (index === activeRef.current) setPlaying(isPlaying);
     };
+    const checkVolume = (volume: unknown) => {
+      if (current() && readyRef.current[index] && typeof volume === 'number' && volume !== volumeFor(index)) {
+        player.setVolume(volumeFor(index)).catch(() => {});
+      }
+    };
+    player.addEventListener('play', () => setPlayingState(true));
+    player.addEventListener('pause', () => setPlayingState(false));
+    player.addEventListener('volumeChange', checkVolume);
     // The status events carry the play state too, which is what the player
     // reports even when its own controls are hidden.
     player.addEventListener('playbackStatusChange', (status: string) => setPlayingState(status === 'playing'));
     player.addEventListener(
       'playbackStatusUpdate',
-      (status: { position?: number; duration?: number; playbackState?: string }) => {
+      (status: { position?: number; duration?: number; volume?: number; playbackState?: string }) => {
         if (status.playbackState) setPlayingState(status.playbackState === 'playing');
+        checkVolume(status.volume);
         if (index !== activeRef.current || !barRef.current || !status.duration) return;
         barRef.current.style.transform = `scaleX(${(status.position ?? 0) / status.duration})`;
       },
     );
     player.ready.then(() => {
+      if (!current()) return;
       readyRef.current[index] = true;
-      if (playersRef.current[index] !== player) return;
+      sync(index, { rewind: true });
       setReadyTick((tick) => tick + 1);
     });
     playersRef.current[index] = player;
@@ -523,20 +594,14 @@ export function ShortVideoFeedClient({ videos }: { videos: ShortVideo[] }) {
               {video.embedSrc ? (
                 <>
                   {video.poster ? <img className="short-feed__poster" src={video.poster} alt="" /> : null}
-                  {Math.abs(index - active) <= 1 ? (
+                  {mounted && Math.abs(index - active) <= 1 ? (
                     <iframe
                       className="short-feed__player"
-                      src={soundLoaded ? video.embedSrc.replace('muted=1', 'muted=0') : video.embedSrc}
+                      src={loud.has(index) ? video.embedSrc.replace('muted=1', 'muted=0') : video.embedSrc}
                       title={video.title || `Video ${index + 1} of ${count}`}
                       allow="autoplay; fullscreen; picture-in-picture"
                       tabIndex={-1}
-                      // The server-rendered iframe may finish loading before
-                      // React hydrates, and then onLoad never reaches us
-                      // (see the effect above); on load, connect again if
-                      // the first connection hasn't come up.
-                      onLoad={(event) => {
-                        if (!readyRef.current[index]) attachPlayer(event.currentTarget, index);
-                      }}
+                      onLoad={(event) => attachPlayer(event.currentTarget, index)}
                     />
                   ) : null}
                   <button

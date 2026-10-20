@@ -68,7 +68,12 @@ export const resolveVideo = cache(async (raw: string): Promise<ResolvedVideo> =>
       // their stream until the player has been told to autoplay, and then
       // ignore a later play command. The feed pauses all but the current
       // clip as soon as each player reports ready.
-      embedSrc: `https://${VIDEO_UNIVERSE}/videos/embed/${video.uuid}?api=1&controls=0&loop=1&muted=1&autoplay=1&title=0&warningTitle=0&peertubeLink=0`,
+      // controls=1 with controlBar=0: no visible controls, but the player
+      // still plays/pauses on a click inside it. When a browser refuses to
+      // start a clip from a command (Safari with sound, iOS in Low Power
+      // Mode), the feed lets taps through to the player (see passthrough),
+      // and with controls=0 those clicks would do nothing.
+      embedSrc: `https://${VIDEO_UNIVERSE}/videos/embed/${video.uuid}?api=1&controls=1&controlBar=0&loop=1&muted=1&autoplay=1&title=0&warningTitle=0&peertubeLink=0`,
       poster: video.previewPath ? `https://${VIDEO_UNIVERSE}${video.previewPath}` : undefined,
       href: video.url ?? raw,
       videoUniverseId: video.uuid,
