@@ -47,6 +47,18 @@ Description...
 
 ## Future outlook
 
-...
+Future work on enzyme activity includes returning to protein purification to obtain pure protein samples, and adding <Tooltip text="A plate-based test that detects and measures a molecule using antibodies.">ELISA</Tooltip>, LC–MS/MS and androgen receptor assays so that testosterone quantities can be identified directly, even when the enzyme kinetics are not clear enough.
+
+Next steps in *in silico* experiments:
+
+* **Consensus docking:** Re-dock the top variants with a second tool (e.g. <Tooltip text="Docking programs that use deep learning to place and score the molecule.">GNINA or DiffDock</Tooltip>) and keep only the variants that rank well in both.
+* **Other steroids:** Dock the top variants against related steroids that could compete in the cell, to see whether the testosterone preference holds beyond progesterone.
+* **Cofactor in the model:** Add NADPH supply to the activity model, since the reaction depends on it.
+* **Dose and conditions:** Run the integrated model for different starting steroid concentrations, culture densities and induction timings, to find the conditions where the preference is largest.
+* **Experimental values in the model:** The model can be run again with the measured activity values in place of the docking scores, to see how the predictions change. &#x20;
+
+##
+
+&#x20;&#x20;
 
 ##
