@@ -315,14 +315,6 @@ The distributions of both speed ratio and selectivity score of docking <Formula 
   **R215A + V263I is the most promising variant. Its docking-based Km values predict a testosterone preference.** This preference is the least affected by a ±0.3 kcal/mol docking shift, and the variant survives the random-error draws against the WT control. **Expression and growth settings change how fast the steroids are consumed, but binding energy shows which steroid is preferred first.** The ranking is still a prediction, because the kcat ratio is unknown and docking error is larger than most differences between variants.
 </Card>
 
-#### **Overall findings:**
-
-* **Target selection:** Of the two enzymes, only ci2350 offered a way to favor testosterone, since in AKR1D1 the mutated residues sit too far from C17 to tell the two steroids apart.
-* **Best candidate:** R215A + V263I is the strongest design. It works by weakening progesterone binding while testosterone binding stays strong, and the enzyme stays stable.
-* **Integrated model:** Growth and expression together determine how much enzyme each culture makes. Enzyme per cell keeps rising after growth stops, and mRNA half-life matters most for how much enzyme is produced. This tells us which expression conditions to control in the experiments.
-* **Predicted behavior:** In the cell model, the R215A + V263I variant is expected to convert testosterone before progesterone, and this is its most robust property among the variants tested.
-* **Predictive layer:** The mathematical model links the design, the expression and the activity steps into one framework. It predicts which conditions to control and what to measure first, so it can guide experimental design and be updated as results come in.
-
 ## **Establishing expression constructs**&#x20;
 
 To test these computational predictions experimentally, both AKR1D1 and ci2350 needed to be expressed as soluble, active protein. Therefore, before expressing the two 5β-reductases in *Escherichia coli* *BL21(DE3)*, we codon-harmonized the AKR1D1 (human origin) and ci2350 (from *Clostridium innocuum*).
