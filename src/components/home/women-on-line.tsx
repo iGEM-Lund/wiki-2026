@@ -504,10 +504,7 @@ export function WomenOnLine() {
         <div className="women-line-scene__title">
           <hgroup>
             <h1>AnTigone</h1>
-            <p>
-              A bacterium that produces an enzyme in the gut, where it converts active androgens into a less active form, to
-              help reduce hyperandrogenism-related symptoms in PMOS.
-            </p>
+            <p>A gut-based approach to address androgen excess in PMOS</p>
           </hgroup>
           <SkipToEnd />
         </div>
