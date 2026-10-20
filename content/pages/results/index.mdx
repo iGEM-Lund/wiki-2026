@@ -361,26 +361,6 @@ We tested this method and adopted it for further cloning, as it proved more reli
 
 However, we still **failed to clone ci2350-SUMO-6xHis, ci2350-TrxA-6xHis, AKR1D1-MBP-6xHis** into pET-Blank-Amp. Due to time constraints, we **decided** to **proceed** **with protein expression** using the successfully cloned constructs.&#x20;
 
-### **ci2350 double mutant** R215A + V263I
-
-After dry lab modeling provided the necessary mutations for strengthening ci2350's specificity towards testosterone (**Arginine 215 to Alanine, and Valine 263 to Isoleucine**), the ci2350-MBP-6xHis was mutated using inverse PCR site-directed mutagenesis.
-
-The mutagenesis was done sequentially, first performing inverse PCR with one primer pair containing a mutation (V263I\_forward &  V263I\_reverse; R215A\_forward & R215A\_reverse). The PCR amplification succeeded with the V263I primers, as shown in <Ref target="fig-p4wta" />.
-
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/mutagenesis-gel-result-for-v263i.avif" alt="Agarose gel image showing inverse PCR mutagenesis results with DNA ladder in lane 1. Lanes 2-3 (V263I mutation) show bright bands at approximately 8400 bp, indicating successful amplification. Lanes 4-5 (R215A mutation) have smearing over all the DNA range. Negative Control lane 6 (V263I) shows smears near the bottom (less than 400 bp), while lane 7 with negative R215A control shows smearing in the whole ladder range (similar to lanes 4-5)." caption="Agarose gel electrophoresis of inverse PCR site-directed mutagenesis of pET-Blank-ci2350-MBP. Lanes: (1) Ampliqon High Range DNA Ladder; (2, 3) mutation V263I; (4, 5) mutation R215A; (6) control V263I; (7) control R215A. The expected band size for successful inverse PCR was 8421 bp." numbered refId="fig-p4wta" scale={100} plain noZoom={false} />
-
-Following these results, ci2350-MBP-6xHis sequences with mutation V263I were transformed into *E. coli* TG1 and sequenced (by [**Microsynth**](https://www.microsynth.com/home-ch.html)**)**, which confirmed the correct mutation. Then this whole process was repeated, to introduce the R215A mutation, and double mutated ci2350-MBP-6xHis was confirmed by sequencing (<Ref target="fig-0tzgr" /> and <Ref target="fig-m0oxe" />).&#x20;
-
-<Layout2>
-  <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/ci2350-263-mutation-seq.avif" alt="Sequencing result confirming ci2350-MBP-6xHis V263I mutation - original sequence (mutant variant) is the same as sequenced" caption="Sequencing result confirming ci2350 V263I mutation, in ci2350-MBP-6xHis double mutant construct. Visualized using SnapGene." numbered refId="fig-0tzgr" scale={100} plain={false} noZoom={false} />
-  </LayoutColumn>
-
-  <LayoutColumn>
-    <FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/results/ci2350-215-mutation-seq.avif" alt="Sequencing result confirming ci2350-MBP-6xHis R215A mutation - original sequence (mutant variant) is the same as sequenced" caption="Sequencing result confirming ci2350 R215A mutation, in ci2350-MBP-6xHis double mutant construct. Visualized using SnapGene." numbered refId="fig-m0oxe" scale={100} plain={false} noZoom={false} />
-  </LayoutColumn>
-</Layout2>
-
 <Card refId="card-a1acu">
   <CardTitle>
     ### &#x20;Plasmid vector maps
@@ -451,9 +431,9 @@ In a second run, 37 °C for 3 h and 25 °C overnight (both 0.4 mM IPTG) were pur
 <TableWithCaption caption="Bands in ci2350-MBP eluates before and after Vivaspin concentration. Expression at 37 °C for 3 h or 25 °C overnight (0.4 mM IPTG), purified on the same column. Band strength was read by eye from one gel. Sizes are estimated from the ladder." refId="tab-h8top">
   | **Sample**            | **\~112 kDa band** | **\~70 kDa band** | **\~38 kDa band** |
   | --------------------- | ------------------ | ----------------- | ----------------- |
-  | 37 °C, eluate        | small              | thick             | very heavy        |
+  | 37 °C, eluate         | small              | thick             | very heavy        |
   | 37 °C, after Vivaspin | none               | faint             | present           |
-  | 25 °C, eluate        | present            | present           | present           |
+  | 25 °C, eluate         | present            | present           | present           |
   | 25 °C, after Vivaspin | present            | present           | present           |
 </TableWithCaption>
 
