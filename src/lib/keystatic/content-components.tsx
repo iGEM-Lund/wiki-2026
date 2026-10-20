@@ -749,6 +749,30 @@ export const contentComponents = {
     ContentView: (props) => <div>[Quiz: {(props.value.questions ?? []).length} question(s)]</div>,
   }),
 
+  Flipcard: block({
+    label: 'Flipcard',
+    description: 'A card with one text on each side. Clicking it flips it over to show the other side.',
+    schema: {
+      front: fields.text({
+        label: 'Front',
+        description: 'Shown first, e.g. a question or a term.',
+        multiline: true,
+        validation: { isRequired: true },
+      }),
+      back: fields.text({
+        label: 'Back',
+        description: 'Shown after the reader clicks, e.g. the answer or its explanation.',
+        multiline: true,
+        validation: { isRequired: true },
+      }),
+    },
+    ContentView: (props) => (
+      <div>
+        [Flipcard: {props.value.front ?? ''} / {props.value.back ?? ''}]
+      </div>
+    ),
+  }),
+
   // Generalized responsive layout system: Layout2/Layout3/LayoutSidebar are the
   // container shapes, LayoutColumn is the shared column marker. The count of
   // LayoutColumn children IS the column count (enforced by each container's
