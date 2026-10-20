@@ -4,8 +4,8 @@ import { TableScroll } from './TableScroll';
 
 // Tables with more body rows than this start collapsed to their first
 // VISIBLE_ROWS, with a button to show the rest.
-const COLLAPSE_ABOVE = 12;
-const VISIBLE_ROWS = 8;
+const COLLAPSE_ABOVE = 8;
+const VISIBLE_ROWS = 5;
 
 type WithChildren = ReactElement<{ children?: ReactNode }>;
 
