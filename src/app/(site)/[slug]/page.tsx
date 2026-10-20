@@ -45,6 +45,9 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
   const citedReferences = await resolveCitedReferences(source);
   const { Content, headings } = await renderMdx(source, toReferenceLookup(citedReferences), slug);
   const outline = buildHeadingTree(headings);
+  if (citedReferences.length > 0) {
+    outline.push({ depth: 2, text: 'References', id: REFERENCES_ID, children: [] });
+  }
   const nextPage = await getNextPage(slug);
 
   return (
