@@ -169,7 +169,7 @@ V263K also reaches −0.5 kcal/mol selectivity, but by a different route. The lo
   **Overall, docking showed that AKR1D1 cannot be engineered towards testosterone with the positions identified. Every substitution moved both steroids by the same amount, because none of the mutated side chains reaches the C17 group, and the selectivity stayed at about +0.5 kcal/mol. In ci2350, R215A + V263I was the only variant to shift the preference beyond the scoring noise (−0.1 to −0.9 kcal/mol), with testosterone affinity kept and stability neutral. R215A + V263I + Q100T is the more stable fallback, and V263K is a simple single-point option that loses affinity. R215A + V263I was therefore taken into the activity modeling** [(Model)](/model#enzyme-activity-model) and prioritized for experimental design [(Parts)](https://wiki.igemlund.org/parts).
 </Card>
 
-## **Mathematical modeling of enzyme production and activity**
+## **Modeling enzyme production and activity**
 
 ### **Overview**
 
@@ -181,7 +181,7 @@ Because this layer depends on binding, it is tied to the specificity work. Since
 
 Most parameters are literature values rather than measurements from our own strain, so the model was tested rather than taken at face value. Each was varied by **±20% one at a time** to see which ones the output depends on, and a Monte Carlo analysis drew all of them at random together to check whether the conclusions hold across the plausible range. The results of both analyses are reported below.
 
-The full description of the three layers, their equations, and assumptions is on the [Model page](/model#mathematical-modeling-of-enzyme-production-and-activity).
+The full description of the three layers, their equations, and assumptions is on the [Model page](/model#modeling-enzyme-production-and-activity).
 
 ### **Prediction of integrated enzyme production model**
 
@@ -550,7 +550,7 @@ The resulting traces confirmed that reactions with and without testosterone exhi
   Further work will require improved protein purification, appropriately matched controls, and direct analysis of steroid substrates and products, for example using <Tooltip text="Liquid chromatography with tandem mass spectrometry: separates molecules and identifies them by mass, to measure steroids directly.">LC–MS/MS</Tooltip>. Complementary <Tooltip text="Tests in cells carrying the androgen receptor and a reporter gene that switches on when a molecule activates the receptor.">androgen-receptor assays</Tooltip> would then be necessary to determine whether any confirmed transformation affects androgenic activity.
 </Card>
 
-## **Initial work with hypoxia-responsive promoter**
+## **Hypoxia-responsive promoter**
 
 To implement a safety mechanism that restricts enzyme production to the anaerobic gut environment, we designed hypoxia-inducible constructs for AKR1D1-SUMO-6xHis and ci2350-MBP-6xHis. These constructs placed enzyme expression under the control of the hypoxia-responsive promoter **PfnrS** ([BBa\_25DMNRIB](https://registry.igem.org/parts/bba-25dmnrib)), followed by a <Tooltip text="A DNA sequence that tells the cell's machinery to stop copying the gene.">lambda t0 terminator</Tooltip> ([BBa\_26P9V9ID](https://registry.igem.org/parts/bba-26p9v9id)), ensuring production would only occur in low-oxygen conditions typical of the intestinal tract.
 

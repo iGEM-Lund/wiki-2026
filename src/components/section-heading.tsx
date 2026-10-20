@@ -1,4 +1,5 @@
 import { useId, type ComponentPropsWithoutRef, type CSSProperties } from 'react';
+import { HeadingText } from '@/components/heading-text';
 import { centerlinePath, easeOut, taperedPath, type Cubic } from '@/lib/tapered-stroke';
 
 // Full stroke weight in viewBox units. Both SVGs are 2rem tall over 32 units
@@ -95,7 +96,7 @@ export function SectionHeading({ children, className, ...props }: ComponentProps
   return (
     <h2 {...props} className={className ? `section-heading ${className}` : 'section-heading'}>
       <Flourish side="left" />
-      <span className="section-heading__text">{children}</span>
+      <HeadingText>{children}</HeadingText>
       <Flourish side="right" />
     </h2>
   );

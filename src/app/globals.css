@@ -440,7 +440,9 @@ body {
 }
 .section-heading__flourish {
   flex: 1 1 0;
-  min-width: 5rem;
+  /* The ribbon (6.5rem) plus enough line after it to taper out; long text
+     wraps rather than squeezing the flourish below this. */
+  min-width: 11rem;
   display: flex;
   align-items: center;
   color: var(--heading);
@@ -466,6 +468,30 @@ body {
   /* Tucks under the ribbon's end: abutting boxes at fractional positions
      leave an anti-aliased hairline gap in the stroke. */
   margin-left: -2px;
+}
+/* Phones: the flourishes shrink to just the ribbon loop and sit tight against
+   the text, which gets the rest of the row, so a heading that wraps keeps its
+   ornaments beside it instead of far off at the edges. */
+@media (max-width: 40rem) {
+  .site .section-heading {
+    gap: 0.5rem;
+  }
+  .section-heading__text {
+    max-width: none;
+  }
+  .section-heading__flourish {
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+  .section-heading__flourish svg {
+    height: 1.6rem;
+  }
+  .section-heading__ribbon {
+    width: 4rem;
+  }
+  .section-heading__flourish .section-heading__line {
+    display: none;
+  }
 }
 /* As a heading scrolls up into view, its text fades in once it's 10% of
    the way up the viewport (--fade), like the rest of the page content
