@@ -4,7 +4,7 @@ import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties
 import { LogoKnot, STROKES } from '@/components/antigone-logo';
 import { drawWoman, POSES, type Look, type Pose, type V3 } from '@/lib/women-on-line';
 import { THREAD_EXIT } from './solution-papers';
-import { LOGO_H, NAME_STEM, threadWidth } from './thread-width';
+import { LOGO_H, NAME_STEM, NAME_WIDTH_EM, threadWidth } from './thread-width';
 import { useScrollProgress, useTimedToggle, type Hold } from './scroll-play';
 import { LayerArt } from './women-art';
 
@@ -58,6 +58,10 @@ const NAME_GROWS = 1.7;
 // and how far under the mark the name ends up, in vh.
 const WORDS_TOP = 58;
 const NAME_GAP = 3;
+// The gap from the name to its description, and how much of the screen's
+// height the whole group is lifted off the middle, as shares of it.
+const BLURB_GAP = 0.03;
+const LIFT = 0.06;
 
 const HOLDS: Hold[] = [{ at: START_AT, ms: PLAY_MS }];
 
@@ -180,7 +184,7 @@ export function AntigoneReveal() {
   // words' size, in px.
   // And where the nav's tag for the first page is (its middle across, and
   // its bottom), for "Start here".
-  const [size, setSize] = useState({ w: 1200, h: 800, header: 60, font: 60, tagX: 600, tagY: 40 });
+  const [size, setSize] = useState({ w: 1200, h: 800, header: 60, font: 60, tagX: 600, tagY: 40, blurb: 90 });
   const [widths, setWidths] = useState<number[]>([]);
   useLayoutEffect(() => {
     const stage = stageRef.current;
@@ -188,6 +192,7 @@ export function AntigoneReveal() {
     const next = [...stage.querySelectorAll<HTMLElement>('.antigone-reveal__measure')].map((el) => el.offsetWidth);
     if (next.some((w, i) => Math.abs(w - (widths[i] ?? -1)) > 0.5)) setWidths(next);
     const words = stage.querySelector('.antigone-reveal__words');
+    const blurb = stage.querySelector<HTMLElement>('.antigone-reveal__tagline');
     const headerBox = document.querySelector('.site__header')?.getBoundingClientRect();
     const tag = document
       .querySelector(`.site__nav a[href="${START_HREF}"]`)
@@ -198,13 +203,14 @@ export function AntigoneReveal() {
       h: window.innerHeight,
       header: Math.max(0, (headerBox?.bottom ?? 0) - Math.min(0, headerBox?.top ?? 0)),
       font: words ? parseFloat(getComputedStyle(words).fontSize) : size.font,
+      blurb: blurb ? blurb.offsetHeight : size.blurb,
       tagX: tag ? tag.left + tag.width / 2 : size.tagX,
       // As it is with the header in place, which may still be sliding in.
       tagY: tag ? tag.bottom - Math.min(0, headerBox?.top ?? 0) : size.tagY,
     };
     if ((Object.keys(next2) as (keyof typeof next2)[]).some((k) => Math.abs(next2[k] - size[k]) > 0.5)) setSize(next2);
   });
-  const { w, h, header, font, tagX, tagY } = size;
+  const { w, h, header, font, tagX, tagY, blurb } = size;
 
   // The mark, scaled to LOGO_H, centred; the thread as thick as the scene's.
   const scale = ((LOGO_H / 100) * h) / MARK.h;
@@ -220,7 +226,10 @@ export function AntigoneReveal() {
   // The mark's line: the thread's, filling out as it lets go of it to the
   // weight of the name's letters.
   // The name grows to match the thread, as far as it fits across the screen.
-  const nameGrows = Math.max(NAME_GROWS, line / (NAME_STEM * font));
+  // On a phone it is grown to take most of the width instead, so it isn't
+  // lost under the mark.
+  const fillWidth = w < 700 ? (0.6 * w) / (NAME_WIDTH_EM * font) : 0;
+  const nameGrows = Math.max(NAME_GROWS, line / (NAME_STEM * font), fillWidth);
   const markLine = mix(line, NAME_STEM * nameGrows * font, settle);
   // Settling: the name closing up under the mark to NAME_GAP below it, and
   // the two together, from the top of the mark to the foot of the name's
@@ -229,10 +238,17 @@ export function AntigoneReveal() {
   const wordsTop = (WORDS_TOP / 100) * h;
   const closeUp = wordsTop - (top + (LOGO_H / 100) * h) - (NAME_GAP / 100) * h;
   const nameFoot = wordsTop - closeUp + nameGrows * font * 1.25;
-  const drop = settle * ((header + h) / 2 - (top + nameFoot) / 2);
+  // The description under the name belongs to the group, so it is centred
+  // with it, a little above the middle (the foot of the screen is taken a
+  // little short).
+  const blurbGap = BLURB_GAP * h;
+  const groupFoot = nameFoot + blurbGap + blurb;
+  const middle = (header + (1 - LIFT) * h) / 2;
+  const settledDrop = middle - (top + groupFoot) / 2;
+  const drop = settle * settledDrop;
   const nameDrop = drop - settle * closeUp;
   // Where the settled name ends, for the one-line description under it.
-  const nameEnd = nameFoot + (header + h) / 2 - (top + nameFoot) / 2;
+  const nameEnd = nameFoot + settledDrop;
 
   // Her colour, from corner to corner: crimson at first, then fading from
   // the name's peacock at her top left (come to round the hue wheel the
@@ -391,12 +407,12 @@ export function AntigoneReveal() {
         <p
           className="antigone-reveal__tagline"
           style={{
-            top: `${(nameEnd + 0.03 * h).toFixed(1)}px`,
+            top: `${(nameEnd + blurbGap).toFixed(1)}px`,
             opacity: start,
             visibility: start ? undefined : 'hidden',
           }}
         >
-          A Living Biotherapeutic to Manage Hyperandrogenism in PMOS
+          A bacterium that produces an enzyme in the gut, where it converts active androgens into less active form, to help reduce hyperandrogenism-related symptoms in PMOS.
         </p>
         <span
           ref={startRef}

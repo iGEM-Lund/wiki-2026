@@ -6116,6 +6116,8 @@ article .layout__column p {
   font-family: var(--font-heading);
   font-size: clamp(1rem, 2.2 * var(--u), 1.75rem);
   color: var(--heading);
+  max-width: 52rem;
+  text-wrap: balance;
 }
 .women-line-scene__art {
   position: absolute;
@@ -6174,6 +6176,18 @@ article .layout__column p {
   display: block;
   font-size: clamp(1rem, 1.8 * var(--u), 1.5rem);
   color: var(--text);
+}
+
+.women-line-scene__next > .women-line-scene__acronym {
+  margin-bottom: 0.7rem;
+}
+.women-line-scene__acronym > span {
+  display: block;
+}
+/* The first letter of each word, picked out to spell the name down the side. */
+.women-line-scene__acronym b {
+  font-weight: 700;
+  color: var(--color-peacock);
 }
 
 /* A term picked out inside a beat's text (hyperandrogenism). */
@@ -6269,6 +6283,13 @@ article .layout__column p {
   text-align: center;
   color: var(--heading);
   pointer-events: none;
+}
+.women-line-scene__ask span {
+  display: block;
+  margin-top: 0.4em;
+  font-size: 0.5em;
+  font-weight: 400;
+  line-height: 1.25;
 }
 /* The room, coming in round the bubble as the view pulls back. Its floor
    --room-raise up from the bottom of the screen. */
@@ -6648,7 +6669,7 @@ article .layout__column p {
   left: 0;
   right: 0;
   margin: 0 auto;
-  max-width: 40rem;
+  max-width: 52rem;
   padding: 0 1.25rem;
   text-align: center;
   text-wrap: balance;
@@ -6949,10 +6970,22 @@ article .layout__column p {
    drug's name in peacock under its drawing, and the thread from the organs
    it works on to her. */
 .treatments__label {
-  fill: var(--color-peacock);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--color-peacock);
   font-family: var(--font-heading);
   font-size: 17px;
   font-weight: 500;
+  line-height: 1.18;
+  text-align: center;
+}
+/* Like the symptom ring's labels: the whole name is the hover/focus target,
+   not positioned (WebKit misplaces positioned elements in a foreignObject). */
+.treatments__item .term-tip {
+  position: static;
+  display: flex;
+  justify-content: center;
 }
 .treatments__line {
   fill: none;

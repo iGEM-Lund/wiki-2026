@@ -15,66 +15,45 @@ import { threadWidth } from './thread-width';
 
 const SOLUTION = [
   {
-    title: 'A gut-gated system',
+    title: 'Act in the gut',
     text: (
       <>
-        Under gut-like conditions, an engineered{' '}
-        <Tooltip text="A live, beneficial bacterium taken by mouth. Ours is genetically modified to carry the enzyme.">
-          probiotic
-        </Tooltip>{' '}
-        expresses an{' '}
-        <Tooltip text="The molecule that does the work in our system. Here, an enzyme that converts testosterone.">
-          effector
-        </Tooltip>{' '}
-        that modulates{' '}
-        <Tooltip text="How strongly an androgen can switch on the androgen receptor and have an effect.">
-          androgen bioactivity
-        </Tooltip>{' '}
-        locally, within the{' '}
-        <Tooltip text="The gut bacteria that metabolise testosterone and other androgens, and so help regulate how much of them stays active in the body.">
-          testobolome
+        Androgens excreted into the gut can be reactivated there and reabsorbed into the blood (
+        <Tooltip text="The loop in which substances are released into the gut, taken up again and carried back to the liver and blood.">
+          enterohepatic circulation
         </Tooltip>
-        .
+        ).
       </>
     ),
   },
   {
-    title: 'Local androgen conversion',
+    title: 'Use a bacterium',
     text: (
       <>
-        The effector converts testosterone into less androgenic metabolites through{' '}
-        <Tooltip text="An enzyme adds hydrogen to the first ring of the steroid, giving a shape that barely activates the androgen receptor.">
-          5β-reduction
-        </Tooltip>{' '}
-        or{' '}
-        <Tooltip text="An enzyme opens the first ring (the A-ring) of the steroid, breaking up its characteristic shape so it can no longer act as an androgen.">
-          A-ring cleavage
+        <em>E. coli</em> carrying the gene for a steroid{' '}
+        <Tooltip text="An enzyme that adds hydrogen to a steroid at the 5β position and changes its 3D shape.">
+          5β-reductase
         </Tooltip>
-        .
+        , an enzyme that acts on androgens.
       </>
     ),
   },
   {
-    title: 'Less regeneration',
+    title: 'Control with gut-gated expression',
     text: (
       <>
-        It targets androgen regeneration in the gut, before{' '}
-        <Tooltip text="Substances released from the liver into the gut via bile are reabsorbed and carried back to the liver, instead of leaving the body.">
-          enterohepatic reabsorption
-        </Tooltip>{' '}
-        can return it to circulation.
+        A hypoxia-responsive{' '}
+        <Tooltip text="The DNA part that switches a gene on.">promoter</Tooltip> is designed to switch the enzyme on
+        only under low oxygen, as in the gut.
       </>
     ),
   },
   {
-    title: 'Lower systemic exposure',
+    title: '5β-reduction of testosterone',
     text: (
       <>
-        Our approach aims to reduce systemic androgen exposure while limiting{' '}
-        <Tooltip text="Unwanted effects on parts of the body or processes other than the intended target.">
-          off-target effects
-        </Tooltip>
-        .
+        The enzyme converts testosterone into 5β-dihydrotestosterone, a steroid with far lower{' '}
+        <Tooltip text="How strongly a hormone switches on the androgen receptor.">androgenic activity</Tooltip>.
       </>
     ),
   },

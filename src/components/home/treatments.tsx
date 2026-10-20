@@ -6,6 +6,8 @@
 // women-on-line.tsx, which paints her from TREATMENT_SPOTS). Drawn inside
 // the scene's SVG, in its units, so they stay round her.
 
+import { Tooltip } from '@/components/content/Tooltip';
+
 // The drawings are uploaded to static.igem.wiki like every other image;
 // NEXT_PUBLIC_TREATMENTS_BASE points at a local copy while developing.
 const BASE = process.env.NEXT_PUBLIC_TREATMENTS_BASE ?? 'https://static.igem.wiki/teams/6160/wiki/home';
@@ -31,6 +33,8 @@ type Item = {
   dy: number;
   size: number;
   label?: string[];
+  // Shown on hover or focus of the name.
+  tip?: string;
   // Reaches her where this spot is, by a line.
   reaches?: boolean;
 };
@@ -51,7 +55,7 @@ const CLUSTERS: Cluster[] = [
     name: 'Combined oral contraceptives',
     window: [0.12, 0.36],
     items: [
-      { art: 'coc', dx: -365, dy: -35, size: 190, label: ['Combined oral', 'contraceptives'] },
+      { art: 'coc', dx: -365, dy: -35, size: 190, label: ['Combined oral', 'contraceptives'], tip: 'Birth control pills regulate the cycle and lower ovarian androgen production.' },
       { art: 'uterus', dx: -330, dy: 95, size: 150, reaches: true },
     ],
     spot: { dx: 0, dy: 30, r: 38 },
@@ -61,7 +65,7 @@ const CLUSTERS: Cluster[] = [
     name: 'Metformin',
     window: [0.4, 0.64],
     items: [
-      { art: 'metformin', dx: 350, dy: -120, size: 120, label: ['Metformin'] },
+      { art: 'metformin', dx: 350, dy: -120, size: 120, label: ['Metformin'], tip: 'Metformin improves how the body responds to insulin, but does little for androgens.' },
       { art: 'insulin', dx: 360, dy: -10, size: 130, reaches: true },
       { art: 'liver', dx: 345, dy: 90, size: 110, reaches: true },
     ],
@@ -71,7 +75,7 @@ const CLUSTERS: Cluster[] = [
     name: 'Anti-androgens',
     window: [0.68, 0.92],
     items: [
-      { art: 'anti-androgen', dx: -385, dy: -175, size: 120, label: ['Anti-androgens'] },
+      { art: 'anti-androgen', dx: -385, dy: -175, size: 120, label: ['Anti-androgens'], tip: 'Anti-androgens block the hormone\'s effect, but must act on the whole body.' },
       { art: 'receptor', dx: -255, dy: -125, size: 90, reaches: true },
     ],
     spot: { dx: 0, dy: -112, r: 38 },
@@ -117,7 +121,7 @@ export function Treatments({ cx, cy, span, shown }: { cx: number; cy: number; sp
   const labelScale = Math.max(1, 0.75 * (1200 / span));
   const labels = labelScale / Math.max(k, 0.01);
   return (
-    <g className="treatments" aria-hidden="true">
+    <g className="treatments">
       {CLUSTERS.map(({ name, window, items, spot, drop = 0 }) => {
         const arrive = smooth(phase(shown, [window[0], window[0] + (window[1] - window[0]) * 0.6]));
         if (!arrive) return null;
@@ -135,7 +139,7 @@ export function Treatments({ cx, cy, span, shown }: { cx: number; cy: number; sp
         const shift = named ? Math.min(reach - half, Math.max(half - reach, at)) - at : 0;
         return (
           <g key={name}>
-            {items.map(({ art, dx: ix, dy: iy, size: isize, label, reaches }) => {
+            {items.map(({ art, dx: ix, dy: iy, size: isize, label, tip, reaches }) => {
               const [dx, dy, size] = [ix * k, iy * k, isize * k];
               const [w, h] = ART[art] >= 1 ? [size, size / ART[art]] : [size * ART[art], size];
               // Each drifts in a little way from further out.
@@ -152,19 +156,21 @@ export function Treatments({ cx, cy, span, shown }: { cx: number; cy: number; sp
                 <g key={art} opacity={arrive}>
                   <image href={`${BASE}/${art}.avif`} x={x - w / 2} y={y - h / 2} width={w} height={h} />
                   {label && (
-                    <text
-                      className="treatments__label"
-                      x={x}
-                      y={y + h / 2 + 22 * k * labels}
-                      textAnchor="middle"
-                      style={{ fontSize: `${17 * k * labels}px` }}
+                    <foreignObject
+                      className="treatments__item"
+                      x={x - 130 * k * labels}
+                      y={y + h / 2 + 4 * k * labels}
+                      width={260 * k * labels}
+                      height={(20 * label.length + 8) * k * labels}
                     >
-                      {label.map((line, i) => (
-                        <tspan key={line} x={x} dy={i ? 20 * k * labels : 0}>
-                          {line}
-                        </tspan>
-                      ))}
-                    </text>
+                      <Tooltip text={tip}>
+                        <span className="treatments__label" style={{ fontSize: `${17 * k * labels}px` }}>
+                          {label.map((line) => (
+                            <span key={line}>{line}</span>
+                          ))}
+                        </span>
+                      </Tooltip>
+                    </foreignObject>
                   )}
                   {reaches && drawn > 0 && (
                     <path

@@ -104,7 +104,7 @@ const D = {
 // her, a beat at a time, each fading in and out over its own stretch, in
 // the words of the wiki design's Problem section. `phrase` beats lead with
 // words instead of a number, set smaller.
-type Beat = { big: string; small: ReactNode; from: number; to: number; phrase?: boolean; top?: boolean };
+type Beat = { big: string; small: ReactNode; from: number; to: number; phrase?: boolean; top?: boolean; words?: string[] };
 const TREAT_AT = at(740);
 const TREAT_MS = 5200;
 const BEATS: Beat[] = [
@@ -112,19 +112,12 @@ const BEATS: Beat[] = [
   // alone on the screen waiting for more scroll.
   { big: 'Up to 70%', small: 'of them remain undiagnosed', from: DROP_AT, to: at(320) },
   {
-    big: 'Polyendocrine Metabolic Ovarian Syndrome',
+    big: 'PMOS',
+    // Set one word to a line, their first letters picked out to spell it.
+    words: ['Polyendocrine', 'Metabolic', 'Ovarian', 'Syndrome'],
     small: (
       <>
-        is a multisystem disorder characterized by{' '}
-        <Tooltip text="Hormone levels that are too high or too low, or out of step with one another.">
-          hormonal imbalance
-        </Tooltip>
-        ,{' '}
-        <Tooltip text="Problems with how the body handles energy, such as processing sugar and fats.">
-          metabolic dysfunction
-        </Tooltip>
-        , and impaired ovarian function, with <strong>hyperandrogenism</strong> being a major{' '}
-        <Tooltip text="Something that causes or drives a disease.">pathological driver</Tooltip>.
+        A disorder that affects hormones, metabolism and the ovaries. A main driver is <strong>hyperandrogenism</strong>.
       </>
     ),
     from: at(320),
@@ -133,19 +126,7 @@ const BEATS: Beat[] = [
   },
   {
     big: 'Hyperandrogenism',
-    small: (
-      <>
-        is the excessive production or activity of{' '}
-        <Tooltip text="A group of hormones, such as testosterone, that drive male traits. Everyone makes them, women in smaller amounts.">
-          androgens
-        </Tooltip>
-        , particularly testosterone and{' '}
-        <Tooltip text="A stronger androgen made from testosterone, which binds the androgen receptor more tightly.">
-          dihydrotestosterone
-        </Tooltip>
-        . It is one of the key pathological drivers of PMOS.
-      </>
-    ),
+    small: 'means having too much androgen, such as testosterone, in the body.',
     from: at(460),
     to: at(600),
     phrase: true,
@@ -171,21 +152,8 @@ const BEATS: Beat[] = [
   // Then the treatments come in round her, and, a beat later, why they are
   // not the end of it.
   {
-    big: 'Current treatments',
-    small: (
-      <>
-        Combined oral contraceptives regulate menstrual cycles and suppress ovarian androgen production. Metformin
-        improves{' '}
-        <Tooltip text="How well the body's cells respond to insulin and take up sugar from the blood.">
-          insulin sensitivity
-        </Tooltip>
-        , but has limited effects on hyperandrogenism. Anti-androgens reduce androgen action, but require{' '}
-        <Tooltip text="Reaching the whole body through the bloodstream, rather than staying in one place.">
-          systemic exposure
-        </Tooltip>
-        .
-      </>
-    ),
+    big: 'Current treatments?',
+    small: 'Not therapeutically precise.',
     from: TREAT_AT,
     to: at(870),
     phrase: true,
@@ -193,20 +161,7 @@ const BEATS: Beat[] = [
   },
   {
     big: 'Symptoms, not the source',
-    small: (
-      <>
-        These therapies relieve symptoms rather than addressing the underlying mechanism. They act on the whole body,
-        cover only part of the problem, and some rule out pregnancy. We need a{' '}
-        <Tooltip text="A treatment that acts at one site in the body, here the gut, instead of everywhere.">
-          localized strategy
-        </Tooltip>{' '}
-        that targets{' '}
-        <Tooltip text="Androgens that were on their way out of the body being turned back into their active form in the gut, so they can be reabsorbed.">
-          androgen regeneration
-        </Tooltip>
-        .
-      </>
-    ),
+    small: 'These treatments act on the whole body and cover only part of the problem.',
     from: at(870),
     to: Infinity,
     phrase: true,
@@ -549,7 +504,10 @@ export function WomenOnLine() {
         <div className="women-line-scene__title">
           <hgroup>
             <h1>AnTigone</h1>
-            <p>A Living Biotherapeutic to Manage Hyperandrogenism in PMOS</p>
+            <p>
+              A bacterium that produces an enzyme in the gut, where it converts active androgens into less active form, to
+              help reduce hyperandrogenism-related symptoms in PMOS.
+            </p>
           </hgroup>
           <SkipToEnd />
         </div>
@@ -613,7 +571,7 @@ export function WomenOnLine() {
           </svg>
           <p className="women-line-scene__stat" style={{ opacity: stat, translate: `0 ${((1 - stat) * 1).toFixed(3)}rem` }}>
             <strong>10–13%</strong>
-            <span>of women worldwide are affected by PMOS</span>
+            <span>of women worldwide are affected by PMOS, a hormonal and metabolic disorder.</span>
           </p>
         </div>
         </div>
@@ -625,7 +583,18 @@ export function WomenOnLine() {
               className={`women-line-scene__next${beat.phrase ? ' women-line-scene__next--phrase' : ''}${beat.top ? ' women-line-scene__next--top' : ''}`}
               style={{ opacity: shown, translate: `0 ${(1 - shown).toFixed(3)}rem`, visibility: shown ? undefined : 'hidden' }}
             >
-              <strong>{beat.big}</strong>
+              {beat.words ? (
+                <strong className="women-line-scene__acronym" aria-label={beat.words.join(' ')}>
+                  {beat.words.map((word) => (
+                    <span key={word} aria-hidden="true">
+                      <b>{word[0]}</b>
+                      {word.slice(1)}
+                    </span>
+                  ))}
+                </strong>
+              ) : (
+                <strong>{beat.big}</strong>
+              )}
               <span>{beat.small}</span>
             </p>
           );
@@ -653,7 +622,8 @@ export function WomenOnLine() {
         )}
         {room > 0.8 && (
           <p className="women-line-scene__ask" style={{ opacity: smooth(phase(room, [0.85, 1])) }}>
-            Our solution?
+            Our Solution?
+            <span>A localized strategy that targets androgen regeneration</span>
           </p>
         )}
         {dark > 0 && <div className="women-line-scene__dark" style={{ opacity: dark }} />}
