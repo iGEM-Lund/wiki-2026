@@ -505,7 +505,7 @@ export function WomenOnLine() {
           <hgroup>
             <h1>AnTigone</h1>
             <p>
-              A bacterium that produces an enzyme in the gut, where it converts active androgens into less active form, to
+              A bacterium that produces an enzyme in the gut, where it converts active androgens into a less active form, to
               help reduce hyperandrogenism-related symptoms in PMOS.
             </p>
           </hgroup>

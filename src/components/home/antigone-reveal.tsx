@@ -412,7 +412,7 @@ export function AntigoneReveal() {
             visibility: start ? undefined : 'hidden',
           }}
         >
-          A bacterium that produces an enzyme in the gut, where it converts active androgens into less active form, to help reduce hyperandrogenism-related symptoms in PMOS.
+          A bacterium that produces an enzyme in the gut, where it converts active androgens into a less active form, to help reduce hyperandrogenism-related symptoms in PMOS.
         </p>
         <span
           ref={startRef}
