@@ -1,12 +1,6 @@
 ---
 title: Outlook
 ---
-Description...
-
-## Implementation
-
-## ...
-
 ## Questions we leave behind
 
 <Card refId="card-qrvm3">
@@ -39,25 +33,96 @@ Description...
   <Ref target="card-9nxm9" linkText="Mahnaz Bahri-Khomami" /> specified what would need to be established if the project were to move further: whether the therapeutic or its byproducts cross the placenta and whether 5β-reduction of androgens could affect male fetal development. Conventional probiotics are widely used during pregnancy, but the safety of genetically engineered probiotics has not yet been established.
 </Card>
 
-<Card refId="card-qrvm3">
-  <CardTitle>
+<Card refId="card-kemr1">
+  * The gut is a major route of androgen elimination and androgens can be reabsorbed there, so lowering testosterone in the gut should in theory change the amount that returns to the blood. However, none of the experts we have interviewed so far could say how much testosterone passes through the gut, so the systemic effect cannot be predicted.
+  * <Ref target="card-v4kro" linkText="Dr.Tsz Yan Clement Chan" /> framed this as the standard objection to any project targeting an enterohepatically circulated molecule: the fraction re-entering the gut may be a small percentage of the total, and a therapeutic acting on that fraction has to justify why altering it produces a clinically meaningful change. Establishing the fraction is only the first step and the second is showing it is large enough to act on.
+  * Our enzyme ci2350 reduced progesterone, cortisone and hydrocortisone in the study that identified it (Arp et al., 2025), implying that it acts on steroids other than testosterone. Making the enzyme more specific towards testosterone is therefore a priority.
+  * A preclinical study would have to be set up to measure blood levels of testosterone and of the other steroid hormones the enzyme may act on (progesterone, cortisone, hydrocortisone), before, during and after treatment.
+</Card>
 
+\
+\
+\
+\
+Future outlook&#x20;
+--------------------
+
+<Card refId="card-kemr1">
+  <CardTitle>
+    Enzyme Activity&#x20;
+
+    <Expandable defaultOpen={false}>
+      &#x20;Future work on enzyme activity includes returning to protein purification to obtain pure protein samples, and adding <Tooltip text="A plate-based test that detects and measures a molecule using antibodies.">ELISA</Tooltip>, LC–MS/MS and androgen receptor assays so that testosterone quantities can be identified directly, even when the enzyme kinetics are not clear enough.
+    </Expandable>
   </CardTitle>
 </Card>
 
-## Future outlook
+<Card refId="card-kemr1">
+  <CardTitle>
+    In silico experimentation&#x20;
 
-Future work on enzyme activity includes returning to protein purification to obtain pure protein samples, and adding <Tooltip text="A plate-based test that detects and measures a molecule using antibodies.">ELISA</Tooltip>, LC–MS/MS and androgen receptor assays so that testosterone quantities can be identified directly, even when the enzyme kinetics are not clear enough.
+    <Expandable defaultOpen={false}>
+      * &#x20;**Consensus docking:** Re-dock the top variants with a second tool (e.g. <Tooltip text="Docking programs that use deep learning to place and score the molecule.">GNINA or DiffDock</Tooltip>) and keep only the variants that rank well in both.
 
-Next steps in *in silico* experiments:
+      - **Other steroids:** Dock the top variants against related steroids that could compete in the cell, to see whether the testosterone preference holds beyond progesterone.
+      - **Cofactor in the model:** Add NADPH supply to the activity model, since the reaction depends on it.
+      - **Dose and conditions:** Run the integrated model for different starting steroid concentrations, culture densities and induction timings, to find the conditions where the preference is largest.
+      - **Experimental values in the model:** The model can be run again with the measured activity values in place of the docking scores, to see how the predictions change. &#x20;
 
-* **Consensus docking:** Re-dock the top variants with a second tool (e.g. <Tooltip text="Docking programs that use deep learning to place and score the molecule.">GNINA or DiffDock</Tooltip>) and keep only the variants that rank well in both.
-* **Other steroids:** Dock the top variants against related steroids that could compete in the cell, to see whether the testosterone preference holds beyond progesterone.
-* **Cofactor in the model:** Add NADPH supply to the activity model, since the reaction depends on it.
-* **Dose and conditions:** Run the integrated model for different starting steroid concentrations, culture densities and induction timings, to find the conditions where the preference is largest.
-* **Experimental values in the model:** The model can be run again with the measured activity values in place of the docking scores, to see how the predictions change. &#x20;
+      &#x20;
+    </Expandable>
+  </CardTitle>
+</Card>
 
-##
+<Card refId="card-kemr1">
+  <CardTitle>
+    Biosafety \
+
+
+    <Expandable defaultOpen={false}>
+      Our project is a proof of concept and its safety features have not completely been tested in our strain. These are the steps we would consider in the future:&#x20;
+
+      \
+      Test the sensing and feedback responsive loop 
+
+      * Measure the concentration of testosterone at which the TeiR switches on. 
+      * Make TeiR specific to testosterone and not other steroids
+      * Further , confirm that TeiR activates the sip48 promoter directly in our chassis.
+
+      Strengthen Containment (multi-layered biosafety)
+
+      * Combine ΔdapA auxotrophy with a second independent dependency 
+      * Develop a hypoxia gated CRISPR based system 
+      * To ensure reduced levels of HGT , we should add a CRISPR system that cuts *dapA* genes acquired from outside since our strain has no *dapA* gene of its own . 
+
+      3\. Study the gut ecosystem and gene transfer 
+
+      * To test whether the effector gene can transfer to other gut bacteria 
+      * Whether the chromosomal integration lowers the risk 
+      * To test how the engineered strain can lower the testosterone levels and how this reduction affects the resident gut community.
+
+       4. Regulations 
+
+      * Prepare for preclinical trials before releasing the product into the market.
+    </Expandable>
+  </CardTitle>
+</Card>
+
+<Card refId="card-kemr1">
+  <CardTitle>
+    Pharmacokinetics and ADME \
+
+
+    <Expandable defaultOpen={false}>
+      We have not yet measured the residence time of the bacteria in the gut after dosing (pharmacokinetics) and how much the enzyme lowers the testosterone levels ( pharmacodynamics). Both are needed to choose a dose and schedule.The ADME framework raises the following questions:&#x20;
+
+      * **A (Absorption)** — absorption normally describes the drug entering the blood, but our bacteria are not meant to enter the blood at all; the question instead is whether the testosterone breakdown products are absorbed from the gut into the blood.
+      * **D (Distribution)** — distribution addresses where the drug travels in the body, which for AnTigone translates to where in the gut the bacteria settle and act.
+      * **M (Metabolism)** — metabolism is normally where the body breaks down the drug, whereas for AnTigone the bacteria metabolise testosterone into less active forms, raising the questions of how the gut microbiota is affected and what it in turn does to those products.
+      * **E (Excretion)** — excretion describes how the drug leaves the body, and for our probiotic we need to understand how the bacteria themselves are cleared ([environmental biocontainment](https://wiki.igemlund.org/biosafety))&#x20;
+    </Expandable>
+  </CardTitle>
+</Card>
 
 &#x20;&#x20;
 
