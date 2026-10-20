@@ -3,22 +3,22 @@ title: Engineering
 ---
 Our project can be viewed as an **overarching <Tooltip text="A repeating engineering loop: design a solution, build it, test it, and learn from the result to improve the next design.">Design–Build–Test–Learn (DBTL) cycle</Tooltip>**, progressing from the **initial concept** toward the envisioned **integrated system** of AnTigone. Within this broader process, **several smaller DBTL cycles addressed specific experimental challenges**, allowing us to iteratively refine individual components of our design.
 
-Each cycle generated observations that informed subsequent experiments, prompted design modifications, and changed how we interpreted our results. As we  had limited access and time in the lab, some DBTL cycles were carried in parallel and some, mentioned in this section, are still open and we invite future researchers and students to carry out and build on what we assessed with our project.
+Each cycle generated observations that informed subsequent experiments, prompted design modifications, and changed how we interpreted our results. As we  had limited access and time in the lab, some DBTL cycles were carried out in parallel and some, mentioned in this section, are still open and we invite future researchers and students to carry out and build on what we assessed with our project.
 
-<SliceWheel slices={[{"title":"Design","body":"We designed AnTigone around the testosterone-transforming enzymes, AKR1D1 and ci350. Our initial genetic designs evolved to include alternative fusion tags (MBP, SUMO, and TrxA), ci2350 variants carrying the R215A and V263I mutations, and hypoxia-responsive regulatory elements intended to control enzyme expression under oxygen-limited conditions."},{"title":"Build","body":"We assembled our expression constructs using restriction cloning, transformed them into E. coli, and produced recombinant enzymes for characterization. Repeated difficulties with pET-11a digestion and cloning led us to adopt the pET-BLANK strategy. We also constructed alternative AKR1D1 and ci2350 fusion-tag variants and introduced targeted ci2350 mutations to investigate additional enzyme configurations."},{"title":"Test","body":"We evaluated cloning outcomes through colony PCR and sequencing, compared AKR1D1 fusion tags and IPTG concentrations using SDS-PAGE, and investigated protein recovery through IMAC. To assess testosterone-transforming activity, we developed NAD(P)H-based assays with testosterone."},{"title":"Learn","body":"Our experiments led us to revise our cloning strategy, prioritize ci2350–MBP for biochemical characterization, and select AKR1D1–TrxA for further solubility optimization. Unexpected NADPH consumption in control preparations revealed that additional analytical validation was needed before claiming testosterone conversion."}]} cycle />
+<SliceWheel slices={[{"title":"Design","body":"We designed AnTigone around the testosterone-transforming enzymes, AKR1D1 and ci2350. Our initial genetic designs evolved to include alternative fusion tags (MBP, SUMO, and TrxA), ci2350 variants carrying the R215A and V263I mutations, and hypoxia-responsive regulatory elements intended to control enzyme expression under oxygen-limited conditions."},{"title":"Build","body":"We assembled our expression constructs using restriction cloning, transformed them into E. coli, and produced recombinant enzymes for characterization. Repeated difficulties with pET-11a digestion and cloning led us to adopt the pET-BLANK strategy. We also constructed alternative AKR1D1 and ci2350 fusion-tag variants and introduced targeted ci2350 mutations to investigate additional enzyme configurations."},{"title":"Test","body":"We evaluated cloning outcomes through colony PCR and sequencing, compared AKR1D1 fusion tags and IPTG concentrations using SDS-PAGE, and investigated protein recovery through IMAC. To assess testosterone-transforming activity, we developed NAD(P)H-based assays with testosterone."},{"title":"Learn","body":"Our experiments led us to revise our cloning strategy, prioritize ci2350–MBP for biochemical characterization, and select AKR1D1–TrxA for further solubility optimization. Unexpected NADPH consumption in control preparations revealed that additional analytical validation was needed before claiming testosterone conversion."}]} cycle />
 
 Our main challenges and small DBTL cycles refer to:
 
-1. **Engineering Enzyme Specificity**: making testosterone the most favourable substrate for our candidate enzymes.
+1. **Engineering Enzyme Specificity**: making testosterone the most favorable substrate for our candidate enzymes.
 2. **Construct Assembly**: establishing a reliable cloning and verification strategy.
-3. **Enzyme production** and **recovery**: identifying suitable fusion tags, cultivation conditions for recombinant AKR1D1.
-4. **Activity characterisation**: developing reliable assays for evaluating testosterone-associated enzymatic activity.
+3. **Enzyme production** and **recovery**: identifying suitable fusion tags and cultivation conditions for recombinant AKR1D1.
+4. **Activity characterization**: developing reliable assays for evaluating testosterone-associated enzymatic activity.
 
 In parallel, **computational enzyme engineering informed our choice of variants** for experimental investigation.
 
 <Pillars pillars={[{"title":"Cycle 1 - Rational Engineering of Enzyme Specificity","heading":"Rational Engineering of Enzyme Specificity","color":"teal"},{"title":"Cycle 2 -  Cloning","heading":"Improving the cloning workflow","color":"rose"},{"title":"Cycle 3 - Fusion tags and Induction strength","heading":"Selecting an AKR1D1 fusion tag for soluble expression and adjusting induction strength","color":"kraft"},{"title":"Cycle 4 - Enzymatic Assay","heading":"Developing a Reliable Enzyme Activity Assay","color":"crimson"}]} />
 
-All **cycles are interconnected**: improvements in cloning allowed the production of alternative enzyme constructs, while expression and activity experiments revealed additional requirements for future optimisations.
+All **cycles are interconnected**: improvements in cloning allowed the production of alternative enzyme constructs, while expression and activity experiments revealed additional requirements for future optimizations.
 
 ## Rational Engineering of Enzyme Specificity
 
@@ -32,7 +32,7 @@ All **cycles are interconnected**: improvements in cloning allowed the productio
 
 ### Design
 
-We **investigated the active sites** of human **AKR1D1** ([BBa\_26ZLKFI1](https://registry.igem.org/parts/bba-26zlkfi1)) and bacterial **Ci2350** ([BBa\_261I5W2C](https://registry.igem.org/parts/bba-261i5w2c)) to identify <Tooltip text="The individual amino acids that make up a protein.">residues</Tooltip> that could influence interactions with the <Tooltip text="The chemical groups attached to carbon 17 of the steroid, where testosterone and progesterone differ.">C17 substituents</Tooltip> of testosterone and progesterone.
+We **investigated the active sites** of human **AKR1D1** ([BBa\_26ZLKFI1](https://registry.igem.org/parts/bba-26zlkfi1)) and bacterial **ci2350** ([BBa\_261I5W2C](https://registry.igem.org/parts/bba-261i5w2c)) to identify <Tooltip text="The individual amino acids that make up a protein.">residues</Tooltip> that could influence interactions with the <Tooltip text="The chemical groups attached to carbon 17 of the steroid, where testosterone and progesterone differ.">C17 substituents</Tooltip> of testosterone and progesterone.
 
 Check out our [designs](/parts) and [models](/model).
 
@@ -40,15 +40,15 @@ Candidate point mutations were **designed to favor testosterone binding** or wea
 
 ### Build
 
-We generated 24 computational AKR1D1 variants and 31 Ci2350 variants. Structural stability was evaluated using <Tooltip text="A software package for modelling protein structures and predicting how mutations change their stability.">PyRosetta</Tooltip>, and both testosterone and progesterone were independently <Tooltip text="Simulated on a computer to predict how well a molecule fits into a protein's binding site.">docked</Tooltip> against variants that passed the selected stability threshold.
+We generated 24 computational AKR1D1 variants and 31 ci2350 variants. Structural stability was evaluated using <Tooltip text="A software package for modeling protein structures and predicting how mutations change their stability.">PyRosetta</Tooltip>, and both testosterone and progesterone were independently <Tooltip text="Simulated on a computer to predict how well a molecule fits into a protein's binding site.">docked</Tooltip> against variants that passed the selected stability threshold.
 
-Thirteen AKR1D1 and seventeen Ci2350 variants passed the initial stability screening.
+Thirteen AKR1D1 and seventeen ci2350 variants passed the initial stability screening.
 
 ### Test
 
 For AKR1D1, **none of the stable variants showed a meaningful improvement** in predicted testosterone selectivity beyond the uncertainty of the docking scoring function.
 
-For CI2350, the **R215A+V263I double mutant (**[BBa\_262E3BYN](https://registry.igem.org/parts/bba-262e3byn)**) showed the strongest predicted shift toward testosterone**, changing the <Tooltip text="The difference in predicted binding between testosterone and progesterone. More negative means a stronger preference for testosterone.">selectivity score</Tooltip> from −0.1 <Tooltip text="Kilocalories per mole, a unit of energy. Here it measures predicted binding strength.">kcal/mol</Tooltip> in wild type to −0.9 kcal/mol, with a predicted stability score of +1.42 <Tooltip text="Rosetta Energy Units, the score software gives for how stable a protein structure is. Lower is more stable.">REU</Tooltip>.
+For ci2350, the **R215A + V263I double mutant (**[BBa\_262E3BYN](https://registry.igem.org/parts/bba-262e3byn)**) showed the strongest predicted shift toward testosterone**, changing the <Tooltip text="The difference in predicted binding between testosterone and progesterone. More negative means a stronger preference for testosterone.">selectivity score</Tooltip> from −0.1 <Tooltip text="Kilocalories per mole, a unit of energy. Here it measures predicted binding strength.">kcal/mol</Tooltip> in wild type to −0.9 kcal/mol, with a predicted stability score of +1.42 <Tooltip text="Rosetta Energy Units, the score software gives for how stable a protein structure is. Lower is more stable.">REU</Tooltip>.
 
 ➜ Check our results [here](/results#enzyme-specificity-engineering).
 
@@ -63,7 +63,7 @@ The AKR1D1 mutations investigated did not produce meaningful predicted specifici
     Challenge
   </CardTitle>
 
-  One of our main **engineering challenge** was **assembling correct expression constructs** for the candidate enzymes, AKR1D1 and Ci2350. Our initial <Tooltip text="Cutting DNA with restriction enzymes at specific sequences and joining the pieces together to build a new construct.">restriction-cloning</Tooltip> workflow using <Tooltip text="A plasmid commonly used to produce proteins in E. coli.">pET-11a</Tooltip> repeatedly produced low DNA recovery and unsuccessful transformation. In addition, incomplete restriction digestion could not be reliably identified as <Tooltip text="Two restriction enzymes, each cutting DNA at its own specific sequence. Together they excise a gene so it can be inserted into a plasmid.">NdeI and BamHI</Tooltip> restriction sites differs only by approximately 40 <Tooltip text="The unit for measuring DNA length: one pair of matching DNA letters.">base pairs (bp)</Tooltip>.
+  One of our main **engineering challenges** was **assembling correct expression constructs** for the candidate enzymes, AKR1D1 and ci2350. Our initial <Tooltip text="Cutting DNA with restriction enzymes at specific sequences and joining the pieces together to build a new construct.">restriction-cloning</Tooltip> workflow using <Tooltip text="A plasmid commonly used to produce proteins in E. coli.">pET-11a</Tooltip> repeatedly produced low DNA recovery and unsuccessful transformation. In addition, incomplete restriction digestion could not be reliably identified because the <Tooltip text="Two restriction enzymes, each cutting DNA at its own specific sequence. Together they excise a gene so it can be inserted into a plasmid.">NdeI and BamHI</Tooltip> restriction sites are only approximately 40 <Tooltip text="The unit for measuring DNA length: one pair of matching DNA letters.">base pairs (bp)</Tooltip> apart.
 </Card>
 
 ### Design
@@ -72,7 +72,7 @@ Our initial restriction-ligation strategy used NdeI and BamHI to insert the gene
 
 > [Check out our designs.](/parts)
 
-We subsequently **redesigned the workflow using pET-BLANK**, a pET-derived construct containing Ci2350–MBP. Digestion was expected to release an approximately 3 kb insert, leaving a vector backbone of approximately 5.4 kb. Unlike the original strategy, this would allow the backbone to be separated from the released insert by <Tooltip text="A method that separates DNA fragments by size by pulling them through a gel with an electric current.">agarose gel electrophoresis</Tooltip>.
+We subsequently **redesigned the workflow using pET-BLANK**, a pET-derived construct containing ci2350–MBP. Digestion was expected to release an approximately 3 kb insert, leaving a vector backbone of approximately 5.4 kb. Unlike the original strategy, this would allow the backbone to be separated from the released insert by <Tooltip text="A method that separates DNA fragments by size by pulling them through a gel with an electric current.">agarose gel electrophoresis</Tooltip>.
 
 ### Build
 
@@ -80,13 +80,13 @@ We subsequently **redesigned the workflow using pET-BLANK**, a pET-derived const
 
 We first extracted pET-11a using the Jena Bioscience <Tooltip text="A kit for purifying small amounts of plasmid DNA from bacteria.">miniprep kit</Tooltip> and prepared the vector through sequential NdeI and BamHI digestion. Following **poor recovery**, which we think was caused by <Tooltip text="An enzyme that degrades RNA, which can contaminate a DNA preparation.">RNase I</Tooltip> that was left in room temperature, we repeated plasmid preparation using the E.Z.N.A. kit and investigated alternative digestion conditions.
 
-**Iteration 2 — Redesigning the backbone preparation strategy**
+**Iteration 2** - **Redesigning the backbone preparation strategy**
 
-Following persistent cloning difficulties, the **revised strategy** involved digesting pET-BLANK, <Tooltip text="Cutting a DNA band out of a gel and purifying the DNA from it.">gel-extracting</Tooltip> the approximately 5.4 kb <Tooltip text="The plasmid vector without the gene, into which a new gene is inserted.">backbone</Tooltip>, and <Tooltip text="Joining DNA pieces together using the enzyme ligase.">ligating</Tooltip> it with the selected AKR1D1 and Ci2350 inserts. Following **unsuccessful initial <Tooltip text="Getting bacteria to take up DNA.">transformations</Tooltip>**, we also repeated ligation using an extended overnight incubation at 16°C.
+Following persistent cloning difficulties, the **revised strategy** involved digesting pET-BLANK, <Tooltip text="Cutting a DNA band out of a gel and purifying the DNA from it.">gel-extracting</Tooltip> the approximately 5.4 kb <Tooltip text="The plasmid vector without the gene, into which a new gene is inserted.">backbone</Tooltip>, and <Tooltip text="Joining DNA pieces together using the enzyme ligase.">ligating</Tooltip> it with the selected AKR1D1 and ci2350 inserts. Following **unsuccessful initial <Tooltip text="Getting bacteria to take up DNA.">transformations</Tooltip>**, we also repeated ligation using an extended overnight incubation at 16 °C.
 
 ### Test
 
-We **improved first gel extraction yield and purity using different kits** and we evaluated the resulting constructs through careful choice of controls and screening of samples to include in <Tooltip text="A quick check of bacterial colonies for the right insert: a PCR run directly on a small sample of each colony.">colony PCR</Tooltip>, restriction digestion, sequencing. However, colony PCR still revealed unsuccessful cloning attempts. Further investigation **suggested incomplete NdeI digestion**. Because the two restriction sites in pET-11a were separated by only approximately 40 bp, conventional agarose gel electrophoresis could not reliably distinguish singly digested from fully digested vector.
+We **improved first gel extraction yield and purity using different kits** and we evaluated the resulting constructs through careful choice of controls and screening of samples to include in <Tooltip text="A quick check of bacterial colonies for the right insert: a PCR run directly on a small sample of each colony.">colony PCR</Tooltip>, restriction digestion and sequencing. However, colony PCR still revealed unsuccessful cloning attempts. Further investigation **suggested incomplete NdeI digestion**. Because the two restriction sites in pET-11a were separated by only approximately 40 bp, conventional agarose gel electrophoresis could not reliably distinguish singly digested from fully digested vector.
 
 In contrast, **pET-BLANK digestion produced distinguishable backbone and insert fragments**. Following the revised ligation procedure, colony-PCR-positive AKR1D1–SUMO and AKR1D1–TrxA candidates were obtained.
 
@@ -97,7 +97,7 @@ In contrast, **pET-BLANK digestion produced distinguishable backbone and insert 
   | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
   | <Ref target="card-teoxx" linkText="25" /> | Initial pET-11a preparation, NdeI/BamHI digestion, low DNA recovery                                                         |
   | <Ref target="card-93sb4" linkText="26" /> | Introducing E.Z.N.A plasmid miniprep kit, improved DNA purity                                                               |
-  | <Ref target="card-nrupl" linkText="27" /> | Positive ligation, trasformation, colony PCR and sequencing for ci2350-His. Troubleshooting TrxA constructs transformation. |
+  | <Ref target="card-nrupl" linkText="27" /> | Positive ligation, transformation, colony PCR and sequencing for ci2350-His. Troubleshooting TrxA constructs transformation. |
   | <Ref target="card-92fs3" linkText="28" /> | Troubleshooting digestion and introducing PCR cleanup kit.                                                                  |
   | <Ref target="card-q86e0" linkText="29" /> | Troubleshooting digestion, diagnostic runs with restriction enzymes aliquots, introduction of pET-BLANK strategy            |
   | <Ref target="card-bd46z" linkText="31" /> | pET-BLANK ligation and transformation resulting in insert-positive colonies                                                 |
@@ -109,7 +109,7 @@ Our results highlighted **two limitations in the initial workflow**: potentially
 
 The **pET-BLANK strategy** enabled clearer separation of the intended backbone from the released insert, improving the reliability of backbone selection for subsequent cloning.
 
-After having identified our problem and chosen the strategy to continue **we managed to successfully cloned our construct and transform our colony**, aligned non-mutated sequences were carried forward for protein expression.&#x20;
+After identifying our problem and chosen the strategy to continue **we successfully cloned our construct and transformed our colonies**, and aligned non-mutated sequences were carried forward for protein expression.&#x20;
 
 ## Selecting an AKR1D1 fusion tag for soluble expression and adjusting induction strength
 
@@ -118,7 +118,7 @@ After having identified our problem and chosen the strategy to continue **we man
     Challenge
   </CardTitle>
 
-  Based on previous reports in the literature  (<Citation reference="penning-2023" narrative={false} />, ref), we anticipated that recombinant expression of our target enzymes could lead to the formation of inclusion bodies, limiting the recovery of soluble, functional protein. To address this challenge, we investigated and compared different solubility-enhancing fusion tags, with particular attention to AKR1D1. Our objective was to identify an expression configuration that would maximize soluble protein yield and facilitate downstream purification and enzymatic characterization. Beyond improving laboratory-scale production, we also considered the potential scalability of the expression and purification strategy, keeping in mind the requirements for future biotechnological and pharmaceutical applications in the context of our intended product.&#x20;
+  Based on previous reports in the literature  (<Citation reference="penning-2023" narrative={false} />), we anticipated that recombinant expression of our target enzymes could lead to the formation of inclusion bodies, limiting the recovery of soluble, functional protein. To address this challenge, we investigated and compared different solubility-enhancing fusion tags, with particular attention to AKR1D1. Our objective was to identify an expression configuration that would maximize soluble protein yield and facilitate downstream purification and enzymatic characterization. Beyond improving laboratory-scale production, we also considered the potential scalability of the expression and purification strategy, keeping in mind the requirements for future biotechnological and pharmaceutical applications in the context of our intended product.&#x20;
 </Card>
 
 ### Design
@@ -133,13 +133,13 @@ To compare their performance, we designed expression experiments under similar c
 
 #### **Iteration 1** - **Fusion-tag comparison**
 
-AKR1D1–His, AKR1D1–SUMO, and AKR1D1–TrxA were expressed in *E. coli* <Tooltip text="A common E. coli strain used to produce recombinant proteins.">BL21(DE3)</Tooltip>. Cultures were grown at 37°C for three hours following <Tooltip text="Switching on the production of the target protein, usually by adding a chemical.">induction</Tooltip> with 1 mM IPTG.
+AKR1D1–His, AKR1D1–SUMO, and AKR1D1–TrxA were expressed in *E. coli* <Tooltip text="A common E. coli strain used to produce recombinant proteins.">BL21(DE3)</Tooltip>. Cultures were grown at 37 °C for three hours following <Tooltip text="Switching on the production of the target protein, usually by adding a chemical.">induction</Tooltip> with 1 mM IPTG.
 
 The experimental setup included triplicate induced cultures, uninduced controls, and an <Tooltip text="A control with the plasmid but without the gene, showing what the host cells do on their own.">empty-vector control</Tooltip>.
 
 Following cultivation, samples were collected for SDS-PAGE and protein quantification. Whole-cell and soluble fractions were prepared to evaluate the distribution of recombinant AKR1D1 under the tested conditions.
 
-#### **Iteration 2- IPTG optimization**
+#### **Iteration 2** - **IPTG optimization**
 
 After the initial comparison, AKR1D1–TrxA was selected for further investigation. We compared induction with 0.2 and 0.4 mM IPTG to determine whether reducing induction strength influenced the amount of recombinant protein present in the soluble fraction. Samples were processed for SDS-PAGE analysis, and band intensities were used to estimate the relative distribution of AKR1D1–TrxA.
 
@@ -161,11 +161,11 @@ Initial comparison suggested differences in soluble recombinant recovery between
 <TableWithCaption refId="tab-zxe5g">
   | **Week**                                  | **Relevant Experimental Work**                                                                                                                     |
   | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | <Ref target="card-q86e0" linkText="29" /> | Initial expression of ci2350–His and ci2350–MBP, no visible over expression of ci2350-MBP                                                          |
-  | <Ref target="card-a2so7" linkText="30" /> | Testing new expression conditions for ci2350-His and ci2350-MBP, confirmation of over expression via SDS-PAGE                                      |
-  | <Ref target="card-bd46z" linkText="31" /> | Expression comparison at different temperature, IPTG concentration. Collection and storage of ci2350-MBP for planned enzymatic activity assessment |
+  | <Ref target="card-q86e0" linkText="29" /> | Initial expression of ci2350–His and ci2350–MBP, no visible overexpression of ci2350-MBP                                                          |
+  | <Ref target="card-a2so7" linkText="30" /> | Testing new expression conditions for ci2350-His and ci2350-MBP, confirmation of overexpression via SDS-PAGE                                      |
+  | <Ref target="card-bd46z" linkText="31" /> | Expression comparison at different temperatures and IPTG concentrations. Collection and storage of ci2350-MBP for planned enzymatic activity assessment |
   | <Ref target="card-jvd89" linkText="36" /> | Comparison of AKR1D1-His, SUMO and TrxA soluble fractions                                                                                          |
-  | <Ref target="card-f98o6" linkText="38" /> | Optimization of AKR1D1-TrxA expression lowering IPTG concentrations                                                                                |
+  | <Ref target="card-f98o6" linkText="38" /> | Optimization of AKR1D1-TrxA expression by lowering IPTG concentrations                                                                                |
 </TableWithCaption>
 
 ### Learn
@@ -177,12 +177,12 @@ Initial comparison suggested differences in soluble recombinant recovery between
     Challenge
   </CardTitle>
 
-  After producing our candidates enzymes, we needed to determine whether they could support the intended testosterone-transforming reaction. Our initial assay measured the consumption of the <Tooltip text="A helper molecule an enzyme needs to do its job.">cofactor</Tooltip> <Tooltip text="A molecule that carries electrons in cells. The enzymes use it as a cofactor, and it absorbs light at 340 nm while its oxidised form does not.">NAD(P)H</Tooltip> <Tooltip text="Using a spectrophotometer, which measures how much light a sample absorbs.">spectrophotometrically</Tooltip>. The development of this assay was complicated by substrate precipitation, inconsistent <Tooltip text="How much light a sample absorbs at a given wavelength.">absorbance</Tooltip> measurements, inadequate signal detection, and background cofactor consumption. These limitations required several rounds of troubleshooting before the measurements could be interpreted reliably.
+  After producing our candidate enzymes, we needed to determine whether they could support the intended testosterone-transforming reaction. Our initial assay measured the consumption of the <Tooltip text="A helper molecule an enzyme needs to do its job.">cofactor</Tooltip> <Tooltip text="A molecule that carries electrons in cells. The enzymes use it as a cofactor, and it absorbs light at 340 nm while its oxidized form does not.">NAD(P)H</Tooltip> <Tooltip text="Using a spectrophotometer, which measures how much light a sample absorbs.">spectrophotometrically</Tooltip>. The development of this assay was complicated by substrate precipitation, inconsistent <Tooltip text="How much light a sample absorbs at a given wavelength.">absorbance</Tooltip> measurements, inadequate signal detection, and background cofactor consumption. These limitations required several rounds of troubleshooting before the measurements could be interpreted reliably.
 </Card>
 
 ### Design
 
-Building from existing literature (<Citation reference="arp-et-al-2025" narrative={false} />; <Citation reference="penning-2023" narrative={false} />) we developed a continuous spectrophotometric assay based on monitoring the decrease in NAD(P)H absorbance at 340 nm.
+Building from existing literature (<Citation reference="arp-et-al-2025" narrative={false} />; <Citation reference="penning-2023" narrative={false} />), we developed a continuous spectrophotometric assay based on monitoring the decrease in NAD(P)H absorbance at 340 nm.
 
 We designed assays with different enzyme concentrations to investigate whether the absorbance signal depended on the amount of enzyme-containing preparation. The following iterations focused on improving substrate preparation, selecting appropriate measurement conditions, and introducing controls to distinguish enzyme-associated activity from background reactions.
 
@@ -195,7 +195,7 @@ We investigated activity for the following constructs:
 * AKR1D1-TrxA
 * AKR1D1-His
 
-#### **Iteration 1** - Optimising Reaction Preparation and Microplate Measurement
+#### **Iteration 1** - Optimizing Reaction Preparation and Microplate Measurement
 
 We initially performed assays in 96-well plates using potassium phosphate buffer at pH 6.5, testosterone, and a pyridine nucleotide cofactor.
 
@@ -207,7 +207,7 @@ The assay was conducted at 350 nm, rather than 340 nm, to reduce interference at
 
 The initial measurements **did not produce consistent absorbance trends**. We subsequently identified that NAD⁺ had mistakenly been used instead of the intended reduced cofactor in one experiment. Following this finding, we revised the reaction preparations and performed additional assays using NADPH.
 
-We also compared enzyme concentrations and investigated cuvette-based measurements, including tests with AKR1D1 preparations, to **overcome limitations associated with the microplate format**. Inconsistent results were attributed to microplate plastics as initial waves can acquisitions, to check correct cofactor absorbance in spectrophotometer cuvettes showed correct signal.
+We also compared enzyme concentrations and investigated cuvette-based measurements, including tests with AKR1D1 preparations, to **overcome limitations associated with the microplate format**. Inconsistent results were attributed to the microplate plastic: initial wavelength scans, run in spectrophotometer cuvettes to check the cofactor absorbance, showed the correct signal.
 
 #### **Iteration 3** - Investigating Signal Intensity
 
@@ -215,24 +215,24 @@ Further assays using ci2350–MBP and AKR1D1–SUMO showed inadequate absorbance
 
 We therefore increased the amount of NADPH added to the reaction and performed additional wavelength scans and kinetic measurements using the NanoSpectre.
 
-* Negative controls without enzyme were included to establish the absorbance signal associated with the reaction components alone and not to NADPH natural oxidation.
+* Negative controls without enzyme were included to establish the absorbance signal associated with the reaction components alone and not NADPH's natural oxidation.
 
 #### **Iteration 4** - Investigating Background Activity
 
-To assess if cofactor consumption was specific to the recombinant enzymes, we introduced:
+To assess whether cofactor consumption was specific to the recombinant enzymes, we introduced:
 
 * empty-vector preparations produced and purified using the same general workflow
-* negative controls reaction without the substrate, to establish if the change in absorbance was due to other enzymes.
+* negative-control reactions without the substrate, to establish whether the change in absorbance was due to other enzymes.
 
-We also measured protein concentrations in recombinant enzyme and empty-vector preparations and repeated activity measurements using ci2350–MBP and its R215A/V263I double mutant.
+We also measured protein concentrations in recombinant enzyme and empty-vector preparations and repeated activity measurements using ci2350–MBP and its R215A + V263I double mutant.
 
 ### Test
 
 Initial enzyme-containing samples showed decreases in NAD(P)H absorbance. However, similar decreases were also observed in empty-vector preparations, preventing enzyme-specific interpretation of the signal.
 
-<Tooltip text="A colour-based test for measuring how much protein is in a sample.">Bradford analysis</Tooltip> subsequently revealed substantial protein concentrations in the empty-vector controls, including 0.926 mg/mL in the induced control, compared with 0.695 mg/mL in the ci2350–MBP double-mutant preparation.
+<Tooltip text="A color-based test for measuring how much protein is in a sample.">Bradford analysis</Tooltip> subsequently revealed substantial protein concentrations in the empty-vector controls, including 0.926 mg/mL in the induced control, compared with 0.695 mg/mL in the ci2350–MBP double-mutant preparation.
 
-These findings suggest non-specific protein recovery or possible carryover during purification, although the cause was not established. When the assays were repeated using ci2350–MBP and its double mutant, no clear NADPH consumption signal was observed. Prolonged storage of the enzyme preparations at 4°C was considered a possible explanation.
+These findings suggest non-specific protein recovery or possible carryover during purification, although the cause was not established. When the assays were repeated using ci2350–MBP and its double mutant, no clear NADPH consumption signal was observed. Prolonged storage of the enzyme preparations at 4 °C was considered a possible explanation.
 
 ➜ Check our results [here](/results).
 
@@ -243,14 +243,14 @@ These findings suggest non-specific protein recovery or possible carryover durin
   | <Ref target="card-s3jl8" linkText="35" /> | Testosterone reduction assay troubleshooting using AKR1D1-SUMO, AKR1D1-His and AKR1D1-TrxA. NADPH calibration curve was introduced, assay results remained inconclusive.  |
   | <Ref target="card-jvd89" linkText="36" /> | Preparation and purification of ci2350–MBP, mutant, and empty-vector controls                                                                                             |
   | <Ref target="card-mbtet" linkText="37" /> | Bradford quantification showed high protein concentration in empty-vector controls. Assay results were inconclusive as control samples showed use of NADPH as a cofactor. |
-  | <Ref target="card-f98o6" linkText="38" /> | Assays performed to ci2350-MBP and ci2350-MBP double mutant. We continued troubleshooting but NADPH measurements remained inconclusive                                    |
+  | <Ref target="card-f98o6" linkText="38" /> | Assays performed on ci2350-MBP and ci2350-MBP double mutant. We continued troubleshooting but NADPH measurements remained inconclusive                                    |
   | <Ref target="card-7m4pn" linkText="39" /> | Background NADH consumption is identified as a major limitation of the assay                                                                                              |
   | <Ref target="card-54uj0" linkText="40" /> | Troubleshooting testosterone-reduction assays, introduction of substrate-free negative control,  NADH measurements remained inconclusive                                  |
 </TableWithCaption>
 
 ### Learn
 
-The experiments demonstrated that **NAD(P)H consumption alone could not establish enzyme-specific testosterone conversion** as background cofactor consumption, uncertain sample composition, and variability between experiments limited the interpretation of our results. The available measurements could not confirm the intended testosterone transformation or any reduction in androgenic activity. Further testing should **include <Tooltip text="Measures the mass of molecules very precisely, so it can tell testosterone apart from its reduced product.">Mass Spectrometry</Tooltip> and/or <Tooltip text="Cells carrying the androgen receptor and a reporter gene that switches on when a molecule activates the receptor.">Androgen Receptor Assay</Tooltip> to confirm product formation and eventual changes in androgenic activity**. Alongside this, our enzyme activity model of the R215A + V263I double mutant will serve as a predictive layer, helping us to understand the enzyme’s preference between the two steroids ([Results](/results#mathematical-modelling-of-enzyme-production-and-activity)).
+The experiments demonstrated that **NAD(P)H consumption alone could not establish enzyme-specific testosterone conversion** because background cofactor consumption, uncertain sample composition, and variability between experiments limited the interpretation of our results. The available measurements could not confirm the intended testosterone transformation or any reduction in androgenic activity. Further testing should **include <Tooltip text="Measures the mass of molecules very precisely, so it can tell testosterone apart from its reduced product.">Mass Spectrometry</Tooltip> and/or <Tooltip text="Cells carrying the androgen receptor and a reporter gene that switches on when a molecule activates the receptor.">Androgen Receptor Assay</Tooltip> to confirm product formation and any changes in androgenic activity**. Alongside this, our enzyme activity model of the R215A + V263I double mutant will serve as a predictive layer, helping us to understand the enzyme's preference between the two steroids ([Results](/results#mathematical-modeling-of-enzyme-production-and-activity)).
 
 &#x20;&#x20;
 
