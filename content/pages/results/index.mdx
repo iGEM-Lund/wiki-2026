@@ -164,7 +164,7 @@ V263K also reaches −0.5 kcal/mol selectivity, but by a different route. The lo
 </Layout2>
 
 <Card refId="card-7vrvs">
-  **Overall, docking showed that AKR1D1 cannot be engineered towards testosterone with the positions identified. Every substitution moved both steroids by the same amount, because none of the mutated side chains reaches the C17 group, and the selectivity stayed at about +0.5 kcal/mol. In ci2350, R215A + V263I was the only variant to shift the preference beyond the scoring noise (−0.1 to −0.9 kcal/mol), with testosterone affinity kept and stability neutral. R215A + V263I + Q100T is the more stable fallback, and V263K is a simple single-point option that loses affinity. R215A + V263I was therefore taken into the activity modeling** [(Model)](/model#enzyme-activity-model) and prioritized for experimental design [(Parts)](https://wiki.igemlund.org/parts).
+  **Overall, docking showed that AKR1D1 cannot be engineered towards testosterone with the positions identified. Every substitution moved both steroids by the same amount, because none of the mutated side chains reaches the C17 group, and the selectivity stayed at about +0.5 kcal/mol. In ci2350, R215A + V263I was the only variant to shift the preference beyond the scoring noise (−0.1 to −0.9 kcal/mol), with testosterone affinity kept and stability neutral. R215A + V263I + Q100T is the more stable fallback, and V263K is a simple single-point option that loses affinity. R215A + V263I was therefore taken into the activity modeling** [(Model)](/model#enzyme-activity-model) and prioritized for experimental design [(Parts)](/parts).
 </Card>
 
 ## **Modeling enzyme production and activity**
@@ -259,7 +259,7 @@ Biologically, **how much enzyme each cell makes depends mainly on how much mRNA 
 
 ### **Prediction of activity model**
 
-To predict how the engineered enzyme would behave in the cell, the **expression model was linked to a competitive Michaelis–Menten model** of testosterone and progesterone conversion. This section tests **R215A + V263I**, the variant selected in the [Enzyme specificity engineering results](/results#enzyme-specificity-engineering). We first show the baseline run and then test how robust it is to the expression and growth settings, the <Tooltip text="The turnover number: how many substrate molecules one enzyme converts per second when fully busy.">kcat</Tooltip> ratio, the docking scores, and random errors in all of them together. Throughout, the speed ratio <Formula latex="t50(P)/t50(T)" /> measures which steroid is converted first.
+To predict how the engineered enzyme would behave in the cell, the **expression model was linked to a competitive Michaelis–Menten model** of testosterone and progesterone conversion. This section tests **R215A + V263I**, the variant selected in the [Enzyme specificity engineering results](#enzyme-specificity-engineering). We first show the baseline run and then test how robust it is to the expression and growth settings, the <Tooltip text="The turnover number: how many substrate molecules one enzyme converts per second when fully busy.">kcat</Tooltip> ratio, the docking scores, and random errors in all of them together. Throughout, the speed ratio <Formula latex="t50(P)/t50(T)" /> measures which steroid is converted first.
 
 #### **Baseline and sweep effect on enzyme activity**
 
@@ -371,7 +371,7 @@ However, we still **failed to clone ci2350-SUMO-6xHis, ci2350-TrxA-6xHis, AKR1D1
 
 ## AKR1D1: Fusion Tag and Induction Strength
 
-Although the [enzyme specificity engineering](https://wiki.igemlund.org/results#enzyme-specificity-engineering) analysis showed AKR1D1 could not be engineered for selectivity at the positions tested, expression optimization was still carried out in parallel to identify the tag configuration that yielded the most soluble protein, and to benchmark these conditions for any future engineering approach targeting different positions. 
+Although the [enzyme specificity engineering](#enzyme-specificity-engineering) analysis showed AKR1D1 could not be engineered for selectivity at the positions tested, expression optimization was still carried out in parallel to identify the tag configuration that yielded the most soluble protein, and to benchmark these conditions for any future engineering approach targeting different positions. 
 
 **TrxA gave the most soluble AKR1D1, and a lower IPTG concentration gave a higher soluble fraction.**
 
@@ -450,7 +450,7 @@ The induced empty-vector control gave about three quarters as much protein as ci
 
 ## **ci2350 double mutant** R215A + V263I
 
-Based on the [docking results](https://wiki.igemlund.org/results#enzyme-specificity-engineering) above, R215A + V263I was selected as the priority variant for experimental characterization. The mutations were introduced into the ci2350-MBP-6xHis backbone using inverse PCR site-directed mutagenesis.
+Based on the [docking results](#enzyme-specificity-engineering) above, R215A + V263I was selected as the priority variant for experimental characterization. The mutations were introduced into the ci2350-MBP-6xHis backbone using inverse PCR site-directed mutagenesis.
 
 The mutagenesis was done sequentially, first performing inverse PCR with one primer pair containing a mutation (V263I\_forward &  V263I\_reverse; R215A\_forward & R215A\_reverse). The PCR amplification succeeded with the V263I primers, as shown in <Ref target="fig-p4wta" />.
 

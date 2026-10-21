@@ -64,7 +64,7 @@ export const contentComponents = {
       refId: refIdField('fig'),
       link: fields.url({
         label: 'Link (optional)',
-        description: 'Makes the whole figure a link that opens in a new tab, hinted by a small icon in the lower left corner. The image no longer enlarges on click.',
+        description: 'Makes the whole figure a link (a web address opens in a new tab; a wiki page like /parts or /parts#section opens in place), hinted by a small icon in the lower left corner. The image no longer enlarges on click.',
       }),
       scale: fields.number({
         label: 'Size (%)',

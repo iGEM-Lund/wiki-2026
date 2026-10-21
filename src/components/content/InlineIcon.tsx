@@ -1,4 +1,5 @@
 import { NavIcon } from '@/components/nav-icon';
+import { ContentLink } from './ContentLink';
 
 type InlineIconProps = {
   iconType?: 'library' | 'custom' | null;
@@ -30,8 +31,9 @@ export function InlineIcon({ iconType, libraryIcon, customUrl, label, href }: In
     );
   }
   const external = /^https?:\/\//.test(href);
+  // ContentLink so a wiki path ("/team") gets the production basePath.
   return (
-    <a
+    <ContentLink
       className="inline-icon inline-icon--link"
       href={href}
       aria-label={label || undefined}
@@ -39,6 +41,6 @@ export function InlineIcon({ iconType, libraryIcon, customUrl, label, href }: In
       {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
     >
       {glyph}
-    </a>
+    </ContentLink>
   );
 }

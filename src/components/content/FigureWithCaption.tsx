@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Link as LinkIcon } from 'lucide-react';
+import { ContentLink } from './ContentLink';
 import { ZoomableImage } from './ZoomableImage';
 import { SmallFigureWatcher } from './SmallFigureWatcher';
 import { MissingAltBanner, readAlt, type AltProp } from './MissingAltBanner';
@@ -10,8 +11,10 @@ type FigureWithCaptionProps = {
   src?: string;
   alt?: AltProp;
   caption?: string;
-  // Optional external URL: makes the whole figure a link, hinted by a small
-  // icon in the image's lower left corner.
+  // Optional URL: makes the whole figure a link, hinted by a small icon in
+  // the image's lower left corner. External URLs open in a new tab; a wiki
+  // path ("/parts#…") or in-page "#…" anchor goes through ContentLink so it
+  // gets the production basePath.
   link?: string | null;
   // Percentage of the column width the figure may occupy (10 to 100).
   scale?: number | null;
@@ -37,12 +40,19 @@ export function FigureWithCaption({ src, alt, caption, link, scale, plain, noZoo
   if (!src && !caption) return null;
   // The enlarged view's caption takes the number too, as plain caption text.
   const lightboxCaption = number ? `${KIND_LABELS.figure} ${number}.${caption ? ` ${caption}` : ''}` : caption;
+  const internal = !!link && (link.startsWith('#') || (link.startsWith('/') && !link.startsWith('//')));
   const pct = scale != null && scale > 0 && scale < 100 ? scale : null;
   const media = src ? (
     <div className="figure-with-caption__media">
       <ZoomableImage src={src} alt={readAlt(alt).alt} caption={lightboxCaption} enlargeable={!link && !noZoom} />
       <MissingAltBanner alt={alt} />
-      {link ? <ExternalLink className="figure-with-caption__link-icon" aria-hidden size={18} /> : null}
+      {link ? (
+        internal ? (
+          <LinkIcon className="figure-with-caption__link-icon" aria-hidden size={18} />
+        ) : (
+          <ExternalLink className="figure-with-caption__link-icon" aria-hidden size={18} />
+        )
+      ) : null}
     </div>
   ) : null;
   const captionElement =
@@ -61,7 +71,12 @@ export function FigureWithCaption({ src, alt, caption, link, scale, plain, noZoo
       } as CSSProperties}
     >
       {plain ? null : <SmallFigureWatcher />}
-      {link ? (
+      {link && internal ? (
+        <ContentLink className="figure-with-caption__anchor" href={link}>
+          {media}
+          {captionElement}
+        </ContentLink>
+      ) : link ? (
         <a className="figure-with-caption__anchor" href={link} target="_blank" rel="noopener noreferrer">
           {media}
           {captionElement}
