@@ -6222,7 +6222,16 @@ article .layout__column p {
      from the top (its bottom stays where the tail is), showing less of
      the world above and below her. */
   --bubble-cut: max(0px, calc(var(--bubble-scale) * 100vh - 0.8 * var(--bubble-scale) * 100cqw));
-  --bubble-y: calc(69.5vh - var(--room-raise) - 24.86cqw + var(--bubble-cut));
+  --bubble-y: calc(69.5vh - var(--room-raise) - 24.86cqw + var(--bubble-cut) - var(--bubble-lift));
+  --bubble-lift: 0px;
+}
+/* On a tall screen only the middle of the room shows (the stage is cropped
+   either side), so the bubble is raised a little, its tail longer, to leave
+   room beside it for the teammate's question (team-room.tsx). */
+@media (max-aspect-ratio: 9/10) {
+  .women-line-scene {
+    --bubble-lift: 9cqw;
+  }
 }
 .women-line-scene__bubble,
 .women-line-scene__bubble-edge {

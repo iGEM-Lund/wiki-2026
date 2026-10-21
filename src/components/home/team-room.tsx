@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { drawWoman, FIGURE_SCALE, POSES, type Look, type Pose, type V3 } from '@/lib/women-on-line';
 import { PAPER_H, PAPER_W, PAPERS, paperFlight, TABLE_SQUASH } from './solution-papers';
 import { LayerArt } from './women-art';
@@ -63,26 +63,82 @@ const ROUND: Member[] = [
 
 // A teammate's question, in a speech bubble of her own over her head: the
 // words, one line each, in an oval with a tail leaning towards her.
-const QUESTION = ['Can we target the gut', 'as a new way to address', 'androgen excess in PMOS?'];
 const ASKER = 3;
-const ASK = { cx: 935, rx: 152, ry: 68, gap: 30, foot: 11, lean: 22 };
-function Question({ head, shown }: { head: { x: number; top: number }; shown: number }) {
-  const { cx, rx, ry, gap, foot, lean } = ASK;
-  const cy = head.top - gap - ry;
+const ASK = { cx: 935, gap: 30, foot: 11, lean: 22, line: 22 };
+// The bubble's gap from the screen's edge and from the presenter's bubble.
+const ASK_MARGIN = 14;
+const ASK_CLEAR = 10;
+// How it can be set out, in the order it is tried: the first is the one
+// drawn on a wide screen (its oval chosen by hand); where that would run off
+// the screen's edge or into the presenter's bubble or its tail, the same
+// words in more, shorter lines, in a narrower and taller oval, whose size is
+// worked out from the lines (a letter is about 10 units across at this size).
+const ASK_LAYOUTS: { lines: string[]; rx?: number; ry?: number; ratio?: number }[] = [
+  { lines: ['Can we target the gut', 'as a new way to address', 'androgen excess in PMOS?'], rx: 152, ry: 68 },
+  { lines: ['Can we target', 'the gut as a new way', 'to address androgen', 'excess in PMOS?'], ratio: 1.6 },
+  { lines: ['Can we target', 'the gut as a', 'new way to address', 'androgen excess', 'in PMOS?'], ratio: 1.4 },
+  { lines: ['Can we', 'target the gut', 'as a new way', 'to address', 'androgen excess', 'in PMOS?'], ratio: 1.2 },
+];
+const LETTER = 9.8;
+// What its text fills of its oval, across and down, squared and added.
+const FILL = 0.85;
+// Half the width of the presenter's tail, and how far the bubble keeps off it.
+const TAIL_HALF = 16;
+
+type Ellipse = { cx: number; cy: number; rx: number; ry: number };
+// What the screen shows of the room (its right edge) and what the question
+// has to keep clear of: the presenter's bubble, and its tail down to her.
+type Seen = { right: number; presenter: Ellipse | null; tail: { x: number; top: number; bottom: number } | null };
+type Setting = Ellipse & { lines: string[] };
+
+// The question's bubble over `head`, as far right as it goes (where the
+// tail leans from) but within what the screen shows, and clear of the
+// presenter's bubble.
+function setQuestion(head: { top: number }, seen: Seen): Setting {
+  let setting!: Setting;
+  for (const { lines, rx: fixedRx, ry: fixedRy, ratio } of ASK_LAYOUTS) {
+    const w = Math.max(...lines.map((words) => words.length)) * LETTER;
+    const h = ASK.line * (lines.length - 1) + 19;
+    let rx = fixedRx ?? 0;
+    let ry = fixedRy ?? 0;
+    if (ratio) {
+      rx = Math.sqrt(((w / 2) ** 2 + ratio ** 2 * (h / 2) ** 2) / FILL);
+      ry = rx / ratio;
+    }
+    const cx = Math.min(ASK.cx, seen.right - ASK_MARGIN - rx);
+    const cy = head.top - ASK.gap - ry;
+    setting = { lines, cx, cy, rx, ry };
+    const { presenter, tail } = seen;
+    const clear = Array.from({ length: 90 }, (_, i) => (i / 90) * 2 * Math.PI).every((t) => {
+      const x = cx + rx * Math.cos(t);
+      const y = cy + ry * Math.sin(t);
+      if (presenter && ((x - presenter.cx) / (presenter.rx + ASK_CLEAR)) ** 2 + ((y - presenter.cy) / (presenter.ry + ASK_CLEAR)) ** 2 <= 1) {
+        return false;
+      }
+      return !(tail && Math.abs(x - tail.x) < TAIL_HALF + ASK_CLEAR && y > tail.top && y < tail.bottom);
+    });
+    if (clear) break;
+  }
+  return setting;
+}
+
+function Question({ head, shown, setting }: { head: { x: number; top: number }; shown: number; setting: Setting }) {
+  const { foot, lean, gap, line } = ASK;
+  const { lines, cx, cy, rx, ry } = setting;
   const onRound = (x: number) => cy + ry * Math.sqrt(1 - ((x - cx) / rx) ** 2);
-  const mid = cx - lean;
+  const reach = rx * 0.6;
+  const mid = Math.min(cx + reach, Math.max(cx - reach, ASK.cx - lean));
   const [left, right] = [mid - foot, mid + foot];
   const f = (n: number) => n.toFixed(1);
   const d =
-    `M${f(left)} ${f(onRound(left))}A${rx} ${ry} 0 1 1 ${f(right)} ${f(onRound(right))}` +
+    `M${f(left)} ${f(onRound(left))}A${rx.toFixed(1)} ${ry.toFixed(1)} 0 1 1 ${f(right)} ${f(onRound(right))}` +
     `Q${f(right - (right - head.x) * 0.3)} ${f(head.top - gap * 0.5)} ${f(head.x)} ${f(head.top - 6)}` +
     `Q${f(left - (left - head.x) * 0.3)} ${f(head.top - gap * 0.6)} ${f(left)} ${f(onRound(left))}Z`;
-  const line = 22;
   return (
     <g className="team-room__question" style={{ opacity: shown }}>
       <path d={d} />
-      <text x={cx} y={cy - ((QUESTION.length - 1) * line) / 2} textAnchor="middle" dominantBaseline="central">
-        {QUESTION.map((words, i) => (
+      <text x={cx} y={cy - ((lines.length - 1) * line) / 2} textAnchor="middle" dominantBaseline="central">
+        {lines.map((words, i) => (
           <tspan key={words} x={cx} dy={i ? line : 0}>
             {words}
           </tspan>
@@ -141,6 +197,55 @@ export function TeamRoom({ shown, papers }: { shown: number; papers: number }) {
   const presenter = useMemo(() => drawWoman(PRESENTING, { hair: 'bun', bottom: 'skirt', sleeve: 'short' }), []);
   const behind = useMemo(() => BEHIND.map((m) => ({ ...m, figure: drawWoman(m.pose, m.look) })), []);
   const round = useMemo(() => ROUND.map((m) => ({ ...m, figure: drawWoman(m.pose, m.look) })), []);
+  // Her head, in the drawing's units, where the bubble's tail comes down to.
+  const k = FIGURE_SCALE * PRESENTER.scale;
+  const presenterHead = {
+    x: PRESENTER.x + k * presenter.head[0],
+    top: PRESENTER.y + k * (presenter.head[1] - presenter.headRadius - 9),
+  };
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [seen, setSeen] = useState<Seen>({ right: WIDTH, presenter: null, tail: null });
+  // Measured as it first shows, as the question comes in, and once settled.
+  const stages = [shown > 0, shown > 0.85, shown >= 1];
+  // What the screen shows of the room, and where the presenter's bubble will
+  // sit once the scene has settled round it (measured off a hidden copy of
+  // its edge at its final size), both in the drawing's units.
+  useEffect(() => {
+    const svg = svgRef.current;
+    const stage = svg?.parentElement;
+    if (!svg || !stage) return;
+    const measure = () => {
+      const box = stage.getBoundingClientRect();
+      const unit = WIDTH / stage.clientWidth;
+      const probe = document.createElement('div');
+      probe.className = 'women-line-scene__bubble-edge';
+      probe.style.setProperty('--room', '1');
+      probe.style.visibility = 'hidden';
+      stage.appendChild(probe);
+      const b = probe.getBoundingClientRect();
+      probe.remove();
+      const top = svg.getBoundingClientRect().top;
+      setSeen({
+        right: Math.min(WIDTH, (document.documentElement.clientWidth - box.left) * unit),
+        presenter: {
+          cx: ((b.left + b.right) / 2 - box.left) * unit,
+          cy: ((b.top + b.bottom) / 2 - top) * unit,
+          rx: (b.width / 2) * unit,
+          ry: (b.height / 2) * unit,
+        },
+        tail: { x: presenterHead.x, top: (b.bottom - top) * unit - 10, bottom: presenterHead.top },
+      });
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, stages); // eslint-disable-line react-hooks/exhaustive-deps
+  const asker = behind[ASKER];
+  const askerHead = {
+    x: asker.x + FIGURE_SCALE * asker.figure.head[0],
+    top: asker.y + FIGURE_SCALE * (asker.figure.head[1] - asker.figure.headRadius),
+  };
+  const question = useMemo(() => setQuestion(askerHead, seen), [askerHead.top, seen]);
   if (!shown) return null;
   const place = (x: number, y: number, scale = 1) => `translate(${x} ${y}) scale(${FIGURE_SCALE * scale})`;
   const draw = ({ x, y, figure, chair: facing }: Member & { figure: ReturnType<typeof drawWoman> }) => {
@@ -158,6 +263,7 @@ export function TeamRoom({ shown, papers }: { shown: number; papers: number }) {
   const presenterAt = place(PRESENTER.x, PRESENTER.y, PRESENTER.scale);
   return (
     <svg
+      ref={svgRef}
       className="women-line team-room"
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
       role="img"
@@ -181,13 +287,7 @@ export function TeamRoom({ shown, papers }: { shown: number; papers: number }) {
       {behind.map(draw)}
       <Table />
       {shown > 0.85 && (
-        <Question
-          shown={Math.min(1, (shown - 0.85) / 0.15)}
-          head={{
-            x: behind[ASKER].x + FIGURE_SCALE * behind[ASKER].figure.head[0],
-            top: behind[ASKER].y + FIGURE_SCALE * (behind[ASKER].figure.head[1] - behind[ASKER].figure.headRadius),
-          }}
-        />
+        <Question shown={Math.min(1, (shown - 0.85) / 0.15)} head={askerHead} setting={question} />
       )}
       {PAPERS.map(({ x, y, rest }, i) =>
         paperFlight(papers, i) > 0 ? null : (
