@@ -128,7 +128,7 @@ const BEATS: Beat[] = [
   },
   {
     big: 'Hyperandrogenism',
-    small: 'means having too much androgen, such as testosterone, in the body.',
+    small: 'A condition caused by too much androgen hormones, such as testosterone, in the body.',
     from: at(460),
     to: at(600),
     phrase: true,
