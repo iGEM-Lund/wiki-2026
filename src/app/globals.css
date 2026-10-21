@@ -6958,6 +6958,7 @@ article .layout__column p {
   --flip-fill: var(--color-pearl);
   --flip-line: var(--color-crimson);
   --flip-cloth: color-mix(in srgb, var(--flip-fill) 72%, var(--flip-line));
+  color: var(--color-crimson);
   transform: rotateY(180deg);
 }
 .flipcard:focus-visible {
