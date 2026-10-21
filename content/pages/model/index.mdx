@@ -30,7 +30,7 @@ Our dry lab work addresses both challenges through two integrated strands.
 
 ## **Enzyme specificity engineering**
 
-<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/specificity-modelling.avif" alt="Pipeline showing how to increase specificity towards testosterone" caption="Computational pipeline for engineering steroid substrate specificity. Structures from the PDB (AKR1D1, 3CAV) or AlphaFold (ci2350) were prepared for docking; the functional pocket was confirmed with fpocket v4.0 and CD Search; testosterone and progesterone were docked in AutoDock Vina 1.2 to identify residues within 4 Å of C17; mutants there were screened in PyRosetta (ΔΔG > +5 REU excluded) and re-docked for selectivity." numbered refId="fig-2ti4x" scale={100} plain={false} noZoom={false} />
+<FigureWithCaption src="https://static.igem.wiki/teams/6160/wiki/dry-lab-3d-model/specificity-modelling.avif" alt="Pipeline showing how to increase specificity towards testosterone" caption="Computational pipeline for engineering steroid substrate specificity. Structures from the PDB (AKR1D1, 3CAV) or AlphaFold (ci2350) were prepared for docking; the functional pocket was confirmed with fpocket v4.0 and CD Search; testosterone and progesterone were docked in AutoDock Vina 1.2 to identify residues within 4 Å of C17; mutants there were screened in PyRosetta (ΔΔG > +5 REU excluded) and re-docked for selectivity. Picture made with BioRender" numbered refId="fig-2ti4x" scale={100} plain={false} noZoom={false} />
 
 ### **Structural Analysis and Active-Site Mapping**
 
@@ -180,9 +180,9 @@ After docking, the two enzymes gave comparable absolute affinities but opposite 
 
 <TableWithCaption caption="Docking affinities and selectivity scores." refId="tab-sznaf">
   | **Enzyme** | **Progesterone (kcal/mol)** | **Testosterone (kcal/mol)** | **Selectivity (ΔGT − ΔGP)** | **Preference** |
-  | ---------- | -------------------------- | -------------------------- | --------------------------- | -------------- |
-  | **AKR1D1** | −9.8                       | −9.3                       | +0.5                        | Progesterone   |
-  | **ci2350** | −9.1                       | −9.2                       | −0.1                        | Testosterone   |
+  | ---------- | --------------------------- | --------------------------- | --------------------------- | -------------- |
+  | **AKR1D1** | −9.8                        | −9.3                        | +0.5                        | Progesterone   |
+  | **ci2350** | −9.1                        | −9.2                        | −0.1                        | Testosterone   |
 </TableWithCaption>
 
 #### For AKR1D1:
@@ -264,7 +264,7 @@ As in AKR1D1, the shared contacts cluster around the conserved Δ4-3-keto end of
   | -------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
   | **Shared (both steroids)** | A24, M25, G26, M110, Y167, E262, Y347, F350, T351 | A/B/C ring contacts – conserved Δ4-3-ketosteroid recognition, including the catalytic Y167; exclude from mutations |
   | **Progesterone only**      | A107, R215, V263                                  | C17 acetyl contacts – targeted to weaken progesterone binding                                                      |
-  | **Testosterone only**      | V59, F71, Q100, M254, L259                        | Possible 17β-hydroxyl contacts – targeted to favor testosterone                                                       |
+  | **Testosterone only**      | V59, F71, Q100, M254, L259                        | Possible 17β-hydroxyl contacts – targeted to favor testosterone                                                    |
 </TableWithCaption>
 
 #### **Rational mutagenesis**
@@ -280,10 +280,10 @@ At V309 and L311, the substitutions cover three different mechanisms: serine (S)
 At I57, all five substitutions replace an <Tooltip text="Made of plain carbon chains, without charges or rings.">aliphatic</Tooltip> side chain with one capable of hydrogen bonding, any of which could pair with testosterone's 17β-hydroxyl. Combinations test whether the two mutation effects are independent. If they are, the selectivity shifts should roughly sum.
 
 <TableWithCaption caption="Mutagenesis design for AKR1D1" refId="tab-6z476">
-  | **Strategy**                                | **Target**                    | **Mutations designed**           | **Rationale**                                                     |
-  | ------------------------------------------- | ----------------------------- | -------------------------------- | ----------------------------------------------------------------- |
-  | **Disrupt progesterone C17 contacts**       | V309, L311                    | V309T/S/Y/F/W/E/K, L311S/T/Y/F/E | Remove the hydrophobic surface stabilizing the acetyl group       |
-  | **Enhance testosterone 17β-OH recognition** | I57                           | I57S/T/N/Q/Y                     | Introduce a hydrogen-bond donor or acceptor near the 17β-hydroxyl |
+  | **Strategy**                                | **Target**                     | **Mutations designed**           | **Rationale**                                                     |
+  | ------------------------------------------- | ------------------------------ | -------------------------------- | ----------------------------------------------------------------- |
+  | **Disrupt progesterone C17 contacts**       | V309, L311                     | V309T/S/Y/F/W/E/K, L311S/T/Y/F/E | Remove the hydrophobic surface stabilizing the acetyl group       |
+  | **Enhance testosterone 17β-OH recognition** | I57                            | I57S/T/N/Q/Y                     | Introduce a hydrogen-bond donor or acceptor near the 17β-hydroxyl |
   | **Combinations**                            | V309 + L311, V309 + L311 + I57 | Various combination              | Test additive effect of multiple substitutions                    |
 </TableWithCaption>
 
@@ -294,11 +294,11 @@ At A107 and V263, the substitutions add volume, narrowing the space progesterone
 For testosterone, F71Y adds a hydroxyl to an aromatic ring already in contact with the 17β-hydroxyl, and V59S/T and Q100S/T introduce or shorten a polar side chain so the hydrogen bond geometry can be optimized. Similarly, combination tests were performed.
 
 <TableWithCaption caption="Mutagenesis design for ci2350." refId="tab-0fpp0">
-  | **Strategy**                                | **Target**         | **Mutations designed**              | **Rationale**                                                                                                     |
-  | ------------------------------------------- | ------------------ | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+  | **Strategy**                                | **Target**         | **Mutations designed**                | **Rationale**                                                                                                     |
+  | ------------------------------------------- | ------------------ | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
   | **Disrupt progesterone C17 contacts**       | A107, R215, V263   | A107V/L/F, R215A/G/E, V263E/K/D/I/L/F | Add bulk to crowd the acetyl group (A107, V263), or remove the R side chain and its possible hydrogen bond (R215) |
-  | **Enhance testosterone 17β-OH recognition** | V59, F71, Q100     | V59S/T, F71Y, Q100S/T                | Introduce or reposition a hydrogen-bonding group for the 17β-hydroxyl                                                   |
-  | **Combinations**                            | Multiple positions | Various combination                 | Test additive effects across both strategies                                                                      |
+  | **Enhance testosterone 17β-OH recognition** | V59, F71, Q100     | V59S/T, F71Y, Q100S/T                 | Introduce or reposition a hydrogen-bonding group for the 17β-hydroxyl                                             |
+  | **Combinations**                            | Multiple positions | Various combination                   | Test additive effects across both strategies                                                                      |
 </TableWithCaption>
 
 ### **Screening and mutant analysis**
@@ -396,13 +396,13 @@ All variants passing the stability threshold were subjected to the same docking 
 
 <TableWithCaption caption="Mutant docking results for AKR1D1 (top-ranked variants)." refId="tab-h4s3i">
   | **Variant**                       | **Progesterone (kcal/mol)** | **Testosterone (kcal/mol)** | **Selectivity (ΔGT − ΔGP)** | **Outcome**          |
-  | --------------------------------- | -------------------------- | -------------------------- | -------------------------- | -------------------- |
-  | **Wild-type**                     | −9.8                       | −9.3                       | +0.5                       | Reference            |
-  | **V309S**                         | −9.8                       | −9.4                       | +0.4                       | Favored progesterone |
-  | **V309E**                         | −9.8                       | −9.4                       | +0.4                       | Favored progesterone |
-  | **I57Y**                          | −9.8                       | −9.4                       | +0.4                       | Favored progesterone |
-  | **Combo 1: V309T + L311S**        | −9.9                       | −9.4                       | +0.5                       | Favored progesterone |
-  | **Combo 6: V309T + L311S + I57S** | −10.4                      | −9.8                       | +0.6                       | Favored progesterone |
+  | --------------------------------- | --------------------------- | --------------------------- | --------------------------- | -------------------- |
+  | **Wild-type**                     | −9.8                        | −9.3                        | +0.5                        | Reference            |
+  | **V309S**                         | −9.8                        | −9.4                        | +0.4                        | Favored progesterone |
+  | **V309E**                         | −9.8                        | −9.4                        | +0.4                        | Favored progesterone |
+  | **I57Y**                          | −9.8                        | −9.4                        | +0.4                        | Favored progesterone |
+  | **Combo 1: V309T + L311S**        | −9.9                        | −9.4                        | +0.5                        | Favored progesterone |
+  | **Combo 6: V309T + L311S + I57S** | −10.4                       | −9.8                        | +0.6                        | Favored progesterone |
 </TableWithCaption>
 
 No AKR1D1 variant shifted selectivity meaningfully. The three best mutants, V309S, V309E and I57Y, moved the score by just 0.1 kcal/mol (<Ref target="tab-h4s3i" />), well within the noise threshold, and every variant kept a positive score, so progesterone remained preferred throughout. None of the substitutions tested was able to redirect AKR1D1 towards testosterone.
@@ -411,13 +411,13 @@ No AKR1D1 variant shifted selectivity meaningfully. The three best mutants, V309
 
 <TableWithCaption caption="Mutant docking results for ci2350 (top-ranked variants)." refId="tab-abuyo">
   | **Variant**                         | **Progesterone (kcal/mol)** | **Testosterone (kcal/mol)** | **Selectivity (ΔGT − ΔGP)** | **Outcome**                                |
-  | ----------------------------------- | -------------------------- | -------------------------- | -------------------------- | ------------------------------------------ |
-  | **Wild-type**                       | −9.1                       | −9.2                       | −0.1                       | Reference                                  |
-  | **Combo 8: R215A + V263I**          | −8.5                       | −9.4                       | −0.9                       | Highly favored testosterone                |
-  | **V263K**                           | −6.9                       | −7.4                       | −0.5                       | Favored testosterone, but affinity reduced |
-  | **Combo 13: R215A + V263I + Q100T** | −8.0                       | −8.5                       | −0.5                       | Favored testosterone, but affinity reduced |
-  | **Combo 9: R215E + V263I**          | −7.4                       | −7.7                       | −0.3                       | Favored testosterone, but affinity reduced |
-  | **V263D**                           | −9.1                       | −9.3                       | −0.2                       | Favored testosterone                       |
+  | ----------------------------------- | --------------------------- | --------------------------- | --------------------------- | ------------------------------------------ |
+  | **Wild-type**                       | −9.1                        | −9.2                        | −0.1                        | Reference                                  |
+  | **Combo 8: R215A + V263I**          | −8.5                        | −9.4                        | −0.9                        | Highly favored testosterone                |
+  | **V263K**                           | −6.9                        | −7.4                        | −0.5                        | Favored testosterone, but affinity reduced |
+  | **Combo 13: R215A + V263I + Q100T** | −8.0                        | −8.5                        | −0.5                        | Favored testosterone, but affinity reduced |
+  | **Combo 9: R215E + V263I**          | −7.4                        | −7.7                        | −0.3                        | Favored testosterone, but affinity reduced |
+  | **V263D**                           | −9.1                        | −9.3                        | −0.2                        | Favored testosterone                       |
 </TableWithCaption>
 
 The combination mutation of **R215A + V263I** is the clear leading candidate, with a selectivity score of **−0.9 kcal/mol** and a shift of **−0.8** against the wild-type, and the only variant to exceed the noise threshold (<Ref target="tab-abuyo" />). It is also the only one where testosterone binding improved in absolute terms while progesterone binding weakened, so the gain comes from both directions at once. The other candidates gained selectivity by losing affinity. &#x20;
@@ -624,14 +624,14 @@ We took the wild type with progesterone as the reference point and gave it the m
 A negative ΔΔG\_T–P means that the variant binds testosterone more tightly than progesterone, which gives testosterone the lower Km. We assumed the same kcat for both steroids because docking describes binding and not catalysis. The Km values obtained this way are predictions that guide the experiments, not measured constants. The assumptions behind them (Km proportional to Kd, equal kcat) are tested in the sensitivity analysis and are the first targets of the planned kinetic measurements.
 
 <TableWithCaption caption="Docking scores of the wild type and top 5 variants of ci2350, with the Michaelis constants (Km) calculated from them" refId="tab-xr0un">
-  | **Variant**               | **ΔG progesterone (kcal/mol)** | **ΔG testosterone (kcal/mol)** | **ΔΔG (kcal/mol) [ΔG\_T − ΔG\_P]** | **Km,P (µM)** | **Km,T (µM)** |
-  | ------------------------- | ------------------------------ | ------------------------------ | --------------------------------------- | ------------------ | ------------------ |
-  | **Wild type**             | −9.1                           | −9.2                           | −0.1                                    | 0.43               | 0.37               |
-  | **R215A + V263I**         | −8.5                           | −9.4                           | −0.9                                    | 1.14               | 0.27               |
-  | **V263K**                 | −6.9                           | −7.4                           | −0.5                                    | 15.3               | 6.8                |
-  | **R215A + V263I + Q100T** | −8.0                           | −8.5                           | −0.5                                    | 2.57               | 1.14               |
-  | **R215E + V263I**         | −7.4                           | −7.7                           | −0.3                                    | 6.8                | 4.2                |
-  | **V263D**                 | −9.1                           | −9.3                           | −0.2                                    | 0.43               | 0.31               |
+  | **Variant**               | **ΔG progesterone (kcal/mol)** | **ΔG testosterone (kcal/mol)** | **ΔΔG (kcal/mol) \[ΔG\_T − ΔG\_P]** | **Km,P (µM)** | **Km,T (µM)** |
+  | ------------------------- | ------------------------------ | ------------------------------ | ----------------------------------- | ------------- | ------------- |
+  | **Wild type**             | −9.1                           | −9.2                           | −0.1                                | 0.43          | 0.37          |
+  | **R215A + V263I**         | −8.5                           | −9.4                           | −0.9                                | 1.14          | 0.27          |
+  | **V263K**                 | −6.9                           | −7.4                           | −0.5                                | 15.3          | 6.8           |
+  | **R215A + V263I + Q100T** | −8.0                           | −8.5                           | −0.5                                | 2.57          | 1.14          |
+  | **R215E + V263I**         | −7.4                           | −7.7                           | −0.3                                | 6.8           | 4.2           |
+  | **V263D**                 | −9.1                           | −9.3                           | −0.2                                | 0.43          | 0.31          |
 </TableWithCaption>
 
 #### **Sensitivity analysis of activity model**
