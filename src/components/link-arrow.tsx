@@ -282,6 +282,7 @@ export function LinkArrow() {
     // pinned (see the top), its data-arrow-href.
     function targetFor(el: HTMLElement) {
       if (el.closest('.scroll-string, .toc')) return null;
+      if (getComputedStyle(el).display === 'none') return null;
       const a =
         el instanceof HTMLAnchorElement
           ? el

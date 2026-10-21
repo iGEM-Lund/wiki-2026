@@ -6728,6 +6728,12 @@ article .layout__column p {
   white-space: nowrap;
   pointer-events: none;
 }
+@media (max-width: 48rem) {
+  /* The nav is a drawer here, so there is no tag to write it up by. */
+  .antigone-reveal__start {
+    display: none;
+  }
+}
 
 /* Quiz: a patch made like the pillars' (see .pillars__link): pale twill
    cloth with an overlocked edge in the line colour, a dashed running stitch
