@@ -61,6 +61,37 @@ const ROUND: Member[] = [
   { x: 770, y: 445, chair: 'back', pose: POSES.restingLeft, look: { hair: 'braid', bottom: 'skirt', sleeve: 'short', hairLength: 40 } },
 ];
 
+// A teammate's question, in a speech bubble of her own over her head: the
+// words, one line each, in an oval with a tail leaning towards her.
+const QUESTION = ['Can we target the gut', 'as a new way to address', 'androgen excess in PMOS?'];
+const ASKER = 3;
+const ASK = { cx: 935, rx: 152, ry: 68, gap: 30, foot: 11, lean: 22 };
+function Question({ head, shown }: { head: { x: number; top: number }; shown: number }) {
+  const { cx, rx, ry, gap, foot, lean } = ASK;
+  const cy = head.top - gap - ry;
+  const onRound = (x: number) => cy + ry * Math.sqrt(1 - ((x - cx) / rx) ** 2);
+  const mid = cx - lean;
+  const [left, right] = [mid - foot, mid + foot];
+  const f = (n: number) => n.toFixed(1);
+  const d =
+    `M${f(left)} ${f(onRound(left))}A${rx} ${ry} 0 1 1 ${f(right)} ${f(onRound(right))}` +
+    `Q${f(right - (right - head.x) * 0.3)} ${f(head.top - gap * 0.5)} ${f(head.x)} ${f(head.top - 6)}` +
+    `Q${f(left - (left - head.x) * 0.3)} ${f(head.top - gap * 0.6)} ${f(left)} ${f(onRound(left))}Z`;
+  const line = 22;
+  return (
+    <g className="team-room__question" style={{ opacity: shown }}>
+      <path d={d} />
+      <text x={cx} y={cy - ((QUESTION.length - 1) * line) / 2} textAnchor="middle" dominantBaseline="central">
+        {QUESTION.map((words, i) => (
+          <tspan key={words} x={cx} dy={i ? line : 0}>
+            {words}
+          </tspan>
+        ))}
+      </text>
+    </g>
+  );
+}
+
 function Table() {
   const { back, front, left, right, slant, thick, floor } = TABLE;
   const top = `M${left + slant} ${back}H${right - slant}L${right} ${front}H${left}Z`;
@@ -149,6 +180,15 @@ export function TeamRoom({ shown, papers }: { shown: number; papers: number }) {
       </g>
       {behind.map(draw)}
       <Table />
+      {shown > 0.85 && (
+        <Question
+          shown={Math.min(1, (shown - 0.85) / 0.15)}
+          head={{
+            x: behind[ASKER].x + FIGURE_SCALE * behind[ASKER].figure.head[0],
+            top: behind[ASKER].y + FIGURE_SCALE * (behind[ASKER].figure.head[1] - behind[ASKER].figure.headRadius),
+          }}
+        />
+      )}
       {PAPERS.map(({ x, y, rest }, i) =>
         paperFlight(papers, i) > 0 ? null : (
           <rect

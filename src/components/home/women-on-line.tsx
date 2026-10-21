@@ -117,7 +117,9 @@ const BEATS: Beat[] = [
     words: ['Polyendocrine', 'Metabolic', 'Ovarian', 'Syndrome'],
     small: (
       <>
-        A disorder that affects hormones, metabolism and the ovaries. A main driver is <strong>hyperandrogenism</strong>.
+        A condition that affects hormone, metabolism and ovarian function.
+        <br />
+        A common feature? <strong>Hyperandrogenism</strong>.
       </>
     ),
     from: at(320),
@@ -137,11 +139,11 @@ const BEATS: Beat[] = [
     big: 'Androgen excess',
     small: (
       <>
-        leads to{' '}
+        Androgens, including testosterone, are a normal part of our biology. Excess levels, through{' '}
         <Tooltip text="The protein in cells that androgens bind to in order to have their effect. When it is switched on, it changes which genes the cell uses.">
           androgen receptor
         </Tooltip>{' '}
-        activation throughout the body, and shows as
+        activation, contribute to:
       </>
     ),
     from: at(600),
@@ -161,7 +163,7 @@ const BEATS: Beat[] = [
   },
   {
     big: 'Symptoms, not the source',
-    small: 'These treatments act on the whole body and cover only part of the problem.',
+    small: 'Current treatments help manage androgen-related symptoms but no single approach addresses every aspect of PMOS.',
     from: at(870),
     to: Infinity,
     phrase: true,
@@ -568,7 +570,7 @@ export function WomenOnLine() {
           </svg>
           <p className="women-line-scene__stat" style={{ opacity: stat, translate: `0 ${((1 - stat) * 1).toFixed(3)}rem` }}>
             <strong>10–13%</strong>
-            <span>of women worldwide are affected by PMOS, a hormonal and metabolic disorder.</span>
+            <span>of women of reproductive age are affected by PMOS</span>
           </p>
         </div>
         </div>
@@ -620,7 +622,6 @@ export function WomenOnLine() {
         {room > 0.8 && (
           <p className="women-line-scene__ask" style={{ opacity: smooth(phase(room, [0.85, 1])) }}>
             Our Solution?
-            <span>A localized strategy that targets androgen regeneration</span>
           </p>
         )}
         {dark > 0 && <div className="women-line-scene__dark" style={{ opacity: dark }} />}

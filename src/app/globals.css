@@ -6307,6 +6307,18 @@ article .layout__column p {
   stroke-linejoin: round;
   stroke-linecap: round;
 }
+.team-room__question path {
+  fill: var(--bg);
+  stroke: var(--heading);
+  stroke-width: 3.4;
+  stroke-linejoin: round;
+}
+.team-room__question text {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 19px;
+  fill: var(--heading);
+}
 .team-room__paper {
   fill: #fff;
   stroke: color-mix(in srgb, var(--heading) 25%, transparent);

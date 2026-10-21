@@ -9,10 +9,9 @@ import { threadWidth } from './thread-width';
 // off the screen as the screen darkens behind them, and a thread, like the
 // one the women sat on, draws itself in over it in an S on its side. Then
 // the site's own cards fly in together, with our solution on them, from
-// the wiki design's Our Solution section, two side by side and one below
-// them in the middle, each hung by its top from the thread as it sags
-// across the top two and curls round under to the third, each card
-// swinging a little until it settles.
+// the wiki design's Our Solution section, two by two, each column hung by
+// the cards' tops from one of the S's outer strokes, each card swinging a
+// little until it settles.
 
 const SOLUTION = [
   {
@@ -24,6 +23,18 @@ const SOLUTION = [
           enterohepatic circulation
         </Tooltip>
         ).
+      </>
+    ),
+  },
+  {
+    title: 'Use an engineered probiotic strain',
+    text: (
+      <>
+        <em>E. coli</em> carrying the gene for a steroid{' '}
+        <Tooltip text="An enzyme that adds hydrogen to a steroid at the 5β position and changes its 3D shape.">
+          5β-reductase
+        </Tooltip>
+        , an enzyme that acts on androgens.
       </>
     ),
   },
@@ -76,7 +87,7 @@ export const PAPER_H = 31;
 const TABLE_TIP = 62;
 export const TABLE_SQUASH = Math.cos((TABLE_TIP * Math.PI) / 180);
 
-// The cards, two over one in the middle of the screen: each laid out
+// The cards, two by two in the middle of the screen: each laid out
 // `design` px wide and scaled to `width` (% of the screen's width), with
 // `gap` (% of it) between them across, room for the thread between the
 // columns, and ROW_GAP (vh) down; on a tall, narrow screen in narrower
@@ -91,37 +102,46 @@ const ROWS_FIT = 86;
 const CARD_FROM: { from: [number, number]; spin: number }[] = [
   { from: [-30, 20], spin: -40 },
   { from: [130, 20], spin: 40 },
-  { from: [50, 130], spin: 25 },
+  { from: [-30, 110], spin: 35 },
+  { from: [130, 110], spin: -35 },
 ];
 // Before its height is measured, a card's guess at it, in px as laid out.
 const CARD_H = 300;
-// The order the thread reaches the cards in: across the top row, then
-// the one below.
-const CLIP_ORDER = [0, 1, 2];
+// The order the thread reaches the cards in: down the first column, then
+// down the second.
+const CLIP_ORDER = [0, 2, 1, 3];
 
 type P2 = [number, number];
 // Where the thread leaves the bottom of the screen, % across.
 export const THREAD_EXIT = 50;
 // The points the thread passes through, in % across and vh down, over the
-// top row's cards centred at `a` and `b` and the bottom one in the middle,
-// `half` wide each side of that, the rows' top edges at `tops`, `under`
-// just below them. In from the top on the left, down through the top left
-// card's clip, sagging across to the top right one's, round in a curl out
-// to the right and back in under the top row to the bottom card's clip,
-// and down behind it out of the bottom in the middle. The last three are
-// where it leaves, which keeps to THREAD_EXIT across the whole screen (see
-// `exit`).
+// cards in two columns centred at `a` and `b`, `half` wide each side of
+// that, their rows' top edges at `tops`, `under` just below them. In from
+// the top in the middle, down through the top left card's clip, round in a
+// curl out to the left, then in one diagonal up through the bottom left
+// card's clip and the top right one's, round in the same curl out to the
+// right, and down through the bottom right card's clip and out of the
+// bottom in the middle. The last three are where it leaves, which keeps
+// to THREAD_EXIT across the whole screen (see `exit`).
 function threadPoints([one, two]: [number, number], under: number, [a, b]: P2, half: number): P2[] {
-  return [
-    [a / 2, -10],
-    [a - half * 0.6, Math.max(3, one - 8)],
-    [a, one],
-    [50, one + 4],
-    [b, one],
-    [b + half * 0.6, Math.max(3, one - 6)],
+  // The curl on the right, from the top right clip round to the bottom
+  // right one; the one on the left is the same turned half round, from the
+  // top left clip to the bottom left.
+  const curl: P2[] = [
+    [b + (b - a) * 0.25, Math.max(3, one - 8)],
     [b + half + 6, (one + two) / 2],
-    [50 + half + 4, two - 4],
-    [50, two],
+    [b + half * 0.6, two - 6],
+  ];
+  const turned = ([x, y]: P2): P2 => [100 - x, one + two - y];
+  return [
+    [50, -10],
+    [(50 + a) / 2 + 2, one / 2],
+    [a, one],
+    ...curl.map(turned).reverse(),
+    [a, two],
+    [b, one],
+    ...curl,
+    [b, two],
     // Straight by 90vh at the latest, so it is in line with the thread the
     // next section picks up at the bottom edge even when the cards run low.
     [THREAD_EXIT, Math.min(under + 12, 90)],
@@ -201,9 +221,8 @@ export function SolutionPapers({ shown }: { shown: number }) {
   const scale = Math.min(((layout.width / 100) * seen) / layout.design, (((ROWS_FIT - ROW_GAP) / 200) * h) / size.card);
   const cardW = (layout.design * scale * 100) / seen;
   const card = ((size.card * scale) / h) * 100;
-  // Card `i`'s centre across, % of what's seen: the top row's two either
-  // side of the middle, the one below in it.
-  const cardX = (i: number) => (i > 1 ? 50 : 50 + ((i % 2 ? 1 : -1) * (cardW + layout.gap)) / 2);
+  // Card `i`'s centre across, % of what's seen.
+  const cardX = (i: number) => 50 + ((i % 2 ? 1 : -1) * (cardW + layout.gap)) / 2;
   // The cards' two rows, in the middle of the screen.
   const tops: [number, number] = [50 - card - ROW_GAP / 2, 50 + ROW_GAP / 2];
   // Out of the bottom at THREAD_EXIT of the whole screen's width, where
