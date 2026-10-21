@@ -34,6 +34,13 @@ const nextConfig: NextConfig = {
   trailingSlash: isProductionExport,
   typescript: { ignoreBuildErrors: skipChecks },
   eslint: { ignoreDuringBuilds: skipChecks },
+  // The static export never ships server code, so minifying the server bundle
+  // is pure build time (about 20% of a build on a single core, more on iGEM's
+  // slow runner, which is close to its 10 minute limit).
+  experimental: { serverMinification: false },
+  // On that runner the first pages can take over the default 60 seconds, and
+  // each timeout throws the attempt away and starts it again.
+  staticPageGenerationTimeout: 180,
   // Dev-only badge; its default bottom-left corner covers the accessibility
   // button at the foot of the nav sidebar.
   devIndicators: { position: 'top-right' },
