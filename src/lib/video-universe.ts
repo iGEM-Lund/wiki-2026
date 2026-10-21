@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import snapshot from './video-universe-snapshot.json';
 
 // iGEM's rules route every video through the iGEM Video Universe
 // (video.igem.org, a PeerTube instance). Its files on static.igem.org only
@@ -30,6 +31,13 @@ export type ResolvedVideo = {
   error?: string;
 };
 
+// What the build knows of each video without asking (video-universe-snapshot.json,
+// keyed by the share id and the uuid): iGEM's build machines have been
+// unable to reach video.igem.org ("fetch failed"), and a lookup that fails
+// bakes an error into the page. A video not in the snapshot is still looked
+// up, as before; its counts are refreshed live in the browser either way.
+const SNAPSHOT: Record<string, PeerTubeVideo> = snapshot;
+
 type PeerTubeVideo = { uuid: string; url?: string; likes?: number; views?: number; previewPath?: string };
 
 // Accepts the share link (/w/<short id>), the watch URL and the embed URL.
@@ -58,11 +66,14 @@ export const resolveVideo = cache(async (raw: string): Promise<ResolvedVideo> =>
     // No caching options on purpose: any revalidate here would turn the
     // otherwise fully static page into an ISR one. Pages are rebuilt on
     // every deploy anyway, which re-resolves the link.
-    const response = await fetch(videoUniverseApiUrl(id));
-    // PeerTube answers 400 (not 404) for an id that isn't a valid one.
-    if (response.status === 400 || response.status === 404) throw new Error('no such video on Video Universe');
-    if (!response.ok) throw new Error(`Video Universe answered ${response.status}`);
-    const video = (await response.json()) as PeerTubeVideo;
+    let video = SNAPSHOT[id];
+    if (!video) {
+      const response = await fetch(videoUniverseApiUrl(id));
+      // PeerTube answers 400 (not 404) for an id that isn't a valid one.
+      if (response.status === 400 || response.status === 404) throw new Error('no such video on Video Universe');
+      if (!response.ok) throw new Error(`Video Universe answered ${response.status}`);
+      video = (await response.json()) as PeerTubeVideo;
+    }
     return {
       // autoplay=1: some clips (e.g. ones with a subtitle track) never load
       // their stream until the player has been told to autoplay, and then
