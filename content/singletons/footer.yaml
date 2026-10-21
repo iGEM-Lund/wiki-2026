@@ -54,6 +54,15 @@ sponsors:
     logoUrl: >-
       https://static.igem.wiki/teams/6160/wiki/sponsorship/sponsorship/teefarm-2.avif
     websiteUrl: https://tee.farm/en
+  - name: LU Innovation
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/luinnovation.avif
+    websiteUrl: https://www.innovation.lu.se/en/
+  - name: Medicon Village
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/medicon.avif
+    websiteUrl: https://www.mediconvillage.se/
+  - name: Future by Lund
+    logoUrl: https://static.igem.wiki/teams/6160/wiki/sponsorship/futurebylund.avif
+    websiteUrl: https://www.futurebylund.se/
 socials:
   - label: Instagram
     icon:
